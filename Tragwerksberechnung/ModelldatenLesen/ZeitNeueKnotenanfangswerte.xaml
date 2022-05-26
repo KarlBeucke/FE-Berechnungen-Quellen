@@ -1,0 +1,59 @@
+﻿<Window x:Class="FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ZeitNeueKnotenanfangswerte"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Neue Knotenanfangswerte" Height="260" Width="380">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,-23.8,37.4" Grid.RowSpan="2">
+            Definition neuer Knotenanfangswerte
+        </Label>
+
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knoten ID:</Label>
+        <TextBox Name="KnotenId" Grid.Row="1" Grid.Column="1" Margin="10,13.2,0,6.8" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50"/>
+
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Freiheitsgrad 1:</Label>
+        <Label Grid.Row="2" Grid.Column="1" Margin="0.8,10,76,0">d0</Label>
+        <TextBox Name="D0" Grid.Row="2" Grid.Column="1" Margin="28.8,13.6,0,7.2" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="39"/>
+        <Label Grid.Row="2" Grid.Column="2" Margin="0.8,10,76,0">v0</Label>
+        <TextBox Name="V0" Grid.Row="2" Grid.Column="2" Margin="28.8,13.6,0,7.2" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50"/>
+
+        <Label Grid.Row="3" Grid.Column="0" Margin="0,5,0,0">Freiheitsgrad 2:</Label>
+        <Label Grid.Row="3" Grid.Column="1" Margin="0.8,10,76,0">d0</Label>
+        <TextBox Name="D1" Grid.Row="3" Grid.Column="1" Margin="28.8,13.6,0,7.2" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="39"/>
+        <Label Grid.Row="3" Grid.Column="2" Margin="0.8,10,76,0">v0</Label>
+        <TextBox Name="V1" Grid.Row="3" Grid.Column="2" Margin="28.8,13.6,0,7.2" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50"/>
+
+        <Label Grid.Row="4" Grid.Column="0" Margin="0,5,0,0">Freiheitsgrad 3:</Label>
+        <Label Grid.Row="4" Grid.Column="1" Margin="0.8,10,76,0">d0</Label>
+        <TextBox Name="D2" Grid.Row="4" Grid.Column="1" Margin="28.8,13.6,0,7.2" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="39"/>
+        <Label Grid.Row="4" Grid.Column="2" Margin="0.8,10,76,0">v0</Label>
+        <TextBox Name="V2" Grid.Row="4" Grid.Column="2" Margin="28.8,13.6,0,7.2" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50"/>
+
+        <Button IsDefault="True" Grid.Row="5" Grid.Column="2" Width="39"  Height="26" Margin="81.6,0,-19.8,7.8" 
+                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">_Ok</Button>
+        <Button Grid.Row="5" Grid.Column="2" Width="71" Height="26" Margin="1.6,0,0,7.8" 
+                Click="BtnDialogCancel_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">_Abbrechen</Button>
+    </Grid>
+</Window>

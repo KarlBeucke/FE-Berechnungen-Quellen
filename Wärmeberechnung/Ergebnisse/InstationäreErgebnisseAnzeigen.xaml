@@ -1,0 +1,50 @@
+﻿<Window x:Class="FE_Berechnungen.Wärmeberechnung.Ergebnisse.InstationäreErgebnisseAnzeigen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="instationäre Ergebnisse" Height="680" Width="790">
+    <Grid Margin="5,10,15,2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="350" />
+            <ColumnDefinition Width="Auto" MinWidth="420" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="68" />
+            <RowDefinition Height="Auto" MinHeight="570.4" />
+        </Grid.RowDefinitions>
+
+        <Label x:Name="Knotentemperatur" Content="Knoten Zeitverlauf" HorizontalAlignment="Left" Margin="5,0,0,39" Grid.Column="0" Width="130"/>
+        <Label Grid.Row="0" Grid.Column="0" Content="Auswahl des Knotens" HorizontalAlignment="Left" Margin="5,30,0,0" VerticalAlignment="Top" Width="200" Height="25"/>
+        <ComboBox Name="Knotenauswahl" HorizontalAlignment="Left" Margin="136,30,0,0" VerticalAlignment="Top" Width="100"
+                  Grid.Row="0" Grid.Column="0" Height="22" 
+                  DropDownClosed="DropDownKnotenauswahlClosed"/>
+        <Button Name="BtnKnoten" Grid.Column="0" Grid.Row="0" Click="KnotentemperaturGrid_Anzeigen" Margin="250,33,57.4,15">Anzeigen</Button>
+
+        <DataGrid Name="KnotentemperaturGrid" HorizontalAlignment="Left" Height="550" Width="358" Margin="4,6,0,0" Grid.Column="0" Grid.Row="1" 
+                  VerticalAlignment="Top" AlternatingRowBackground="Aqua" AutoGenerateColumns="False" HeadersVisibility="None">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Key}"/>
+                <DataGridTextColumn Binding="{Binding Path=Value}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Label x:Name="Zeitschritt" Content="Modellzustand an festgelegtem Zeitschritt" HorizontalAlignment="Left" Margin="4.8,0,0,39"
+               Grid.Row="0" Grid.Column="1" Width="242"/>
+        <Label Content="Auswahl der Integrationszeit" HorizontalAlignment="Left" Margin="4.8,30,0,0" VerticalAlignment="Top" Width="163" Height="28"
+               Grid.Row="0" Grid.Column="1"/>
+        <ComboBox Name="Zeitschrittauswahl" HorizontalAlignment="Left" Margin="169.8,30,0,0" VerticalAlignment="Top" Width="100"
+                  Grid.Row="0" Grid.Column="1" Height="23"
+                  DropDownClosed="DropDownZeitschrittauswahlClosed" ItemStringFormat="N2"/>
+        <Button Name="BtnZeit" Grid.Column="1" Grid.Row="0"  Click="ZeitschrittGrid_Anzeigen" Margin="287.6,33,79.4,15">Anzeigen</Button>
+
+        <DataGrid Name="ZeitschrittGrid" HorizontalAlignment="Left" Height="550" Width="394" Margin="7,6,0,0" Grid.Column="1" Grid.Row="1" 
+                  VerticalAlignment="Top" AlternatingRowBackground="Aqua" AutoGenerateColumns="False" HeadersVisibility="None">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Key}"/>
+                <DataGridTextColumn Binding="{Binding Path=Value}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

@@ -1,0 +1,35 @@
+﻿<Window x:Class="FE_Berechnungen.Tragwerksberechnung.Ergebnisse.DarstellungsbereichDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Darstellungsbereich Dialog" Height="250" Width="350" WindowStartupLocation="Manual" Left="700" Top="200" IsManipulationEnabled="True">
+    <Grid Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,0">Darstellungsbereich für Zeitachse und Ordinate ändern:</Label>
+        <Label Name="LblMaxZeit" Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">maximale Zeit:</Label>
+        <TextBox Name="TxtMaxZeit" Grid.Row="1" Grid.Column="1" Margin="10,10,100,5" Height="20" VerticalAlignment="Center"/>
+        <!--<Label Name="LblMinZeit" Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">minimale Zeit:</Label>
+        <TextBox Name="TxtMinZeit" Grid.Row="2" Grid.Column="1" Margin="10,10,100,5" Height="20" VerticalAlignment="Center"/>-->
+        <Label Name="LblMaxV" Grid.Row="3" Grid.Column="0" Margin="0,5,0,0">maximale Verformung:</Label>
+        <TextBox Name="TxtMaxVerformung" Grid.Row="3" Grid.Column="1" Margin="10,10,100,5" Height="20" VerticalAlignment="Center"/>
+        <Label Name="LblMaxB" Grid.Row="4" Grid.Column="0" Margin="0,5,0,0">maximale Beschleunigung:</Label>
+        <TextBox Name="TxtMaxBeschleunigung" Grid.Row="4" Grid.Column="1" Margin="10,10,100,5" Height="20" VerticalAlignment="Center"/>
+        <Button IsDefault="True" Name="BtnDialogOk" Grid.Row="5" Grid.Column="1" Width="35"  Margin="0,10,19.4,0" 
+                Click="BtnDialogOk_Click" HorizontalAlignment="Right">_Ok</Button>
+        <Button Name="BtnDialogCancel" Grid.Row="5" Grid.Column="1" Width="80" Margin="0,10,59.4,0" 
+                Click="BtnDialogCancel_Click" HorizontalAlignment="Right">_Abbrechen</Button>
+    </Grid>
+</Window>

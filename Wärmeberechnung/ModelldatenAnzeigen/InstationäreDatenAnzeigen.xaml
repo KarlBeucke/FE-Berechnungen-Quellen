@@ -1,0 +1,274 @@
+﻿<Window x:Class="FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen.InstationäreDatenAnzeigen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:modell="clr-namespace:FEBibliothek.Modell;assembly=FEBibliothek"
+        mc:Ignorable="d"
+        Title="instationäre Daten anzeigen" Height="700" Width="927.2">
+    <Grid Background="AliceBlue" Loaded ="InstationärLoaded">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="99*" />
+            <ColumnDefinition Width="105*" />
+            <ColumnDefinition Width="105*" />
+            <ColumnDefinition Width="105*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="113" />
+            <RowDefinition Height="330" />
+            <RowDefinition Height="300" />
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="Parameter" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" 
+              Margin="5,5,0,0" Width="212" Height="100"
+          Background="AliceBlue" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <TextBlock FontSize="12" FontWeight="Bold" Grid.ColumnSpan="2" Grid.Row="0" Margin="0,0,-91,0">Eigenlösungen und Integrationsparameter
+            </TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,0,3,0">Anzahl Eigenlösungen =</TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="0" Margin="0,0,3,0">Zeitintervall Delta T =</TextBlock>
+            <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,0,3,0">Maximalzeit Tmax =</TextBlock>
+            <TextBlock Grid.Row="4" Grid.Column="0" Margin="0,0,3,0">Integrationsparameter =</TextBlock>
+
+            <TextBox Name ="Eigen" Grid.Column="1" Grid.Row="1" Text="{Binding Path=Eigenzustand.AnzahlZustände}" Margin="1.4,0,0.2,0"/>
+            <TextBox Name ="ZeitintDt" Grid.Column="1" Grid.Row="2" Text="{Binding Zeitintegration.Dt}" Margin="1.4,0,0.2,0"/>
+            <TextBox Name ="ZeitintTmax" Grid.Column="1" Grid.Row="3" Text="{Binding Zeitintegration.Tmax}" Margin="1.4,0,0.2,0"/>
+            <TextBox Name ="ZeitintParameter1" Grid.Column="1" Grid.Row="4" Text="{Binding Zeitintegration.Parameter1}" Margin="1.4,0,0.2,0"/>
+        </Grid>
+
+        <Label x:Name="Anfangstemperaturen" Content="Anfangstemperaturen" FontWeight="Bold" HorizontalAlignment="Left" Margin="5,2.2,0,0" 
+               VerticalAlignment="Top" Width="135" Height="30" Grid.Row="1" Grid.Column="0"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="stationäre Lösung" Margin="6,23.2,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30"/>
+        <TextBox Grid.Column="0" Grid.Row="1" Height="19" Text="alle" Background="#FFF0EEEE" 
+                 Margin="6,45.2,167,0" VerticalAlignment="Top"/>
+        <CheckBox Name ="Alle" Grid.Column="0" Grid.Row="1" Margin="64,48.2,141,0" Height="14" VerticalAlignment="Top" Click="ToggleStationaer" ></CheckBox>
+
+        <Grid Margin="5,4.2,5,7.8" Grid.Row="1" Grid.Column="0">
+            <DataGrid 
+                Name="AnfangstemperaturenGrid" HorizontalAlignment="Left" Width="200" AlternatingRowBackground="Aqua"
+                AutoGenerateColumns="False" Grid.ColumnSpan="2" Margin="0,76,0,1.4" 
+                MouseDoubleClick="NeueAnfangstemperatur" CellEditEnding="Model_Changed" 
+                UnloadingRow="AnfangstemperaturZeileLoeschen" SelectionChanged="AnfangstemperaturZeileSelected"
+                d:DataContext="{d:DesignData }">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
+                    <DataGridTextColumn Header="Anfangstemperatur" Binding="{Binding Werte[0]}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <Label Content="zeitabhängige Randtemperaturen" FontWeight="Bold" Margin="6,3.2,0,0" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="30" Grid.Row="1" Grid.Column="1"/>
+        <Label Grid.Row="1" Grid.Column="1" Content="aus Datei" Margin="6,24.2,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30"/>
+        <Grid Margin="2,20,3.6,5.4" Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+            </Grid.ColumnDefinitions>
+            <DataGrid Grid.Column="0" VerticalAlignment="Top"
+                      Name="RandDateiGrid" Height="50" Margin="5,29,-170,0" AlternatingRowBackground="Aqua"
+                      AutoGenerateColumns="False" MouseDoubleClick="NeueRandtemperatur" CellEditEnding="Model_Changed"
+                      SelectionChanged="RandDateiSelectionChanged" UnloadingRow="RandDateiZeileLoeschen"
+                      d:DataContext="{d:DesignData }">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding RandbedingungId}"/>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <Label Grid.Row="1" Grid.Column="1" Content="konstant" Margin="6,96.2,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30"/>
+        <Grid Margin="2,100,3.6,5.4" Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+            </Grid.ColumnDefinitions>
+            <DataGrid Grid.Column="0" VerticalAlignment="Top"
+                      Name="RandKonstantGrid" Height="50" Margin="5,20,-114,0" AlternatingRowBackground="Aqua"
+                      AutoGenerateColumns="False" Grid.ColumnSpan="2" 
+                      MouseDoubleClick="NeueRandtemperatur" CellEditEnding="Model_Changed"
+                      SelectionChanged="RandKonstantSelectionChanged" UnloadingRow="RandKonstantZeileLoeschen"
+                      d:DataContext="{d:DesignData }">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding RandbedingungId}"/>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
+                    <DataGridTextColumn Header="Temperatur" Binding="{Binding KonstanteTemperatur}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <Label Grid.Row="1" Grid.Column="1" Content="harmonisch" Margin="6,169.4,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30"/>
+        <Grid Margin="2,190,3.6,5.4" Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+            </Grid.ColumnDefinitions>
+            <DataGrid Grid.Column="0" VerticalAlignment="Top"
+                Name="RandHarmonischGrid" Height="124" Margin="5,8,-4,0" AlternatingRowBackground="Aqua"
+                AutoGenerateColumns="False" Grid.ColumnSpan="4" 
+                MouseDoubleClick="NeueRandtemperatur" CellEditEnding="Model_Changed"
+                SelectionChanged="RandHarmonischSelectionChanged" UnloadingRow="RandHarmonischZeileLoeschen"
+                d:DataContext="{d:DesignData }">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding RandbedingungId}"/>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
+                    <DataGridTextColumn Header="Amplitude" Binding="{Binding Amplitude}"/>
+                    <DataGridTextColumn Header="Frequenz" Binding="{Binding Frequenz, StringFormat=N4}"/>
+                    <DataGridTextColumn Header="Phase" Binding="{Binding PhasenWinkel, StringFormat=N4}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <Label Grid.Column="1" Content="stückweise linear" Margin="6,5.2,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30" Grid.Row="2"/>
+        <Label Grid.Column="1" Content="Wertepaare (z=Zeit,T=Temperatur)" Margin="6,22.2,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30" Grid.Row="2"/>
+        <Grid Margin="5,18.8,5,81.2" Grid.Row="2" Grid.Column="1">
+            <DataGrid 
+                Name="RandLinearGrid" Margin="1,31,0,2" AlternatingRowBackground="Aqua"
+                AutoGenerateColumns="False" 
+                MouseDoubleClick="NeueRandtemperatur" CellEditEnding="Model_Changed"
+                SelectionChanged="RandLinearSelectionChanged" UnloadingRow="RandLinearZeileLoeschen"
+                d:DataContext="{d:DesignData }">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding RandbedingungId}"/>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[0]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[1]}" />
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[2]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[3]}" />
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[4]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[5]}" />
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[6]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[7]}" />
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[8]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[9]}" />
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[10]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[11]}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <Label Content="zeitabhängige Knotentemperaturen" FontWeight="Bold" Margin="3.4,5.2,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="216" Height="30" Grid.Row="1" Grid.Column="2"/>
+
+        <Label Grid.Row="1" Grid.Column="2" Content="aus Datei" Margin="6.4,25.2,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30"/>
+        <Grid Margin="2,20,3.6,5.4" Grid.Row="1" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="55"/>
+            </Grid.ColumnDefinitions>
+            <DataGrid Grid.Column="0" VerticalAlignment="Top"
+                      Name="KnotenDateiGrid" Height="50" Margin="5,29,-170,0" AlternatingRowBackground="Aqua"
+                      AutoGenerateColumns="False" MouseDoubleClick="NeueKnotentemperatur" CellEditEnding="Model_Changed"
+                      SelectionChanged="KnotenDateiSelectionChanged" UnloadingRow="KnotenDateiZeileLoeschen"
+                      d:DataContext="{d:DesignData }">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding LastId}"/>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <Label Grid.Row="1" Grid.Column="2" Content="harmonisch" Margin="6.4,172.4,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30"/>
+        <Grid Margin="4.4,175.2,8.2,0" Grid.Row="1" Grid.Column="2" Height="146" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="55*"/>
+                <ColumnDefinition Width="55*"/>
+                <ColumnDefinition Width="55*"/>
+                <ColumnDefinition Width="55*"/>
+            </Grid.ColumnDefinitions>
+            <DataGrid
+                Name="KnotenHarmonischGrid" Margin="1,23,-12.2,-2" AlternatingRowBackground="Aqua"
+                AutoGenerateColumns="False" Grid.ColumnSpan="5" 
+                MouseDoubleClick="NeueKnotentemperatur" CellEditEnding="Model_Changed"
+                SelectionChanged="KnotenHarmonischSelectionChanged" UnloadingRow="KnotenHarmonischZeileLoeschen"
+                d:DataContext="{d:DesignData }">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding LastId}"/>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
+                    <DataGridTextColumn Header="Amplitude" Binding="{Binding Amplitude}"/>
+                    <DataGridTextColumn Header="Frequenz" Binding="{Binding Frequenz, StringFormat=N4}"/>
+                    <DataGridTextColumn Header="Phase" Binding="{Binding PhasenWinkel, StringFormat=N4}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <Label Grid.Column="2" Content="stückweise linear" Margin="5.4,4.2,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30" Grid.Row="2"/>
+        <Label Grid.Column="2" Content="Wertepaare (z=Zeit,T=Temperatur)" Margin="5.4,22.2,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30" Grid.Row="2"/>
+        <Grid Margin="3.4,52.8,1.2,77.2" Grid.Row="2" Grid.Column="2">
+
+            <DataGrid
+                Name="KnotenLinearGrid" AlternatingRowBackground="Aqua"
+                AutoGenerateColumns="False" Height="165" VerticalAlignment="Top"
+                MouseDoubleClick="NeueKnotentemperatur" CellEditEnding="Model_Changed"
+                SelectionChanged="KnotenLinearSelectionChanged" UnloadingRow="KnotenLinearZeileLoeschen"
+                d:DataContext="{d:DesignData }">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding LastId}"/>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[0]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[1]}" />
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[2]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[3]}" />
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[4]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[5]}" />
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[6]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[7]}" />
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[8]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[9]}" />
+                    <DataGridTextColumn Header="z" Binding="{Binding Intervall[10]}" />
+                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[11]}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <Label Content="zeitabhängige Elementtemperaturen" FontWeight="Bold" Margin="3.8,4.2,0,0"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="221"  Height="30" Grid.Row="1" Grid.Column="3"/>
+        <Label Grid.Column="2" Content="konstante Knotenwerte" Margin="233.4,26.2,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30" Grid.Row="1" Grid.ColumnSpan="2"/>
+        <Grid Margin="5.8,24.2,-1.2,3.2" Grid.Row="1" Grid.Column="3">
+
+            <DataGrid
+                Name="ElementLastenGrid" Margin="0,27,0,0" AlternatingRowBackground="Aqua"
+                HorizontalAlignment="Left" VerticalAlignment="Top" Height="271" Width="226" AutoGenerateColumns="False" 
+                MouseDoubleClick="NeueElementtemperatur" CellEditEnding="Model_Changed"
+                SelectionChanged="ElementtemperaturSelectionChanged" UnloadingRow="ElementtemperaturZeileLoeschen"
+                d:DataContext="{d:DesignData }">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding LastId}"/>
+                    <DataGridTextColumn Header="Element" Binding="{Binding ElementId}"/>
+                    <DataGridTextColumn Header="T0" Binding="{Binding P[0]}"/>
+                    <DataGridTextColumn Header="T1" Binding="{Binding P[1]}"/>
+                    <DataGridTextColumn Header="T2" Binding="{Binding P[2]}"/>
+                    <DataGridTextColumn Header="T3" Binding="{Binding P[3]}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>
