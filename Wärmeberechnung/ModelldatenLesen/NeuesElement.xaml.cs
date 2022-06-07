@@ -12,16 +12,16 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
         {
             InitializeComponent();
             this.modell = modell;
-            ElementId.Text = "";
-            Knoten1Id.Text = "";
-            Knoten2Id.Text = "";
-            Knoten3Id.Text = "";
-            Knoten4Id.Text = "";
-            Knoten5Id.Text = "";
-            Knoten6Id.Text = "";
-            Knoten7Id.Text = "";
-            Knoten8Id.Text = "";
-            MaterialId.Text = "";
+            ElementId.Text = string.Empty;
+            Knoten1Id.Text = string.Empty;
+            Knoten2Id.Text = string.Empty;
+            Knoten3Id.Text = string.Empty;
+            Knoten4Id.Text = string.Empty;
+            Knoten5Id.Text = string.Empty;
+            Knoten6Id.Text = string.Empty;
+            Knoten7Id.Text = string.Empty;
+            Knoten8Id.Text = string.Empty;
+            MaterialId.Text = string.Empty;
             Show();
         }
 

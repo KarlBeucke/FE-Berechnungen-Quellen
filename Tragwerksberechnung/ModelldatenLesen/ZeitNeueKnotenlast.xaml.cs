@@ -13,14 +13,14 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         {
             InitializeComponent();
             this.modell = modell;
-            LoadId.Text = "";
-            KnotenId.Text = "";
-            KnotenDof.Text = "";
+            LoadId.Text = string.Empty;
+            KnotenId.Text = string.Empty;
+            KnotenDof.Text = string.Empty;
             Datei.IsChecked = false;
-            Amplitude.Text = "";
-            Frequenz.Text = "";
-            Winkel.Text = "";
-            Linear.Text = "";
+            Amplitude.Text = string.Empty;
+            Frequenz.Text = string.Empty;
+            Winkel.Text = string.Empty;
+            Linear.Text = string.Empty;
             Show();
         }
 
@@ -34,10 +34,10 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 
             if (Datei.IsChecked == true)
             {
-                Amplitude.Text = "";
-                Frequenz.Text = "";
-                Winkel.Text = "";
-                Linear.Text = "";
+                Amplitude.Text = string.Empty;
+                Frequenz.Text = string.Empty;
+                Winkel.Text = string.Empty;
+                Linear.Text = string.Empty;
                 zeitabhängigeKnotenlast.Datei = true;
                 zeitabhängigeKnotenlast.VariationsTyp = 0;
                 var last = (AbstraktZeitabhängigeKnotenlast)zeitabhängigeKnotenlast;
@@ -46,7 +46,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             }
             else if ((Amplitude.Text.Length & Frequenz.Text.Length & Winkel.Text.Length) != 0)
             {
-                Linear.Text = "";
+                Linear.Text = string.Empty;
                 Datei.IsChecked = false;
                 zeitabhängigeKnotenlast.VariationsTyp = 2;
                 zeitabhängigeKnotenlast.Amplitude = double.Parse(Amplitude.Text);
@@ -55,9 +55,9 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             }
             else if (Linear.Text.Length != 0)
             {
-                Amplitude.Text = "";
-                Frequenz.Text = "";
-                Winkel.Text = "";
+                Amplitude.Text = string.Empty;
+                Frequenz.Text = string.Empty;
+                Winkel.Text = string.Empty;
                 Datei.IsChecked = false;
                 var delimiters = new[] { '\t' };
                 var teilStrings = Linear.Text.Split(delimiters);

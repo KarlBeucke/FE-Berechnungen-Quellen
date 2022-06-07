@@ -12,14 +12,14 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
         {
             InitializeComponent();
             this.modell = modell;
-            SupportId.Text = "";
-            KnotenId.Text = "";
+            SupportId.Text = string.Empty;
+            KnotenId.Text = string.Empty;
             Datei.IsChecked = false;
-            Konstant.Text = "";
-            Amplitude.Text = "";
-            Frequenz.Text = "";
-            Winkel.Text = "";
-            Linear.Text = "";
+            Konstant.Text = string.Empty;
+            Amplitude.Text = string.Empty;
+            Frequenz.Text = string.Empty;
+            Winkel.Text = string.Empty;
+            Linear.Text = string.Empty;
             Show();
         }
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
@@ -30,11 +30,11 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 
             if (Datei.IsChecked == true)
             {
-                Konstant.Text = "";
-                Amplitude.Text = "";
-                Frequenz.Text = "";
-                Winkel.Text = "";
-                Linear.Text = "";
+                Konstant.Text = string.Empty;
+                Amplitude.Text = string.Empty;
+                Frequenz.Text = string.Empty;
+                Winkel.Text = string.Empty;
+                Linear.Text = string.Empty;
                 zeitabhängigeRandbedingung =
                     new ZeitabhängigeRandbedingung(knotenId, true)
                     { RandbedingungId = supportId, VariationsTyp = 0, Vordefiniert = new double[1] };
@@ -42,10 +42,10 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             else if (Konstant.Text.Length != 0)
             {
                 Datei.IsChecked = false;
-                Amplitude.Text = "";
-                Frequenz.Text = "";
-                Winkel.Text = "";
-                Linear.Text = "";
+                Amplitude.Text = string.Empty;
+                Frequenz.Text = string.Empty;
+                Winkel.Text = string.Empty;
+                Linear.Text = string.Empty;
                 var konstanteTemperatur = double.Parse(Konstant.Text);
                 zeitabhängigeRandbedingung =
                     new ZeitabhängigeRandbedingung(knotenId, konstanteTemperatur)
@@ -54,8 +54,8 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             else if ((Amplitude.Text.Length & Frequenz.Text.Length & Winkel.Text.Length) != 0)
             {
                 Datei.IsChecked = false;
-                Konstant.Text = "";
-                Linear.Text = "";
+                Konstant.Text = string.Empty;
+                Linear.Text = string.Empty;
                 var amplitude = double.Parse(Amplitude.Text);
                 var frequency = 2 * Math.PI * double.Parse(Frequenz.Text);
                 var phaseAngle = Math.PI / 180 * double.Parse(Winkel.Text);
@@ -66,10 +66,10 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             else if (Linear.Text.Length != 0)
             {
                 Datei.IsChecked = false;
-                Konstant.Text = "";
-                Amplitude.Text = "";
-                Frequenz.Text = "";
-                Winkel.Text = "";
+                Konstant.Text = string.Empty;
+                Amplitude.Text = string.Empty;
+                Frequenz.Text = string.Empty;
+                Winkel.Text = string.Empty;
 
                 var delimiters = new[] { '\t' };
                 var teilStrings = Linear.Text.Split(delimiters);

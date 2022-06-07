@@ -11,9 +11,9 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
         {
             this.modell = modell;
             InitializeComponent();
-            KnotenlastId.Text = "";
-            KnotenId.Text = "";
-            Temperatur.Text = "";
+            KnotenlastId.Text = string.Empty;
+            KnotenId.Text = string.Empty;
+            Temperatur.Text = string.Empty;
             Show();
         }
 
@@ -22,7 +22,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             var knotenlastId = KnotenlastId.Text;
             var knotenId = KnotenId.Text;
             double[] temperatur = new double[1];
-            if (Temperatur.Text != "") { temperatur[0] = double.Parse(Temperatur.Text); }
+            if (Temperatur.Text != string.Empty) { temperatur[0] = double.Parse(Temperatur.Text); }
 
             var knotenlast = new Modelldaten.KnotenLast(knotenlastId, knotenId, temperatur);
 

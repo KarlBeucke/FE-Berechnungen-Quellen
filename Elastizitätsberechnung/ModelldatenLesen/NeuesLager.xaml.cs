@@ -13,11 +13,11 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
         {
             InitializeComponent();
             this.modell = modell;
-            InitialKnotenId.Text = "";
-            AnzahlKnoten.Text = "";
-            VorX.Text = "";
-            VorY.Text = "";
-            VorZ.Text = "";
+            InitialKnotenId.Text = string.Empty;
+            AnzahlKnoten.Text = string.Empty;
+            VorX.Text = string.Empty;
+            VorY.Text = string.Empty;
+            VorZ.Text = string.Empty;
             Show();
         }
 

@@ -11,10 +11,10 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
         {
             this.modell = modell;
             InitializeComponent();
-            MaterialId.Text = "";
-            Elastizitätsmodul.Text = "";
-            Poisson.Text = "";
-            Schubmodul.Text = "";
+            MaterialId.Text = string.Empty;
+            Elastizitätsmodul.Text = string.Empty;
+            Poisson.Text = string.Empty;
+            Schubmodul.Text = string.Empty;
             Show();
         }
 
@@ -22,9 +22,9 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
         {
             var materialId = MaterialId.Text;
             double elastizität = 0, poisson = 0, schub = 0;
-            if (Elastizitätsmodul.Text != "") { elastizität = double.Parse(Elastizitätsmodul.Text); }
-            if (Poisson.Text != "") { poisson = double.Parse(Poisson.Text); }
-            if (Schubmodul.Text != "") { schub = double.Parse(Schubmodul.Text); }
+            if (Elastizitätsmodul.Text != string.Empty) { elastizität = double.Parse(Elastizitätsmodul.Text); }
+            if (Poisson.Text != string.Empty) { poisson = double.Parse(Poisson.Text); }
+            if (Schubmodul.Text != string.Empty) { schub = double.Parse(Schubmodul.Text); }
             var material = new Modelldaten.Material(elastizität, poisson, schub)
             {
                 MaterialId = materialId

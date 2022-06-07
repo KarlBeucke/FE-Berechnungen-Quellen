@@ -17,8 +17,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         {
             var querschnittId = QuerschnittId.Text;
             double fläche = 0, ixx = 0;
-            if (Fläche.Text != "") { fläche = double.Parse(Fläche.Text); }
-            if (Ixx.Text != "") { ixx = double.Parse(Ixx.Text); }
+            if (Fläche.Text != string.Empty) { fläche = double.Parse(Fläche.Text); }
+            if (Ixx.Text != string.Empty) { ixx = double.Parse(Ixx.Text); }
             {
                 var querschnitt = new Querschnitt(fläche, ixx) { QuerschnittId = querschnittId };
                 modell.Querschnitt.Add(querschnittId, querschnitt);

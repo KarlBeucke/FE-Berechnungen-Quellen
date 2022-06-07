@@ -11,8 +11,8 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
         {
             InitializeComponent();
             this.modell = modell;
-            KnotenId.Text = "";
-            Anfangstemperatur.Text = "";
+            KnotenId.Text = string.Empty;
+            Anfangstemperatur.Text = string.Empty;
             StationäreLösung.IsChecked = modell.Zeitintegration.VonStationär;
             Show();
         }
@@ -28,7 +28,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 
             var knotenId = KnotenId.Text;
             var anfang = new double[1];
-            if (Anfangstemperatur.Text != "") { anfang[0] = double.Parse(Anfangstemperatur.Text); }
+            if (Anfangstemperatur.Text != string.Empty) { anfang[0] = double.Parse(Anfangstemperatur.Text); }
             modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(knotenId, anfang));
             modell.Zeitintegration.VonStationär = false;
             Close();

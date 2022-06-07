@@ -11,11 +11,11 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         {
             InitializeComponent();
             this.modell = modell;
-            ElementId.Text = "";
-            StartknotenId.Text = "";
-            EndknotenId.Text = "";
-            MaterialId.Text = "";
-            QuerschnittId.Text = "";
+            ElementId.Text = string.Empty;
+            StartknotenId.Text = string.Empty;
+            EndknotenId.Text = string.Empty;
+            MaterialId.Text = string.Empty;
+            QuerschnittId.Text = string.Empty;
             Show();
         }
 

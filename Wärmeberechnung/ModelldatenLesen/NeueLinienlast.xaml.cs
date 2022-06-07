@@ -11,11 +11,11 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
         {
             this.modell = modell;
             InitializeComponent();
-            LinienlastId.Text = "";
-            StartknotenId.Text = "";
-            Start.Text = "";
-            EndknotenId.Text = "";
-            End.Text = "";
+            LinienlastId.Text = string.Empty;
+            StartknotenId.Text = string.Empty;
+            Start.Text = string.Empty;
+            EndknotenId.Text = string.Empty;
+            End.Text = string.Empty;
             Show();
         }
 
@@ -24,9 +24,9 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             var linienlastId = LinienlastId.Text;
             double[] temperatur = new double[2];
             var startId = StartknotenId.Text;
-            if (Start.Text != "") { temperatur[0] = double.Parse(Start.Text); }
+            if (Start.Text != string.Empty) { temperatur[0] = double.Parse(Start.Text); }
             var endId = EndknotenId.Text;
-            if (End.Text != "") { temperatur[1] = double.Parse(End.Text); }
+            if (End.Text != string.Empty) { temperatur[1] = double.Parse(End.Text); }
 
             var knotenlast = new Modelldaten.LinienLast(linienlastId, startId, endId, temperatur);
 

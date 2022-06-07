@@ -13,14 +13,14 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
         {
             InitializeComponent();
             this.modell = modell;
-            LoadId.Text = "";
-            KnotenId.Text = "";
+            LoadId.Text = string.Empty;
+            KnotenId.Text = string.Empty;
             Datei.IsChecked = false;
-            Konstant.Text = "";
-            Amplitude.Text = "";
-            Frequenz.Text = "";
-            Winkel.Text = "";
-            Linear.Text = "";
+            Konstant.Text = string.Empty;
+            Amplitude.Text = string.Empty;
+            Frequenz.Text = string.Empty;
+            Winkel.Text = string.Empty;
+            Linear.Text = string.Empty;
             Show();
         }
 
@@ -32,20 +32,20 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 
             if (Datei.IsChecked == true)
             {
-                Konstant.Text = "";
-                Amplitude.Text = "";
-                Frequenz.Text = "";
-                Winkel.Text = "";
-                Linear.Text = "";
+                Konstant.Text = string.Empty;
+                Amplitude.Text = string.Empty;
+                Frequenz.Text = string.Empty;
+                Winkel.Text = string.Empty;
+                Linear.Text = string.Empty;
                 zeitabhängigeKnotentemperatur =
                     new ZeitabhängigeKnotenLast(knotenId, true) { LastId = loadId, VariationsTyp = 0 };
             }
             else if (Konstant.Text.Length != 0)
             {
-                Amplitude.Text = "";
-                Frequenz.Text = "";
-                Winkel.Text = "";
-                Linear.Text = "";
+                Amplitude.Text = string.Empty;
+                Frequenz.Text = string.Empty;
+                Winkel.Text = string.Empty;
+                Linear.Text = string.Empty;
                 Datei.IsChecked = false;
                 var konstanteTemperatur = double.Parse(Konstant.Text);
                 zeitabhängigeKnotentemperatur =
@@ -53,8 +53,8 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             }
             else if ((Amplitude.Text.Length & Frequenz.Text.Length & Winkel.Text.Length) != 0)
             {
-                Konstant.Text = "";
-                Linear.Text = "";
+                Konstant.Text = string.Empty;
+                Linear.Text = string.Empty;
                 Datei.IsChecked = false;
                 var amplitude = double.Parse(Amplitude.Text);
                 var frequency = 2 * Math.PI * double.Parse(Frequenz.Text);
@@ -64,10 +64,10 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             }
             else if (Linear.Text.Length != 0)
             {
-                Konstant.Text = "";
-                Amplitude.Text = "";
-                Frequenz.Text = "";
-                Winkel.Text = "";
+                Konstant.Text = string.Empty;
+                Amplitude.Text = string.Empty;
+                Frequenz.Text = string.Empty;
+                Winkel.Text = string.Empty;
                 Datei.IsChecked = false;
                 var delimiters = new[] { '\t' };
                 var teilStrings = Linear.Text.Split(delimiters);

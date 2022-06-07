@@ -11,9 +11,9 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
         {
             this.modell = modell;
             InitializeComponent();
-            RandbedingungId.Text = "";
-            KnotenId.Text = "";
-            Temperatur.Text = "";
+            RandbedingungId.Text = string.Empty;
+            KnotenId.Text = string.Empty;
+            Temperatur.Text = string.Empty;
             Show();
         }
 
@@ -22,7 +22,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             var randbedingungId = RandbedingungId.Text;
             var knotenId = KnotenId.Text;
             double temperatur = 0;
-            if (Temperatur.Text != "") { temperatur = double.Parse(Temperatur.Text); }
+            if (Temperatur.Text != string.Empty) { temperatur = double.Parse(Temperatur.Text); }
 
             var randbedingung = new Modelldaten.Randbedingung(randbedingungId, knotenId, temperatur);
 

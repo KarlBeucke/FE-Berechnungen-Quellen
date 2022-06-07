@@ -11,7 +11,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         {
             InitializeComponent();
             this.modell = modell;
-            KnotenId.Text = "";
+            KnotenId.Text = string.Empty;
             Show();
         }
 
@@ -22,18 +22,18 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             {
                 var nodalDof = knoten.AnzahlKnotenfreiheitsgrade;
                 var anfangsWerte = new double[2 * nodalDof];
-                if (D0.Text != "") { anfangsWerte[0] = double.Parse(D0.Text); }
-                if (V0.Text != "") { anfangsWerte[1] = double.Parse(V0.Text); }
+                if (D0.Text != string.Empty) { anfangsWerte[0] = double.Parse(D0.Text); }
+                if (V0.Text != string.Empty) { anfangsWerte[1] = double.Parse(V0.Text); }
 
                 if (nodalDof == 2)
                 {
-                    if (D1.Text != "") { anfangsWerte[2] = double.Parse(D1.Text); }
-                    if (V1.Text != "") { anfangsWerte[3] = double.Parse(V1.Text); }
+                    if (D1.Text != string.Empty) { anfangsWerte[2] = double.Parse(D1.Text); }
+                    if (V1.Text != string.Empty) { anfangsWerte[3] = double.Parse(V1.Text); }
                 }
                 if (nodalDof == 3)
                 {
-                    if (D2.Text != "") { anfangsWerte[4] = double.Parse(D2.Text); }
-                    if (V2.Text != "") { anfangsWerte[5] = double.Parse(V2.Text); }
+                    if (D2.Text != string.Empty) { anfangsWerte[4] = double.Parse(D2.Text); }
+                    if (V2.Text != string.Empty) { anfangsWerte[5] = double.Parse(V2.Text); }
                 }
                 modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(knotenId, anfangsWerte));
             }

@@ -20,10 +20,10 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         {
             var materialId = MaterialId.Text;
             double eModul = 0, masse = 0, poisson = 0;
-            if (EModul.Text != "") { eModul = double.Parse(EModul.Text); }
-            if (Masse.Text != "") { masse = double.Parse(Masse.Text); }
-            if (Poisson.Text != "") { poisson = double.Parse(Poisson.Text); }
-            if (FederX.Text == "" && FederY.Text == "" && FederPhi.Text == "")
+            if (EModul.Text != string.Empty) { eModul = double.Parse(EModul.Text); }
+            if (Masse.Text != string.Empty) { masse = double.Parse(Masse.Text); }
+            if (Poisson.Text != string.Empty) { poisson = double.Parse(Poisson.Text); }
+            if (FederX.Text == string.Empty && FederY.Text == string.Empty && FederPhi.Text == string.Empty)
             {
                 material = new Material(eModul, poisson, masse)
                 {
@@ -33,11 +33,11 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             else
             {
                 double federX = 0;
-                if (FederX.Text != "") { federX = double.Parse(FederX.Text); }
+                if (FederX.Text != string.Empty) { federX = double.Parse(FederX.Text); }
                 double federY = 0;
-                if (FederY.Text != "") { federY = double.Parse(FederY.Text); }
+                if (FederY.Text != string.Empty) { federY = double.Parse(FederY.Text); }
                 double federPhi = 0;
-                if (FederPhi.Text != "") federPhi = double.Parse(FederPhi.Text);
+                if (FederPhi.Text != string.Empty) federPhi = double.Parse(FederPhi.Text);
                 material = new Material("feder", federX, federY, federPhi)
                 {
                     MaterialId = materialId

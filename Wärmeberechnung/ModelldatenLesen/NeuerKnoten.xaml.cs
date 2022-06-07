@@ -10,11 +10,11 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
         {
             this.modell = modell;
             InitializeComponent();
-            KnotenId.Text = "";
+            KnotenId.Text = string.Empty;
             AnzahlDOF.Text = "1";
-            X.Text = "";
-            Y.Text = "";
-            Z.Text = "";
+            X.Text = string.Empty;
+            Y.Text = string.Empty;
+            Z.Text = string.Empty;
             Show();
         }
 

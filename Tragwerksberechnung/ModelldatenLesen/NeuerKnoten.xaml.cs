@@ -14,11 +14,11 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         {
             InitializeComponent();
             this.modell = modell;
-            KnotenId.Text = "";
+            KnotenId.Text = string.Empty;
             AnzahlDOF.Text = ndof.ToString("0");
-            X.Text = "";
-            Y.Text = "";
-            Z.Text = "";
+            X.Text = string.Empty;
+            Y.Text = string.Empty;
+            Z.Text = string.Empty;
             Show();
         }
 

@@ -11,8 +11,8 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
         {
             this.modell = modell;
             InitializeComponent();
-            QuerschnittId.Text = "";
-            Dicke.Text = "";
+            QuerschnittId.Text = string.Empty;
+            Dicke.Text = string.Empty;
             Show();
         }
 
