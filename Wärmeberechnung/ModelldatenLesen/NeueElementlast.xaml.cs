@@ -37,7 +37,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             if (Knoten5.Text != string.Empty) { temperatur[4] = double.Parse(Knoten5.Text); }
             if (Knoten6.Text != string.Empty) { temperatur[5] = double.Parse(Knoten6.Text); }
             if (Knoten7.Text != string.Empty) { temperatur[6] = double.Parse(Knoten7.Text); }
-            if (Knoten8.Text != "") { temperatur[7] = double.Parse(Knoten8.Text); }
+            if (Knoten8.Text != string.Empty) { temperatur[7] = double.Parse(Knoten8.Text); }
 
             var elementlast = new Modelldaten.ElementLast4(elementlastId, elementId, temperatur);
 

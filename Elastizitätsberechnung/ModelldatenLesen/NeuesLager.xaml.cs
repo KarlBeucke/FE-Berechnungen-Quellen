@@ -64,7 +64,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                         var id2 = k.ToString().PadLeft(2, '0');
                         var supportName = supportInitial + face + id1 + id2;
                         if (modell.Randbedingungen.TryGetValue(supportName, out _))
-                            throw new ParseAusnahme("Randbedingung \"" + supportName + "\" bereits vorhanden.");
+                            throw new ParseAusnahme($"Randbedingung \"{supportName}\" bereits vorhanden.");
                         string nodeName;
                         const string faceNode = "00";
                         switch (face.Substring(0, 1))
@@ -79,8 +79,8 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                                 nodeName = nodeInitial + id1 + id2 + faceNode;
                                 break;
                             default:
-                                throw new ParseAusnahme("falsche FlächenId = " + face.Substring(0, 1) +
-                                                        ", muss sein:\n" + " X, Y or Z");
+                                throw new ParseAusnahme(
+                                    $"falsche FlächenId = {face.Substring(0, 1)}, muss sein:\n X, Y or Z");
                         }
 
                         var lager = new Lager(nodeName, face, conditions, prescribed, modell);

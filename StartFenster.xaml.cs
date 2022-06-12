@@ -800,7 +800,7 @@ namespace FE_Berechnungen
             }
 
             // Randbedingungen
-            var fest = "";
+            var fest = string.Empty;
             zeilen.Add("\nLager");
             foreach (var item in modell.Randbedingungen)
             {
@@ -1183,7 +1183,7 @@ namespace FE_Berechnungen
             }
 
             // Randbedingungen
-            var fest = "";
+            var fest = string.Empty;
             zeilen.Add("\nRandbedingungen");
             foreach (var item in modell.Randbedingungen)
             {

@@ -133,7 +133,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                                 var eNode = new String[nodesPerElement];
                                 var elementName = initial + idX + idY + idZ;
                                 if (modell.Elemente.TryGetValue(elementName, out element))
-                                    throw new ParseAusnahme("Element \"" + elementName + "\" bereits vorhanden.");
+                                    throw new ParseAusnahme($"Element \"{elementName}\" bereits vorhanden.");
                                 eNode[0] = eNodeName + idX + idY + idZ;
                                 eNode[1] = eNodeName + idXp + idY + idZ;
                                 eNode[2] = eNodeName + idXp + idYp + idZ;

@@ -315,7 +315,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
             MyPopup.IsOpen = false;
 
             var sb = new StringBuilder();
-            foreach (var item in hitList.Where(item => !(item == null | item?.Name == "")))
+            foreach (var item in hitList.Where(item => !(item == null | item?.Name == string.Empty)))
             {
                 sb.Clear();
                 MyPopup.IsOpen = true;
@@ -349,7 +349,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
 
             foreach (var item in hitTextBlock)
             {
-                if (item == null | item.Text == "") { continue; }
+                if (item == null | item.Text == string.Empty) { continue; }
 
                 sb.Clear();
                 MyPopup.IsOpen = true;

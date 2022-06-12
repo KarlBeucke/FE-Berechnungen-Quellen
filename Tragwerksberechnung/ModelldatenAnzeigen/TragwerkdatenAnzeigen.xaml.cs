@@ -1,4 +1,5 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using System;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
@@ -200,9 +201,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
         }
         private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
         {
-            const string lastId = "", knotenId = "";
-            const double px = 0, py = 0, m = 0;
-            _ = new NeueKnotenlast(modell, lastId, knotenId, px, py, m);
+            _ = new NeueKnotenlast(modell, String.Empty, String.Empty, 0, 0, 0);
             StartFenster.berechnet = false;
             Close();
         }
@@ -234,9 +233,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
         }
         private void NeuePunktlast(object sender, MouseButtonEventArgs e)
         {
-            const string lastId = "", elementId = "";
-            const double px = 0, py = 0, offset = 0;
-            _ = new NeuePunktlast(modell, lastId, elementId, px, py, offset);
+            _ = new NeuePunktlast(modell, string.Empty, string.Empty, 0, 0, 0);
             StartFenster.berechnet = false;
             Close();
         }
@@ -269,9 +266,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
         }
         private void NeueLinienlast(object sender, MouseButtonEventArgs e)
         {
-            const string lastId = "", elementId = "", inElement = "false";
-            const double pxa = 0, pya = 0, pxb = 0, pyb = 0;
-            _ = new NeueLinienlast(modell, lastId, elementId, pxa, pya, pxb, pyb, inElement);
+            _ = new NeueLinienlast(modell, String.Empty, String.Empty, 0, 0, 0, 0, "false");
             StartFenster.berechnet = false;
             Close();
         }

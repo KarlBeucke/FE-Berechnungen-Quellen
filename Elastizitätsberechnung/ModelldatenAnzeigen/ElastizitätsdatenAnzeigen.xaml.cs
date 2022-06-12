@@ -61,20 +61,20 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen
                     case 1:
                         {
                             if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                            if (modell.Raumdimension == 2) vordefiniert[2] = "";
+                            if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
                             break;
                         }
                     case 2:
                         {
                             if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                            if (modell.Raumdimension == 2) vordefiniert[2] = "";
+                            if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
                             break;
                         }
                     case 3:
                         {
                             if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
                             if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                            if (modell.Raumdimension == 2) vordefiniert[2] = "";
+                            if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
                             break;
                         }
                     case 4:
@@ -223,9 +223,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen
         // Lasten
         private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
         {
-            const string lastId = "", knotenId = "";
-            const double px = 0, py = 0, m = 0;
-            _ = new NeueKnotenlast(modell, lastId, knotenId, px, py, m);
+            _ = new NeueKnotenlast(modell, string.Empty, string.Empty, 0, 0, 0);
             StartFenster.berechnet = false;
             Close();
         }

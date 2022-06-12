@@ -69,7 +69,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
             // ************************* modale Dämpfungsmaße ***********************
             if (modell.Eigenzustand.DämpfungsRaten.Count <= 0) return;
             var dämpfungsmaße = modell.Eigenzustand.DämpfungsRaten.Cast<ModaleWerte>().ToList();
-            dämpfungsmaße[0].Text = dämpfungsmaße.Count == 1 ? "alle Eigenmodes" : "";
+            dämpfungsmaße[0].Text = dämpfungsmaße.Count == 1 ? "alle Eigenmodes" : string.Empty;
             DämpfungGrid.ItemsSource = dämpfungsmaße;
         }
 

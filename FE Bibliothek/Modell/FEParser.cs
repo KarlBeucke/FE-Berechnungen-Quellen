@@ -20,7 +20,7 @@
         {
             for (var i = 0; i < zeilen.Length; i++)
             {
-                EingabeGefunden = "";
+                EingabeGefunden = string.Empty;
                 if (zeilen[i] != "ModellName") continue;
                 ModellId = zeilen[i + 1];
                 EingabeGefunden = "ModellName = " + ModellId;
