@@ -18,7 +18,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Eigenlösungen") continue;
-                FEParser.EingabeGefunden += "\nEigenlösungen";
+                FeParser.EingabeGefunden += "\nEigenlösungen";
 
                 substrings = lines[i + 1].Split(delimiters);
                 if (substrings.Length == 2)
@@ -38,7 +38,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Zeitintegration") continue;
-                FEParser.EingabeGefunden += "\nZeitintegration";
+                FeParser.EingabeGefunden += "\nZeitintegration";
                 //id, tmax, dt, method, parameter1, parameter2
                 //method=1:beta,gamma  method=2:theta  method=3: alfa
                 substrings = lines[i + 1].Split(delimiters);
@@ -71,7 +71,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Dämpfung") continue;
-                FEParser.EingabeGefunden += "\nDämpfung";
+                FeParser.EingabeGefunden += "\nDämpfung";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -89,7 +89,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Anfangsbedingungen") continue;
-                FEParser.EingabeGefunden += "\nAnfangsbedingungen";
+                FeParser.EingabeGefunden += "\nAnfangsbedingungen";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -125,7 +125,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Zeitabhängige Knotenlast") continue;
-                FEParser.EingabeGefunden += "\nZeitabhängige Knotenlast";
+                FeParser.EingabeGefunden += "\nZeitabhängige Knotenlast";
                 var boden = false;
                 i++;
 

@@ -33,7 +33,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "KnotenLasten") continue;
-                FEParser.EingabeGefunden += "\nKnotenLasten";
+                FeParser.EingabeGefunden += "\nKnotenLasten";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -65,7 +65,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "LinienLasten") continue;
-                FEParser.EingabeGefunden += "\nLinienLasten";
+                FeParser.EingabeGefunden += "\nLinienLasten";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -99,7 +99,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "ElementLast3") continue;
-                FEParser.EingabeGefunden += "\nElementLast3";
+                FeParser.EingabeGefunden += "\nElementLast3";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -133,7 +133,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "ElementLast4") continue;
-                FEParser.EingabeGefunden += "\nElementLast4";
+                FeParser.EingabeGefunden += "\nElementLast4";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);

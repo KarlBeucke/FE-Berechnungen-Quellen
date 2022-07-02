@@ -2,7 +2,7 @@
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
-    public class ElastizitätsParser : FEParser
+    public class ElastizitätsParser : FeParser
     {
         private FEModell modell;
         private ElementParser parseElastizitätsElemente;

@@ -19,7 +19,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Randbedingungen") continue;
-                FEParser.EingabeGefunden += "\nRandbedingungen";
+                FeParser.EingabeGefunden += "\nRandbedingungen";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);

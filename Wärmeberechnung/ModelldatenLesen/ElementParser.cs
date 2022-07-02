@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {
-    public class ElementParser : FEParser
+    public class ElementParser : FeParser
     {
         private string[] substrings;
         private int nodesPerElement;

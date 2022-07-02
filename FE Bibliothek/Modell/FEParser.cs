@@ -1,6 +1,6 @@
 ﻿namespace FEBibliothek.Modell
 {
-    public class FEParser
+    public class FeParser
     {
         private string knotenId, knotenPrefix;
         private string[] substrings;
@@ -8,11 +8,11 @@
         private double[] koords;
         private int anzahlKnotenfreiheitsgrade, zaehler;
         private double xIntervall, yIntervall, zIntervall;
-        private int nKnotenX, nKnotenY;
+        private int nKnotenX, nKnotenY, nKnotenZ;
 
-        public string ModellId { get; set; }
-        public FEModell FeModell { get; set; }
-        public int Raumdimension { get; set; }
+        private string ModellId { get; set; }
+        public FEModell FeModell { get; private set; }
+        private int Raumdimension { get; set; }
         public static string EingabeGefunden { get; set; }
 
         // parsing ein neues Modell aus einer Datei
@@ -30,10 +30,10 @@
             for (var i = 0; i < zeilen.Length; i++)
             {
                 if (zeilen[i] != "Raumdimension") continue;
-                EingabeGefunden += "\nRaumdimension";
                 substrings = zeilen[i + 1].Split(delimiters);
                 Raumdimension = int.Parse(substrings[0]);
                 anzahlKnotenfreiheitsgrade = int.Parse(substrings[1]);
+                EingabeGefunden += "\nRaumdimension = " + Raumdimension + ", Anzahl Knotenfreiheitsgrade = " + anzahlKnotenfreiheitsgrade;
                 break;
             }
             FeModell = new FEModell(ModellId, Raumdimension);
@@ -44,11 +44,13 @@
         {
             for (var i = 0; i < zeilen.Length; i++)
             {
+                double[] knotenKoords;
                 if (zeilen[i] == "Knoten")
                 {
                     EingabeGefunden += "\nKnoten";
-                    do
+                    while (i + 1 <= zeilen.Length)
                     {
+                        if (zeilen[i + 1] == string.Empty) break;
                         substrings = zeilen[i + 1].Split(delimiters);
                         Knoten knoten;
                         koords = new double[3];
@@ -61,14 +63,16 @@
                             case 2:
                                 knotenId = substrings[0];
                                 koords[0] = double.Parse(substrings[1]);
-                                knoten = new Knoten(knotenId, koords, anzahlKnotenfreiheitsgrade, dimension);
+                                knotenKoords = new[] { koords[0]};
+                                knoten = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, dimension);
                                 FeModell.Knoten.Add(knotenId, knoten);
                                 break;
                             case 3:
                                 knotenId = substrings[0];
                                 koords[0] = double.Parse(substrings[1]);
                                 koords[1] = double.Parse(substrings[2]);
-                                knoten = new Knoten(knotenId, koords, anzahlKnotenfreiheitsgrade, dimension);
+                                knotenKoords = new[] { koords[0], koords[1] };
+                                knoten = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, dimension);
                                 FeModell.Knoten.Add(knotenId, knoten);
                                 break;
                             case 4:
@@ -76,255 +80,243 @@
                                 koords[0] = double.Parse(substrings[1]);
                                 koords[1] = double.Parse(substrings[2]);
                                 koords[2] = double.Parse(substrings[3]);
-                                knoten = new Knoten(knotenId, koords, anzahlKnotenfreiheitsgrade, dimension);
+                                knotenKoords = new[] { koords[0], koords[1], koords[2] };
+                                knoten = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, dimension);
                                 FeModell.Knoten.Add(knotenId, knoten);
                                 break;
                             default:
-                                {
-                                    throw new ParseAusnahme((i + 2) + ": Knoten " + knotenId + " falsche Anzahl Parameter");
-                                }
+                                throw new ParseAusnahme((i + 2) + ": Knoten " + knotenId + " falsche Anzahl Parameter");
                         }
                         i++;
-                    } while (zeilen[i + 1].Length != 0);
+                    }
                 }
                 //Knotengruppe
                 if (zeilen[i] == "Knotengruppe")
                 {
                     EingabeGefunden += "\nKnotengruppe";
-                    substrings = zeilen[i + 1].Split(delimiters);
-                    if (substrings.Length == 1) knotenPrefix = substrings[0];
-                    else
-                        throw new ParseAusnahme(i + 2 + ": Knotengruppe");
-                    zaehler = 0;
-                    i += 2;
-                    do
+                    i++;
+                    while (i <= zeilen.Length)
                     {
+                        if (zeilen[i] == string.Empty) break;
                         substrings = zeilen[i].Split(delimiters);
-                        koords = new double[3];
-                        if (substrings.Length == Raumdimension)
-                            for (var k = 0; k < Raumdimension; k++)
-                                koords[k] = double.Parse(substrings[k]);
+                        if (substrings.Length == 1) knotenPrefix = substrings[0];
                         else
-                            throw new ParseAusnahme(i + ": Knotengruppe");
+                            throw new ParseAusnahme(i + 2 + ": Knotengruppe falscher Prefix");
+                        zaehler = 0;
+                        while (zeilen[i+1].Length > 1)
+                        {
+                            substrings = zeilen[i + 1].Split(delimiters);
+                            knotenKoords = new double[substrings.Length];
+                            for (var k = 0; k < substrings.Length; k++)
+                                knotenKoords[k] = double.Parse(substrings[k]);
 
-                        //raumdimension += anzahlKnotenfreiheitsgrade;
-                        knotenId = knotenPrefix + zaehler.ToString().PadLeft(6, '0');
-                        var node = new Knoten(knotenId, koords, anzahlKnotenfreiheitsgrade, Raumdimension);
-                        FeModell.Knoten.Add(knotenId, node);
+                            knotenId = knotenPrefix + zaehler.ToString().PadLeft(2*substrings.Length, '0');
+                            var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
+                            FeModell.Knoten.Add(knotenId, node);
+                            zaehler++;
+                            i++;
+                        }
                         i++;
-                        zaehler++;
-                    } while (zeilen[i].Length != 0);
+                    }
                 }
 
-                //Äquidistantes Knotennetz in 1D
+                //Äquidistantes Knotennetz
                 if (zeilen[i] == "Äquidistantes Knotennetz")
-                    do
+                {
+                    i++;
+                    while (i < zeilen.Length)
                     {
-                        substrings = zeilen[i + 1].Split(delimiters);
+                        if (zeilen[i] == string.Empty) break;
+                        substrings = zeilen[i].Split(delimiters);
                         knotenPrefix = substrings[0];
 
-                        //Äquidistantes Knotennetz in 1D
-                        double[] knotenKoords;
                         switch (substrings.Length)
                         {
+                            //Äquidistantes Knotennetz in 1D
                             case 4:
-                                {
-                                    EingabeGefunden += "\nÄquidistantes Knotennetz in 1D";
-                                    koords[0] = double.Parse(substrings[1]);
-                                    xIntervall = double.Parse(substrings[2]);
-                                    nKnotenX = short.Parse(substrings[3]);
+                                EingabeGefunden += "\nÄquidistantes Knotennetz in 1D";
+                                koords[0] = double.Parse(substrings[1]);
+                                xIntervall = double.Parse(substrings[2]);
+                                nKnotenX = short.Parse(substrings[3]);
 
-                                    for (var k = 0; k < nKnotenX; k++)
+                                for (var k = 0; k < nKnotenX; k++)
+                                {
+                                    knotenId = knotenPrefix + k.ToString().PadLeft(2, '0');
+                                    knotenKoords = new[] { koords[0]};
+                                    var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
+                                    FeModell.Knoten.Add(knotenId, node);
+                                    koords[0] += xIntervall;
+                                }
+
+                                i++;
+                                break;
+                            //Äquidistantes Knotennetz in 2D
+                            case 7:
+                                EingabeGefunden += "\nÄquidistantes Knotennetz in 2D";
+                                koords = new double[3];
+                                koords[0] = double.Parse(substrings[1]);
+                                xIntervall = double.Parse(substrings[2]);
+                                nKnotenX = short.Parse(substrings[3]);
+                                koords[1] = double.Parse(substrings[4]);
+                                yIntervall = double.Parse(substrings[5]);
+                                nKnotenY = short.Parse(substrings[6]);
+
+                                for (var k = 0; k < nKnotenX; k++)
+                                {
+                                    var temp = koords[0];
+                                    var idY = k.ToString().PadLeft(2, '0');
+                                    for (var l = 0; l < nKnotenY; l++)
                                     {
-                                        knotenId = knotenPrefix + "0000" + k.ToString().PadLeft(2, '0');
-                                        knotenKoords = new[] { koords[0], 0 };
-                                        var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
+                                        var idX = l.ToString().PadLeft(2, '0');
+                                        knotenId = knotenPrefix + idX + idY;
+                                        knotenKoords = new[] { koords[0], koords[1] };
+                                        var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade,
+                                            Raumdimension);
                                         FeModell.Knoten.Add(knotenId, node);
                                         koords[0] += xIntervall;
                                     }
 
-                                    break;
+                                    koords[1] += yIntervall;
+                                    koords[0] = temp;
                                 }
-                            //Äquidistantes Knotennetz in 2D
-                            case 7:
-                                {
-                                    EingabeGefunden += "\nÄquidistantes Knotennetz in 2D";
-                                    koords = new double[3];
-                                    koords[0] = double.Parse(substrings[1]);
-                                    xIntervall = double.Parse(substrings[2]);
-                                    nKnotenX = short.Parse(substrings[3]);
-                                    koords[1] = double.Parse(substrings[4]);
-                                    yIntervall = double.Parse(substrings[5]);
-                                    nKnotenY = short.Parse(substrings[6]);
-
-                                    var idZ = "00";
-                                    for (var k = 0; k < nKnotenX; k++)
-                                    {
-                                        var temp = koords[1];
-                                        var idY = k.ToString().PadLeft(2, '0');
-                                        for (var l = 0; l < nKnotenY; l++)
-                                        {
-                                            var idX = l.ToString().PadLeft(2, '0');
-                                            knotenId = knotenPrefix + idX + idY + idZ;
-                                            knotenKoords = new[] { koords[0], koords[1] };
-                                            var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
-                                            FeModell.Knoten.Add(knotenId, node);
-                                            koords[1] += yIntervall;
-                                        }
-
-                                        koords[0] += xIntervall;
-                                        koords[1] = temp;
-                                    }
-
-                                    break;
-                                }
+                                i++;
+                                break;
                             //Äquidistantes Knotennetz in 3D
                             case 10:
+                                EingabeGefunden += "\nÄquidistantes Knotennetz in 3D";
+                                koords = new double[3];
+                                koords[0] = double.Parse(substrings[1]);
+                                xIntervall = double.Parse(substrings[2]);
+                                nKnotenX = short.Parse(substrings[3]);
+                                koords[1] = double.Parse(substrings[4]);
+                                yIntervall = double.Parse(substrings[5]);
+                                nKnotenY = short.Parse(substrings[6]);
+                                koords[2] = double.Parse(substrings[7]);
+                                zIntervall = double.Parse(substrings[8]);
+                                nKnotenZ = short.Parse(substrings[9]);
+
+                                for (var k = 0; k < nKnotenZ; k++)
                                 {
-                                    EingabeGefunden += "\nÄquidistantes Knotennetz in 3D";
-                                    koords = new double[3];
-                                    koords[0] = double.Parse(substrings[1]);
-                                    xIntervall = double.Parse(substrings[2]);
-                                    nKnotenX = short.Parse(substrings[3]);
-                                    koords[1] = double.Parse(substrings[4]);
-                                    yIntervall = double.Parse(substrings[5]);
-                                    nKnotenY = short.Parse(substrings[6]);
-                                    koords[2] = double.Parse(substrings[7]);
-                                    zIntervall = double.Parse(substrings[8]);
-
-                                    for (var k = 0; k < nKnotenX; k++)
+                                    var temp1 = koords[1];
+                                    var idZ = k.ToString().PadLeft(2, '0');
+                                    for (var l = 0; l < nKnotenY; l++)
                                     {
-                                        var temp1 = koords[1];
-                                        var idX = k.ToString().PadLeft(2, '0');
-                                        for (var l = 0; l < nKnotenY; l++)
+                                        var temp0 = koords[0];
+                                        var idY = l.ToString().PadLeft(2, '0');
+                                        for (var m = 0; m < nKnotenX; m++)
                                         {
-                                            var temp2 = koords[2];
-                                            var idY = l.ToString().PadLeft(2, '0');
-                                            knotenId = knotenPrefix + idX + idY;
-                                            for (var m = 0; m < nKnotenY; m++)
-                                            {
-                                                var idZ = m.ToString().PadLeft(2, '0');
-                                                knotenId = knotenPrefix + idX + idY + idZ;
-                                                knotenKoords = new[] { koords[0], koords[1], koords[2] };
-                                                var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
-                                                FeModell.Knoten.Add(knotenId, node);
-                                                koords[2] += zIntervall;
-                                            }
-
-                                            koords[2] = temp2;
-                                            koords[1] += yIntervall;
+                                            var idX = m.ToString().PadLeft(2, '0');
+                                            knotenId = knotenPrefix + idX + idY + idZ;
+                                            knotenKoords = new[] { koords[0], koords[1], koords[2] };
+                                            var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade,
+                                                Raumdimension);
+                                            FeModell.Knoten.Add(knotenId, node);
+                                            koords[0] += xIntervall;
                                         }
 
-                                        koords[1] = temp1;
-                                        koords[0] += xIntervall;
+                                        koords[0] = temp0;
+                                        koords[1] += yIntervall;
                                     }
 
-                                    break;
+                                    koords[1] = temp1;
+                                    koords[2] += zIntervall;
                                 }
-                            default:
-                                {
-                                    throw new ParseAusnahme(i + 3 + ": Äquidistantes Knotennetz");
-                                }
-                        }
 
-                        i++;
-                    } while (zeilen[i + 1].Length != 0);
+                                i++;
+                                break;
+                            default:
+                                throw new ParseAusnahme(i + 3 + ": Äquidistantes Knotennetz");
+                        }
+                    }
+                }
 
                 //variables Knotennetz
                 if (zeilen[i] != "Variables Knotennetz") continue;
                 {
-                    do
+                    if (zeilen[i] == string.Empty) break;
+                    EingabeGefunden += "\nVariables Knotennetz";
+
+                    i++;
+                    while (i < zeilen.Length)
                     {
-                        substrings = zeilen[i + 1].Split(delimiters);
-                        EingabeGefunden += "\nVariables Knotennetz";
-                        substrings = zeilen[i + 1].Split(delimiters);
-                        string idX, idY;
+                        substrings = zeilen[i].Split(delimiters);
                         koords = new double[3];
 
-                        double koord0, koord1;
                         var offset = new double[substrings.Length];
                         for (var k = 0; k < substrings.Length; k++)
                             offset[k] = double.Parse(substrings[k]);
 
-                        substrings = zeilen[i + 2].Split(delimiters);
-                        double[] knotenKoords;
+                        substrings = zeilen[i + 1].Split(delimiters);
+                        string idX, idY;
+                        double koord0, koord1;
                         switch (substrings.Length)
                         {
                             case 2:
+                                knotenPrefix = substrings[0];
+                                koord0 = double.Parse(substrings[1]);
+                                for (var n = 0; n < offset.Length; n++)
                                 {
-                                    knotenPrefix = substrings[0];
-                                    koord0 = double.Parse(substrings[1]);
-                                    for (var n = 0; n < offset.Length; n++)
+                                    koords[0] = koord0 + offset[n];
+                                    knotenId = knotenPrefix + n.ToString().PadLeft(2);
+                                    knotenKoords = new[] { koords[0]};
+                                    var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
+                                    FeModell.Knoten.Add(knotenId, node);
+                                }
+                                break;
+                            case 3:
+                                knotenPrefix = substrings[0];
+                                koord0 = double.Parse(substrings[1]);
+                                koord1 = double.Parse(substrings[2]);
+                                for (var n = 0; n < offset.Length; n++)
+                                {
+                                    idY = n.ToString().PadLeft(2, '0');
+                                    koords[1] = koord1 + offset[n];
+                                    for (var m = 0; m < offset.Length; m++)
                                     {
-                                        koords[0] = koord0 + offset[n];
-                                        knotenId = knotenPrefix + "0000" + n.ToString().PadLeft(2, '0');
-                                        knotenKoords = new[] { koords[0], 0 };
+                                        idX = m.ToString().PadLeft(2, '0');
+                                        koords[0] = koord0 + offset[m];
+                                        knotenId = knotenPrefix + idX + idY;
+                                        knotenKoords = new[] { koords[0], koords[1] };
                                         var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
                                         FeModell.Knoten.Add(knotenId, node);
                                     }
-
-                                    break;
                                 }
-                            case 3:
+                                break;
+                            case 4:
+                                knotenPrefix = substrings[0];
+                                koord0 = double.Parse(substrings[1]);
+                                koord1 = double.Parse(substrings[2]);
+                                var koord2 = double.Parse(substrings[3]);
+                                for (var n = 0; n < offset.Length; n++)
                                 {
-                                    knotenPrefix = substrings[0];
-                                    var idZ = "00";
-                                    koord0 = double.Parse(substrings[1]);
-                                    koord1 = double.Parse(substrings[2]);
-                                    for (var n = 0; n < offset.Length; n++)
+                                    var idZ = n.ToString().PadLeft(2, '0');
+                                    var inkrement2 = koord2 + offset[n];
+                                    for (var m = 0; m < offset.Length; m++)
                                     {
-                                        idX = n.ToString().PadLeft(2, '0');
-                                        koords[0] = koord0 + offset[n];
-                                        for (var m = 0; m < offset.Length; m++)
+                                        idY = m.ToString().PadLeft(2, '0');
+                                        var inkrement1 = koord1 + offset[m];
+                                        for (var k = 0; k < offset.Length; k++)
                                         {
-                                            idY = m.ToString().PadLeft(2, '0');
-                                            koords[1] = koord1 + offset[m];
+                                            koords = new double[3];
+                                            koords[1] = inkrement1;
+                                            koords[2] = inkrement2;
+                                            idX = k.ToString().PadLeft(2, '0');
+                                            koords[0] = koord0 + offset[k];
                                             knotenId = knotenPrefix + idX + idY + idZ;
-                                            knotenKoords = new[] { koords[0], koords[1] };
+                                            knotenKoords = new[] { koords[0], koords[1], koords[2] };
                                             var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
                                             FeModell.Knoten.Add(knotenId, node);
                                         }
                                     }
-
-                                    break;
                                 }
-                            case 4:
-                                {
-                                    knotenPrefix = substrings[0];
-                                    koord0 = double.Parse(substrings[1]);
-                                    koord1 = double.Parse(substrings[2]);
-                                    var coord2 = double.Parse(substrings[3]);
-                                    for (var n = 0; n < offset.Length; n++)
-                                    {
-                                        idX = n.ToString().PadLeft(2, '0');
-                                        var inkrement0 = koord0 + offset[n];
-                                        for (var m = 0; m < offset.Length; m++)
-                                        {
-                                            idY = m.ToString().PadLeft(2, '0');
-                                            var inkrement1 = koord1 + offset[m];
-                                            for (var k = 0; k < offset.Length; k++)
-                                            {
-                                                koords = new double[3];
-                                                koords[0] = inkrement0;
-                                                koords[1] = inkrement1;
-                                                var idZ = k.ToString().PadLeft(2, '0');
-                                                koords[2] = coord2 + offset[k];
-                                                knotenId = knotenPrefix + idX + idY + idZ;
-                                                knotenKoords = new[] { koords[0], koords[1], koords[2] };
-                                                var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
-                                                FeModell.Knoten.Add(knotenId, node);
-                                            }
-                                        }
-                                    }
-
-                                    break;
-                                }
+                                i += 2;
+                                break;
                             default:
-                                {
-                                    throw new ParseAusnahme(i + 3 + ": Variables Knotennetz");
-                                }
+                                throw new ParseAusnahme(i + 3 + ": Variables Knotennetz");
                         }
-                    } while (zeilen[i + 3].Length != 0);
+                        i += 2;
+                    }
+                    break;
                 }
             }
         }

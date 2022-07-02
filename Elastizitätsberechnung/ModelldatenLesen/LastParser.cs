@@ -23,7 +23,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             {
                 if (lines[i] != "Knotenlasten") continue;
                 modell = feModel;
-                FEParser.EingabeGefunden += "\nKnotenlasten";
+                FeParser.EingabeGefunden += "\nKnotenlasten";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -60,7 +60,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             {
                 modell = feModel;
                 if (lines[i] != "Linienlasten") continue;
-                FEParser.EingabeGefunden += "\nLinienlasten";
+                FeParser.EingabeGefunden += "\nLinienlasten";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);

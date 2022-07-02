@@ -34,7 +34,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Count; i++)
             {
                 if (lines[i] != "Knotenlast") continue;
-                FEParser.EingabeGefunden += "\nKnotenlast";
+                FeParser.EingabeGefunden += "\nKnotenlast";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -74,7 +74,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Count; i++)
             {
                 if (lines[i] != "Punktlast") continue;
-                FEParser.EingabeGefunden += "\nPunktlast";
+                FeParser.EingabeGefunden += "\nPunktlast";
                 do
                 {
                     // Punktlast durch Normalkraft, Querkraft auf Stab und prozentualem Offset zum Stabanfang
@@ -107,7 +107,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Count; i++)
             {
                 if (lines[i] != "Linienlast") continue;
-                FEParser.EingabeGefunden += "\nLinienlast";
+                FeParser.EingabeGefunden += "\nLinienlast";
                 do
                 {
                     // Linenlast definiert durch p0, p1, p2, p3 mit optionalem inElementCoordinateSystem: default= true

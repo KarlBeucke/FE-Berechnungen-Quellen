@@ -32,7 +32,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Count; i++)
             {
                 if (lines[i] != "Fachwerk") continue;
-                FEParser.EingabeGefunden += "\nFachwerk";
+                FeParser.EingabeGefunden += "\nFachwerk";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -69,7 +69,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Count; i++)
             {
                 if (lines[i] != "Biegebalken") continue;
-                FEParser.EingabeGefunden += "\nBiegebalken";
+                FeParser.EingabeGefunden += "\nBiegebalken";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -106,7 +106,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Count; i++)
             {
                 if (lines[i] != "BiegebalkenGelenk") continue;
-                FEParser.EingabeGefunden += "\nBiegebalkenGelenk";
+                FeParser.EingabeGefunden += "\nBiegebalkenGelenk";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -159,7 +159,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Count; i++)
             {
                 if (lines[i] != "Federelement") continue;
-                FEParser.EingabeGefunden += "\nFederelement";
+                FeParser.EingabeGefunden += "\nFederelement";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -191,7 +191,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Count; i++)
             {
                 if (lines[i] != "Querschnitt") continue;
-                FEParser.EingabeGefunden += "\nQuerschnitt";
+                FeParser.EingabeGefunden += "\nQuerschnitt";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);

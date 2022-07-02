@@ -19,7 +19,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Lager") continue;
-                FEParser.EingabeGefunden += "\nLager";
+                FeParser.EingabeGefunden += "\nLager";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);

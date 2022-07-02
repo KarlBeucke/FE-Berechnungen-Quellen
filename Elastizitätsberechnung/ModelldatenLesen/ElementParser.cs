@@ -32,7 +32,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Count; i++)
             {
                 if (lines[i] != "Element2D3") continue;
-                FEParser.EingabeGefunden += "\nElement2D3";
+                FeParser.EingabeGefunden += "\nElement2D3";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -68,7 +68,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Count; i++)
             {
                 if (lines[i] != "Element3D8") continue;
-                FEParser.EingabeGefunden += "\nElement3D8";
+                FeParser.EingabeGefunden += "\nElement3D8";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -102,7 +102,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "3D8ElementNetz") continue;
-                FEParser.EingabeGefunden += "\n3D8ElementNetz";
+                FeParser.EingabeGefunden += "\n3D8ElementNetz";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -159,7 +159,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Count; i++)
             {
                 if (lines[i] != "Querschnitte") continue;
-                FEParser.EingabeGefunden += "\nQuerschnitte";
+                FeParser.EingabeGefunden += "\nQuerschnitte";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);

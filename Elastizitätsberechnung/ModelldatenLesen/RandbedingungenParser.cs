@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
-    public class RandbedingungenParser : FEParser
+    public class RandbedingungenParser : FeParser
     {
         private FEModell modell;
         private string[] substrings;
@@ -168,7 +168,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 
                 // 1. Zeile: Feld mit Offsets
                 // 2. Zeile: supportInitial, face, nodeInitial, type
-                FEParser.EingabeGefunden += "\nRandbedingungBoussinesq";
+                FeParser.EingabeGefunden += "\nRandbedingungBoussinesq";
                 substrings = lines[i + 1].Split(delimiters);
                 var offset = new double[substrings.Length];
                 for (var k = 0; k < substrings.Length; k++)

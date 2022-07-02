@@ -22,7 +22,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Material") continue;
-                FEParser.EingabeGefunden += "\nMaterial";
+                FeParser.EingabeGefunden += "\nMaterial";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);

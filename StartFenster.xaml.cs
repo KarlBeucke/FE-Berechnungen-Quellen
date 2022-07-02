@@ -14,7 +14,7 @@ namespace FE_Berechnungen
 {
     public partial class StartFenster
     {
-        private FEParser parse;
+        private FeParser parse;
         private FEModell modell;
         private Berechnung modellBerechnung;
         private OpenFileDialog dateiDialog;
@@ -67,7 +67,7 @@ namespace FE_Berechnungen
                 throw new ParseAusnahme("Abbruch: Fehler beim Lesen aus Eingabedatei ");
             }
 
-            parse = new FEParser();
+            parse = new FeParser();
             parse.ParseModell(dateiZeilen);
             modell = parse.FeModell;
             parse.ParseNodes(dateiZeilen);
@@ -92,7 +92,7 @@ namespace FE_Berechnungen
             berechnet = false;
             zeitintegrationBerechnet = false;
 
-            sb.Append(FEParser.EingabeGefunden + "\n\nWärmemodelldaten erfolgreich eingelesen");
+            sb.Append(FeParser.EingabeGefunden + "\n\nWärmemodelldaten erfolgreich eingelesen");
             _ = MessageBox.Show(sb.ToString(), "Wärmeberechnung");
             sb.Clear();
         }
@@ -623,7 +623,7 @@ namespace FE_Berechnungen
                 throw new ParseAusnahme("Abbruch: Fehler beim Lesen aus Eingabedatei ");
             }
 
-            parse = new FEParser();
+            parse = new FeParser();
             parse.ParseModell(dateiZeilen);
             modell = parse.FeModell;
             parse.ParseNodes(dateiZeilen);
@@ -648,7 +648,7 @@ namespace FE_Berechnungen
             berechnet = false;
             zeitintegrationBerechnet = false;
 
-            sb.Append(FEParser.EingabeGefunden + "\n\nTragwerksdaten erfolgreich eingelesen");
+            sb.Append(FeParser.EingabeGefunden + "\n\nTragwerksdaten erfolgreich eingelesen");
             _ = MessageBox.Show(sb.ToString(), "Tragwerksberechnung");
             sb.Clear();
         }
@@ -1036,7 +1036,7 @@ namespace FE_Berechnungen
                 throw new ParseAusnahme("Abbruch: Fehler beim Lesen aus Eingabedatei ");
             }
 
-            parse = new FEParser();
+            parse = new FeParser();
             parse.ParseModell(dateiZeilen);
             modell = parse.FeModell;
             parse.ParseNodes(dateiZeilen);
@@ -1047,7 +1047,7 @@ namespace FE_Berechnungen
             berechnet = false;
 
             sb.Clear();
-            sb.Append(FEParser.EingabeGefunden + "\n\nModelldaten für Elastizitätsberechnung erfolgreich eingelesen");
+            sb.Append(FeParser.EingabeGefunden + "\n\nModelldaten für Elastizitätsberechnung erfolgreich eingelesen");
             _ = MessageBox.Show(sb.ToString(), "Elastizitätsberechnung");
             sb.Clear();
         }

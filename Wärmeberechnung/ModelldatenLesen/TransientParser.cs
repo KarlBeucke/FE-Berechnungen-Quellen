@@ -17,7 +17,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Eigenlösungen") continue;
-                FEParser.EingabeGefunden += "\nEigenlösungen";
+                FeParser.EingabeGefunden += "\nEigenlösungen";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
@@ -42,7 +42,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Zeitintegration") continue;
-                FEParser.EingabeGefunden += "\nZeitintegration";
+                FeParser.EingabeGefunden += "\nZeitintegration";
                 var teilStrings = lines[i + 1].Split(delimiters);
                 var tmax = double.Parse(teilStrings[1]);
                 var dt = double.Parse(teilStrings[2]);
@@ -57,7 +57,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             {
                 // stationäre Lösung oder nodeId (incl. "alle")
                 if (lines[i] != "Anfangstemperaturen") continue;
-                FEParser.EingabeGefunden += "\nAnfangstemperaturen";
+                FeParser.EingabeGefunden += "\nAnfangstemperaturen";
 
                 var teilStrings = lines[i + 1].Split(delimiters);
                 if (teilStrings[0] == "stationäre Lösung")
@@ -87,7 +87,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Zeitabhängige Randbedingungen") continue;
-                FEParser.EingabeGefunden += "\nZeitabhängige Randbedingungen";
+                FeParser.EingabeGefunden += "\nZeitabhängige Randbedingungen";
                 do
                 {
                     var teilStrings = lines[i + 1].Split(delimiters);
@@ -170,7 +170,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Zeitabhängige Knotenlasten") continue;
-                FEParser.EingabeGefunden += "\nZeitabhängige Knotenlasten";
+                FeParser.EingabeGefunden += "\nZeitabhängige Knotenlasten";
 
                 do
                 {
@@ -238,7 +238,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i] != "Zeitabhängige Elementlasten") continue;
-                FEParser.EingabeGefunden += "\nZeitabhängige Elementlasten";
+                FeParser.EingabeGefunden += "\nZeitabhängige Elementlasten";
                 var knotenWerte = new double[3];
                 do
                 {
