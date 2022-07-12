@@ -158,8 +158,8 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 
             for (var i = 0; i < lines.Count; i++)
             {
-                if (lines[i] != "Querschnitte") continue;
-                FeParser.EingabeGefunden += "\nQuerschnitte";
+                if (lines[i] != "Querschnitt") continue;
+                FeParser.EingabeGefunden += "\nQuerschnitt";
                 do
                 {
                     substrings = lines[i + 1].Split(delimiters);
