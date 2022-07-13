@@ -246,7 +246,7 @@
                         for (var k = 0; k < substrings.Length; k++)
                             offset[k] = double.Parse(substrings[k]);
 
-                        substrings = zeilen[i + 1].Split(delimiters);
+                        substrings = zeilen[i+1].Split(delimiters);
                         string idX, idY;
                         double koord0, koord1;
                         switch (substrings.Length)
@@ -309,12 +309,13 @@
                                         }
                                     }
                                 }
-                                i += 2;
                                 break;
                             default:
-                                throw new ParseAusnahme(i + 3 + ": Variables Knotennetz");
+                                throw new ParseAusnahme(i + 1 + ": Variables Knotennetz");
                         }
-                        i += 2;
+
+                        i+=2;
+                        if (zeilen[i] == string.Empty) break;
                     }
                     break;
                 }

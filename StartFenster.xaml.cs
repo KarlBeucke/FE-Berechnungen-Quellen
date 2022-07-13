@@ -40,15 +40,15 @@ namespace FE_Berechnungen
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
             };
 
-            if (Directory.Exists(dateiDialog.InitialDirectory + "\\FE Berechnungen\\input"))
+            if (Directory.Exists(dateiDialog.InitialDirectory + "\\FE-Berechnungen-App\\input"))
             {
-                dateiDialog.InitialDirectory += "\\FE Berechnungen\\input\\Wärmeberechnung";
+                dateiDialog.InitialDirectory += "\\FE-Berechnungen-App\\input\\Wärmeberechnung";
                 dateiDialog.ShowDialog();
             }
             else
             {
                 _ = MessageBox.Show("Directory für Eingabedatei " + dateiDialog.InitialDirectory +
-                                    " \\FE Berechnungen\\input nicht gefunden", "Wärmeberechnung");
+                                    " \\FE-Berechnungen-App\\input nicht gefunden", "Wärmeberechnung");
                 dateiDialog.ShowDialog();
             }
             dateiPfad = dateiDialog.FileName;
@@ -596,15 +596,15 @@ namespace FE_Berechnungen
                 //InitialDirectory = Directory.GetCurrentDirectory()
             };
 
-            if (Directory.Exists(dateiDialog.InitialDirectory + "\\FE Berechnungen\\input"))
+            if (Directory.Exists(dateiDialog.InitialDirectory + "\\FE-Berechnungen-App\\input"))
             {
-                dateiDialog.InitialDirectory += "\\FE Berechnungen\\input\\Tragwerksberechnung";
+                dateiDialog.InitialDirectory += "\\FE-Berechnungen-App\\input\\Tragwerksberechnung";
                 dateiDialog.ShowDialog();
             }
             else
             {
                 _ = MessageBox.Show("Directory für Eingabedatei " + dateiDialog.InitialDirectory +
-                                    " \\FE Berechnungen\\input\\Tragwerksberechnung nicht gefunden", "Tragwerksberechnung");
+                                    " \\FE-Berechnungen-App\\input\\Tragwerksberechnung nicht gefunden", "Tragwerksberechnung");
                 dateiDialog.ShowDialog();
             }
             dateiPfad = dateiDialog.FileName;
@@ -1009,15 +1009,15 @@ namespace FE_Berechnungen
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
             };
 
-            if (Directory.Exists(dateiDialog.InitialDirectory + "\\FE Berechnungen\\input"))
+            if (Directory.Exists(dateiDialog.InitialDirectory + "\\FE-Berechnungen-App\\input"))
             {
-                dateiDialog.InitialDirectory += "\\FE Berechnungen\\input\\Elastizitätsberechnung";
+                dateiDialog.InitialDirectory += "\\FE-Berechnungen-App\\input\\Elastizitätsberechnung";
                 dateiDialog.ShowDialog();
             }
             else
             {
                 _ = MessageBox.Show("Directory für Eingabedatei " + dateiDialog.InitialDirectory +
-                                    " \\FE Berechnungen\\input\\Elastizitätsberechnung nicht gefunden", "Elastizitätsberechnung");
+                                    " \\FE-Berechnungen-App\\input\\Elastizitätsberechnung nicht gefunden", "Elastizitätsberechnung");
                 dateiDialog.ShowDialog();
             }
             dateiPfad = dateiDialog.FileName;
