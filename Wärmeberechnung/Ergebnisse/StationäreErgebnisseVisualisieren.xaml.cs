@@ -31,7 +31,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse
         {
             darstellung = new Darstellung(modell, VisualErgebnisse);
             darstellung.FestlegungAuflösung();
-            darstellung.ElementeZeichnen();
+            darstellung.AlleElementeZeichnen();
             darstellung.KnotentemperaturZeichnen();
             knotenTemperaturAn = true;
         }

@@ -17,7 +17,7 @@
                    VerticalAlignment="Top" Width="160"/>
             <DataGrid
                 Name="KnotenverformungenGrid" Margin="5,30,0,0" Grid.Column="0" AlternatingRowBackground="Aqua"
-                Loaded="Knotenverformungen_Loaded" AutoGenerateColumns="False">
+                Loaded="Knotenverformungen_Loaded" SelectionChanged="KnotenZeileSelected" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Knoten"  Binding="{Binding Key}"/>
                     <DataGridTextColumn Header="ux" Binding="{Binding Value.Knotenfreiheitsgrade[0], StringFormat=N4}" />
@@ -31,8 +31,8 @@
             <Label x:Name="ElementEndkraefte" Content="Schnittkräfte an Elementanfang und -ende" HorizontalAlignment="Left" Margin="0,5,0,0" 
                    VerticalAlignment="Top" Width="240"/>
             <DataGrid
-                Name="ElementendkraefteGrid" Margin="5,30,0,0" AlternatingRowBackground="Aqua"
-                Loaded="Elementendkraefte_Loaded" AutoGenerateColumns="False">
+                Name="ElementendkraefteGrid" Margin="5,30,0,0" AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
+                Loaded="Elementendkraefte_Loaded" SelectionChanged="ElementZeileSelected">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Element"  Binding="{Binding ElementId}"/>
                     <DataGridTextColumn Header="Na" Binding="{Binding Na, StringFormat=N2}" />

@@ -19,7 +19,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
         private readonly FEModell modell;
         private bool elementTexteAn = true, knotenTexteAn = true,
                      verformungenAn, normalkräfteAn, querkräfteAn, momenteAn;
-        private readonly Darstellung darstellung;
+
+        public readonly Darstellung darstellung;
         private readonly List<Shape> hitList = new List<Shape>();
         private readonly List<TextBlock> hitTextBlock = new List<TextBlock>();
         private EllipseGeometry hitArea;

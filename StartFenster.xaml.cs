@@ -19,6 +19,10 @@ namespace FE_Berechnungen
         private Berechnung modellBerechnung;
         private OpenFileDialog dateiDialog;
         private string dateiPfad;
+        public static Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren tragwerksModell;
+        public static Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren statikErgebnisse;
+        public static Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren wärmeModell;
+        public static Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren wärmeErgebnisse;
 
         private string[] dateiZeilen;
         private bool wärmeDaten, tragwerksDaten, zeitintegrationDaten;
@@ -384,7 +388,7 @@ namespace FE_Berechnungen
         }
         private void WärmedatenVisualisieren(object sender, RoutedEventArgs e)
         {
-            var wärmeModell = new Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren(modell);
+            wärmeModell = new Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren(modell);
             wärmeModell.Show();
         }
         private void WärmedatenBerechnen(object sender, EventArgs e)
@@ -435,8 +439,8 @@ namespace FE_Berechnungen
                     modellBerechnung.LöseGleichungen();
                     berechnet = true;
                 }
-                var wärmeModell = new Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren(modell);
-                wärmeModell.Show();
+                var stationäreErgebnisse = new Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren(modell);
+                stationäreErgebnisse.Show();
             }
             else
             {
@@ -563,8 +567,8 @@ namespace FE_Berechnungen
         {
             if (zeitintegrationBerechnet)
             {
-                var wärmeModell = new Wärmeberechnung.Ergebnisse.InstationäreModellzuständeVisualisieren(modell);
-                wärmeModell.Show();
+                var modellzuständeVisualisieren = new Wärmeberechnung.Ergebnisse.InstationäreModellzuständeVisualisieren(modell);
+                modellzuständeVisualisieren.Show();
             }
             else
             {
@@ -824,10 +828,10 @@ namespace FE_Berechnungen
             var tragwerk = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkdatenAnzeigen(modell);
             tragwerk.Show();
         }
-        private void TragwerksdatenVisualisieren(object sender, RoutedEventArgs e)
+        public void TragwerksdatenVisualisieren(object sender, RoutedEventArgs e)
         {
-            var tragwerksmodell = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren(modell);
-            tragwerksmodell.Show();
+            tragwerksModell = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren(modell);
+            tragwerksModell.Show();
         }
         private void TragwerksdatenBerechnen(object sender, EventArgs e)
         {
@@ -869,7 +873,8 @@ namespace FE_Berechnungen
                 modellBerechnung.LöseGleichungen();
                 berechnet = true;
             }
-            _ = new Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren(modell);
+            statikErgebnisse = new Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren(modell);
+            statikErgebnisse.Show();
         }
         private void EigenlösungTragwerkBerechnen(object sender, RoutedEventArgs e)
         {

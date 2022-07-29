@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
 {
@@ -14,6 +16,8 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
     {
         private readonly FEModell modell;
         private string removeKey;
+        private Shape letztesElement;
+        private Shape letzterKnoten;
 
         public WärmedatenAnzeigen(FEModell modell)
         {
@@ -53,6 +57,15 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
             var cellInfo = KnotenGrid.SelectedCells[0];
             var knoten = (Knoten)cellInfo.Item;
             removeKey = knoten.Id;
+            if (letzterKnoten != null)
+            {
+                StartFenster.wärmeModell.VisualModel.Children.Remove(letzterKnoten);
+            }
+            letzterKnoten = StartFenster.wärmeModell.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        }
+        private void KeinKnotenSelected(object sender, RoutedEventArgs e)
+        {
+            StartFenster.wärmeModell.VisualModel.Children.Remove(letzterKnoten);
         }
 
         private void Elemente_Loaded(object sender, RoutedEventArgs e)
@@ -87,6 +100,16 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
             var cellInfo = ElementGrid.SelectedCells[0];
             var element = (AbstraktElement)cellInfo.Item;
             removeKey = element.ElementId;
+            if (letztesElement != null)
+            {
+                StartFenster.wärmeModell.VisualModel.Children.Remove(letztesElement);
+            }
+            letztesElement = StartFenster.wärmeModell.darstellung.ElementFillZeichnen((Abstrakt2D)element, 
+                Brushes.Black, Colors.Green, .2, 2);
+        }
+        private void KeinElementSelected(object sender, RoutedEventArgs e)
+        {
+            StartFenster.wärmeModell.VisualModel.Children.Remove(letztesElement);
         }
 
         private void Material_Loaded(object sender, RoutedEventArgs e)

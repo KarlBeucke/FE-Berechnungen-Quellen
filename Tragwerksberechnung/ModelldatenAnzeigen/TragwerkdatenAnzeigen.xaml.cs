@@ -9,6 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
 {
@@ -16,12 +18,16 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
     {
         private readonly FEModell modell;
         private string removeKey;
+        private Shape letztesElement;
+        private Shape letzterKnoten;
 
         public TragwerkdatenAnzeigen(FEModell feModell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             modell = feModell;
             InitializeComponent();
+            letzterKnoten = null;
+            letztesElement = null;
         }
 
         private void Knoten_Loaded(object sender, RoutedEventArgs e)
@@ -55,6 +61,16 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
             var cellInfo = KnotenGrid.SelectedCells[0];
             var knoten = (Knoten)cellInfo.Item;
             removeKey = knoten.Id;
+            if (letzterKnoten != null)
+            {
+                StartFenster.tragwerksModell.VisualModel.Children.Remove(letzterKnoten);
+            }
+            letzterKnoten =
+                StartFenster.tragwerksModell.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        }
+        private void KeinKnotenSelected(object sender, RoutedEventArgs e)
+        {
+            StartFenster.tragwerksModell.VisualModel.Children.Remove(letzterKnoten);
         }
 
         private void ElementeGrid_Loaded(object sender, RoutedEventArgs e)
@@ -87,6 +103,15 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
             var cellInfo = ElementGrid.SelectedCells[0];
             var element = (Abstrakt2D)cellInfo.Item;
             removeKey = element.ElementId;
+            if (letztesElement != null)
+            {
+                StartFenster.tragwerksModell.VisualModel.Children.Remove(letztesElement);
+            }
+            letztesElement = StartFenster.tragwerksModell.darstellung.ElementZeichnen(element, Brushes.Green, 5);
+        }
+        private void KeinElementSelected(object sender, RoutedEventArgs e)
+        {
+            StartFenster.tragwerksModell.VisualModel.Children.Remove(letztesElement);
         }
 
         private void Material_Loaded(object sender, RoutedEventArgs e)

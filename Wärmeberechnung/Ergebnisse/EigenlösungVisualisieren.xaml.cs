@@ -41,7 +41,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse
             darstellung.FestlegungAuflösung();
             maxY = darstellung.maxY;
             auflösung = darstellung.auflösung;
-            darstellung.ElementeZeichnen();
+            darstellung.AlleElementeZeichnen();
         }
 
         // Combobox event

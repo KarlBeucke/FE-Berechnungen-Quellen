@@ -24,6 +24,7 @@
             Margin="7,37,2,10" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
             AlternatingRowBackground="Aqua" Loaded="Knoten_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed" 
             MouseDoubleClick="NeuerKnoten" UnloadingRow="KnotenZeileLoeschen" SelectionChanged="KnotenZeileSelected"
+            LostFocus="KeinKnotenSelected"
             d:DataContext="{d:DesignData }">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Knoten" Binding="{Binding Id}"/>
@@ -38,9 +39,12 @@
         <DataGrid
             Name="ElementGrid"
             Margin="4,38,5,9" Width="290" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
-            AlternatingRowBackground="Aqua" AutoGenerateColumns="False" Loaded="Elemente_Loaded" CellEditEnding="Model_Changed" 
+            AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
+            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+            Loaded="Elemente_Loaded"
             MouseDoubleClick="NeuesElement" UnloadingRow="ElementZeileLoeschen" SelectionChanged="ElementZeileSelected"
-            d:DataContext="{d:DesignData }" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            LostFocus="KeinElementSelected" CellEditEnding="Model_Changed"
+            d:DataContext="{d:DesignData}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Element"  Binding="{Binding ElementId}"/>
                 <DataGridTextColumn Header="k1" Binding="{Binding KnotenIds[0]}"/>
@@ -88,8 +92,10 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Label x:Name="Einwirkungen" Content="Einwirkungen" HorizontalAlignment="Left" VerticalAlignment="Top"
+        <Label Content="Einwirkungen" HorizontalAlignment="Left" VerticalAlignment="Top"
                Margin="5,0,0,0" Width="180" Grid.Row="0" Grid.Column="3"/>
+        <Label Content="Knotentemperaturen" HorizontalAlignment="Left" VerticalAlignment="Top"
+               Margin="5,15,0,0" Width="180" Grid.Row="0" Grid.Column="3"/>
         <DataGrid
             Name="KnotenEinwirkungenGrid"
             Margin="2,37,5,187" Grid.Column="3" Grid.Row="0"
@@ -102,9 +108,12 @@
                 <DataGridTextColumn Header="Temperatur" Binding="{Binding Lastwert[0]}"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <Label Content="Linientemperaturen" HorizontalAlignment="Left" VerticalAlignment="Top"
+               Margin="5,0,0,0" Width="180" Grid.Row="1" Grid.Column="3"/>
         <DataGrid
             Name="LinienEinwirkungenGrid"
-            Margin="6,2,3,6" Width="194" Grid.Column="3"
+            Margin="6,25,3,6" Width="194" Grid.Column="3"
             AlternatingRowBackground="Aqua" Loaded="LinienEinwirkungen_Loaded" AutoGenerateColumns="False"
             MouseDoubleClick="NeueLinienlast" UnloadingRow="LinienlastZeileLoeschen" SelectionChanged="LinienlastZeileSelected" Grid.Row="1" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
@@ -115,9 +124,12 @@
                 <DataGridTextColumn Header="Te" Binding="{Binding Lastwerte[1]}"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <Label Content="Elementtemperaturen" HorizontalAlignment="Left" VerticalAlignment="Top"
+               Margin="5,0,0,0" Width="180" Grid.Row="2" Grid.Column="3"/>
         <DataGrid
             Name="ElementEinwirkungenGrid"
-            Margin="4,14,5,9" Grid.Column="3" Grid.Row="2"
+            Margin="4,25,5,9" Grid.Column="3" Grid.Row="2"
             AlternatingRowBackground="Aqua"
             Loaded="ElementEinwirkungen_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
             MouseDoubleClick="NeueElementlast" UnloadingRow="ElementlastZeileLoeschen" SelectionChanged="ElementlastlastZeileSelected">

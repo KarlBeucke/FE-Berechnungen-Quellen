@@ -25,7 +25,8 @@
             <DataGrid
                 Name="KnotenGrid" Margin="0,20,0,0" Grid.Column="0" AlternatingRowBackground="Aqua"
                 Loaded="Knoten_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed" 
-                MouseDoubleClick="NeuerKnoten" UnloadingRow="KnotenZeileLoeschen" SelectionChanged="KnotenZeileSelected">
+                MouseDoubleClick="NeuerKnoten" UnloadingRow="KnotenZeileLoeschen" SelectionChanged="KnotenZeileSelected" 
+                LostFocus="KeinKnotenSelected">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Knoten"  Binding="{Binding Id}"/>
                     <DataGridTextColumn Header="X" Binding="{Binding Koordinaten[0]}" />
@@ -40,7 +41,8 @@
             <DataGrid
                 Name="ElementGrid" HorizontalAlignment="Stretch" Width="227" Margin="0,20,0,1" AlternatingRowBackground="Aqua"
                 Loaded="ElementeGrid_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed" 
-                MouseDoubleClick="NeuesElement" UnloadingRow="ElementZeileLoeschen" SelectionChanged="ElementZeileSelected">
+                MouseDoubleClick="NeuesElement" UnloadingRow="ElementZeileLoeschen" SelectionChanged="ElementZeileSelected" 
+                LostFocus="KeinElementSelected">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID"  Binding="{Binding ElementId, StringFormat=N2}"/>
                     <DataGridTextColumn Header="k1" Binding="{Binding KnotenIds[0], StringFormat=N2}"/>

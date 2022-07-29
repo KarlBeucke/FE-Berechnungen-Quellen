@@ -15,7 +15,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
     public partial class TragwerkmodellVisualisieren
     {
         private readonly FEModell modell;
-        private readonly Darstellung darstellung;
+        public readonly Darstellung darstellung;
         private bool lastenAn = true, lagerAn = true, knotenTexteAn = true, elementTexteAn = true;
         //alle gefundenen "Shapes" werden in dieser Liste gesammelt
         private readonly List<Shape> hitList = new List<Shape>();
@@ -121,7 +121,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
                             if (path.Name == null) continue;
                             if (modell.Elemente.TryGetValue(path.Name, out var element))
                             {
-                                sb.Append("\nElement\t= " + element.ElementId);
+
+                                sb.Append("Element\t= " + element.ElementId);
                                 if (element is FederElement)
                                 {
                                     if (modell.Elemente.TryGetValue(element.ElementId, out var feder))
@@ -147,7 +148,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
                                     {
                                         sb.Append("\nFläche\t= " + querschnitt.QuerschnittsWerte[0]);
                                         if (querschnitt.QuerschnittsWerte.Length > 1)
-                                            sb.Append("\nIxx\t= " + querschnitt.QuerschnittsWerte[1].ToString("g3" + "\n"));
+                                            sb.Append("\nIxx\t= " + querschnitt.QuerschnittsWerte[1].ToString("g3"));
                                     }
                                 }
                             }
@@ -178,8 +179,6 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
                                     sb.Append("\nLastwert " + i + "\t= " + elementlast.Lastwerte[i]);
                                 }
                             }
-
-                            sb.Append("\n");
                         }
                         break;
                 }

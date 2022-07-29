@@ -91,6 +91,25 @@ namespace FE_Berechnungen.Wärmeberechnung
                 KnotenIDs.Add(id);
             }
         }
+        public Shape KnotenZeigen(Knoten feKnoten, Brush farbe, double wichte)
+        {
+            var punkt = TransformKnoten(feKnoten, auflösung, maxY);
+
+            var knotenZeigen = new GeometryGroup();
+            knotenZeigen.Children.Add(
+                new EllipseGeometry(new Point(punkt.X, punkt.Y), 20, 20)
+            );
+            Shape knotenPath = new Path()
+            {
+                Stroke = farbe,
+                StrokeThickness = wichte,
+                Data = knotenZeigen
+            };
+            SetLeft(knotenPath, RandLinks);
+            SetTop(knotenPath, RandOben);
+            visualErgebnisse.Children.Add(knotenPath);
+            return knotenPath;
+        }
         public void ElementTexte()
         {
             foreach (var item in modell.Elemente)
@@ -111,26 +130,46 @@ namespace FE_Berechnungen.Wärmeberechnung
             }
         }
 
-        public void ElementeZeichnen()
+        public void AlleElementeZeichnen()
         {
-            foreach (var path in from item in modell.Elemente
-                                 select item.Value into element
-                                 let pathGeometry = AktElementZeichnen(element)
-                                 select new Path()
-                                 {
-                                     Name = element.ElementId,
-                                     Stroke = Brushes.Black,
-                                     StrokeThickness = 1,
-                                     Data = pathGeometry
-                                 })
+            foreach (var item in modell.Elemente)
             {
-                // setz oben/links Position zum Zeichnen auf dem Canvas
-                SetLeft(path, RandLinks);
-                SetTop(path, RandOben);
-                visualErgebnisse.Children.Add(path);
+                ElementZeichnen(item.Value, Black, 2);
             }
         }
-        private PathGeometry AktElementZeichnen(AbstraktElement element)
+        private void ElementZeichnen(AbstraktElement element, Brush farbe, double wichte)
+        {
+            var pathGeometry = ElementUmrisse(element);
+            Shape elementPath = new Path()
+            {
+                Name = element.ElementId,
+                Stroke = farbe,
+                StrokeThickness = wichte,
+                Data = pathGeometry
+            };
+            SetLeft(elementPath, RandLinks);
+            SetTop(elementPath, RandOben);
+            visualErgebnisse.Children.Add(elementPath);
+        }
+        public Shape ElementFillZeichnen(AbstraktElement element, Brush umrissFarbe, Color füllFarbe, double transparenz, double wichte)
+        {
+            var pathGeometry = ElementUmrisse(element);
+            var füllung = new SolidColorBrush(füllFarbe) { Opacity = .2 };
+
+            Shape elementPath = new Path()
+            {
+                Name = element.ElementId,
+                Stroke = umrissFarbe,
+                StrokeThickness = wichte,
+                Fill= füllung,
+                Data = pathGeometry
+            };
+            SetLeft(elementPath, RandLinks);
+            SetTop(elementPath, RandOben);
+            visualErgebnisse.Children.Add(elementPath);
+            return elementPath;
+        }
+        private PathGeometry ElementUmrisse(AbstraktElement element)
         {
             var pathFigure = new PathFigure();
             var pathGeometry = new PathGeometry();
@@ -175,22 +214,8 @@ namespace FE_Berechnungen.Wärmeberechnung
             foreach (var item in modell.ElementLasten)
             {
                 if (modell.Elemente.TryGetValue(item.Value.ElementId, out var element)) { }
-                var pathGeometry = AktElementZeichnen((Abstrakt2D)element);
-
-                var mySolidColorBrush = new SolidColorBrush(Colors.Red) { Opacity = .2 };
-                var lastElement = new Path()
-                {
-                    Stroke = Black,
-                    StrokeThickness = 1,
-                    Fill = mySolidColorBrush,
-                    Data = pathGeometry
-                };
-                LastElemente.Add(lastElement);
-                // setz oben/links Position zum Zeichnen auf dem Canvas
-                SetLeft(lastElement, RandLinks);
-                SetTop(lastElement, RandOben);
-                // zeichne Shape
-                visualErgebnisse.Children.Add(lastElement);
+                var elementLast = ElementFillZeichnen((Abstrakt2D)element, Black, Colors.Red, .2, 1);
+                LastElemente.Add(elementLast);
             }
         }
         public void RandbedingungenZeichnen()
@@ -280,7 +305,7 @@ namespace FE_Berechnungen.Wärmeberechnung
             foreach (var item in modell.Elemente)
             {
                 aktElement = item.Value;
-                var pathGeometry = AktElementZeichnen((Abstrakt2D)aktElement);
+                var pathGeometry = ElementUmrisse((Abstrakt2D)aktElement);
                 //var elementTemperature = aktElement.KnotenIds.Where(knotenId
                 //    => modell.Knoten.TryGetValue(knotenId, out knoten)).Sum(knotenId => knoten.Knotenfreiheitsgrade[0]);
                 double elementTemperatur = 0;

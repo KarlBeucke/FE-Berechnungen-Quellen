@@ -16,7 +16,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
         private readonly FEModell modell;
         private bool knotenAn = true, elementeAn = true;
         private bool knotenLastAn, elementLastAn, randbedingungAn;
-        private readonly Darstellung darstellung;
+        public readonly Darstellung darstellung;
         private readonly List<Shape> hitList = new List<Shape>();
         private readonly List<TextBlock> hitTextBlock = new List<TextBlock>();
         private EllipseGeometry hitArea;
@@ -29,7 +29,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
             Show();
 
             darstellung = new Darstellung(feModell, VisualModel);
-            darstellung.ElementeZeichnen();
+            darstellung.AlleElementeZeichnen();
 
             // mit Knoten und Element Ids
             darstellung.KnotenTexte();

@@ -18,16 +18,20 @@ namespace FE_Berechnungen.Tragwerksberechnung
     {
         private readonly FEModell modell;
         private Knoten knoten;
-        private double screenH;
-        private double screenV;
-        private double minX, maxX, minY;
-        public double maxY;
         public double auflösung;
         private double auflösungH, auflösungV, lastAuflösung;
-        private const int RandOben = 60, RandLinks = 60;
+        public double maxY;
+        private double minX, maxX, minY;
         private double plazierungV, plazierungH;
+        private double screenH, screenV;
         public int überhöhungVerformung = 1;
         public int überhöhungRotation = 1;
+        private const int RandOben = 60, RandLinks = 60;
+        private const int MaxNormalkraftScreen = 30;
+        private const int MaxQuerkraftScreen = 30;
+        private const int MaxMomentScreen = 50;
+        private readonly Canvas visualErgebnisse;
+        public TextBlock maxMomentText;
 
         public List<object> ElementIDs { get; }
         public List<object> KnotenIDs { get; }
@@ -38,12 +42,6 @@ namespace FE_Berechnungen.Tragwerksberechnung
         public List<object> NormalkraftListe { get; }
         public List<object> QuerkraftListe { get; }
         public List<object> MomenteListe { get; }
-        public TextBlock maxMomentText;
-
-        private const int MaxNormalkraftScreen = 30;
-        private const int MaxQuerkraftScreen = 30;
-        private const int MaxMomentScreen = 50;
-        private readonly Canvas visualErgebnisse;
 
         public Darstellung(FEModell feModell, Canvas visual)
         {
@@ -111,54 +109,7 @@ namespace FE_Berechnungen.Tragwerksberechnung
 
             foreach (var item in modell.Elemente)
             {
-                var element = item.Value;
-                PathGeometry pathGeometry;
-
-                switch (element)
-                {
-                    // Federelement
-                    case FederElement _:
-                        {
-                            pathGeometry = FederelementZeichnen(element);
-                            break;
-                        }
-
-                    case Fachwerk _:
-                        {
-                            // Gelenke als Halbkreise an Knoten des Fachwerkelementes zeichnen
-                            pathGeometry = FachwerkelementZeichnen(element);
-                            break;
-                        }
-                    case Biegebalken _:
-                        {
-                            pathGeometry = BiegebalkenZeichnen(element);
-                            break;
-                        }
-
-                    case BiegebalkenGelenk _:
-                        {
-                            // Gelenk am Startknoten bzw. Endknoten des BiegebalkenGelenk zeichnen
-                            pathGeometry = BiegebalkenGelenkZeichnen(element);
-                            break;
-                        }
-
-                    // Elemente mit mehreren Knoten
-                    default:
-                        {
-                            pathGeometry = MultiKnotenElementZeichnen(element);
-                            break;
-                        }
-                }
-                Shape elementPath = new Path()
-                {
-                    Name = element.ElementId,
-                    Stroke = Black,
-                    StrokeThickness = 2,
-                    Data = pathGeometry
-                };
-                SetLeft(elementPath, RandLinks);
-                SetTop(elementPath, RandOben);
-                visualErgebnisse.Children.Add(elementPath);
+                ElementZeichnen(item.Value, Black, 2);
             }
 
             // Knotengelenke werden als EllipseGeometry der GeometryGroup tragwerk hinzugefügt
@@ -178,6 +129,77 @@ namespace FE_Berechnungen.Tragwerksberechnung
             SetLeft(tragwerkPath, RandLinks);
             SetTop(tragwerkPath, RandOben);
             visualErgebnisse.Children.Add(tragwerkPath);
+        }
+
+        public Shape KnotenZeigen(Knoten feKnoten, Brush farbe, double wichte)
+        {
+            var punkt = TransformKnoten(feKnoten, auflösung, maxY);
+
+            var knotenZeigen = new GeometryGroup();
+            knotenZeigen.Children.Add(
+                new EllipseGeometry(new Point(punkt.X, punkt.Y), 20, 20)
+            );
+            Shape knotenPath = new Path()
+            {
+                Stroke = farbe,
+                StrokeThickness = wichte,
+                Data = knotenZeigen
+            };
+            SetLeft(knotenPath, RandLinks);
+            SetTop(knotenPath, RandOben);
+            visualErgebnisse.Children.Add(knotenPath);
+            return knotenPath;
+        }
+        public Shape ElementZeichnen(AbstraktElement element, Brush farbe, double wichte)
+        {
+            PathGeometry pathGeometry;
+
+            switch (element)
+            {
+                // Federelement
+                case FederElement _:
+                {
+                    pathGeometry = FederelementZeichnen(element);
+                    break;
+                }
+
+                case Fachwerk _:
+                {
+                    // Gelenke als Halbkreise an Knoten des Fachwerkelementes zeichnen
+                    pathGeometry = FachwerkelementZeichnen(element);
+                    break;
+                }
+                case Biegebalken _:
+                {
+                    pathGeometry = BiegebalkenZeichnen(element);
+                    break;
+                }
+
+                case BiegebalkenGelenk _:
+                {
+                    // Gelenk am Startknoten bzw. Endknoten des BiegebalkenGelenk zeichnen
+                    pathGeometry = BiegebalkenGelenkZeichnen(element);
+                    break;
+                }
+
+                // Elemente mit mehreren Knoten
+                default:
+                {
+                    pathGeometry = MultiKnotenElementZeichnen(element);
+                    break;
+                }
+            }
+            Shape elementPath = new Path()
+            {
+                Name = element.ElementId,
+                Stroke = farbe,
+                StrokeThickness = wichte,
+                Data = pathGeometry
+            };
+            SetLeft(elementPath, RandLinks);
+            SetTop(elementPath, RandOben);
+            visualErgebnisse.Children.Add(elementPath);
+            return elementPath;
         }
         public void VerformteGeometrie()
         {
