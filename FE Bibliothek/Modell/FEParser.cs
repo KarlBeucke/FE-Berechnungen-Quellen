@@ -63,7 +63,7 @@
                             case 2:
                                 knotenId = substrings[0];
                                 koords[0] = double.Parse(substrings[1]);
-                                knotenKoords = new[] { koords[0]};
+                                knotenKoords = new[] { koords[0] };
                                 knoten = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, dimension);
                                 FeModell.Knoten.Add(knotenId, knoten);
                                 break;
@@ -103,14 +103,14 @@
                         else
                             throw new ParseAusnahme(i + 2 + ": Knotengruppe falscher Prefix");
                         zaehler = 0;
-                        while (zeilen[i+1].Length > 1)
+                        while (zeilen[i + 1].Length > 1)
                         {
                             substrings = zeilen[i + 1].Split(delimiters);
                             knotenKoords = new double[substrings.Length];
                             for (var k = 0; k < substrings.Length; k++)
                                 knotenKoords[k] = double.Parse(substrings[k]);
 
-                            knotenId = knotenPrefix + zaehler.ToString().PadLeft(2*substrings.Length, '0');
+                            knotenId = knotenPrefix + zaehler.ToString().PadLeft(2 * substrings.Length, '0');
                             var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
                             FeModell.Knoten.Add(knotenId, node);
                             zaehler++;
@@ -142,7 +142,7 @@
                                 for (var k = 0; k < nKnotenX; k++)
                                 {
                                     knotenId = knotenPrefix + k.ToString().PadLeft(2, '0');
-                                    knotenKoords = new[] { koords[0]};
+                                    knotenKoords = new[] { koords[0] };
                                     var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
                                     FeModell.Knoten.Add(knotenId, node);
                                     koords[0] += xIntervall;
@@ -246,7 +246,7 @@
                         for (var k = 0; k < substrings.Length; k++)
                             offset[k] = double.Parse(substrings[k]);
 
-                        substrings = zeilen[i+1].Split(delimiters);
+                        substrings = zeilen[i + 1].Split(delimiters);
                         string idX, idY;
                         double koord0, koord1;
                         switch (substrings.Length)
@@ -258,7 +258,7 @@
                                 {
                                     koords[0] = koord0 + offset[n];
                                     knotenId = knotenPrefix + n.ToString().PadLeft(2);
-                                    knotenKoords = new[] { koords[0]};
+                                    knotenKoords = new[] { koords[0] };
                                     var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
                                     FeModell.Knoten.Add(knotenId, node);
                                 }
@@ -314,7 +314,7 @@
                                 throw new ParseAusnahme(i + 1 + ": Variables Knotennetz");
                         }
 
-                        i+=2;
+                        i += 2;
                         if (zeilen[i] == string.Empty) break;
                     }
                     break;

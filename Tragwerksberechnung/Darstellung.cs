@@ -158,36 +158,36 @@ namespace FE_Berechnungen.Tragwerksberechnung
             {
                 // Federelement
                 case FederElement _:
-                {
-                    pathGeometry = FederelementZeichnen(element);
-                    break;
-                }
+                    {
+                        pathGeometry = FederelementZeichnen(element);
+                        break;
+                    }
 
                 case Fachwerk _:
-                {
-                    // Gelenke als Halbkreise an Knoten des Fachwerkelementes zeichnen
-                    pathGeometry = FachwerkelementZeichnen(element);
-                    break;
-                }
+                    {
+                        // Gelenke als Halbkreise an Knoten des Fachwerkelementes zeichnen
+                        pathGeometry = FachwerkelementZeichnen(element);
+                        break;
+                    }
                 case Biegebalken _:
-                {
-                    pathGeometry = BiegebalkenZeichnen(element);
-                    break;
-                }
+                    {
+                        pathGeometry = BiegebalkenZeichnen(element);
+                        break;
+                    }
 
                 case BiegebalkenGelenk _:
-                {
-                    // Gelenk am Startknoten bzw. Endknoten des BiegebalkenGelenk zeichnen
-                    pathGeometry = BiegebalkenGelenkZeichnen(element);
-                    break;
-                }
+                    {
+                        // Gelenk am Startknoten bzw. Endknoten des BiegebalkenGelenk zeichnen
+                        pathGeometry = BiegebalkenGelenkZeichnen(element);
+                        break;
+                    }
 
                 // Elemente mit mehreren Knoten
                 default:
-                {
-                    pathGeometry = MultiKnotenElementZeichnen(element);
-                    break;
-                }
+                    {
+                        pathGeometry = MultiKnotenElementZeichnen(element);
+                        break;
+                    }
             }
             Shape elementPath = new Path()
             {

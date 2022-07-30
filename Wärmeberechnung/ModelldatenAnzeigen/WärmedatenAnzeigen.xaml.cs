@@ -104,7 +104,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
             {
                 StartFenster.wärmeModell.VisualModel.Children.Remove(letztesElement);
             }
-            letztesElement = StartFenster.wärmeModell.darstellung.ElementFillZeichnen((Abstrakt2D)element, 
+            letztesElement = StartFenster.wärmeModell.darstellung.ElementFillZeichnen((Abstrakt2D)element,
                 Brushes.Black, Colors.Green, .2, 2);
         }
         private void KeinElementSelected(object sender, RoutedEventArgs e)

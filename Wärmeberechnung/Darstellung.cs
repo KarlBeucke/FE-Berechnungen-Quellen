@@ -161,7 +161,7 @@ namespace FE_Berechnungen.Wärmeberechnung
                 Name = element.ElementId,
                 Stroke = umrissFarbe,
                 StrokeThickness = wichte,
-                Fill= füllung,
+                Fill = füllung,
                 Data = pathGeometry
             };
             SetLeft(elementPath, RandLinks);
