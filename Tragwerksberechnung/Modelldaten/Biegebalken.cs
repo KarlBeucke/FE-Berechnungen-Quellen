@@ -11,7 +11,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten
         protected AbstraktMaterial material;
         private AbstraktElement element;
         protected Querschnitt querschnitt;
-        private readonly FEModell modell;
+        private readonly FeModell modell;
 
         private double[,] steifigkeitsMatrix = new double[6, 6];
         private readonly double[] massenMatrix = new double[6];
@@ -21,7 +21,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten
         //private readonly double gaussPoint = 1.0 / Math.Sqrt(3.0);
 
         // ... Konstruktor ........................................................
-        public Biegebalken(string[] eKnotenIds, string eQuerschnittId, string eMaterialId, FEModell feModell)
+        public Biegebalken(string[] eKnotenIds, string eQuerschnittId, string eMaterialId, FeModell feModell)
         {
             modell = feModell;
             KnotenIds = eKnotenIds;

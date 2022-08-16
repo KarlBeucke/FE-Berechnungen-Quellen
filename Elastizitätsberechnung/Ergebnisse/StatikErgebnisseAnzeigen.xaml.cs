@@ -9,9 +9,9 @@ namespace FE_Berechnungen.Elastizitätsberechnung.Ergebnisse
 
     public partial class StatikErgebnisseAnzeigen
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
 
-        public StatikErgebnisseAnzeigen(FEModell feModell)
+        public StatikErgebnisseAnzeigen(FeModell feModell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             modell = feModell;

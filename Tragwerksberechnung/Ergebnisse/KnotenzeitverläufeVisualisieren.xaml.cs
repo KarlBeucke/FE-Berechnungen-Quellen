@@ -13,7 +13,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
 {
     public partial class KnotenzeitverläufeVisualisieren
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private Knoten knoten;
         private readonly double dt;
         private double zeit;
@@ -30,7 +30,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
         private bool accXVerlauf, accYVerlauf;
         private TextBlock maximal;
 
-        public KnotenzeitverläufeVisualisieren(FEModell feModell)
+        public KnotenzeitverläufeVisualisieren(FeModell feModell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             modell = feModell;

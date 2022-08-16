@@ -13,17 +13,24 @@
                 </Grid.RowDefinitions>
                 <Label x:Name="Zeitschritt" Content="Modellzustand an festgelegtem Zeitschritt" Width="300" Grid.Column="0" Margin="10,0,0,0"
                        VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                <Label Content="Auswahl des Integrationszeit0" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top" Width="137" Height="25" />
-                <ComboBox Name="Zeitschrittauswahl" Grid.Column="0" Margin="151,28,0,10" Height="22" Width="100" HorizontalAlignment="Left"
+                <Label Content="Auswahl des Integrationszeit" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top" Width="164" Height="25" />
+                <ComboBox Name="Zeitschrittauswahl" Grid.Column="0" Margin="180,28,0,10" Height="22" Width="100" HorizontalAlignment="Left"
                           DropDownClosed="DropDownZeitschrittauswahlClosed" ItemStringFormat="N2"/>
-                <Button Content="Knotentemperaturen" Margin="300,30,0,10" Height="20" Width="120" 
+                <Button Content="Knotentemperaturen" Margin="342,30,0,10" Height="20" Width="120" 
                         HorizontalAlignment="Left" Click="BtnKnotenTemperaturen_Click"/>
-                <Button Content="Knotengradienten" Margin="450,30,0,10" Height="20" Width="108" 
+                <Button Content="Knotengradienten" Margin="492,30,0,10" Height="20" Width="108" 
                         HorizontalAlignment="Left" Click="BtnKnotenGradienten_Click"/>
-                <Button Content="Elementtemperaturen" Margin="594,30,0,10" Height="20" Width="123" 
+                <Button Content="Elementtemperaturen" Margin="632,30,0,10" Height="20" Width="123" 
                         HorizontalAlignment="Left" Click="BtnElementTemperaturen_Click"/>
             </Grid>
-            <Canvas x:Name="VisualErgebnisse" Height="690" Width="1000" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+            <Canvas x:Name="VisualErgebnisse" Height="690" Width="1000" ScrollViewer.CanContentScroll="True" 
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                    MouseLeftButtonDown="OnMouseLeftButtonDown"
+                    MouseRightButtonDown="OnMouseRightButtonDown">
+                <Popup x:Name="MyPopup" Placement="MousePoint">
+                    <TextBlock x:Name="MyPopupText" Background="LightBlue" Foreground="Blue" Padding="10"/>
+                </Popup>
+            </Canvas>
         </StackPanel>
     </ScrollViewer>
 </Window>

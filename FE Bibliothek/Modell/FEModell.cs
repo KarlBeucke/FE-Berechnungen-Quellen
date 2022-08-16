@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace FEBibliothek.Modell
 {
-    public class FEModell
+    public class FeModell
     {
         public string ModellId { get; set; }
         public int Raumdimension { get; set; }
-        public bool Gelöst { get; set; }
+        public int AnzahlKnotenfreiheitsgrade { get; set; }
         public bool Eigen { get; set; }
         public bool ZeitIntegration { get; set; }
 
@@ -26,10 +26,11 @@ namespace FEBibliothek.Modell
         public Dictionary<string, AbstraktZeitabhängigeElementLast> ZeitabhängigeElementLasten { get; set; }
         public Dictionary<string, AbstraktZeitabhängigeRandbedingung> ZeitabhängigeRandbedingung { get; set; }
 
-        public FEModell(string modellId, int raumdimension)
+        public FeModell(string modellId, int raumdimension, int anzahlKnotenfreiheitsgrade)
         {
-            Raumdimension = raumdimension;
             ModellId = modellId;
+            Raumdimension = raumdimension;
+            AnzahlKnotenfreiheitsgrade = anzahlKnotenfreiheitsgrade;
 
             Knoten = new Dictionary<string, Knoten>();
             Elemente = new Dictionary<string, AbstraktElement>();

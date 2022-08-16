@@ -16,7 +16,7 @@ namespace FE_Berechnungen.Tragwerksberechnung
 {
     public class Darstellung
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private Knoten knoten;
         public double auflösung;
         private double auflösungH, auflösungV, lastAuflösung;
@@ -43,7 +43,7 @@ namespace FE_Berechnungen.Tragwerksberechnung
         public List<object> QuerkraftListe { get; }
         public List<object> MomenteListe { get; }
 
-        public Darstellung(FEModell feModell, Canvas visual)
+        public Darstellung(FeModell feModell, Canvas visual)
         {
             modell = feModell;
             visualErgebnisse = visual;
@@ -68,37 +68,38 @@ namespace FE_Berechnungen.Tragwerksberechnung
             foreach (var item in modell.Knoten)
             {
                 x.Add(item.Value.Koordinaten[0]);
-                maxX = x.Max(); minX = x.Min();
                 y.Add(item.Value.Koordinaten[1]);
-                maxY = y.Max(); minY = y.Min();
             }
+            maxX = x.Max(); minX = x.Min();
+            maxY = y.Max(); minY = y.Min();
 
+            // vertikales Modell
             var delta = Math.Abs(maxX - minX);
             if (delta < 1)
             {
-                auflösungH = screenH - 5 * RandLinks;
+                auflösungH = screenH - 2 * RandLinks;
                 plazierungH = (int)(0.5 * screenH);
             }
             else
             {
-                auflösungH = (screenH - 5 * RandLinks) / delta;
+                auflösungH = (screenH - 2 * RandLinks) / delta;
+                plazierungH = RandLinks;
             }
-            //plazierungH = randLinks;
-            if (maxX < double.Epsilon) plazierungH = screenH / 2;
 
+            // horizontales Modell
             delta = Math.Abs(maxY - minY);
             if (delta < 1)
             {
-                auflösung = screenV - 5 * RandOben;
+                auflösung = screenV - 2 * RandOben;
                 plazierungV = (int)(0.5 * screenV);
             }
             else
             {
-                auflösung = (screenV - 5 * RandOben) / delta;
+                auflösung = (screenV - 2 * RandOben) / delta;
+                plazierungV = RandOben;
             }
             if (auflösungH < auflösung) auflösung = auflösungH;
-            //plazierungV = randOben;
-            if (maxY < double.Epsilon) plazierungV = screenV / 2;
+
         }
 
         public void UnverformteGeometrie()
@@ -126,8 +127,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                 StrokeThickness = 1,
                 Data = tragwerk
             };
-            SetLeft(tragwerkPath, RandLinks);
-            SetTop(tragwerkPath, RandOben);
+            SetLeft(tragwerkPath, plazierungH);
+            SetTop(tragwerkPath, plazierungV);
             visualErgebnisse.Children.Add(tragwerkPath);
         }
 
@@ -145,8 +146,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                 StrokeThickness = wichte,
                 Data = knotenZeigen
             };
-            SetLeft(knotenPath, RandLinks);
-            SetTop(knotenPath, RandOben);
+            SetLeft(knotenPath, plazierungH);
+            SetTop(knotenPath, plazierungV);
             visualErgebnisse.Children.Add(knotenPath);
             return knotenPath;
         }
@@ -196,8 +197,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                 StrokeThickness = wichte,
                 Data = pathGeometry
             };
-            SetLeft(elementPath, RandLinks);
-            SetTop(elementPath, RandOben);
+            SetLeft(elementPath, plazierungH);
+            SetTop(elementPath, plazierungV);
             visualErgebnisse.Children.Add(elementPath);
             return elementPath;
         }
@@ -337,8 +338,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                     Data = pathGeometry
                 };
 
-                SetLeft(path, RandLinks);
-                SetTop(path, RandOben);
+                SetLeft(path, plazierungH);
+                SetTop(path, plazierungV);
                 visualErgebnisse.Children.Add(path);
                 Verformungen.Add(path);
             }
@@ -559,8 +560,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                     Text = item.Key,
                     Foreground = Blue
                 };
-                SetTop(id, (-cg.Y + maxY) * auflösung + RandOben);
-                SetLeft(id, cg.X * auflösung + RandLinks);
+                SetTop(id, (-cg.Y + maxY) * auflösung + plazierungV);
+                SetLeft(id, cg.X * auflösung + plazierungH);
                 visualErgebnisse.Children.Add(id);
                 ElementIDs.Add(id);
             }
@@ -575,8 +576,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                     Text = item.Key,
                     Foreground = Red
                 };
-                SetTop(id, (-item.Value.Koordinaten[1] + maxY) * auflösung + RandOben);
-                SetLeft(id, item.Value.Koordinaten[0] * auflösung + RandLinks);
+                SetTop(id, (-item.Value.Koordinaten[1] + maxY) * auflösung + plazierungV);
+                SetLeft(id, item.Value.Koordinaten[0] * auflösung + plazierungH);
                 visualErgebnisse.Children.Add(id);
                 KnotenIDs.Add(id);
             }
@@ -622,8 +623,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                 };
                 LastVektoren.Add(path);
 
-                SetLeft(path, RandLinks);
-                SetTop(path, RandOben);
+                SetLeft(path, plazierungH);
+                SetTop(path, plazierungV);
                 visualErgebnisse.Children.Add(path);
             }
             foreach (var item in modell.PunktLasten)
@@ -638,8 +639,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                 };
                 LastVektoren.Add(path);
 
-                SetLeft(path, RandLinks);
-                SetTop(path, RandOben);
+                SetLeft(path, plazierungH);
+                SetTop(path, plazierungV);
                 visualErgebnisse.Children.Add(path);
             }
             foreach (var item in modell.ElementLasten)
@@ -660,8 +661,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                 };
                 LastVektoren.Add(path);
 
-                SetLeft(path, RandLinks);
-                SetTop(path, RandOben);
+                SetLeft(path, plazierungH);
+                SetTop(path, plazierungV);
                 visualErgebnisse.Children.Add(path);
             }
         }
@@ -900,8 +901,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                 LagerDarstellung.Add(path);
 
                 // setz oben/links Position zum Zeichnen auf dem Canvas
-                SetLeft(path, RandLinks);
-                SetTop(path, RandOben);
+                SetLeft(path, plazierungH);
+                SetTop(path, plazierungV);
                 // zeichne Shape
                 visualErgebnisse.Children.Add(path);
             }
@@ -1079,8 +1080,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                     StrokeThickness = 1,
                     Data = pathGeometry
                 };
-                SetLeft(path, RandLinks);
-                SetTop(path, RandOben);
+                SetLeft(path, plazierungH);
+                SetTop(path, plazierungV);
                 visualErgebnisse.Children.Add(path);
                 NormalkraftListe.Add(path);
             }
@@ -1159,7 +1160,7 @@ namespace FE_Berechnungen.Tragwerksberechnung
                         StrokeThickness = 1,
                         Data = pathGeometry
                     };
-                    SetLeft(path, RandLinks);
+                    SetLeft(path, plazierungH);
                     SetTop(path, plazierungV);
                     visualErgebnisse.Children.Add(path);
                     NormalkraftListe.Add(path);
@@ -1211,8 +1212,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                     StrokeThickness = 1,
                     Data = pathGeometry
                 };
-                SetLeft(path, RandLinks);
-                SetTop(path, RandOben);
+                SetLeft(path, plazierungH);
+                SetTop(path, plazierungV);
                 visualErgebnisse.Children.Add(path);
                 QuerkraftListe.Add(path);
             }
@@ -1273,8 +1274,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                         StrokeThickness = 1,
                         Data = pathGeometry
                     };
-                    SetLeft(path, RandLinks);
-                    SetTop(path, RandOben);
+                    SetLeft(path, plazierungH);
+                    SetTop(path, plazierungV);
                     visualErgebnisse.Children.Add(path);
                     QuerkraftListe.Add(path);
 
@@ -1304,8 +1305,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                         StrokeThickness = 1,
                         Data = pathGeometry
                     };
-                    SetLeft(path, RandLinks);
-                    SetTop(path, RandOben);
+                    SetLeft(path, plazierungH);
+                    SetTop(path, plazierungV);
                     visualErgebnisse.Children.Add(path);
                     QuerkraftListe.Add(path);
                 }
@@ -1360,8 +1361,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                         StrokeThickness = 1,
                         Data = pathGeometry
                     };
-                    SetLeft(path, RandLinks);
-                    SetTop(path, RandOben);
+                    SetLeft(path, plazierungH);
+                    SetTop(path, plazierungV);
                     visualErgebnisse.Children.Add(path);
                     QuerkraftListe.Add(path);
 
@@ -1391,8 +1392,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                         StrokeThickness = 1,
                         Data = pathGeometry
                     };
-                    SetLeft(path, RandLinks);
-                    SetTop(path, RandOben);
+                    SetLeft(path, plazierungH);
+                    SetTop(path, plazierungV);
                     visualErgebnisse.Children.Add(path);
                     QuerkraftListe.Add(path);
                 }
@@ -1449,8 +1450,8 @@ namespace FE_Berechnungen.Tragwerksberechnung
                     StrokeThickness = 1,
                     Data = pathGeometry
                 };
-                SetLeft(path, RandLinks);
-                SetTop(path, RandOben);
+                SetLeft(path, plazierungH);
+                SetTop(path, plazierungV);
                 visualErgebnisse.Children.Add(path);
                 MomenteListe.Add(path);
             }
@@ -1661,18 +1662,18 @@ namespace FE_Berechnungen.Tragwerksberechnung
                     StrokeThickness = 1,
                     Data = pathGeometry
                 };
-                SetLeft(path, RandLinks);
-                SetTop(path, RandOben);
+                SetLeft(path, plazierungH);
+                SetTop(path, plazierungV);
                 visualErgebnisse.Children.Add(path);
                 MomenteListe.Add(path);
 
                 maxMomentText = new TextBlock
                 {
                     FontSize = 12,
-                    Text = "Moment = " + mmax.ToString("N2"),
+                    Text = "Moment = " + mmax.ToString("G4"),
                     Foreground = Blue
                 };
-                SetTop(maxMomentText, maxPunkt.Y + RandOben);
+                SetTop(maxMomentText, maxPunkt.Y + plazierungV);
                 SetLeft(maxMomentText, maxPunkt.X);
                 visualErgebnisse.Children.Add(maxMomentText);
                 MaxTexte.Add(maxMomentText);
@@ -1699,7 +1700,7 @@ namespace FE_Berechnungen.Tragwerksberechnung
 
             // setz oben/links Position zum Zeichnen auf dem Canvas
             SetLeft(zeitverlauf, RandLinks);
-            SetTop(zeitverlauf, mY * auflösungV + RandOben);
+            SetTop(zeitverlauf, mY * auflösungV + plazierungV);
             // zeichne Shape
             visualErgebnisse.Children.Add(zeitverlauf);
         }
@@ -1715,9 +1716,9 @@ namespace FE_Berechnungen.Tragwerksberechnung
             {
                 Stroke = Black,
                 X1 = 0,
-                Y1 = max * auflösungV + RandOben,
-                X2 = (tmax - tmin) * auflösungH + RandLinks,
-                Y2 = max * auflösungV + RandOben,
+                Y1 = max * auflösungV + plazierungV,
+                X2 = (tmax - tmin) * auflösungH + plazierungH,
+                Y2 = max * auflösungV + plazierungV,
                 StrokeThickness = 2
             };
             _ = visualErgebnisse.Children.Add(xAchse);
@@ -1725,9 +1726,9 @@ namespace FE_Berechnungen.Tragwerksberechnung
             {
                 Stroke = Black,
                 X1 = RandLinks,
-                Y1 = max * auflösungV - min * auflösungV + 2 * RandOben,
+                Y1 = max * auflösungV - min * auflösungV + 2 * plazierungV,
                 X2 = RandLinks,
-                Y2 = RandOben,
+                Y2 = plazierungV,
                 StrokeThickness = 2
             };
             visualErgebnisse.Children.Add(yAchse);

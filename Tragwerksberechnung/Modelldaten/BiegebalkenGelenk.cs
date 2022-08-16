@@ -8,7 +8,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten
 {
     public class BiegebalkenGelenk : AbstraktBalken
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private AbstraktElement element;
         protected Knoten knoten;
         private readonly double[] massenMatrix = new double[6];
@@ -39,7 +39,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten
         private readonly int[] c;
         private readonly int[] l;
 
-        public BiegebalkenGelenk(string[] eKnotenIds, string eMaterialId, string eQuerschnittId, FEModell feModell, int typ)
+        public BiegebalkenGelenk(string[] eKnotenIds, string eMaterialId, string eQuerschnittId, FeModell feModell, int typ)
         {
             modell = feModell;
             ElementFreiheitsgrade = 3;

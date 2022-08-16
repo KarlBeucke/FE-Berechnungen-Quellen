@@ -14,7 +14,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
 {
     public partial class TragwerkmodellVisualisieren
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         public readonly Darstellung darstellung;
         private bool lastenAn = true, lagerAn = true, knotenTexteAn = true, elementTexteAn = true;
         //alle gefundenen "Shapes" werden in dieser Liste gesammelt
@@ -22,7 +22,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
         private readonly List<TextBlock> hitTextBlock = new List<TextBlock>();
         private EllipseGeometry hitArea;
 
-        public TragwerkmodellVisualisieren(FEModell feModell)
+        public TragwerkmodellVisualisieren(FeModell feModell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             InitializeComponent();

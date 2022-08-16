@@ -5,9 +5,9 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {
     public partial class NeueKnotenlast
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
 
-        public NeueKnotenlast(FEModell modell)
+        public NeueKnotenlast(FeModell modell)
         {
             this.modell = modell;
             InitializeComponent();

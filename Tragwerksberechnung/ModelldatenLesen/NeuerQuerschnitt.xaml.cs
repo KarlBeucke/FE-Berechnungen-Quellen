@@ -5,8 +5,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     public partial class NeuerQuerschnitt : Window
     {
-        private readonly FEModell modell;
-        public NeuerQuerschnitt(FEModell modell)
+        private readonly FeModell modell;
+        public NeuerQuerschnitt(FeModell modell)
         {
             InitializeComponent();
             this.modell = modell;

@@ -7,9 +7,9 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {
     public partial class ZeitNeueKnotentemperatur
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
 
-        public ZeitNeueKnotentemperatur(FEModell modell)
+        public ZeitNeueKnotentemperatur(FeModell modell)
         {
             InitializeComponent();
             this.modell = modell;

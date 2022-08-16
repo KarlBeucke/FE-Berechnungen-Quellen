@@ -5,7 +5,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     internal class MaterialParser
     {
-        private FEModell modell;
+        private FeModell modell;
         private readonly char[] delimiters = { '\t' };
         private string[] substrings;
         private string materialId;
@@ -15,7 +15,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         private double masse;
         private double kx, ky, kphi;
 
-        public void ParseMaterials(string[] lines, FEModell feModell)
+        public void ParseMaterials(string[] lines, FeModell feModell)
         {
             modell = feModell;
 

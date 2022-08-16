@@ -9,7 +9,7 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
         public AbstraktElement Element { get => element; set => element = value; }
         public bool InElementKoordinatenSystem { get; set; } = true;
 
-        public void SetzElementlastReferenzen(FEModell modell)
+        public void SetzElementlastReferenzen(FeModell modell)
         {
             if (modell.Elemente.TryGetValue(ElementId, out element)) { Element = element; }
 

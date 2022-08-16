@@ -13,8 +13,8 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten
         private Knoten knoten;
         public double[] SpezifischeWärmeMatrix { get; }
         private readonly double[] elementTemperaturen = new double[3];   // at element nodes
-        public FEModell Modell { get; }
-        public Element2D3(string[] eKnotens, string eMaterialId, FEModell feModell)
+        public FeModell Modell { get; }
+        public Element2D3(string[] eKnotens, string eMaterialId, FeModell feModell)
         {
             Modell = feModell;
             ElementFreiheitsgrade = 1;
@@ -24,7 +24,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten
             ElementMaterialId = eMaterialId;
             SpezifischeWärmeMatrix = new double[3];
         }
-        public Element2D3(string id, string[] eKnotens, string eMaterialId, FEModell feModell)
+        public Element2D3(string id, string[] eKnotens, string eMaterialId, FeModell feModell)
         {
             Modell = feModell;
             ElementId = id;

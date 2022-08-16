@@ -14,14 +14,14 @@ namespace FE_Berechnungen.Elastizitätsberechnung.Ergebnisse
 
     public partial class StatikErgebnisseVisualisieren
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private readonly Darstellung darstellung;
         private bool elementTexteAn = true, knotenTexteAn = true, verformungenAn, spannungenAn, reaktionenAn;
         private readonly List<object> hitList = new List<object>();
         private readonly List<TextBlock> hitTextBlock = new List<TextBlock>();
         private EllipseGeometry hitArea;
 
-        public StatikErgebnisseVisualisieren(FEModell feModell)
+        public StatikErgebnisseVisualisieren(FeModell feModell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             InitializeComponent();

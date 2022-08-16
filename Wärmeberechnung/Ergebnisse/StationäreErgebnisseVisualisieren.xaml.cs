@@ -14,14 +14,14 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse
 {
     public partial class StationäreErgebnisseVisualisieren
     {
-        private readonly FEModell modell;
-        private Darstellung darstellung;
+        private readonly FeModell modell;
+        public Darstellung darstellung;
         private bool knotenTemperaturAn, elementTemperaturAn, wärmeflussAn;
         private readonly List<object> hitList = new List<object>();
         private readonly List<TextBlock> hitTextBlock = new List<TextBlock>();
         private EllipseGeometry hitArea;
 
-        public StationäreErgebnisseVisualisieren(FEModell model)
+        public StationäreErgebnisseVisualisieren(FeModell model)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             modell = model;

@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace FEBibliothek.Werkzeuge
 {
-    public static class FEGeometrie
+    public static class FeGeometrie
     {
         public static List<Knoten> innenKnoten = new List<Knoten>();
 

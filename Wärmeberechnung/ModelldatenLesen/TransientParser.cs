@@ -9,7 +9,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
     {
         private string[] substrings;
         public bool zeitintegrationDaten;
-        public void ParseZeitintegration(string[] lines, FEModell feModell)
+        public void ParseZeitintegration(string[] lines, FeModell feModell)
         {
             var delimiters = new[] { '\t' };
 

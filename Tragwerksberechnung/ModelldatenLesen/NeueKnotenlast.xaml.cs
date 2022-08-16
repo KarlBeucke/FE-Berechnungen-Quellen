@@ -6,14 +6,14 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     public partial class NeueKnotenlast
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         public NeueKnotenlast()
         {
             InitializeComponent();
             Show();
         }
 
-        public NeueKnotenlast(FEModell modell, string last, string knoten,
+        public NeueKnotenlast(FeModell modell, string last, string knoten,
             double px, double py, double m)
         {
             InitializeComponent();

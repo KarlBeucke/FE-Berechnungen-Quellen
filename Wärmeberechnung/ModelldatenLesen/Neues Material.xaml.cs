@@ -5,9 +5,9 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {
     public partial class NeuesMaterial
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
 
-        public NeuesMaterial(FEModell modell)
+        public NeuesMaterial(FeModell modell)
         {
             this.modell = modell;
             InitializeComponent();

@@ -4,14 +4,14 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
     public class ElastizitätsParser : FeParser
     {
-        private FEModell modell;
+        private FeModell modell;
         private ElementParser parseElastizitätsElemente;
         private MaterialParser parseElastizitätsMaterial;
         private LastParser parseElastizitätsLasten;
         public static RandbedingungenParser parseElastizitätsRandbedingungen;
 
         // Eingabedaten für eine Elastizitätsberechnung aus Detei lesen
-        public void ParseElastizität(string[] lines, FEModell feModell)
+        public void ParseElastizität(string[] lines, FeModell feModell)
         {
             modell = feModell;
             parseElastizitätsElemente = new ElementParser();

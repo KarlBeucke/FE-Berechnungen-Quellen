@@ -6,8 +6,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 
     public partial class ZeitNeueKnotenanfangswerte
     {
-        private readonly FEModell modell;
-        public ZeitNeueKnotenanfangswerte(FEModell modell)
+        private readonly FeModell modell;
+        public ZeitNeueKnotenanfangswerte(FeModell modell)
         {
             InitializeComponent();
             this.modell = modell;

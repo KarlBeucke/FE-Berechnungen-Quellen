@@ -15,14 +15,14 @@ namespace FE_Berechnungen
     public partial class StartFenster
     {
         private FeParser parse;
-        private FEModell modell;
+        private FeModell modell;
         private Berechnung modellBerechnung;
         private OpenFileDialog dateiDialog;
         private string dateiPfad;
         public static Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren tragwerksModell;
         public static Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren statikErgebnisse;
         public static Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren wärmeModell;
-        public static Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren wärmeErgebnisse;
+        public static Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren stationäreErgebnisse;
 
         private string[] dateiZeilen;
         private bool wärmeDaten, tragwerksDaten, zeitintegrationDaten;
@@ -132,8 +132,8 @@ namespace FE_Berechnungen
                 modell.ModellId,
                 "\nRaumdimension"
             };
-            var numberNodalDOF = 1;
-            zeilen.Add(modell.Raumdimension + "\t" + numberNodalDOF + "\n");
+            var numberNodalDof = 1;
+            zeilen.Add(modell.Raumdimension + "\t" + numberNodalDof + "\n");
 
             // Knoten
             zeilen.Add("Knoten");
@@ -439,7 +439,7 @@ namespace FE_Berechnungen
                     modellBerechnung.LöseGleichungen();
                     berechnet = true;
                 }
-                var stationäreErgebnisse = new Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren(modell);
+                stationäreErgebnisse = new Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren(modell);
                 stationäreErgebnisse.Show();
             }
             else
@@ -556,7 +556,8 @@ namespace FE_Berechnungen
         {
             if (zeitintegrationBerechnet)
             {
-                _ = new Wärmeberechnung.Ergebnisse.InstationäreErgebnisseAnzeigen(modell);
+                var ergebnisse = new Wärmeberechnung.Ergebnisse.InstationäreErgebnisseAnzeigen(modell);
+                ergebnisse.Show();
             }
             else
             {
@@ -579,8 +580,9 @@ namespace FE_Berechnungen
         {
             if (zeitintegrationBerechnet)
             {
-                var wärmeModell = new Wärmeberechnung.Ergebnisse.KnotenzeitverläufeVisualisieren(modell);
-                wärmeModell.Show();
+                var knotenzeitverläufeVisualisieren = 
+                    new Wärmeberechnung.Ergebnisse.KnotenzeitverläufeVisualisieren(modell);
+                knotenzeitverläufeVisualisieren.Show();
             }
             else
             {
@@ -681,23 +683,31 @@ namespace FE_Berechnungen
             {
                 "ModellName",
                 modell.ModellId,
-                "\nRaumdimension"
+                "\nRaumdimension",
+                modell.Raumdimension + "\t" + modell.AnzahlKnotenfreiheitsgrade,
+                // Knoten
+                "\nKnoten"
             };
-            int knotenfreiheitsgrade = 3;
-            zeilen.Add(modell.Raumdimension + "\t" + knotenfreiheitsgrade);
 
-            // Knoten
-            zeilen.Add("\nKnoten");
-            if (modell.Raumdimension == 2)
+            switch (modell.Raumdimension)
             {
-                zeilen.AddRange(modell.Knoten.Select(knoten => knoten.Key
-                                                               + "\t" + knoten.Value.Koordinaten[0] + "\t" + knoten.Value.Koordinaten[1]));
+                case 1:
+                    zeilen.AddRange(modell.Knoten.Select(knoten => knoten.Key
+                                                                   + "\t" + knoten.Value.Koordinaten[0]));
+                    break;
+                case 2:
+                    zeilen.AddRange(modell.Knoten.Select(knoten => knoten.Key
+                                                                   + "\t" + knoten.Value.Koordinaten[0] + "\t" + knoten.Value.Koordinaten[1]));
+                    break;
+                case 3:
+                    zeilen.AddRange(modell.Knoten.Select(knoten => knoten.Key
+                                                                   + "\t" + knoten.Value.Koordinaten[0] + "\t" + knoten.Value.Koordinaten[1] + "\t" + knoten.Value.Koordinaten[2]));
+                    break;
+                default:
+                    _ = MessageBox.Show("falsche Raumdimension, muss 1, 2 oder 3 sein", "Structural Analysis");
+                    return;
             }
-            else
-            {
-                zeilen.AddRange(modell.Knoten.Select(knoten => knoten.Key
-                                                               + "\t" + knoten.Value.Koordinaten[0] + "\t" + knoten.Value.Koordinaten[1] + "\t" + knoten.Value.Koordinaten[2]));
-            }
+
 
             // Elemente
             var alleFachwerkelemente = new List<Fachwerk>();

@@ -7,9 +7,9 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     public partial class NeuesMaterial
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private AbstraktMaterial material;
-        public NeuesMaterial(FEModell modell)
+        public NeuesMaterial(FeModell modell)
         {
             InitializeComponent();
             this.modell = modell;

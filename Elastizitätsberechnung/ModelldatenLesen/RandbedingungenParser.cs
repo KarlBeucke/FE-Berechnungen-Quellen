@@ -7,14 +7,14 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
     public class RandbedingungenParser : FeParser
     {
-        private FEModell modell;
+        private FeModell modell;
         private string[] substrings;
         private string supportId;
         private string nodeId;
         private Lager lager;
         public readonly List<string> faces = new List<string>();
 
-        public void ParseRandbedingungen(string[] lines, FEModell feModell)
+        public void ParseRandbedingungen(string[] lines, FeModell feModell)
         {
             modell = feModell;
             ParseRandbedingungenKnoten(lines);

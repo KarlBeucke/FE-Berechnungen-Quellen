@@ -16,7 +16,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung
 {
     public class Darstellung
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private Knoten knoten;
         private readonly Canvas visualErgebnisse;
         private double screenH, screenV;
@@ -39,7 +39,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung
         public List<object> Reaktionen { get; }
         private double vektorskalierung;
 
-        public Darstellung(FEModell feModell, Canvas visual)
+        public Darstellung(FeModell feModell, Canvas visual)
         {
             modell = feModell;
             visualErgebnisse = visual;

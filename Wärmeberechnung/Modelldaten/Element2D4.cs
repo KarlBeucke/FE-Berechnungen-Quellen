@@ -12,10 +12,10 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten
         private readonly double[,] elementMatrix = new double[4, 4];
         public double[] SpecificHeatMatrix { get; }
         private readonly double[] elementTemperatures = new double[4];   // at element nodes
-        public FEModell Modell { get; set; }
+        public FeModell Modell { get; set; }
 
         // ....Constructor................................................
-        public Element2D4(string[] eNodes, string materialId, FEModell feModell)
+        public Element2D4(string[] eNodes, string materialId, FeModell feModell)
         {
             // The null-coalescing operator ?? returns the value of its left-hand operand
             // if it isn't null; otherwise, it evaluates the right-hand operand and returns
@@ -34,7 +34,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten
             ElementMaterialId = materialId ?? throw new ArgumentNullException(nameof(materialId));
             SpecificHeatMatrix = new double[4];
         }
-        public Element2D4(string id, string[] eNodes, string materialId, FEModell feModell)
+        public Element2D4(string id, string[] eNodes, string materialId, FeModell feModell)
         {
             if (eNodes == null) throw new ArgumentNullException(nameof(eNodes));
             Modell = feModell ?? throw new ArgumentNullException(nameof(feModell));

@@ -13,10 +13,10 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen
 {
     public partial class ElastizitätsdatenAnzeigen
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private string removeKey;
 
-        public ElastizitätsdatenAnzeigen(FEModell modell)
+        public ElastizitätsdatenAnzeigen(FeModell modell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             this.modell = modell;

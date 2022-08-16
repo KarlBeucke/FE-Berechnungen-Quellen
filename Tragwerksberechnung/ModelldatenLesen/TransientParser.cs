@@ -10,7 +10,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         private readonly char[] delimiters = { '\t', ';' };
         public bool zeitintegrationDaten;
 
-        public void ParseZeitintegration(string[] lines, FEModell feModell)
+        public void ParseZeitintegration(string[] lines, FeModell feModell)
         {
             var modell = feModell;
 

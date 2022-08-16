@@ -8,7 +8,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten
 {
     public class Fachwerk : AbstraktBalken
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private AbstraktElement element;
 
         private static double[,] _stiffnessMatrix = new double[4, 4];
@@ -16,7 +16,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten
         private static readonly double[] MassMatrix = new double[4];
 
         // ... Constructor ........................................................
-        public Fachwerk(string[] eKnotens, string querschnittId, string materialId, FEModell feModel)
+        public Fachwerk(string[] eKnotens, string querschnittId, string materialId, FeModell feModel)
         {
             modell = feModel;
             KnotenIds = eKnotens;

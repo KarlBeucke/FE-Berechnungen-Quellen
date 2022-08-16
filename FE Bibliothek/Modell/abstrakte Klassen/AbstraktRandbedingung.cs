@@ -9,7 +9,7 @@
         public double[] Vordefiniert { get; set; }
         public bool[] Festgehalten { get; set; }
 
-        public void SetzRandbedingungenReferenzen(FEModell modell)
+        public void SetzRandbedingungenReferenzen(FeModell modell)
         {
             if (KnotenId != null)
             {

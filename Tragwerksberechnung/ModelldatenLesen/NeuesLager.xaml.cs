@@ -6,15 +6,15 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     public partial class NeuesLager
     {
-        private readonly FEModell modell;
-        public NeuesLager(FEModell modell)
+        private readonly FeModell modell;
+        public NeuesLager(FeModell modell)
         {
             InitializeComponent();
             this.modell = modell;
             Show();
         }
 
-        public NeuesLager(FEModell modell, double vordefX, double vordefY, double vordefRot)
+        public NeuesLager(FeModell modell, double vordefX, double vordefY, double vordefRot)
         {
             InitializeComponent();
             this.modell = modell;

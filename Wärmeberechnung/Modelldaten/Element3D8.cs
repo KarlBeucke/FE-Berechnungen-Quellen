@@ -15,7 +15,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten
         private readonly double[,] e = new double[3, 3];               // material matrix
         public double[] WärmeStatus { get; set; }
         private AbstraktMaterial Material { get; set; }
-        private FEModell Modell { get; }
+        private FeModell Modell { get; }
 
         // constructor
         public Element3D8(string[] eKnotens, string materialId)
@@ -35,7 +35,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten
             }
             ElementMaterialId = materialId;
         }
-        public Element3D8(string id, string[] eKnotens, string materialId, FEModell feModell)
+        public Element3D8(string id, string[] eKnotens, string materialId, FeModell feModell)
         {
             Modell = feModell;
             WärmeStatus = new double[3];
@@ -106,7 +106,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten
             return elementWärmeStatus;
         }
 
-        public override double[] ComputeElementState(double z0, double z1, double z2)
+        public override double[] BerechneElementZustand(double z0, double z1, double z2)
         {
             for (var i = 0; i < 8; i++)
             {

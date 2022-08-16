@@ -1,5 +1,7 @@
-﻿using FEBibliothek.Modell;
+﻿using System;
+using FEBibliothek.Modell;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Markup;
 
@@ -7,15 +9,14 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
 {
     public partial class DynamischeErgebnisseAnzeigen
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private Knoten knoten;
 
         private double Dt { get; }
         private int NSteps { get; }
         private int Index { get; set; }
-        private string KnotenId { get; set; }
 
-        public DynamischeErgebnisseAnzeigen(FEModell feModell)
+        public DynamischeErgebnisseAnzeigen(FeModell feModell)
         {
             this.Language = XmlLanguage.GetLanguage("de-DE");
             modell = feModell;
@@ -46,8 +47,26 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
             }
             var knotenId = (string)Knotenauswahl.SelectedItem;
             if (modell.Knoten.TryGetValue(knotenId, out knoten)) { }
+            if (knoten != null)
+            {
+                var maxDeltaX = knoten.KnotenVariable[0].Max();
+                var maxDeltaXZeit = Dt * Array.IndexOf(knoten.KnotenVariable[0], maxDeltaX);
+                var maxDeltaY = knoten.KnotenVariable[1].Max();
+                var maxDeltaYZeit = Dt * Array.IndexOf(knoten.KnotenVariable[1], maxDeltaY);
+                var maxAccX = knoten.KnotenAbleitungen[0].Max();
+                var maxAccXZeit = Dt * Array.IndexOf(knoten.KnotenAbleitungen[0], maxAccX);
+                var maxAccY = knoten.KnotenAbleitungen[1].Max();
+                var maxAccYZeit = Dt * Array.IndexOf(knoten.KnotenAbleitungen[1], maxAccY);
+
+                var maxText = "max. DeltaX = " + maxDeltaX.ToString("G4") + ", t =" + maxDeltaXZeit.ToString("N2") 
+                                + ", max. DeltaY = " + maxDeltaY.ToString("G4") + ", t =" + maxDeltaYZeit.ToString("N2")
+                                + "\nmax. AccX = " + maxAccX.ToString("G4") + ", t =" + maxAccXZeit.ToString("N2")
+                                + ", max. AccY = " + maxAccY.ToString("G4") + ", t =" + maxAccYZeit.ToString("N2");
+                MaxText.Text = maxText;
+            }
+            KnotenverformungenAnzeigen();
         }
-        private void KnotenverformungenGrid_Anzeigen(object sender, RoutedEventArgs e)
+        private void KnotenverformungenAnzeigen()
         {
             if (knoten == null) { return; }
 

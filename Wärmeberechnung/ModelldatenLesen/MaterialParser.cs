@@ -5,14 +5,14 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {
     public class MaterialParser
     {
-        private FEModell modell;
+        private FeModell modell;
         private string[] substrings;
         private string materialId;
         private Material material;
         private double[] leitfähigkeit;
         private double dichteLeitfähigkeit;
 
-        public void ParseMaterials(string[] lines, FEModell feModell)
+        public void ParseMaterials(string[] lines, FeModell feModell)
         {
             modell = feModell;
             var delimiters = new[] { '\t' };

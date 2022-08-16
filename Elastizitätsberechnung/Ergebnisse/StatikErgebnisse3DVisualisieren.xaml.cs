@@ -35,7 +35,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.Ergebnisse
         private ModelVisual3D modelVisual;
         private readonly Darstellung3D darstellung3D;
 
-        public StatikErgebnisse3DVisualisieren(FEModell feModell)
+        public StatikErgebnisse3DVisualisieren(FeModell feModell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             darstellung3D = new Darstellung3D(feModell);

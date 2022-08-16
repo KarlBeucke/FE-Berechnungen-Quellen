@@ -16,7 +16,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
 {
     public partial class StatikErgebnisseVisualisieren
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private bool elementTexteAn = true, knotenTexteAn = true,
                      verformungenAn, normalkräfteAn, querkräfteAn, momenteAn;
 
@@ -25,7 +25,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
         private readonly List<TextBlock> hitTextBlock = new List<TextBlock>();
         private EllipseGeometry hitArea;
 
-        public StatikErgebnisseVisualisieren(FEModell feModell)
+        public StatikErgebnisseVisualisieren(FeModell feModell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             modell = feModell;
@@ -187,7 +187,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
                 // Bestimmung des maximalen Biegemoments
                 IEnumerable<AbstraktBalken> Beams()
                 {
-                    foreach (KeyValuePair<string, AbstraktElement> item in modell.Elemente)
+                    foreach (var item in modell.Elemente)
                     {
                         if (item.Value is AbstraktBalken beam) { yield return beam; }
                     }
@@ -303,7 +303,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
 
         private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // In der Methode "UnverformeteGeometrie" werden Elemente und Knoten als Path bzw TextBlock gezeichnet.
+            // In der Methode "UnverformteGeometrie" werden Elemente und Knoten als Path bzw TextBlock gezeichnet.
             // Deren IDs werden als "Name" an jeden einzelnen Path bzw als Text an jeden einzelnen TextBlock angehängt
             // Shapes und TextBlocks werden am Hit-Punkt gesammelt und nach ID ausgewertet
             hitList.Clear();
@@ -350,7 +350,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
 
             foreach (var item in hitTextBlock)
             {
-                if (item == null | item.Text == string.Empty) { continue; }
+                if (item == null) { continue; }
+                if (item.Text == string.Empty) { continue; }
 
                 sb.Clear();
                 MyPopup.IsOpen = true;

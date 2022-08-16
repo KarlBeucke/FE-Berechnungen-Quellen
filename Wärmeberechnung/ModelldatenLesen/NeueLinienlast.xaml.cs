@@ -5,9 +5,9 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {
     public partial class NeueLinienlast
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
 
-        public NeueLinienlast(FEModell modell)
+        public NeueLinienlast(FeModell modell)
         {
             this.modell = modell;
             InitializeComponent();

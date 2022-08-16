@@ -13,10 +13,10 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
         private string[] nodeIds;
         private AbstraktElement element;
         private string materialId;
-        private FEModell modell;
+        private FeModell modell;
 
         // parsing a new model to be read from file
-        public void ParseWärmeElements(string[] lines, FEModell feModell)
+        public void ParseWärmeElements(string[] lines, FeModell feModell)
         {
             modell = feModell;
             ParseElement2D2(lines);
@@ -42,7 +42,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
                         case 4:
                             {
                                 elementId = substrings[0];
-                                nodeIds = new string[8];
+                                nodeIds = new string[nodesPerElement];
                                 for (var k = 0; k < nodesPerElement; k++)
                                 {
                                     nodeIds[k] = substrings[k + 1];
@@ -78,7 +78,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
                         case 5:
                             {
                                 elementId = substrings[0];
-                                nodeIds = new string[8];
+                                nodeIds = new string[nodesPerElement];
                                 for (var k = 0; k < nodesPerElement; k++)
                                 {
                                     nodeIds[k] = substrings[k + 1];
@@ -115,7 +115,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
                         case 6:
                             {
                                 elementId = substrings[0];
-                                nodeIds = new string[8];
+                                nodeIds = new string[nodesPerElement];
                                 for (var k = 0; k < nodesPerElement; k++)
                                 {
                                     nodeIds[k] = substrings[k + 1];
@@ -152,7 +152,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
                         case 10:
                             {
                                 elementId = substrings[0];
-                                nodeIds = new string[8];
+                                nodeIds = new string[nodesPerElement];
                                 for (var k = 0; k < nodesPerElement; k++)
                                 {
                                     nodeIds[k] = substrings[k + 1];

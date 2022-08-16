@@ -5,14 +5,14 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     public class RandbedingungParser
     {
-        private FEModell modell;
+        private FeModell modell;
         private readonly char[] delimiters = { '\t' };
         private string[] substrings;
         private string lagerId;
         private string knotenId;
         private Lager lager;
 
-        public void ParseRandbedingungen(string[] lines, FEModell feModell)
+        public void ParseRandbedingungen(string[] lines, FeModell feModell)
         {
             modell = feModell;
 

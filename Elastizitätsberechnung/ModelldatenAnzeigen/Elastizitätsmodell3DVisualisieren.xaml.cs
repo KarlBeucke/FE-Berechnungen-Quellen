@@ -33,7 +33,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen
 
         private readonly Darstellung3D darstellung3D;
         private ModelVisual3D modelVisual;
-        public Elastizitätsmodell3DVisualisieren(FEModell feModell)
+        public Elastizitätsmodell3DVisualisieren(FeModell feModell)
         {
             darstellung3D = new Darstellung3D(feModell);
             InitializeComponent();

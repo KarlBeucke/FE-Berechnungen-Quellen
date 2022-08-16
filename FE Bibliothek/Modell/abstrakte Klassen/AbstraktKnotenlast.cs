@@ -7,7 +7,7 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
         public Knoten Knoten { get; set; }
         public int KnotenFreiheitsgrad { get; set; }
 
-        public void SetzReferenzen(FEModell modell)
+        public void SetzReferenzen(FeModell modell)
         {
             if (KnotenId == "boden") return;
             if (modell.Knoten.TryGetValue(KnotenId, out Knoten node)) { }

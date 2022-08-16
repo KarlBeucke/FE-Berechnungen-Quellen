@@ -13,7 +13,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
 {
     public partial class WärmemodellVisualisieren
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private bool knotenAn = true, elementeAn = true;
         private bool knotenLastAn, elementLastAn, randbedingungAn;
         public readonly Darstellung darstellung;
@@ -21,7 +21,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
         private readonly List<TextBlock> hitTextBlock = new List<TextBlock>();
         private EllipseGeometry hitArea;
 
-        public WärmemodellVisualisieren(FEModell feModell)
+        public WärmemodellVisualisieren(FeModell feModell)
         {
             modell = feModell;
             Language = XmlLanguage.GetLanguage("de-DE");
@@ -122,7 +122,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
 
                 if (modell.Elemente.TryGetValue(item.Name, out var element))
                 {
-                    sb.Append("\nElement\t= " + element.ElementId);
+                    sb.Append("Element\t= " + element.ElementId);
                     foreach (var id in element.KnotenIds)
                     {
                         if (modell.Knoten.TryGetValue(id, out var knoten))
@@ -144,9 +144,10 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
                 {
                     sb.Append("\nElementlast = " + last.Value.Lastwerte[0].ToString("g2") + ", "
                               + last.Value.Lastwerte[1].ToString("g2") + ", "
-                              + last.Value.Lastwerte[2].ToString("g2") + "\n");
+                              + last.Value.Lastwerte[2].ToString("g2"));
                 }
 
+                sb.Append("\n");
                 MyPopupText.Text = sb.ToString();
             }
 
@@ -178,7 +179,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
                     {
                         sb.Append("\nElementlast = " + last.Value.Lastwerte[0].ToString("g2") + ", "
                                   + last.Value.Lastwerte[1].ToString("g2") + ", "
-                                  + last.Value.Lastwerte[2].ToString("g2") + "\n");
+                                  + last.Value.Lastwerte[2].ToString("g2"));
                     }
 
                     MyPopupText.Text = sb.ToString();
@@ -201,7 +202,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
                     foreach (var rand in modell.Randbedingungen.
                         Where(rand => rand.Value.KnotenId == item.Text))
                     {
-                        sb.Append("\nvordefinierte Randtemperatur = " + rand.Value.Vordefiniert[0].ToString("g2") + "\n");
+                        sb.Append("\nvordefinierte Randtemperatur = " + rand.Value.Vordefiniert[0].ToString("g2"));
                     }
 
                     MyPopupText.Text = sb.ToString();

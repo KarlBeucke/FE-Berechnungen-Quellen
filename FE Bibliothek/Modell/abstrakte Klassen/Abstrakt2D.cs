@@ -6,7 +6,7 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
     {
         protected Querschnitt ElementQuerschnitt { get; set; }
 
-        public void SetzQuerschnittReferenzen(FEModell modell)
+        public void SetzQuerschnittReferenzen(FeModell modell)
         {
             // Elementquerschnitt für 2D Elemente
             if (ElementQuerschnittId == null) return;

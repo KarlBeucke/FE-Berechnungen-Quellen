@@ -7,7 +7,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     public partial class NeuePunktlast
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private AbstraktElementLast punktlast;
         public NeuePunktlast()
         {
@@ -15,7 +15,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             Show();
         }
 
-        public NeuePunktlast(FEModell modell, string last, string element, double px, double py, double offset)
+        public NeuePunktlast(FeModell modell, string last, string element, double px, double py, double offset)
         {
             InitializeComponent();
             this.modell = modell;

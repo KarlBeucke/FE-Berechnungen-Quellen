@@ -16,7 +16,7 @@ namespace FE_Berechnungen.Wärmeberechnung
 {
     public class Darstellung
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private AbstraktElement aktElement;
         private Knoten knoten;
         private readonly Canvas visualErgebnisse;
@@ -33,29 +33,29 @@ namespace FE_Berechnungen.Wärmeberechnung
         private const int RandOben = 60;
         private const int RandLinks = 60;
 
-        public List<object> ElementIDs { get; }
-        public List<object> KnotenIDs { get; }
-        public List<object> LastKnoten { get; }
-        public List<object> LastElemente { get; }
+        public List<TextBlock> ElementIDs { get; }
+        public List<TextBlock> KnotenIDs { get; }
+        public List<TextBlock> LastKnoten { get; }
+        public List<Shape> LastElemente { get; }
         public List<TextBlock> Knotentemperaturen { get; }
         public List<TextBlock> Knotengradienten { get; }
         public List<Shape> TemperaturElemente { get; }
-        public List<object> WärmeVektoren { get; }
-        public List<object> RandKnoten { get; }
+        public List<Shape> WärmeVektoren { get; }
+        public List<TextBlock> RandKnoten { get; }
 
-        public Darstellung(FEModell feModell, Canvas visual)
+        public Darstellung(FeModell feModell, Canvas visual)
         {
             modell = feModell;
             visualErgebnisse = visual;
-            KnotenIDs = new List<object>();
-            ElementIDs = new List<object>();
-            LastKnoten = new List<object>();
-            LastElemente = new List<object>();
+            KnotenIDs = new List<TextBlock>();
+            ElementIDs = new List<TextBlock>();
+            LastKnoten = new List<TextBlock>();
+            LastElemente = new List<Shape>();
             Knotentemperaturen = new List<TextBlock>();
             Knotengradienten = new List<TextBlock>();
             TemperaturElemente = new List<Shape>();
-            WärmeVektoren = new List<object>();
-            RandKnoten = new List<object>();
+            WärmeVektoren = new List<Shape>();
+            RandKnoten = new List<TextBlock>();
             FestlegungAuflösung();
         }
 
@@ -227,7 +227,7 @@ namespace FE_Berechnungen.Wärmeberechnung
                 if (modell.Knoten.TryGetValue(knotenId, out knoten)) { }
                 var fensterKnoten = TransformKnoten(knoten, auflösung, maxY);
 
-                var randWert = item.Value.Vordefiniert[0];
+                var randWert = item.Value.Knoten.Reaktionen[0];
                 var randbedingung = new TextBlock
                 {
                     Name = "Support",
@@ -268,32 +268,14 @@ namespace FE_Berechnungen.Wärmeberechnung
                 visualErgebnisse.Children.Add(id);
             }
         }
-        public void KnotentemperaturZeichnen(int index)
-        {
-            foreach (var item in modell.Knoten)
-            {
-                knoten = item.Value;
-                var temperatur = knoten.KnotenVariable[0][index].ToString("N2");
-                temp = knoten.Knotenfreiheitsgrade[0];
-                if (temp > maxTemp) maxTemp = temp;
-                if (temp < minTemp) minTemp = temp;
-                var fensterKnoten = TransformKnoten(knoten, auflösung, maxY);
 
-                var id = new TextBlock
-                {
-                    FontSize = 12,
-                    Background = LightGray,
-                    FontWeight = FontWeights.Bold,
-                    Text = temperatur
-                };
-                Knotentemperaturen.Add(id);
-                SetTop(id, fensterKnoten.Y + RandOben);
-                SetLeft(id, fensterKnoten.X + RandLinks);
-                visualErgebnisse.Children.Add(id);
-            }
-        }
         public void ElementTemperaturZeichnen()
         {
+            foreach (var path in TemperaturElemente)
+            {
+                visualErgebnisse.Children.Remove(path);
+            }
+            TemperaturElemente.Clear();
             foreach (var item in modell.Knoten)
             {
                 knoten = item.Value;
@@ -327,6 +309,7 @@ namespace FE_Berechnungen.Wärmeberechnung
                 {
                     Stroke = Blue,
                     StrokeThickness = 1,
+                    Opacity = 0.5,
                     Fill = myBrush,
                     Data = pathGeometry
                 };
@@ -364,6 +347,11 @@ namespace FE_Berechnungen.Wärmeberechnung
         }
         public void WärmeflussvektorenZeichnen()
         {
+            foreach (var path in WärmeVektoren)
+            {
+                visualErgebnisse.Children.Remove(path);
+            }
+            WärmeVektoren.Clear();
             double maxVektor = 0;
             foreach (var abstract2D in modell.Elemente.Select(item => (Abstrakt2D)item.Value))
             {
@@ -409,9 +397,10 @@ namespace FE_Berechnungen.Wärmeberechnung
                 visualErgebnisse.Children.Add(path);
             }
         }
+
         private PathGeometry WärmeflussElementmitte(AbstraktElement abstraktElement, double length)
         {
-            Abstrakt2D abstrakt2D = (Abstrakt2D)abstraktElement;
+            var abstrakt2D = (Abstrakt2D)abstraktElement;
             var pathFigure = new PathFigure();
             var pathGeometry = new PathGeometry();
             var cg = abstrakt2D.BerechneSchwerpunkt();
@@ -436,7 +425,6 @@ namespace FE_Berechnungen.Wärmeberechnung
                 StrokeThickness = 2
             };
             var stützpunkte = new PointCollection();
-
             var start = (int)Math.Round(tmin / dt);
             for (var i = 0; i < ordinaten.Length - start; i++)
             {

@@ -9,7 +9,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten
         public const int XFixed = 1, YFixed = 2, RFixed = 4,
                          XyFixed = 3, XrFixed = 5, YrFixed = 6,
                          XyrFixed = 7;
-        public Lager(string knotenId, int lagerTyp, IReadOnlyList<double> pre, FEModell modell)
+        public Lager(string knotenId, int lagerTyp, IReadOnlyList<double> pre, FeModell modell)
         {
             Typ = lagerTyp;
             if (modell.Knoten.TryGetValue(knotenId, out _)) { }

@@ -12,7 +12,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse
 {
     public partial class KnotenzeitverläufeVisualisieren
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private Knoten knoten;
         private readonly double dt;
         private double zeit;
@@ -28,7 +28,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse
         private bool temperaturVerlauf, wärmeflussVerlauf;
         private TextBlock maximal;
 
-        public KnotenzeitverläufeVisualisieren(FEModell modell)
+        public KnotenzeitverläufeVisualisieren(FeModell modell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             this.modell = modell;

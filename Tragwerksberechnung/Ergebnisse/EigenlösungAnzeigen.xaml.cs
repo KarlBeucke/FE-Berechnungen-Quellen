@@ -10,8 +10,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
 {
     public partial class EigenlösungAnzeigen
     {
-        private readonly FEModell modell;
-        public EigenlösungAnzeigen(FEModell modell)
+        private readonly FeModell modell;
+        public EigenlösungAnzeigen(FeModell modell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             this.modell = modell;

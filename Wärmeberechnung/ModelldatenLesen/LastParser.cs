@@ -5,7 +5,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {
     public class LastParser
     {
-        private FEModell modell;
+        private FeModell modell;
         private string[] substrings;
         private string loadId;
         private string elementId;
@@ -16,7 +16,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
         private ElementLast3 elementLast3;
         private ElementLast4 elementLast4;
 
-        public void ParseLasten(string[] lines, FEModell feModel)
+        public void ParseLasten(string[] lines, FeModell feModel)
         {
             modell = feModel;
             p = new double[8];

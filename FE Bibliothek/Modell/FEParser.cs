@@ -6,13 +6,14 @@
         private string[] substrings;
         private readonly char[] delimiters = { '\t' };
         private double[] koords;
-        private int anzahlKnotenfreiheitsgrade, zaehler;
+        private int zaehler;
         private double xIntervall, yIntervall, zIntervall;
         private int nKnotenX, nKnotenY, nKnotenZ;
 
         private string ModellId { get; set; }
-        public FEModell FeModell { get; private set; }
+        public FeModell FeModell { get; private set; }
         private int Raumdimension { get; set; }
+        private int AnzahlKnotenfreiheitsgrade { get; set; }
         public static string EingabeGefunden { get; set; }
 
         // parsing ein neues Modell aus einer Datei
@@ -32,11 +33,11 @@
                 if (zeilen[i] != "Raumdimension") continue;
                 substrings = zeilen[i + 1].Split(delimiters);
                 Raumdimension = int.Parse(substrings[0]);
-                anzahlKnotenfreiheitsgrade = int.Parse(substrings[1]);
-                EingabeGefunden += "\nRaumdimension = " + Raumdimension + ", Anzahl Knotenfreiheitsgrade = " + anzahlKnotenfreiheitsgrade;
+                AnzahlKnotenfreiheitsgrade = int.Parse(substrings[1]);
+                EingabeGefunden += "\nRaumdimension = " + Raumdimension + ", Anzahl Knotenfreiheitsgrade = " + AnzahlKnotenfreiheitsgrade;
                 break;
             }
-            FeModell = new FEModell(ModellId, Raumdimension);
+            FeModell = new FeModell(ModellId, Raumdimension, AnzahlKnotenfreiheitsgrade);
         }
 
         // KnotenId, Knotenkoordinaten
@@ -58,13 +59,13 @@
                         switch (substrings.Length)
                         {
                             case 1:
-                                anzahlKnotenfreiheitsgrade = int.Parse(substrings[0]);
+                                AnzahlKnotenfreiheitsgrade = int.Parse(substrings[0]);
                                 break;
                             case 2:
                                 knotenId = substrings[0];
                                 koords[0] = double.Parse(substrings[1]);
                                 knotenKoords = new[] { koords[0] };
-                                knoten = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, dimension);
+                                knoten = new Knoten(knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, dimension);
                                 FeModell.Knoten.Add(knotenId, knoten);
                                 break;
                             case 3:
@@ -72,7 +73,7 @@
                                 koords[0] = double.Parse(substrings[1]);
                                 koords[1] = double.Parse(substrings[2]);
                                 knotenKoords = new[] { koords[0], koords[1] };
-                                knoten = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, dimension);
+                                knoten = new Knoten(knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, dimension);
                                 FeModell.Knoten.Add(knotenId, knoten);
                                 break;
                             case 4:
@@ -81,7 +82,7 @@
                                 koords[1] = double.Parse(substrings[2]);
                                 koords[2] = double.Parse(substrings[3]);
                                 knotenKoords = new[] { koords[0], koords[1], koords[2] };
-                                knoten = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, dimension);
+                                knoten = new Knoten(knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, dimension);
                                 FeModell.Knoten.Add(knotenId, knoten);
                                 break;
                             default:
@@ -111,7 +112,7 @@
                                 knotenKoords[k] = double.Parse(substrings[k]);
 
                             knotenId = knotenPrefix + zaehler.ToString().PadLeft(2 * substrings.Length, '0');
-                            var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
+                            var node = new Knoten(knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, Raumdimension);
                             FeModell.Knoten.Add(knotenId, node);
                             zaehler++;
                             i++;
@@ -143,7 +144,7 @@
                                 {
                                     knotenId = knotenPrefix + k.ToString().PadLeft(2, '0');
                                     knotenKoords = new[] { koords[0] };
-                                    var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
+                                    var node = new Knoten(knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, Raumdimension);
                                     FeModell.Knoten.Add(knotenId, node);
                                     koords[0] += xIntervall;
                                 }
@@ -170,7 +171,7 @@
                                         var idX = l.ToString().PadLeft(2, '0');
                                         knotenId = knotenPrefix + idX + idY;
                                         knotenKoords = new[] { koords[0], koords[1] };
-                                        var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade,
+                                        var node = new Knoten(knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade,
                                             Raumdimension);
                                         FeModell.Knoten.Add(knotenId, node);
                                         koords[0] += xIntervall;
@@ -208,7 +209,7 @@
                                             var idX = m.ToString().PadLeft(2, '0');
                                             knotenId = knotenPrefix + idX + idY + idZ;
                                             knotenKoords = new[] { koords[0], koords[1], koords[2] };
-                                            var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade,
+                                            var node = new Knoten(knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade,
                                                 Raumdimension);
                                             FeModell.Knoten.Add(knotenId, node);
                                             koords[0] += xIntervall;
@@ -259,7 +260,7 @@
                                     koords[0] = koord0 + offset[n];
                                     knotenId = knotenPrefix + n.ToString().PadLeft(2);
                                     knotenKoords = new[] { koords[0] };
-                                    var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
+                                    var node = new Knoten(knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, Raumdimension);
                                     FeModell.Knoten.Add(knotenId, node);
                                 }
                                 break;
@@ -277,7 +278,7 @@
                                         koords[0] = koord0 + offset[m];
                                         knotenId = knotenPrefix + idX + idY;
                                         knotenKoords = new[] { koords[0], koords[1] };
-                                        var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
+                                        var node = new Knoten(knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, Raumdimension);
                                         FeModell.Knoten.Add(knotenId, node);
                                     }
                                 }
@@ -304,7 +305,7 @@
                                             koords[0] = koord0 + offset[k];
                                             knotenId = knotenPrefix + idX + idY + idZ;
                                             knotenKoords = new[] { koords[0], koords[1], koords[2] };
-                                            var node = new Knoten(knotenId, knotenKoords, anzahlKnotenfreiheitsgrade, Raumdimension);
+                                            var node = new Knoten(knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, Raumdimension);
                                             FeModell.Knoten.Add(knotenId, node);
                                         }
                                     }

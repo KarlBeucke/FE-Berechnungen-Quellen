@@ -11,11 +11,11 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
 {
     public partial class InstationäreDatenAnzeigen
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private string removeKey;
         private int removeIndex;
 
-        public InstationäreDatenAnzeigen(FEModell modell)
+        public InstationäreDatenAnzeigen(FeModell modell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             this.modell = modell;

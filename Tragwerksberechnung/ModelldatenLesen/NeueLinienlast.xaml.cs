@@ -8,14 +8,14 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 
     public partial class NeueLinienlast
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private AbstraktLinienlast linienlast;
         public NeueLinienlast()
         {
             InitializeComponent();
             Show();
         }
-        public NeueLinienlast(FEModell modell, string last, string element,
+        public NeueLinienlast(FeModell modell, string last, string element,
             double pxa, double pya, double pxb, double pyb, string inElement)
         {
             InitializeComponent();

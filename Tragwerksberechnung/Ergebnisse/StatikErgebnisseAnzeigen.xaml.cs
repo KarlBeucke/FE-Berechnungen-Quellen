@@ -5,15 +5,16 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
 {
     public partial class StatikErgebnisseAnzeigen
     {
-        private readonly FEModell modell;
-        private AbstraktElement letztesElement;
-        private Knoten letzterKnoten;
-        public StatikErgebnisseAnzeigen(FEModell feModell)
+        private readonly FeModell modell;
+        private Shape letztesElement;
+        private Shape letzterKnoten;
+        public StatikErgebnisseAnzeigen(FeModell feModell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             modell = feModell;
@@ -32,10 +33,14 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
             var knoten = cell.Value;
             if (letzterKnoten != null)
             {
-                StartFenster.statikErgebnisse.darstellung.KnotenZeigen(letzterKnoten, Brushes.White, 2);
+                StartFenster.statikErgebnisse.VisualErgebnisse.Children.Remove(letzterKnoten);
             }
-            StartFenster.statikErgebnisse.darstellung.KnotenZeigen(knoten, Brushes.Red, 1);
-            letzterKnoten = knoten;
+            letzterKnoten = StartFenster.statikErgebnisse.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        }
+        //LostFocus
+        private void KeinKnotenSelected(object sender, RoutedEventArgs e)
+        {
+            StartFenster.statikErgebnisse.VisualErgebnisse.Children.Remove(letzterKnoten);
         }
 
         private void Elementendkraefte_Loaded(object sender, RoutedEventArgs e)
@@ -57,13 +62,16 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
             var cellInfo = ElementendkraefteGrid.SelectedCells[0];
             var stabendKräfte = (Stabendkräfte)cellInfo.Item;
             if (!modell.Elemente.TryGetValue(stabendKräfte.ElementId, out var element)) return;
-            StartFenster.statikErgebnisse.darstellung.ElementZeichnen(element, Brushes.Red, 5);
             if (letztesElement != null)
             {
-                StartFenster.statikErgebnisse.darstellung.ElementZeichnen(letztesElement, Brushes.White, 5);
-                StartFenster.statikErgebnisse.darstellung.ElementZeichnen(letztesElement, Brushes.Black, 2);
+                StartFenster.statikErgebnisse.VisualErgebnisse.Children.Remove(letztesElement);
             }
-            letztesElement = element;
+            letztesElement = StartFenster.statikErgebnisse.darstellung.ElementZeichnen(element, Brushes.Green, 5);
+        }
+        //LostFocus
+        private void KeinElementSelected(object sender, RoutedEventArgs e)
+        {
+            StartFenster.statikErgebnisse.VisualErgebnisse.Children.Remove(letztesElement);
         }
 
         private void Lagerreaktionen_Loaded(object sender, RoutedEventArgs e)

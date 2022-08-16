@@ -5,7 +5,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
     public class MaterialParser
     {
-        private FEModell modell;
+        private FeModell modell;
         private string[] substrings;
         private string materialId;
         private Material material;
@@ -14,7 +14,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
         public static double GModul { get; set; }
         public static double Poisson { get; set; }
 
-        public void ParseMaterials(string[] lines, FEModell feModell)
+        public void ParseMaterials(string[] lines, FeModell feModell)
         {
             modell = feModell;
             var delimiters = new[] { '\t' };

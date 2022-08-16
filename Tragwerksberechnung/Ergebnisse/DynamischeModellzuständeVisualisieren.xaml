@@ -41,8 +41,8 @@
                         MaxWidth="200" HorizontalAlignment="Right" Width="149">Überhöhung Verschiebung</Button>
                 <TextBox Name="Verschiebung" Text="1" Grid.Column="7" HorizontalAlignment="Right" 
                          Width="40" Margin="0,26,-80,11" LostFocus="BtnVerschiebung_Click"/>
-                <TextBox Name="AktuellerZeitschritt" Grid.Column="0" HorizontalAlignment="Right"
-                         Margin="0,82,35.8,-41" Width="209" BorderThickness="0"/>
+                <TextBox Name="AktuellerZeitschritt" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                         Margin="10,95,0,-50" Width="534" Grid.ColumnSpan="4" Grid.Column="0" BorderThickness="0,0,0,0" />
             </Grid>
             <Canvas x:Name="VisualErgebnisse" Height="660" Width="1200" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
         </StackPanel>

@@ -12,10 +12,10 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
         private string elementId;
         private string[] nodeIds;
         private AbstraktElement element;
-        private FEModell modell;
+        private FeModell modell;
 
         // parsing a new model to be read from file
-        public void ParseElements(string[] lines, FEModell feModell)
+        public void ParseElements(string[] lines, FeModell feModell)
         {
             modell = feModell;
             ParseElement2D3(lines);

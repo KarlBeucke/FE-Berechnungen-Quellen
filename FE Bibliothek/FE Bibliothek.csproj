@@ -66,7 +66,7 @@
     <Compile Include="Modell\BerechnungAusnahme.cs" />
     <Compile Include="Modell\ModaleWerte.cs" />
     <Compile Include="Modell\Eigenzustände.cs" />
-    <Compile Include="Modell\FEModell.cs" />
+    <Compile Include="Modell\FeModell.cs" />
     <Compile Include="Modell\FEParser.cs" />
     <Compile Include="Modell\Gleichungen.cs" />
     <Compile Include="Modell\Knoten.cs" />

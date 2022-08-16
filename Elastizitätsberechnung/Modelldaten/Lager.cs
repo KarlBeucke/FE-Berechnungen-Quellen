@@ -14,7 +14,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten
         public const int XFixed = 1, YFixed = 2, ZFixed = 4;
         private const int XYFixed = 3, XZFixed = 5, YZFixed = 6, XYZFixed = 7;
 
-        public Lager(string knotenId, string face, int supportTyp, IReadOnlyList<double> pre, FEModell modell)
+        public Lager(string knotenId, string face, int supportTyp, IReadOnlyList<double> pre, FeModell modell)
         {
             this.face = face;
             int ndof;

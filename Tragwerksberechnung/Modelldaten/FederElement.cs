@@ -6,13 +6,13 @@ namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten
 {
     public class FederElement : Abstrakt2D
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private Knoten node;
 
         private readonly double[,] stiffnessMatrix = new double[3, 3];
 
         // ... Constructor ........................................................
-        public FederElement(string[] springKnoten, string eMaterialId, FEModell feModel)
+        public FederElement(string[] springKnoten, string eMaterialId, FeModell feModel)
         {
             modell = feModel;
             KnotenIds = springKnoten;

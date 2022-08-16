@@ -17,7 +17,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
 {
     public partial class EigenlösungVisualisieren
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private Knoten knoten;
         private int index;
         public Darstellung darstellung;
@@ -31,7 +31,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
         public List<object> Eigenfrequenzen { get; set; }
         private double eigenformSkalierung;
 
-        public EigenlösungVisualisieren(FEModell feModel)
+        public EigenlösungVisualisieren(FeModell feModel)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             modell = feModel;

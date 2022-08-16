@@ -11,7 +11,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung
 {
     public class Darstellung3D
     {
-        public readonly FEModell modell;
+        public readonly FeModell modell;
         private GeometryModel3D oberflächenModell;
         private GeometryModel3D drahtModell;
         private GeometryModel3D randbedingungenModell;
@@ -40,7 +40,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung
         // Erzeugung eines Dictionary, um Dreieckspunkte effizient zu finden
         private readonly Dictionary<Point3D, int> punktDictionary = new Dictionary<Point3D, int>();
 
-        public Darstellung3D(FEModell feModell)
+        public Darstellung3D(FeModell feModell)
         {
             modell = feModell;
 

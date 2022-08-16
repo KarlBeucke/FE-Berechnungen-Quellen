@@ -9,7 +9,7 @@ namespace FE_Berechnungen.Dateieingabe
         public ModelldatenEditieren()
         {
             InitializeComponent();
-            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Eingabedateien (*.inp)|*.*" };
+            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Eingabedateien (*.inp)|*.inp" };
             if (openFileDialog.ShowDialog() == true)
                 txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
         }
@@ -20,13 +20,13 @@ namespace FE_Berechnungen.Dateieingabe
         }
         private void BtnOpenFileClick(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Eingabedateien (*.inp)|*.*" };
+            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Eingabedateien (*.inp)|*.inp" };
             if (openFileDialog.ShowDialog() == true)
                 txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
         }
         private void BtnSaveFile_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = "Eingabedateien (*.inp)|*.*" };
+            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = "Eingabedateien (*.inp)|*.inp" };
             if (saveFileDialog.ShowDialog() == true)
                 File.WriteAllText(saveFileDialog.FileName, txtEditor.Text);
         }

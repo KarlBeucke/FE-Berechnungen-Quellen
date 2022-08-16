@@ -7,7 +7,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     internal class LastParser
     {
-        private FEModell modell;
+        private FeModell modell;
         private string[] substrings;
         private readonly char[] delimiters = { '\t' };
 
@@ -20,7 +20,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         private double offset;
         private bool inElementCoordinateSystem;
 
-        public void ParseLasten(string[] lines, FEModell feModel)
+        public void ParseLasten(string[] lines, FeModell feModel)
         {
             modell = feModel;
 

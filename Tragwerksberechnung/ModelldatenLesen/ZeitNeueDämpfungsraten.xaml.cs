@@ -5,8 +5,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     public partial class ZeitNeueDämpfungsraten
     {
-        private readonly FEModell modell;
-        public ZeitNeueDämpfungsraten(FEModell modell)
+        private readonly FeModell modell;
+        public ZeitNeueDämpfungsraten(FeModell modell)
         {
             InitializeComponent();
             this.modell = modell;

@@ -14,12 +14,12 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
 {
     public partial class WärmedatenAnzeigen
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private string removeKey;
         private Shape letztesElement;
         private Shape letzterKnoten;
 
-        public WärmedatenAnzeigen(FEModell modell)
+        public WärmedatenAnzeigen(FeModell modell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             this.modell = modell;
@@ -63,6 +63,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen
             }
             letzterKnoten = StartFenster.wärmeModell.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
         }
+        //LostFocus
         private void KeinKnotenSelected(object sender, RoutedEventArgs e)
         {
             StartFenster.wärmeModell.VisualModel.Children.Remove(letzterKnoten);

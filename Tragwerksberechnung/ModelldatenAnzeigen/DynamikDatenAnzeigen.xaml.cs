@@ -12,11 +12,11 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
 {
     public partial class DynamikDatenAnzeigen
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private string removeKey;
         private int removeIndex;
 
-        public DynamikDatenAnzeigen(FEModell feModell)
+        public DynamikDatenAnzeigen(FeModell feModell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             modell = feModell;

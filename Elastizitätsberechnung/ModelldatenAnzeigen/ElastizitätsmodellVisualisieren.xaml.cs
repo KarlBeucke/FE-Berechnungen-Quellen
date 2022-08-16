@@ -13,14 +13,14 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen
 
     public partial class ElastizitätsmodellVisualisieren
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private readonly Darstellung darstellung;
         private bool lastenAn = true, lagerAn = true, knotenTexteAn = true, elementTexteAn = true;
         private readonly List<Shape> hitList = new List<Shape>();
         private readonly List<TextBlock> hitTextBlock = new List<TextBlock>();
         private EllipseGeometry hitArea;
 
-        public ElastizitätsmodellVisualisieren(FEModell feModell)
+        public ElastizitätsmodellVisualisieren(FeModell feModell)
         {
             modell = feModell;
             InitializeComponent();

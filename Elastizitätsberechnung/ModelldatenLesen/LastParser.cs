@@ -5,7 +5,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
     public class LastParser
     {
-        private FEModell modell;
+        private FeModell modell;
         private string[] substrings;
         private readonly char[] delimiters = { '\t' };
 
@@ -16,7 +16,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 
         public static double[] NodeLoad { get; set; }
 
-        public void ParseLasten(string[] lines, FEModell feModel)
+        public void ParseLasten(string[] lines, FeModell feModel)
         {
 
             for (var i = 0; i < lines.Length; i++)

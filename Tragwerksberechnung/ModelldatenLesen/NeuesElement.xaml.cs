@@ -6,8 +6,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     public partial class NeuesElement
     {
-        private readonly FEModell modell;
-        public NeuesElement(FEModell modell)
+        private readonly FeModell modell;
+        public NeuesElement(FeModell modell)
         {
             InitializeComponent();
             this.modell = modell;

@@ -7,8 +7,8 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {
     public partial class ZeitNeueRandtemperatur
     {
-        private readonly FEModell modell;
-        public ZeitNeueRandtemperatur(FEModell modell)
+        private readonly FeModell modell;
+        public ZeitNeueRandtemperatur(FeModell modell)
         {
             InitializeComponent();
             this.modell = modell;

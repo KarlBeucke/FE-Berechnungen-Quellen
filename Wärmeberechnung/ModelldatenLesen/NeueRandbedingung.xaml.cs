@@ -5,9 +5,9 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {
     public partial class NeueRandbdingung : Window
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
 
-        public NeueRandbdingung(FEModell modell)
+        public NeueRandbdingung(FeModell modell)
         {
             this.modell = modell;
             InitializeComponent();

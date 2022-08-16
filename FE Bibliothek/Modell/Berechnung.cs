@@ -12,7 +12,7 @@ namespace FEBibliothek.Modell
 {
     public class Berechnung
     {
-        private FEModell modell;
+        private FeModell modell;
         private Knoten knoten;
         private AbstraktElement element;
         private Gleichungen systemGleichungen;
@@ -20,7 +20,7 @@ namespace FEBibliothek.Modell
         private int dimension;
         private bool zerlegt, setzDimension, profil, diagonalMatrix;
 
-        public Berechnung(FEModell m)
+        public Berechnung(FeModell m)
         {
             modell = m;
             if (modell == null)
@@ -38,7 +38,7 @@ namespace FEBibliothek.Modell
         }
         // Objekt Referenzen werden erst auf Basis der eindeutigen Identifikatoren ermittelt, d.h. unmittelbar vor Objekt Instantiierung
         // wenn eine Berechnung gestartet wird, müssen folglich ALLE Objektreferenzen auf Basis der eindeutigen Identifikatoren ermittelt werden
-        private void SetzReferenzen(FEModell m)
+        private void SetzReferenzen(FeModell m)
         {
             modell = m;
 
@@ -271,7 +271,6 @@ namespace FEBibliothek.Modell
                     reaktion[i] = reaktionen[index[i]];
                 knoten.Reaktionen = reaktion;
             }
-            modell.Gelöst = true;
         }
 
         // Eigenlösungen ***********************************************************************************************************
@@ -453,7 +452,7 @@ namespace FEBibliothek.Modell
                         case 0:
                             {
                                 // Datei einlesen
-                                const string inputDirectory = "\\FE Programm\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                                const string inputDirectory = "\\FE-Berechnungen-App\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
                                 const int spalte = -1;
                                 AusDatei(inputDirectory, spalte, last);
                                 break;
@@ -719,7 +718,7 @@ namespace FEBibliothek.Modell
                 {
                     case 0:
                         {
-                            const string inputDirectory = "\\FE Berechnungen\\input\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
+                            const string inputDirectory = "\\FE-Berechnungen-App\\input\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
                             const int col = -1; // ALLE Values in Datei
                                                 // Ordinatenwerte im Zeitintervall dt aus Datei lesen
                             AusDatei(inputDirectory, col, force);

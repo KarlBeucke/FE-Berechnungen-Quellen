@@ -7,9 +7,9 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
     public partial class NeuesLager
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
 
-        public NeuesLager(FEModell modell)
+        public NeuesLager(FeModell modell)
         {
             InitializeComponent();
             this.modell = modell;

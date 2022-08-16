@@ -5,12 +5,12 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
     public partial class NeuerKnoten : Window
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         public NeuerKnoten()
         {
             InitializeComponent();
         }
-        public NeuerKnoten(FEModell modell, int ndof)
+        public NeuerKnoten(FeModell modell, int ndof)
         {
             InitializeComponent();
             this.modell = modell;

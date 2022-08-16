@@ -8,8 +8,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     public partial class ZeitNeueKnotenlast
     {
-        private readonly FEModell modell;
-        public ZeitNeueKnotenlast(FEModell modell)
+        private readonly FeModell modell;
+        public ZeitNeueKnotenlast(FeModell modell)
         {
             InitializeComponent();
             this.modell = modell;

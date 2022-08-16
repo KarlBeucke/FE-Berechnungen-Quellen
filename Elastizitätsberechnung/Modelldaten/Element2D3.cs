@@ -12,13 +12,13 @@ namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten
         private readonly double[] elementVerformungen = new double[6];// at element nodes
 
         //private AbstractMaterial Material { get; }
-        private FEModell Modell { get; }
+        private FeModell Modell { get; }
 
         private readonly double[,] b = new double[3, 6];               // strain-displacement transformation
         private readonly double[,] e = new double[3, 3];               // Materialmatrix
 
         // ....Constructor................................................
-        public Element2D3(string[] eKnotens, string querschnittId, string eMaterialId, FEModell feModell)
+        public Element2D3(string[] eKnotens, string querschnittId, string eMaterialId, FeModell feModell)
         {
             Modell = feModell;
             ElementFreiheitsgrade = 2;

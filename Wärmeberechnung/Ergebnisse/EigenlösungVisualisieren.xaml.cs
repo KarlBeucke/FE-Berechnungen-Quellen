@@ -11,7 +11,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse
 {
     public partial class EigenlösungVisualisieren : Window
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private int index;
         public Darstellung darstellung;
         private double auflösung, maxY;
@@ -21,7 +21,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse
         public List<object> Knotentemperaturen { get; set; }
         public List<object> Eigenwerte { get; set; }
 
-        public EigenlösungVisualisieren(FEModell modell)
+        public EigenlösungVisualisieren(FeModell modell)
         {
             this.Language = XmlLanguage.GetLanguage("de-DE");
             this.modell = modell;

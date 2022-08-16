@@ -5,9 +5,9 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
     public partial class NeuerQuerschnitt
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
 
-        public NeuerQuerschnitt(FEModell modell)
+        public NeuerQuerschnitt(FeModell modell)
         {
             this.modell = modell;
             InitializeComponent();

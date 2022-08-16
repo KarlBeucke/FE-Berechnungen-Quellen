@@ -8,7 +8,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten
 {
     public class Element3D8 : AbstraktLinear3D8
     {
-        private readonly FEModell Modell;
+        private readonly FeModell Modell;
         private AbstraktElement element;
         private readonly double[,] elementMatrix = new double[24, 24];
         private readonly double[] elementDeformations = new double[24];// at element nodes
@@ -18,7 +18,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten
         private static readonly double[] GCoord = { -1.0 / Math.Sqrt(5.0 / 3.0), 0.0, 1.0 / Math.Sqrt(5.0 / 3.0) };
         private static readonly double[] GWeight = { 5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0 };   // gaussian coordinates, weights
 
-        public Element3D8(string[] eKnotens, string eMaterialId, FEModell feModell)
+        public Element3D8(string[] eKnotens, string eMaterialId, FeModell feModell)
         {
             this.Modell = feModell;
             ElementFreiheitsgrade = 3;
@@ -103,7 +103,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten
             var elementStresses = MatrizenAlgebra.Mult(temp, elementDeformations);
             return elementStresses;
         }
-        public override double[] ComputeElementState(double z0, double z1, double z2)
+        public override double[] BerechneElementZustand(double z0, double z1, double z2)
         {
             var elementStresses = new double[6];
             return elementStresses;

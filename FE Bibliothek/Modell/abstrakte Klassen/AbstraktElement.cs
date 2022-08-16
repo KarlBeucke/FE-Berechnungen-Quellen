@@ -22,7 +22,7 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
         public abstract void SetzElementSystemIndizes();
         public abstract double[] BerechneZustandsvektor();
 
-        public void SetzElementReferenzen(FEModell modell)
+        public void SetzElementReferenzen(FeModell modell)
         {
             for (int i = 0; i < KnotenProElement; i++)
             {

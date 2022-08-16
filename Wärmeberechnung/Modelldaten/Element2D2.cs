@@ -7,12 +7,12 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten
 {
     public class Element2D2 : AbstraktLinear2D2
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private AbstraktElement element;
         private Material material;
         private readonly double[,] elementMatrix;
         private readonly double[] specificHeatMatrix;
-        public Element2D2(string[] eNodes, string eMaterialId, FEModell feModell)
+        public Element2D2(string[] eNodes, string eMaterialId, FeModell feModell)
         {
             if (feModell != null) modell = feModell ?? throw new ArgumentNullException(nameof(feModell));
             KnotenIds = eNodes ?? throw new ArgumentNullException(nameof(eNodes));
@@ -23,7 +23,7 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten
             specificHeatMatrix = new double[KnotenProElement];
             Knoten = new Knoten[KnotenProElement];
         }
-        public Element2D2(string id, string[] eNodes, string eMaterialId, FEModell feModell)
+        public Element2D2(string id, string[] eNodes, string eMaterialId, FeModell feModell)
         {
             modell = feModell ?? throw new ArgumentNullException(nameof(feModell));
             ElementId = id ?? throw new ArgumentNullException(nameof(id));

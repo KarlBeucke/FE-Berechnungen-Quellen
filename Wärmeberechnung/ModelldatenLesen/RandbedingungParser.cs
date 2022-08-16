@@ -5,13 +5,13 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {
     public class RandbedingungParser
     {
-        private FEModell modell;
+        private FeModell modell;
         private string[] substrings;
         private string supportId;
         private string nodeId;
         private Randbedingung randbedingung;
 
-        public void ParseRandbedingungen(string[] lines, FEModell feModell)
+        public void ParseRandbedingungen(string[] lines, FeModell feModell)
         {
             modell = feModell;
             var delimiters = new[] { '\t' };

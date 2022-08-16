@@ -9,8 +9,8 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse
 {
     public partial class EigenlösungAnzeigen : Window
     {
-        private readonly FEModell modell;
-        public EigenlösungAnzeigen(FEModell modell)
+        private readonly FeModell modell;
+        public EigenlösungAnzeigen(FeModell modell)
         {
             this.Language = XmlLanguage.GetLanguage("de-DE");
             this.modell = modell;

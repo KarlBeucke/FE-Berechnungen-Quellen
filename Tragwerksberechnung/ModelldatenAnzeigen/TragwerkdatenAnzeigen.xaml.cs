@@ -16,12 +16,12 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen
 {
     public partial class TragwerkdatenAnzeigen
     {
-        private readonly FEModell modell;
+        private readonly FeModell modell;
         private string removeKey;
         private Shape letztesElement;
         private Shape letzterKnoten;
 
-        public TragwerkdatenAnzeigen(FEModell feModell)
+        public TragwerkdatenAnzeigen(FeModell feModell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             modell = feModell;
