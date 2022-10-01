@@ -157,7 +157,6 @@ namespace FE_Berechnungen.Tragwerksberechnung
 
             switch (element)
             {
-                // Federelement
                 case FederElement _:
                     {
                         pathGeometry = FederelementZeichnen(element);
@@ -372,18 +371,10 @@ namespace FE_Berechnungen.Tragwerksberechnung
             }
 
             // Drehfeder zeichnen
-            if (Math.Abs(element.ElementMaterial.MaterialWerte[2]) > 0)
-            {
-                var b = 10;
-                pathFigure.StartPoint = startPunkt;
-                var zielPunkt = new Point(startPunkt.X - b, startPunkt.Y - b);
-                pathFigure.Segments.Add(
-                    new ArcSegment(zielPunkt, new Size(b, b - 3), 200, true, 0, true));
-                zielPunkt = new Point(startPunkt.X + b, startPunkt.Y);
-                pathFigure.Segments.Add(
-                    new ArcSegment(zielPunkt, new Size(b, b + 2), 190, false, 0, true));
-                pathGeometry.Figures.Add(pathFigure);
-            }
+            if (!(Math.Abs(element.ElementMaterial.MaterialWerte[2]) > 0)) return pathGeometry;
+
+            DrehfederZeichnen(pathFigure, startPunkt);
+            pathGeometry.Figures.Add(pathFigure);
             return pathGeometry;
         }
         private static void DehnfederZeichnen(PathFigure pathFigure, Point startPunkt)
@@ -427,6 +418,17 @@ namespace FE_Berechnungen.Tragwerksberechnung
                 new LineSegment(new Point(startPunkt.X - b, startPunkt.Y + 12 * h), false));
             pathFigure.Segments.Add(
                 new LineSegment(new Point(startPunkt.X - b - h, startPunkt.Y + 13 * h), true));
+        }
+        private static void DrehfederZeichnen(PathFigure pathFigure, Point startPunkt)
+        {
+            const int b = 10;
+            pathFigure.StartPoint = startPunkt;
+            var zielPunkt = new Point(startPunkt.X - b, startPunkt.Y - b);
+            pathFigure.Segments.Add(
+                new ArcSegment(zielPunkt, new Size(b, b - 3), 200, true, 0, true));
+            zielPunkt = new Point(startPunkt.X + b, startPunkt.Y);
+            pathFigure.Segments.Add(
+                new ArcSegment(zielPunkt, new Size(b, b + 2), 190, false, 0, true));
         }
 
         private PathGeometry FachwerkelementZeichnen(AbstraktElement element)

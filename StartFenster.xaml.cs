@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Markup;
 
 namespace FE_Berechnungen
@@ -1257,6 +1258,7 @@ namespace FE_Berechnungen
                     }
             }
         }
+
         private void ElastizitätsdatenBerechnen(object sender, EventArgs e)
         {
             if (modell == null)
