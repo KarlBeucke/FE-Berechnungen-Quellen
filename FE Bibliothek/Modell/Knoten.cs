@@ -9,7 +9,7 @@ namespace FEBibliothek.Modell
         // Properties
         public string Id { get; }
         public int Raumdimension { get; }
-        public int AnzahlKnotenfreiheitsgrade { get; }
+        public int AnzahlKnotenfreiheitsgrade { get; set; }
         public double[] Knotenfreiheitsgrade { get; set; }
         public double[][] KnotenVariable { get; set; }
         public double[][] KnotenAbleitungen { get; set; }

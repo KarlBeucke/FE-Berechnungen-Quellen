@@ -1,24 +1,23 @@
 ﻿using System.Windows;
 
-namespace FE_Berechnungen.Dateieingabe
+namespace FE_Berechnungen.Dateieingabe;
+
+public partial class NeuerDateiname
 {
-    public partial class NeuerDateiname
+    public string dateiName;
+    public NeuerDateiname()
     {
-        public string dateiName;
-        public NeuerDateiname()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
-        {
-            dateiName = Dateiname.Text;
-            DialogResult = true;
-        }
+    private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
+    {
+        dateiName = Dateiname.Text;
+        DialogResult = true;
+    }
 
-        private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
-        }
+    private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
+    {
+        DialogResult = false;
     }
 }

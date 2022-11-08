@@ -1,10 +1,10 @@
-﻿<Window x:Class="FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.NeuesLager"
+﻿<Window x:Class="FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.LagerNeu"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="NeuesLager" Height="330" Width="350">
+        Title="Neues Lager" Height="350" Width="370">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -21,21 +21,20 @@
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="4" Margin="0,0,0,37.4" Grid.RowSpan="2">
-            Definition eines neuen Lagers
+            Eingabewerte für ein neues Lager
         </Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Lager ID:</Label>
-        <TextBox Name="LagerId" Grid.Row="1" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
+        <TextBox Name="LagerId" Grid.Row="1" Grid.Column="1" Margin="13,13,-12,0" Height="20" 
+                 VerticalAlignment="Top" LostFocus="LagerIdLostFocus"/>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Knoten ID:</Label>
         <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="12.2,13.2,0,6.8" Height="20" 
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
-        <Label Grid.Row="3" Grid.Column="0" Margin="0,3,0,0" Grid.RowSpan="2" Grid.ColumnSpan="2"
-               VerticalAlignment="Top" HorizontalAlignment="Left">Festhaltungen</Label>
-        <Label Grid.Row="3" Grid.Column="0" Margin="-3,19.6,0,0" Grid.RowSpan="2" Grid.ColumnSpan="2"
-               VerticalAlignment="Top" HorizontalAlignment="Left">"x" und/oder "y" und/oder "r"</Label>
-        <TextBox Name="Fest" Grid.Row="3" Grid.Column="1" Margin="10.2,11.2,0,0" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="45"/>
+        <Label Grid.Row="3" Grid.Column="0"
+               VerticalAlignment="Center" HorizontalAlignment="Left">Festhaltungen in x, y und r</Label>
+        <CheckBox Name="Xfest" Grid.Row="3" Grid.Column="1" Margin="20,15,45,5" Width="35">x</CheckBox>
+        <CheckBox Name="Yfest" Grid.Row="3" Grid.Column="1" Margin="70,15,-5,5" Width="35">y</CheckBox>
+        <CheckBox Name="Rfest" Grid.Row="3" Grid.Column="1" Margin="120,15,-55,5" Width="35">r</CheckBox>
 
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5,0,0">vordefinierte Verschiebung in x:</Label>
         <TextBox Name="VorX" Grid.Row="4" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20" 
@@ -47,8 +46,10 @@
         <TextBox Name="VorRot" Grid.Row="6" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20" 
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
 
-        <Button IsDefault="True" Grid.Row="7" Grid.Column="1" Width="35"  Height="26" Margin="101.2,0,-35.4,7.8" 
-                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">_Ok</Button>
+        <Button Grid.Row="7" Grid.Column="0" Width="50"  Height="26" Margin="5,0,0,4.6" 
+                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" >löschen</Button>
+        <Button IsDefault="True" Grid.Row="7" Grid.Column="1"  Height="26" Margin="101,0,-36,0" 
+                Click="BtnDialogOk_Click" VerticalAlignment="Center">_Ok</Button>
         <Button Grid.Row="7" Grid.Column="1" Width="71" Height="26" Margin="21.2,0,0,7.8" 
                 Click="BtnDialogCancel_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">_Abbrechen</Button>
     </Grid>

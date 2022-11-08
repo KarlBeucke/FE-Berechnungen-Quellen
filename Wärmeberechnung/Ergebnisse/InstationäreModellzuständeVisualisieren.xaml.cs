@@ -8,207 +8,206 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse
+namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
+
+public partial class InstationäreModellzuständeVisualisieren
 {
-    public partial class InstationäreModellzuständeVisualisieren
+    private readonly FeModell modell;
+    private int index;
+    private readonly Darstellung darstellung;
+    private bool knotenTemperaturAn, knotenGradientenAn, elementTemperaturAn;
+    private readonly List<Shape> hitList = new List<Shape>();
+    private EllipseGeometry hitArea;
+
+    public InstationäreModellzuständeVisualisieren(FeModell modell)
     {
-        private readonly FeModell modell;
-        private int index;
-        private readonly Darstellung darstellung;
-        private bool knotenTemperaturAn, knotenGradientenAn, elementTemperaturAn;
-        private readonly List<Shape> hitList = new List<Shape>();
-        private EllipseGeometry hitArea;
+        this.modell = modell;
+        Language = XmlLanguage.GetLanguage("de-DE");
+        InitializeComponent();
+        Show();
 
-        public InstationäreModellzuständeVisualisieren(FeModell modell)
+        darstellung = new Darstellung(modell, VisualErgebnisse);
+        darstellung.FestlegungAuflösung();
+        darstellung.AlleElementeZeichnen();
+
+        // Auswahl des Zeitschritts
+        var dt = modell.Zeitintegration.Dt;
+        var tmax = modell.Zeitintegration.Tmax;
+        var nSteps = (int)(tmax / dt) + 1;
+        var zeit = new double[nSteps];
+        for (var i = 0; i < nSteps; i++) { zeit[i] = (i * dt); }
+        Zeitschrittauswahl.ItemsSource = zeit;
+    }
+
+    private void DropDownZeitschrittauswahlClosed(object sender, System.EventArgs e)
+    {
+        if (Zeitschrittauswahl.SelectedIndex < 0)
         {
-            this.modell = modell;
-            Language = XmlLanguage.GetLanguage("de-DE");
-            InitializeComponent();
-            Show();
+            _ = MessageBox.Show("kein gültiger Zeitschritt ausgewählt", "Zeitschrittauswahl");
+            return;
+        }
+        index = Zeitschrittauswahl.SelectedIndex;
 
-            darstellung = new Darstellung(modell, VisualErgebnisse);
-            darstellung.FestlegungAuflösung();
-            darstellung.AlleElementeZeichnen();
-
-            // Auswahl des Zeitschritts
-            var dt = modell.Zeitintegration.Dt;
-            var tmax = modell.Zeitintegration.Tmax;
-            var nSteps = (int)(tmax / dt) + 1;
-            var zeit = new double[nSteps];
-            for (var i = 0; i < nSteps; i++) { zeit[i] = (i * dt); }
-            Zeitschrittauswahl.ItemsSource = zeit;
+        foreach (var item in modell.Knoten)
+        {
+            item.Value.Knotenfreiheitsgrade[0] = item.Value.KnotenVariable[0][index];
         }
 
-        private void DropDownZeitschrittauswahlClosed(object sender, System.EventArgs e)
+        darstellung.zeitschritt = index;
+        KnotentemperaturenZeichnen();
+        darstellung.WärmeflussvektorenZeichnen();
+        ElementTemperaturenZeichnen();
+    }
+
+    private void KnotentemperaturenZeichnen()
+    {
+        if (!knotenTemperaturAn)
         {
-            if (Zeitschrittauswahl.SelectedIndex < 0)
+            if (index == 0)
             {
-                _ = MessageBox.Show("kein gültiger Zeitschritt ausgewählt", "Zeitschrittauswahl");
-                return;
-            }
-            index = Zeitschrittauswahl.SelectedIndex;
-
-            foreach (var item in modell.Knoten)
-            {
-                item.Value.Knotenfreiheitsgrade[0] = item.Value.KnotenVariable[0][index];
-            }
-
-            darstellung.zeitschritt = index;
-            KnotentemperaturenZeichnen();
-            darstellung.WärmeflussvektorenZeichnen();
-            ElementTemperaturenZeichnen();
-        }
-
-        private void KnotentemperaturenZeichnen()
-        {
-            if (!knotenTemperaturAn)
-            {
-                if (index == 0)
-                {
-                    _ = MessageBox.Show("Zeitschritt muss erst ausgewählt werden", "instationäre Wärmeberechnung");
-                }
-                else
-                {
-                    darstellung.KnotentemperaturZeichnen();
-                    knotenTemperaturAn = true;
-                }
+                _ = MessageBox.Show("Zeitschritt muss erst ausgewählt werden", "instationäre Wärmeberechnung");
             }
             else
             {
-                // entferne ALLE Textdarstellungen der Knotentemperaturen
-                foreach (var knotenTemp in darstellung.Knotentemperaturen)
-                {
-                    VisualErgebnisse.Children.Remove(knotenTemp);
-                }
-                knotenTemperaturAn = false;
+                darstellung.KnotentemperaturZeichnen();
+                knotenTemperaturAn = true;
             }
         }
-        private void ElementTemperaturenZeichnen()
+        else
         {
-            if (!elementTemperaturAn)
+            // entferne ALLE Textdarstellungen der Knotentemperaturen
+            foreach (var knotenTemp in darstellung.Knotentemperaturen)
             {
-                if (index == 0)
-                {
-                    _ = MessageBox.Show("Zeitschritt muss erst ausgewählt werden", "instationäre Wärmeberechnung");
-                }
-                else
-                {
-                    darstellung.ElementTemperaturZeichnen();
-                    darstellung.WärmeflussvektorenZeichnen();
-                    elementTemperaturAn = true;
-                }
+                VisualErgebnisse.Children.Remove(knotenTemp);
             }
-            else
-            {
-                foreach (var path in darstellung.TemperaturElemente)
-                {
-                    VisualErgebnisse.Children.Remove(path);
-                }
-                elementTemperaturAn = false;
-            }
+            knotenTemperaturAn = false;
         }
-        
-        private void BtnKnotenTemperaturen_Click(object sender, RoutedEventArgs e)
+    }
+    private void ElementTemperaturenZeichnen()
+    {
+        if (!elementTemperaturAn)
         {
-            KnotentemperaturenZeichnen();
-        }
-
-        private void BtnKnotenGradienten_Click(object sender, RoutedEventArgs e)
-        {
-            if (!knotenGradientenAn)
+            if (index == 0)
             {
-                if (index == 0)
-                {
-                    _ = MessageBox.Show("Zeitschritt muss erst ausgewählt werden", "instationäre Wärmeberechnung");
-                }
-                else
-                {
-                    darstellung.KnotengradientenZeichnen(index);
-                    knotenGradientenAn = true;
-                }
+                _ = MessageBox.Show("Zeitschritt muss erst ausgewählt werden", "instationäre Wärmeberechnung");
             }
             else
             {
-                // entferne ALLE Textdarstellungen der Knotentemperaturen
-                foreach (var knotenGrad in darstellung.Knotengradienten)
+                darstellung.ElementTemperaturZeichnen();
+                darstellung.WärmeflussvektorenZeichnen();
+                elementTemperaturAn = true;
+            }
+        }
+        else
+        {
+            foreach (var path in darstellung.TemperaturElemente)
+            {
+                VisualErgebnisse.Children.Remove(path);
+            }
+            elementTemperaturAn = false;
+        }
+    }
+
+    private void BtnKnotenTemperaturen_Click(object sender, RoutedEventArgs e)
+    {
+        KnotentemperaturenZeichnen();
+    }
+
+    private void BtnKnotenGradienten_Click(object sender, RoutedEventArgs e)
+    {
+        if (!knotenGradientenAn)
+        {
+            if (index == 0)
+            {
+                _ = MessageBox.Show("Zeitschritt muss erst ausgewählt werden", "instationäre Wärmeberechnung");
+            }
+            else
+            {
+                darstellung.KnotengradientenZeichnen(index);
+                knotenGradientenAn = true;
+            }
+        }
+        else
+        {
+            // entferne ALLE Textdarstellungen der Knotentemperaturen
+            foreach (var knotenGrad in darstellung.Knotengradienten)
+            {
+                VisualErgebnisse.Children.Remove(knotenGrad);
+            }
+            knotenGradientenAn = false;
+        }
+    }
+
+    private void BtnElementTemperaturen_Click(object sender, RoutedEventArgs e)
+    {
+        ElementTemperaturenZeichnen();
+    }
+
+    private void OnMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        hitList.Clear();
+        var hitPoint = e.GetPosition(VisualErgebnisse);
+        hitArea = new EllipseGeometry(hitPoint, 0.2, 0.2);
+        VisualTreeHelper.HitTest(VisualErgebnisse, null, HitTestCallBack,
+            new GeometryHitTestParameters(hitArea));
+
+        MyPopup.IsOpen = false;
+
+        var sb = new StringBuilder();
+        foreach (var item in hitList.Where(item => !(item == null | item?.Name == string.Empty)))
+        {
+            sb.Clear();
+            MyPopup.IsOpen = true;
+
+            if (!modell.Elemente.TryGetValue(item.Name, out var element2D)) continue;
+            sb.Clear();
+            var wärmeElement = (Abstrakt2D)element2D;
+            var wärmeFluss = wärmeElement.BerechneElementZustand(0, 0);
+
+            sb.Append("Element = " + wärmeElement.ElementId);
+            sb.Append("\nWärmefluss x\t= " + wärmeFluss[0].ToString("G4"));
+            sb.Append("\nWärmefluss y\t= " + wärmeFluss[1].ToString("G4"));
+
+            MyPopupText.Text = sb.ToString();
+        }
+    }
+    private HitTestResultBehavior HitTestCallBack(HitTestResult result)
+    {
+        var intersectionDetail = ((GeometryHitTestResult)result).IntersectionDetail;
+
+        switch (intersectionDetail)
+        {
+            case IntersectionDetail.Empty:
+                return HitTestResultBehavior.Continue;
+            case IntersectionDetail.FullyContains:
+                switch (result.VisualHit)
                 {
-                    VisualErgebnisse.Children.Remove(knotenGrad);
-                }
-                knotenGradientenAn = false;
-            }
-        }
-        
-        private void BtnElementTemperaturen_Click(object sender, RoutedEventArgs e)
-        {
-            ElementTemperaturenZeichnen();
-        }
-        
-        private void OnMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            hitList.Clear();
-            var hitPoint = e.GetPosition(VisualErgebnisse);
-            hitArea = new EllipseGeometry(hitPoint, 0.2, 0.2);
-            VisualTreeHelper.HitTest(VisualErgebnisse, null, HitTestCallBack,
-                new GeometryHitTestParameters(hitArea));
-
-            MyPopup.IsOpen = false;
-
-            var sb = new StringBuilder();
-            foreach (var item in hitList.Where(item => !(item == null | item?.Name == string.Empty)))
-            {
-                sb.Clear();
-                MyPopup.IsOpen = true;
-
-                if (!modell.Elemente.TryGetValue(item.Name, out var element2D)) continue;
-                sb.Clear();
-                var wärmeElement = (Abstrakt2D)element2D;
-                var wärmeFluss = wärmeElement.BerechneElementZustand(0,0);
-
-                sb.Append("Element = " + wärmeElement.ElementId);
-                        sb.Append("\nWärmefluss x\t= " + wärmeFluss[0].ToString("G4"));
-                        sb.Append("\nWärmefluss y\t= " + wärmeFluss[1].ToString("G4"));
-                
-                MyPopupText.Text = sb.ToString();
-            }
-        }
-        private HitTestResultBehavior HitTestCallBack(HitTestResult result)
-        {
-            var intersectionDetail = ((GeometryHitTestResult)result).IntersectionDetail;
-
-            switch (intersectionDetail)
-            {
-                case IntersectionDetail.Empty:
-                    return HitTestResultBehavior.Continue;
-                case IntersectionDetail.FullyContains:
-                    switch (result.VisualHit)
-                    {
-                        case Shape hit:
-                            hitList.Add(hit);
-                            break;
+                    case Shape hit:
+                        hitList.Add(hit);
+                        break;
                         //case TextBlock hit:
                         //    hitTextBlock.Add(hit);
                         //    break;
-                    }
-                    return HitTestResultBehavior.Continue;
-                case IntersectionDetail.FullyInside:
-                    return HitTestResultBehavior.Continue;
-                case IntersectionDetail.Intersects:
-                    switch (result.VisualHit)
-                    {
-                        case Shape hit:
-                            hitList.Add(hit);
-                            break;
-                    }
-                    return HitTestResultBehavior.Continue;
-                case IntersectionDetail.NotCalculated:
-                    return HitTestResultBehavior.Continue;
-                default:
-                    return HitTestResultBehavior.Stop;
-            }
+                }
+                return HitTestResultBehavior.Continue;
+            case IntersectionDetail.FullyInside:
+                return HitTestResultBehavior.Continue;
+            case IntersectionDetail.Intersects:
+                switch (result.VisualHit)
+                {
+                    case Shape hit:
+                        hitList.Add(hit);
+                        break;
+                }
+                return HitTestResultBehavior.Continue;
+            case IntersectionDetail.NotCalculated:
+                return HitTestResultBehavior.Continue;
+            default:
+                return HitTestResultBehavior.Stop;
         }
-        private void OnMouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            MyPopup.IsOpen = false;
-        }
+    }
+    private void OnMouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        MyPopup.IsOpen = false;
     }
 }

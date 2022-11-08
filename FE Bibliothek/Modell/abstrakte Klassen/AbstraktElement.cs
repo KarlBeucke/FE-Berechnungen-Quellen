@@ -13,7 +13,7 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
         public string ElementMaterialId { get; set; }
         public string ElementQuerschnittId { get; set; }
         public AbstraktMaterial ElementMaterial { get; set; }
-        public int Typ { get; protected set; }
+        public int Typ { get; set; }
         public double[] ElementZustand { get; set; }
         public double[] ElementVerformungen { get; protected set; }
         public double Determinant { get; protected set; }

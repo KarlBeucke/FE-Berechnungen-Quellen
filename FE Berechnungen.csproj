@@ -41,6 +41,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,6 +51,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>BF76D6371514C594ADD2B1C10517D8DBDE30F29A</ManifestCertificateThumbprint>
@@ -167,6 +169,9 @@
     <Compile Include="Tragwerksberechnung\Ergebnisse\StatikErgebnisseVisualisieren.cs">
       <DependentUpon>StatikErgebnisseVisualisieren.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tragwerksberechnung\ModelldatenAnzeigen\DialogLöschStrukturobjekte.xaml.cs">
+      <DependentUpon>DialogLöschStrukturobjekte.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenAnzeigen\DynamikDatenAnzeigen.xaml.cs">
       <DependentUpon>DynamikDatenAnzeigen.xaml</DependentUpon>
     </Compile>
@@ -178,42 +183,69 @@
       <DependentUpon>TragwerkmodellVisualisieren.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\ElementParser.cs" />
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenlastKeys.xaml.cs">
+      <DependentUpon>KnotenlastKeys.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\LagerKeys.xaml.cs">
+      <DependentUpon>LagerKeys.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\LastParser.cs" />
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ElementKeys.xaml.cs">
+      <DependentUpon>ElementKeys.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\LinienlastKeys.xaml.cs">
+      <DependentUpon>LinienlastKeys.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\MaterialKeys.xaml.cs">
+      <DependentUpon>MaterialKeys.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\MaterialParser.cs" />
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\NeueKnotenlast.xaml.cs">
-      <DependentUpon>NeueKnotenlast.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenlastNeu.xaml.cs">
+      <DependentUpon>KnotenlastNeu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\NeueLinienlast.xaml.cs">
-      <DependentUpon>NeueLinienlast.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\LinienlastNeu.xaml.cs">
+      <DependentUpon>LinienlastNeu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\NeuePunktlast.xaml.cs">
-      <DependentUpon>NeuePunktlast.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\PunktlastKeys.xaml.cs">
+      <DependentUpon>PunktlastKeys.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\NeuerKnoten.xaml.cs">
-      <DependentUpon>NeuerKnoten.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\PunktlastNeu.xaml.cs">
+      <DependentUpon>PunktlastNeu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\NeuerQuerschnitt.xaml.cs">
-      <DependentUpon>NeuerQuerschnitt.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\BalkenElementNeu.xaml.cs">
+      <DependentUpon>BalkenElementNeu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\NeuesElement.xaml.cs">
-      <DependentUpon>NeuesElement.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenNeu.xaml.cs">
+      <DependentUpon>KnotenNeu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\NeuesLager.xaml.cs">
-      <DependentUpon>NeuesLager.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\QuerschnittKeys.xaml.cs">
+      <DependentUpon>QuerschnittKeys.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\NeuesMaterial.xaml.cs">
-      <DependentUpon>NeuesMaterial.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\QuerschnittNeu.xaml.cs">
+      <DependentUpon>QuerschnittNeu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ElementNeu.xaml.cs">
+      <DependentUpon>ElementNeu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\FederelementNeu.xaml.cs">
+      <DependentUpon>FederelementNeu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\LagerNeu.xaml.cs">
+      <DependentUpon>LagerNeu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\MaterialNeu.xaml.cs">
+      <DependentUpon>MaterialNeu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\RandbedingungParser.cs" />
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\TransientParser.cs" />
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ZeitNeueDämpfungsraten.xaml.cs">
-      <DependentUpon>ZeitNeueDämpfungsraten.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ZeitDämpfungsratenNeu.xaml.cs">
+      <DependentUpon>ZeitDämpfungsratenNeu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ZeitNeueKnotenanfangswerte.xaml.cs">
-      <DependentUpon>ZeitNeueKnotenanfangswerte.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ZeitKnotenanfangswerteNeu.xaml.cs">
+      <DependentUpon>ZeitKnotenanfangswerteNeu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ZeitNeueKnotenlast.xaml.cs">
-      <DependentUpon>ZeitNeueKnotenlast.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ZeitKnotenlastNeu.xaml.cs">
+      <DependentUpon>ZeitKnotenlastNeu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tragwerksberechnung\Modelldaten\AnregungsFunktion.cs" />
     <Compile Include="Tragwerksberechnung\Modelldaten\Biegebalken.cs" />
@@ -414,6 +446,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenAnzeigen\DialogLöschStrukturobjekte.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Tragwerksberechnung\ModelldatenAnzeigen\DynamikDatenAnzeigen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -426,47 +462,83 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\NeueKnotenlast.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\ElementKeys.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\NeueLinienlast.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenlastKeys.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\NeuePunktlast.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\LagerKeys.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\NeuerKnoten.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\LinienlastKeys.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\NeuerQuerschnitt.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\MaterialKeys.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\NeuesElement.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenlastNeu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\NeuesLager.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\LinienlastNeu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\NeuesMaterial.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\PunktlastKeys.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\ZeitNeueDämpfungsraten.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\PunktlastNeu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\ZeitNeueKnotenanfangswerte.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\BalkenElementNeu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\ZeitNeueKnotenlast.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenNeu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\QuerschnittKeys.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\QuerschnittNeu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\ElementNeu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\FederelementNeu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\LagerNeu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\MaterialNeu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\ZeitDämpfungsratenNeu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\ZeitKnotenanfangswerteNeu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\ZeitKnotenlastNeu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
