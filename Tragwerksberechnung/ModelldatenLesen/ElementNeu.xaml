@@ -12,8 +12,8 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
-            <RowDefinition Height="70" />
             <RowDefinition Height="30" />
+            <RowDefinition Height="70" />
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
@@ -21,13 +21,24 @@
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,-44,0">
-            Eingabewerte für ein neues Element
-        </Label>
-        <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Element ID:</Label>
-        <TextBox Name="ElementId" Grid.Row="2" Grid.Column="1" Margin="10,9,0,0" Height="15" 
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="100"/>
+            Eingabewerte für ein neues Element</Label>
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Element ID:</Label>
+        <TextBox Name="ElementId" Grid.Row="1" Grid.Column="1" Margin="10,9,-10,0" Height="15" 
+                 VerticalAlignment="Top" LostFocus="ElementIdLostFocus"/>
+
+        <CheckBox Name="FachwerkCheck" Grid.Row="2" Grid.Column="0" Margin="9.8,3.2,0,48.2" 
+                  Checked="FachwerkChecked">Fachwerk</CheckBox>
+        <CheckBox Name="BalkenCheck" Grid.Row="2" Grid.Column="0" Margin="9.8,20.2,0,33.2" 
+                  Checked="BalkenChecked">Biebebalken</CheckBox>
+        <CheckBox Name="FederCheck" Grid.Row="2" Grid.Column="0" Margin="10,37,0,16" 
+                  Checked="FederChecked">Federelement</CheckBox>
+        <CheckBox Name="Gelenk1" Grid.Row="2" Grid.Column="1" Margin="11,4,-36,48" 
+                  >Gelenk am Anfang</CheckBox>
+        <CheckBox Name="Gelenk2" Grid.Row="2" Grid.Column="1" Margin="11,22,-11,31"
+                  >Gelenk am Ende</CheckBox>
+
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5,0,0">Startknoten ID:</Label>
-        <TextBox Name="StartknotenId" Grid.Row="3" Grid.Column="1" Margin="9.8,7.6,0,8.6" Height="15" 
+        <TextBox Name="StartknotenId" Grid.Row="3" Grid.Column="1" Margin="10,0,0,0" Height="16" 
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="25"/>
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5,0,0">Endknoten ID:</Label>
         <TextBox Name="EndknotenId" Grid.Row="4" Grid.Column="1" Margin="9.8,6.4,0,4.8" Height="15" 
@@ -36,19 +47,11 @@
         <TextBox Name="MaterialId" Grid.Row="5" Grid.Column="1" Margin="9.8,9,0,6.4" Height="15" 
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="25"/>
         <Label Grid.Row="6" Grid.Column="0" Margin="0,5,0,0">Querschnitt ID:</Label>
-        <TextBox Name="QuerschnittId" Grid.Row="6" Grid.Column="1" Margin="9.8,9.8,0,5.2" Height="15" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="25"/>
+        <TextBox Name="QuerschnittId" Grid.Row="6" Grid.Column="1" Margin="10,10,0,0" Height="15" 
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="25"/>
 
-        <CheckBox Name="Fachwerk" Grid.Row="1" Grid.Column="0" Margin="9.8,3.2,0,48.2">Fachwerk</CheckBox>
-        <CheckBox Name="Balken" Grid.Row="1" Grid.Column="0" Margin="9.8,20.2,0,33.2">Biegebalken</CheckBox>
-        <CheckBox Name="BalkenGelenk" Grid.Row="1" Grid.Column="0" Margin="9.8,37.2,-34,16.2">Biegebalken Gelenk</CheckBox>
-        <CheckBox Name="Feder" Grid.Row="1" Grid.Column="0" Margin="10,53.2,6.2,2.2">Feder</CheckBox>
-
-        <Label Grid.Row="1" Margin="4.8,1.2,-39,39.2" Grid.Column="1">Gelenk am Anfang: 1</Label>
-        <Label Grid.Row="1" Margin="4.8,13.2,-39,31.2" Grid.Column="1">Gelenk am Ende: 2</Label>
-        <TextBox Name="Gelenk" Grid.Row="1" Grid.Column="1" Margin="9.8,38.2,0,17.2" Height="15" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="25"/>
-
+        <Button Grid.Row="7" Grid.Column="0" Width="50"  Height="26" Margin="5,0,0,0" 
+                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" >löschen</Button>
         <Button IsDefault="True" Grid.Row="7" Grid.Column="1" Width="35"  Height="26" Margin="22.8,0,0,2.6" 
                 Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">_Ok</Button>
         <Button Grid.Row="7" Width="71" Height="26" Margin="64.8,0,-35,2.6" 

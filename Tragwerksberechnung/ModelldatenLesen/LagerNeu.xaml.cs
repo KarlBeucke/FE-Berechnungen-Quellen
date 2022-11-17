@@ -15,9 +15,14 @@ public partial class LagerNeu
     {
         InitializeComponent();
         this.modell = modell;
-        lagerKeys = new LagerKeys(modell);
-        lagerKeys.Show();
         Show();
+        LagerId.Text = string.Empty;
+        KnotenId.Text = string.Empty;
+        VorX.Text = "0,00";
+        VorY.Text = "0,00";
+        VorRot.Text = "0,00";
+        lagerKeys = new LagerKeys(modell) { Owner = this };
+        lagerKeys.Show();
     }
 
     public LagerNeu(FeModell modell, double vordefX, double vordefY, double vordefRot)

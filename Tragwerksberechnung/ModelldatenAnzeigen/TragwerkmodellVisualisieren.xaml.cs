@@ -1,9 +1,5 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +7,10 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using FEBibliothek.Modell;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
+using System.Linq;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
@@ -19,9 +19,12 @@ public partial class TragwerkmodellVisualisieren
     private readonly FeModell modell;
     public readonly Darstellung darstellung;
     private bool lastenAn = true, lagerAn = true, knotenTexteAn = true, elementTexteAn = true;
+    
     //alle gefundenen "Shapes" werden in dieser Liste gesammelt
     private readonly List<Shape> hitList = new();
+    //alle gefundenen "TextBlocks" werden in dieser Liste gesammelt
     private readonly List<TextBlock> hitTextBlock = new();
+
     private EllipseGeometry hitArea;
     private KnotenNeu neuerKnoten;
     private Point mittelpunkt;
@@ -39,9 +42,11 @@ public partial class TragwerkmodellVisualisieren
         modell = feModell;
         darstellung = new Darstellung(feModell, VisualModel);
         darstellung.UnverformteGeometrie();
+        
         // mit Knoten und Element Ids
         darstellung.KnotenTexte();
         darstellung.ElementTexte();
+        // mit Lasten und Auflagerdarstellungen und Ids
         darstellung.LastenZeichnen();
         darstellung.LastTexte();
         darstellung.LagerZeichnen();
@@ -57,7 +62,7 @@ public partial class TragwerkmodellVisualisieren
         }
         else
         {
-            foreach (var id in darstellung.KnotenIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
+            foreach (TextBlock id in darstellung.KnotenIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
             knotenTexteAn = false;
         }
     }
@@ -70,7 +75,7 @@ public partial class TragwerkmodellVisualisieren
         }
         else
         {
-            foreach (var id in darstellung.ElementIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
+            foreach (TextBlock id in darstellung.ElementIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
             elementTexteAn = false;
         }
     }
@@ -84,10 +89,10 @@ public partial class TragwerkmodellVisualisieren
         }
         else
         {
-            foreach (var lasten in darstellung.LastVektoren.Cast<Shape>())
+            foreach (Shape lasten in darstellung.LastVektoren.Cast<Shape>())
             {
                 VisualModel.Children.Remove(lasten);
-                foreach (var id in darstellung.LastIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
+                foreach (TextBlock id in darstellung.LastIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
             }
             lastenAn = false;
         }
@@ -102,10 +107,10 @@ public partial class TragwerkmodellVisualisieren
         }
         else
         {
-            foreach (var path in darstellung.LagerDarstellung.Cast<Shape>())
+            foreach (Shape path in darstellung.LagerDarstellung.Cast<Shape>())
             {
                 VisualModel.Children.Remove(path);
-                foreach (var id in darstellung.LagerIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
+                foreach (TextBlock id in darstellung.LagerIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
             }
             lagerAn = false;
         }
@@ -119,20 +124,15 @@ public partial class TragwerkmodellVisualisieren
     
     private void MenuBalkenElementNeu(object sender, RoutedEventArgs e)
     {
-        _ = new BalkenElementNeu(modell);
+        _ = new ElementNeu(modell);
         StartFenster.berechnet = false;
-        Close();
+        //Close();
     }
     private void MenuQuerschnittNeu(object sender, RoutedEventArgs e)
     {
         _ = new QuerschnittNeu(modell);
     }
-    private void MenuFederelementNeu(object sender, RoutedEventArgs e)
-    {
-        _ = new FederelementNeu(modell);
-        StartFenster.berechnet = false;
-        Close();
-    }
+
     private void MenuMaterialNeu(object sender, RoutedEventArgs e)
     {
         _ = new MaterialNeu(modell);
@@ -154,7 +154,7 @@ public partial class TragwerkmodellVisualisieren
         StartFenster.berechnet = false;
     }
 
-    private void OnBtnFesthaltungenNeu_Click(object sender, RoutedEventArgs e)
+    private void OnBtnLagerNeu_Click(object sender, RoutedEventArgs e)
     {
         _ = new LagerNeu(modell);
         StartFenster.berechnet = false;
@@ -204,6 +204,7 @@ public partial class TragwerkmodellVisualisieren
         Knoten.ReleaseMouseCapture();
         isDragging = false;
     }
+    
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         hitList.Clear();
@@ -233,138 +234,152 @@ public partial class TragwerkmodellVisualisieren
         // click auf Shape Darstellungen
         foreach (var item in hitList)
         {
-            if (isKnoten) return;
-            switch (item)
+            if (isKnoten | item is not Path) return;
+            if (item.Name == null) continue;
+
+            // Elemente
+            if (modell.Elemente.TryGetValue(item.Name, out var element))
             {
-                case { }:
+                if (löschFlag)
+                {
+                    if (MessageBox.Show("Element " + element.ElementId + " wird gelöscht.", "Tragwerksmodell",
+                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
+                    else
                     {
-                        // Elemente
-                        if (modell.Elemente.TryGetValue(item.Name, out var element))
+                        modell.Elemente.Remove(element.ElementId);
+                        StartFenster.tragwerksModell.Close();
+                    }
+                    return;
+                }
+
+                MyPopup.IsOpen = true;
+                sb.Append("Element\t= " + element.ElementId);
+                if (element is FederElement)
+                {
+                    if (modell.Elemente.TryGetValue(element.ElementId, out var feder))
+                    {
+                        if (modell.Material.TryGetValue(feder.ElementMaterialId, out var material))
                         {
-                            if (löschFlag)
-                            {
-                                if (MessageBox.Show("Element " + element.ElementId + " wird gelöscht.", "Tragwerksmodell", 
-                                        MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                                else
-                                {
-                                    modell.Elemente.Remove(element.ElementId);
-                                    StartFenster.tragwerksModell.Close();
-                                }
-                                return;
-                            }
-
-                            MyPopup.IsOpen = true;
-                            sb.Append("Element\t= " + element.ElementId);
-                            if (element is FederElement)
-                            {
-                                if (modell.Elemente.TryGetValue(element.ElementId, out var feder))
-                                {
-                                    if (modell.Material.TryGetValue(feder.ElementMaterialId, out var material)) { }
-                                    for (var i = 0; i < 3; i++)
-                                    {
-                                        if (material != null)
-                                            sb.Append("\nFedersteifigkeit " + i + "\t= " +
-                                                      material.MaterialWerte[i].ToString("g3"));
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                sb.Append("\nKnoten 1\t= " + element.KnotenIds[0]);
-                                sb.Append("\nKnoten 2\t= " + element.KnotenIds[1]);
-                                if (modell.Material.TryGetValue(element.ElementMaterialId, out var material))
-                                {
-                                    sb.Append("\nE-Modul\t= " + material.MaterialWerte[0].ToString("g3"));
-                                }
-                                if (modell.Querschnitt.TryGetValue(element.ElementQuerschnittId, out var querschnitt))
-                                {
-                                    sb.Append("\nFläche\t= " + querschnitt.QuerschnittsWerte[0]);
-                                    if (querschnitt.QuerschnittsWerte.Length > 1)
-                                        sb.Append("\nIxx\t= " + querschnitt.QuerschnittsWerte[1].ToString("g3"));
-                                }
-                            }
-
                         }
 
-                        // Lasten
-                        if (modell.Lasten.TryGetValue(item.Name, out var knotenlast))
+                        for (var i = 0; i < 3; i++)
                         {
-                            if (löschFlag)
-                            {
-                                if (MessageBox.Show("Knotenlast " + knotenlast.LastId + " wird gelöscht.", "Tragwerksmodell",
-                                        MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                                else
-                                {
-                                    modell.Lasten.Remove(knotenlast.LastId);
-                                    StartFenster.tragwerksModell.Close();
-                                }
-                                return;
-                            }
-                            MyPopup.IsOpen = true;
-                            sb.Append("Last\t= " + item.Name);
-                            for (var i = 0; i < knotenlast.Lastwerte.Length; i++)
-                            {
-                                sb.Append("\nLastwert " + i + "\t= " + knotenlast.Lastwerte[i]);
-                            }
-                            sb.Append("\n");
-                        }
-                        else if (modell.PunktLasten.TryGetValue(item.Name, out var punktlast))
-                        {
-                            if (löschFlag)
-                            {
-                                modell.PunktLasten.Remove(item.Name);
-                                StartFenster.tragwerksModell.Close();
-                                return;
-                            }
-                            MyPopup.IsOpen = true;
-                            sb.Append("Punktlast\t= " + item.Name);
-                            for (var i = 0; i < punktlast.Lastwerte.Length; i++)
-                            {
-                                sb.Append("\nLastwert " + i + "\t= " + punktlast.Lastwerte[i]);
-                            }
-                            sb.Append("\n");
-                        }
-                        else if (modell.ElementLasten.TryGetValue(item.Name, out var elementlast))
-                        {
-                            if (löschFlag)
-                            {
-                                modell.ElementLasten.Remove(item.Name);
-                                StartFenster.tragwerksModell.Close();
-                                return;
-                            }
-                            MyPopup.IsOpen = true;
-                            sb.Append("Last\t= " + elementlast.LastId);
-                            for (var i = 0; i < elementlast.Lastwerte.Length; i++)
-                            {
-                                sb.Append("\nLastwert " + i + "\t= " + elementlast.Lastwerte[i]);
-                            }
-                            sb.Append("\n");
+                            if (material != null)
+                                sb.Append("\nFedersteifigkeit " + i + "\t= " +
+                                          material.MaterialWerte[i].ToString("g3"));
                         }
                     }
-
-                    // Lager
-                    if (modell.Randbedingungen.TryGetValue(item.Name, out var lager))
+                }
+                else
+                {
+                    sb.Append("\nKnoten 1\t= " + element.KnotenIds[0]);
+                    sb.Append("\nKnoten 2\t= " + element.KnotenIds[1]);
+                    if (modell.Material.TryGetValue(element.ElementMaterialId, out var material))
                     {
-                        if (löschFlag)
-                        {
-                            if (MessageBox.Show("Lager " + lager.RandbedingungId + " wird gelöscht.", "Tragwerksmodell",
-                                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-
-                            modell.Randbedingungen.Remove(lager.RandbedingungId);
-                            StartFenster.tragwerksModell.Close();
-                            return;
-                        }
-                    
-                        MyPopup.IsOpen = true;
-                        sb.Append("Lager\t\t= " + lager.RandbedingungId);
-                        sb.Append("\festgehalten\t= " + Lagertyp(lager.Typ));
-                        for (var i = 0; i < lager.Vordefiniert.Length; i++)
-                        {
-                            sb.Append("\nvordefinierter Randwert " + i + "\t= " + lager.Vordefiniert[i]);
-                        }
-                        sb.Append("\n");
+                        sb.Append("\nE-Modul\t= " + material.MaterialWerte[0].ToString("g3"));
                     }
-                    break;
+
+                    if (modell.Querschnitt.TryGetValue(element.ElementQuerschnittId, out var querschnitt))
+                    {
+                        sb.Append("\nFläche\t= " + querschnitt.QuerschnittsWerte[0]);
+                        if (querschnitt.QuerschnittsWerte.Length > 1)
+                            sb.Append("\nIxx\t= " + querschnitt.QuerschnittsWerte[1].ToString("g3"));
+                    }
+                }
+
+            }
+
+            // Lasten
+            if (modell.Lasten.TryGetValue(item.Name, out var knotenlast))
+            {
+                if (löschFlag)
+                {
+                    if (MessageBox.Show("Knotenlast " + knotenlast.LastId + " wird gelöscht.", "Tragwerksmodell",
+                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    {
+                    }
+                    else
+                    {
+                        modell.Lasten.Remove(knotenlast.LastId);
+                        StartFenster.tragwerksModell.Close();
+                    }
+
+                    return;
+                }
+
+                MyPopup.IsOpen = true;
+                sb.Append("Last\t= " + item.Name);
+                for (var i = 0; i < knotenlast.Lastwerte.Length; i++)
+                {
+                    sb.Append("\nLastwert " + i + "\t= " + knotenlast.Lastwerte[i]);
+                }
+
+                sb.Append("\n");
+            }
+            else if (modell.PunktLasten.TryGetValue(item.Name, out var abstraktElementLast))
+            {
+                if (löschFlag)
+                {
+                    modell.PunktLasten.Remove(item.Name);
+                    StartFenster.tragwerksModell.Close();
+                    return;
+                }
+
+                var punktlast = (PunktLast)abstraktElementLast;
+                MyPopup.IsOpen = true;
+                sb.Append("Punktlast\t= " + item.Name);
+                for (var i = 0; i < punktlast.Lastwerte.Length; i++)
+                {
+                    sb.Append("\nLastwert " + i + "\t= " + punktlast.Lastwerte[i]);
+                }
+                sb.Append("\nLastoffset auf element\t= " + punktlast.Offset);
+                sb.Append("\n");
+            }
+            else if (modell.ElementLasten.TryGetValue(item.Name, out var elementlast))
+            {
+                if (löschFlag)
+                {
+                    modell.ElementLasten.Remove(item.Name);
+                    StartFenster.tragwerksModell.Close();
+                    return;
+                }
+
+                MyPopup.IsOpen = true;
+                sb.Append("Last\t= " + elementlast.LastId);
+                for (var i = 0; i < elementlast.Lastwerte.Length; i++)
+                {
+                    sb.Append("\nLastwert " + i + "\t= " + elementlast.Lastwerte[i]);
+                }
+
+                sb.Append("\n");
+            }
+
+            // Lager
+            if (modell.Randbedingungen.TryGetValue(item.Name, out var lager))
+            {
+                if (löschFlag)
+                {
+                    if (MessageBox.Show("Lager " + lager.RandbedingungId + " wird gelöscht.", "Tragwerksmodell",
+                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    {
+                    }
+
+                    modell.Randbedingungen.Remove(lager.RandbedingungId);
+                    StartFenster.tragwerksModell.Close();
+                    return;
+                }
+
+                MyPopup.IsOpen = true;
+                sb.Append("Lager\t\t= " + lager.RandbedingungId);
+                sb.Append("\nfestgehalten\t= " + Lagertyp(lager.Typ));
+                if (lager.Typ == 1 | lager.Typ == 3 | lager.Typ == 7)
+                    sb.Append("\nLagerverschiebung x \t= " + lager.Vordefiniert[0]);
+                if (lager.Typ == 2 | lager.Typ == 3 | lager.Typ == 7)
+                    sb.Append("\nLagerverschiebung y \t= " + lager.Vordefiniert[1]);
+                if (lager.Typ == 4 | lager.Typ == 7)
+                    sb.Append("\nLagerverdrehung r \t= " + lager.Vordefiniert[2]);
+
+                sb.Append("\n");
             }
         }
 
@@ -425,18 +440,22 @@ public partial class TragwerkmodellVisualisieren
                 {
                     case FederElement:
                     {
-                        _ = new FederelementNeu(modell)
+                        _ = new ElementNeu(modell)
                         {
+                            FederCheck = { IsChecked = true },
                             ElementId = { Text = item.Text },
-                            KnotenId = { Text = element.KnotenIds[0] },
+                            StartknotenId = { Text = element.KnotenIds[0] },
                             MaterialId = { Text = element.ElementMaterialId }
                         };
                         break;
                     }
                     case Fachwerk:
                     {
-                        _ = new BalkenElementNeu(modell)
+                        _ = new ElementNeu(modell)
                         {
+                            FachwerkCheck = { IsChecked = true},
+                            Gelenk1 = { IsChecked = true },
+                            Gelenk2 = { IsChecked = true },
                             ElementId = { Text = item.Text },
                             StartknotenId = { Text = element.KnotenIds[0] },
                             EndknotenId = { Text = element.KnotenIds[1] },
@@ -447,8 +466,9 @@ public partial class TragwerkmodellVisualisieren
                     }
                     case Biegebalken:
                     {
-                        _ = new BalkenElementNeu(modell)
+                        _ = new ElementNeu(modell)
                         {
+                            BalkenCheck = {IsChecked = true},
                             ElementId = { Text = item.Text },
                             StartknotenId = { Text = element.KnotenIds[0] },
                             EndknotenId = { Text = element.KnotenIds[1] },
@@ -461,8 +481,9 @@ public partial class TragwerkmodellVisualisieren
                     }
                     case BiegebalkenGelenk:
                     {
-                        var neuesElement = new BalkenElementNeu(modell)
+                        var neuesElement = new ElementNeu(modell)
                         {
+                            BalkenCheck = { IsChecked = true },
                             ElementId = { Text = item.Text },
                             StartknotenId = { Text = element.KnotenIds[0] },
                             EndknotenId = { Text = element.KnotenIds[1] },
@@ -493,14 +514,15 @@ public partial class TragwerkmodellVisualisieren
                     return;
                 }
 
-                _ = new KnotenlastNeu(modell)
+                var last = new KnotenlastNeu(modell)
                 {
                     LastId = { Text = item.Text},
                     KnotenId = { Text = knotenlast.KnotenId.ToString(CultureInfo.CurrentCulture) },
                     Px = { Text = knotenlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
-                    Py = { Text = knotenlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
-                    M  = { Text = knotenlast.Lastwerte[2].ToString(CultureInfo.CurrentCulture) },
+                    Py = { Text = knotenlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) }
                 };
+                if (knotenlast.Lastwerte.Length > 2) last.M.Text = knotenlast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
+
             }
             // Textdarstellung ist eine Elementlast (Linienlast)
             else if (modell.ElementLasten.TryGetValue(item.Text, out var linienlast))
@@ -565,17 +587,17 @@ public partial class TragwerkmodellVisualisieren
                     return;
                 }
 
-                _ = new LagerNeu(modell)
+                var lagerNeu = new LagerNeu(modell)
                 {
                     LagerId = { Text = item.Text },
                     KnotenId = { Text = lager.KnotenId.ToString(CultureInfo.CurrentCulture) },
-                    VorX = { Text = lager.Vordefiniert[0].ToString("0.00") },
-                    VorY = { Text = lager.Vordefiniert[1].ToString("0.00") },
-                    VorRot = { Text = lager.Vordefiniert[2].ToString("0.00") },
                     Xfest = { IsChecked = lager.Typ == 1 | lager.Typ == 3 | lager.Typ == 7 },
                     Yfest = { IsChecked = lager.Typ == 2 | lager.Typ == 3 | lager.Typ == 7 },
                     Rfest = { IsChecked = lager.Typ == 4 | lager.Typ == 7 }
                 };
+                if ((bool)lagerNeu.Xfest.IsChecked) lagerNeu.VorX.Text = lager.Vordefiniert[0].ToString("0.00");
+                if ((bool)lagerNeu.Yfest.IsChecked) lagerNeu.VorY.Text = lager.Vordefiniert[1].ToString("0.00");
+                if ((bool)lagerNeu.Rfest.IsChecked) lagerNeu.VorRot.Text = lager.Vordefiniert[2].ToString("0.00");
             }
         }
     }

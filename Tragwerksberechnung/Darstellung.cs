@@ -625,6 +625,7 @@ public class Darstellung
         foreach (var item in modell.Lasten)
         {
             last = item.Value;
+            last.LastId = item.Key;
             var pathGeometry = KnotenlastZeichnen(last);
             path = new Path()
             {
@@ -872,7 +873,7 @@ public class Darstellung
         }
         foreach (var item in modell.ElementLasten)
         {
-            if (item.Value is not { } linienlast) continue;
+            if (item.Value is not { } lineload) continue;
             const int knotenOffset = 10;
 
             var id = new TextBlock
@@ -902,7 +903,7 @@ public class Darstellung
         foreach (var item in modell.PunktLasten)
         {
             if (item.Value is not PunktLast last) continue;
-            var punktlast = (PunktLast)last;
+            var punktlast = last;
             var id = new TextBlock
             {
                 FontSize = 12,
@@ -912,7 +913,7 @@ public class Darstellung
 
             var startPoint = TransformKnoten(last.Element.Knoten[0], auflösung, maxY);
             var endPoint = TransformKnoten(last.Element.Knoten[1], auflösung, maxY);
-            plazierungText = (Point)(startPoint + (endPoint- startPoint)*punktlast.Offset);
+            plazierungText = startPoint + (endPoint- startPoint)*punktlast.Offset;
             const int knotenOffset = 15;
             SetTop(id, plazierungText.Y + plazierungV + knotenOffset);
             SetLeft(id, plazierungText.X + plazierungH);
@@ -1084,7 +1085,7 @@ public class Darstellung
     {
         foreach (var item in modell.Randbedingungen)
         {
-            if (item.Value is not { } lager) continue;
+            if (item.Value is not { } support) continue;
             var id = new TextBlock
             {
                 FontSize = 12,
@@ -1093,8 +1094,8 @@ public class Darstellung
             };
             item.Value.SetzRandbedingungenReferenzen(modell);
             plazierungText = TransformKnoten(item.Value.Knoten, auflösung, maxY);
-            const int lagerSymbol = 25;
-            SetTop(id, plazierungText.Y + plazierungV + lagerSymbol);
+            const int supportSymbol = 25;
+            SetTop(id, plazierungText.Y + plazierungV + supportSymbol);
             SetLeft(id, plazierungText.X + plazierungH);
             visualErgebnisse.Children.Add(id);
             LagerIDs.Add(id);

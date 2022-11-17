@@ -657,6 +657,9 @@ public partial class StartFenster
         sb.Append(FeParser.EingabeGefunden + "\n\nTragwerksdaten erfolgreich eingelesen");
         _ = MessageBox.Show(sb.ToString(), "Tragwerksberechnung");
         sb.Clear();
+
+        tragwerksModell = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren(modell);
+        tragwerksModell.Show();
     }
     private void TragwerksdatenEditieren(object sender, RoutedEventArgs e)
     {

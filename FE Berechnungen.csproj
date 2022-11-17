@@ -212,9 +212,6 @@
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\PunktlastNeu.xaml.cs">
       <DependentUpon>PunktlastNeu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\BalkenElementNeu.xaml.cs">
-      <DependentUpon>BalkenElementNeu.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenNeu.xaml.cs">
       <DependentUpon>KnotenNeu.xaml</DependentUpon>
     </Compile>
@@ -226,9 +223,6 @@
     </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\ElementNeu.xaml.cs">
       <DependentUpon>ElementNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\FederelementNeu.xaml.cs">
-      <DependentUpon>FederelementNeu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\LagerNeu.xaml.cs">
       <DependentUpon>LagerNeu.xaml</DependentUpon>
@@ -498,10 +492,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\BalkenElementNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenNeu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -515,10 +505,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Tragwerksberechnung\ModelldatenLesen\ElementNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\FederelementNeu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
