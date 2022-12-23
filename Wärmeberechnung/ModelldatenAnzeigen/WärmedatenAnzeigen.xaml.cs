@@ -35,7 +35,7 @@ public partial class WärmedatenAnzeigen
     }
     private void NeuerKnoten(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeuerKnoten(modell);
+        _ = new KnotenNeu(modell);
         StartFenster.berechnet = false;
         Close();
     }
@@ -59,14 +59,14 @@ public partial class WärmedatenAnzeigen
         removeKey = knoten.Id;
         if (letzterKnoten != null)
         {
-            StartFenster.wärmeModell.VisualModel.Children.Remove(letzterKnoten);
+            StartFenster.wärmeModell.VisualWärmeModell.Children.Remove(letzterKnoten);
         }
         letzterKnoten = StartFenster.wärmeModell.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
     //LostFocus
     private void KeinKnotenSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.wärmeModell.VisualModel.Children.Remove(letzterKnoten);
+        StartFenster.wärmeModell.VisualWärmeModell.Children.Remove(letzterKnoten);
     }
 
     private void Elemente_Loaded(object sender, RoutedEventArgs e)
@@ -79,7 +79,7 @@ public partial class WärmedatenAnzeigen
     }
     private void NeuesElement(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeuesElement(modell);
+        _ = new ElementNeu(modell);
         StartFenster.berechnet = false;
         Close();
     }
@@ -103,14 +103,14 @@ public partial class WärmedatenAnzeigen
         removeKey = element.ElementId;
         if (letztesElement != null)
         {
-            StartFenster.wärmeModell.VisualModel.Children.Remove(letztesElement);
+            StartFenster.wärmeModell.VisualWärmeModell.Children.Remove(letztesElement);
         }
         letztesElement = StartFenster.wärmeModell.darstellung.ElementFillZeichnen((Abstrakt2D)element,
             Brushes.Black, Colors.Green, .2, 2);
     }
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.wärmeModell.VisualModel.Children.Remove(letztesElement);
+        StartFenster.wärmeModell.VisualWärmeModell.Children.Remove(letztesElement);
     }
 
     private void Material_Loaded(object sender, RoutedEventArgs e)
@@ -123,7 +123,7 @@ public partial class WärmedatenAnzeigen
     }
     private void NeuesMaterial(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeuesMaterial(modell);
+        _ = new MaterialNeu(modell);
         Close();
     }
     //UnloadingRow
@@ -154,7 +154,7 @@ public partial class WärmedatenAnzeigen
     }
     private void NeueRandbedingung(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeueRandbdingung(modell);
+        _ = new RandbdingungNeu(modell);
         StartFenster.berechnet = false;
         Close();
     }
@@ -186,7 +186,7 @@ public partial class WärmedatenAnzeigen
     }
     private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeueKnotenlast(modell);
+        _ = new KnotenlastNeu(modell);
         StartFenster.berechnet = false;
         Close();
     }
@@ -218,7 +218,7 @@ public partial class WärmedatenAnzeigen
     }
     private void NeueLinienlast(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeueLinienlast(modell);
+        _ = new LinienlastNeu(modell);
         StartFenster.berechnet = false;
         Close();
     }
@@ -250,7 +250,7 @@ public partial class WärmedatenAnzeigen
     }
     private void NeueElementlast(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeueElementlast(modell);
+        _ = new ElementlastNeu(modell);
         StartFenster.berechnet = false;
         Close();
     }

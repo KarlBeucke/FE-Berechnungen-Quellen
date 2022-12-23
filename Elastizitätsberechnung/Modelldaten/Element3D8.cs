@@ -2,13 +2,14 @@
 using FEBibliothek.Modell.abstrakte_Klassen;
 using FEBibliothek.Werkzeuge;
 using System;
+using System.Windows;
 using System.Windows.Media.Media3D;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 
 public class Element3D8 : AbstraktLinear3D8
 {
-    private readonly FeModell Modell;
+    private readonly FeModell modell;
     private AbstraktElement element;
     private readonly double[,] elementMatrix = new double[24, 24];
     private readonly double[] elementDeformations = new double[24];// at element nodes
@@ -20,7 +21,7 @@ public class Element3D8 : AbstraktLinear3D8
 
     public Element3D8(string[] eKnotens, string eMaterialId, FeModell feModell)
     {
-        this.Modell = feModell;
+        this.modell = feModell;
         ElementFreiheitsgrade = 3;
         KnotenProElement = 8;
         KnotenIds = eKnotens;
@@ -103,7 +104,8 @@ public class Element3D8 : AbstraktLinear3D8
         var elementStresses = MatrizenAlgebra.Mult(temp, elementDeformations);
         return elementStresses;
     }
-    public override double[] BerechneElementZustand(double z0, double z1, double z2)
+
+    public override double[] BerechneElementZustand(double zet0, double zet1, double zet2)
     {
         var elementStresses = new double[6];
         return elementStresses;
@@ -118,13 +120,14 @@ public class Element3D8 : AbstraktLinear3D8
                 SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
         }
     }
-    public override Point3D ComputeCenterOfGravity3D()
+
+    public override Point3D BerechneSchwerpunkt3D()
     {
-        if (!Modell.Elemente.TryGetValue(ElementId, out element))
+        if (!modell.Elemente.TryGetValue(ElementId, out element))
         {
             throw new ModellAusnahme("Element3D8: " + ElementId + " nicht im Modell gefunden");
         }
-        element.SetzElementReferenzen(Modell);
-        return Schwerpunkt(element);
+        element.SetzElementReferenzen(modell);
+        return BerechneSchwerpunkt3D(element);
     }
 }

@@ -92,8 +92,10 @@ internal class LastParser
                         p[1] = double.Parse(substrings[3]);
                         offset = double.Parse(substrings[4]);
 
-                        punktLast = new PunktLast(elementId, p[0], p[1], offset);
-                        punktLast.LastId = loadId;
+                        punktLast = new PunktLast(elementId, p[0], p[1], offset)
+                        {
+                            LastId = loadId
+                        };
                         modell.PunktLasten.Add(loadId, punktLast);
                         i++;
                         break;

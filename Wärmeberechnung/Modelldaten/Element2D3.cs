@@ -111,6 +111,6 @@ public class Element2D3 : AbstraktLinear2D3
             throw new ModellAusnahme("Element2D3: " + ElementId + " nicht im Modell gefunden");
         }
         element.SetzElementReferenzen(Modell);
-        return Schwerpunkt(element);
+        return BerechneSchwerpunkt(element);
     }
 }

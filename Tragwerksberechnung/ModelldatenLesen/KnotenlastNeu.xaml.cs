@@ -12,7 +12,7 @@ public partial class KnotenlastNeu
 {
     private readonly FeModell modell;
     private AbstraktLast vorhandeneKnotenlast;
-    private readonly KnotenlastKeys knotenlastKeys;
+    private readonly TragwerkLastenKeys lastenKeys;
     public KnotenlastNeu()
     {
         InitializeComponent();
@@ -23,8 +23,8 @@ public partial class KnotenlastNeu
     {
         InitializeComponent();
         this.modell = modell;
-        knotenlastKeys = new KnotenlastKeys(modell);
-        knotenlastKeys.Show();
+        lastenKeys = new TragwerkLastenKeys(modell);
+        lastenKeys.Show();
         Show();
     }
     public KnotenlastNeu(FeModell modell, string last, string knoten,
@@ -75,14 +75,14 @@ public partial class KnotenlastNeu
             };
             modell.Lasten.Add(knotenlastId, knotenlast);
         }
-        knotenlastKeys?.Close();
+        lastenKeys?.Close();
         Close();
         StartFenster.tragwerksModell.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        knotenlastKeys?.Close();
+        lastenKeys?.Close();
         Close();
     }
 
@@ -112,7 +112,7 @@ public partial class KnotenlastNeu
     {
         if (!modell.Lasten.Keys.Contains(LastId.Text)) return;
         modell.Lasten.Remove(LastId.Text);
-        knotenlastKeys?.Close();
+        lastenKeys?.Close();
         Close();
         StartFenster.tragwerksModell.Close();
     }

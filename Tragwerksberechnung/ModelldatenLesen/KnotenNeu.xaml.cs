@@ -17,15 +17,15 @@ public partial class KnotenNeu
         InitializeComponent();
         modell = feModell;
         // aktiviere Ereignishandler für Canvas
-        StartFenster.tragwerksModell.VisualModel.Background = System.Windows.Media.Brushes.Transparent;
+        StartFenster.tragwerksModell.VisualTragwerkModel.Background = System.Windows.Media.Brushes.Transparent;
         Show();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         // entferne Steuerungsknoten und deaktiviere Ereignishandler für Canvas
-        StartFenster.tragwerksModell.VisualModel.Children.Remove(StartFenster.tragwerksModell.Knoten);
-        StartFenster.tragwerksModell.VisualModel.Background = null;
+        StartFenster.tragwerksModell.VisualTragwerkModel.Children.Remove(StartFenster.tragwerksModell.Knoten);
+        StartFenster.tragwerksModell.VisualTragwerkModel.Background = null;
         StartFenster.tragwerksModell.isKnoten = false;
         Close();
     }
@@ -62,8 +62,8 @@ public partial class KnotenNeu
         }
 
         // entferne Steuerungsknoten und deaktiviere Ereignishandler für Canvas
-        StartFenster.tragwerksModell.VisualModel.Children.Remove(StartFenster.tragwerksModell.Knoten);
-        StartFenster.tragwerksModell.VisualModel.Background = null;
+        StartFenster.tragwerksModell.VisualTragwerkModel.Children.Remove(StartFenster.tragwerksModell.Knoten);
+        StartFenster.tragwerksModell.VisualTragwerkModel.Background = null;
         StartFenster.tragwerksModell.isKnoten = false;
         StartFenster.tragwerksModell.Close();
         Close();

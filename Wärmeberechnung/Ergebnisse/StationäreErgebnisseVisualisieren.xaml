@@ -17,7 +17,7 @@
                 Grid.Row="0" Width="80" Click="BtnWärmefluss_Click" Height="19"/>
             <Button x:Name="ElementTemperaturen" Content="ElementTemperaturen" HorizontalAlignment="Left" Margin="260,7,0,0" VerticalAlignment="Top" 
                 Grid.Row="0" Width="120" Click="BtnElementTemperaturen_Click" Height="19"/>
-            <Canvas Name="VisualErgebnisse" HorizontalAlignment="Left"  VerticalAlignment="Top"
+            <Canvas Name="VisualWärmeErgebnisse" HorizontalAlignment="Left"  VerticalAlignment="Top"
                     Height="690" Width="1000" Grid.Row="1" 
                     ScrollViewer.CanContentScroll="True" SnapsToDevicePixels="True"
                     MouseLeftButtonDown="OnMouseLeftButtonDown"

@@ -110,7 +110,7 @@ public partial class InstationäreDatenAnzeigen
     }
     private void NeueAnfangstemperatur(object sender, MouseButtonEventArgs e)
     {
-        _ = new ZeitNeueAnfangstemperatur(modell);
+        _ = new ZeitAnfangstemperaturNeu(modell);
         StartFenster.berechnet = false;
         Close();
     }
@@ -135,7 +135,7 @@ public partial class InstationäreDatenAnzeigen
     // ************************* Zeitabhängige Randbedingungen ***********************
     private void NeueRandtemperatur(object sender, MouseButtonEventArgs e)
     {
-        _ = new ZeitNeueRandtemperatur(modell);
+        _ = new ZeitRandtemperaturNeu(modell);
         StartFenster.berechnet = false;
         Close();
     }
@@ -209,7 +209,7 @@ public partial class InstationäreDatenAnzeigen
     // ************************* Zeitabhängige Knotenlasten ********************************
     private void NeueKnotentemperatur(object sender, MouseButtonEventArgs e)
     {
-        _ = new ZeitNeueKnotentemperatur(modell);
+        _ = new ZeitKnotentemperaturNeu(modell);
         StartFenster.berechnet = false;
         Close();
     }
@@ -268,7 +268,7 @@ public partial class InstationäreDatenAnzeigen
     // ************************* Zeitabhängige Elementtemperaturen ********************************
     private void NeueElementtemperatur(object sender, MouseButtonEventArgs e)
     {
-        _ = new ZeitNeueElementtemperatur(modell);
+        _ = new ZeitElementtemperaturNeu(modell);
         StartFenster.berechnet = false;
         Close();
     }

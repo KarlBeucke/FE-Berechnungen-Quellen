@@ -10,12 +10,12 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 public partial class PunktlastNeu
 {
     private readonly FeModell modell;
-    private readonly PunktlastKeys punktlastKeys; 
+    private readonly TragwerkLastenKeys punktlastKeys; 
     public PunktlastNeu(FeModell modell)
     {
         InitializeComponent();
         this.modell = modell;
-        punktlastKeys = new PunktlastKeys(modell);
+        punktlastKeys = new TragwerkLastenKeys(modell);
         punktlastKeys.Show();
         Show();
     }

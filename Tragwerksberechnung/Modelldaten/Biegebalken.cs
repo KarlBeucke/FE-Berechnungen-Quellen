@@ -290,6 +290,7 @@ public class Biegebalken : AbstraktBalken
 
         return ElementVerformungen;
     }
+
     public override double[] BerechneElementZustand(double z0, double z1)
     {
         return ElementZustand;

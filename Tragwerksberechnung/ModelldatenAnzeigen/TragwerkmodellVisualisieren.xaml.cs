@@ -24,23 +24,25 @@ public partial class TragwerkmodellVisualisieren
     private readonly List<Shape> hitList = new();
     //alle gefundenen "TextBlocks" werden in dieser Liste gesammelt
     private readonly List<TextBlock> hitTextBlock = new();
-
     private EllipseGeometry hitArea;
+
     private KnotenNeu neuerKnoten;
     private Point mittelpunkt;
     private bool isDragging;
     public bool isKnoten;
     private bool löschFlag;
+    private DialogLöschTragwerksObjekte dialogLöschen;
+    public ZeitintegrationNeu zeitintegrationNeu;
 
     public TragwerkmodellVisualisieren(FeModell feModell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
         InitializeComponent();
-        VisualModel.Children.Remove(Knoten);
+        VisualTragwerkModel.Children.Remove(Knoten);
         Show();
-        VisualModel.Background = Brushes.Transparent;
+        VisualTragwerkModel.Background = Brushes.Transparent;
         modell = feModell;
-        darstellung = new Darstellung(feModell, VisualModel);
+        darstellung = new Darstellung(feModell, VisualTragwerkModel);
         darstellung.UnverformteGeometrie();
         
         // mit Knoten und Element Ids
@@ -62,7 +64,7 @@ public partial class TragwerkmodellVisualisieren
         }
         else
         {
-            foreach (TextBlock id in darstellung.KnotenIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
+            foreach (TextBlock id in darstellung.KnotenIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
             knotenTexteAn = false;
         }
     }
@@ -75,7 +77,7 @@ public partial class TragwerkmodellVisualisieren
         }
         else
         {
-            foreach (TextBlock id in darstellung.ElementIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
+            foreach (TextBlock id in darstellung.ElementIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
             elementTexteAn = false;
         }
     }
@@ -89,10 +91,10 @@ public partial class TragwerkmodellVisualisieren
         }
         else
         {
-            foreach (Shape lasten in darstellung.LastVektoren.Cast<Shape>())
+            foreach (var lasten in darstellung.LastVektoren.Cast<Shape>())
             {
-                VisualModel.Children.Remove(lasten);
-                foreach (TextBlock id in darstellung.LastIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
+                VisualTragwerkModel.Children.Remove(lasten);
+                foreach (var id in darstellung.LastIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
             }
             lastenAn = false;
         }
@@ -109,8 +111,8 @@ public partial class TragwerkmodellVisualisieren
         {
             foreach (Shape path in darstellung.LagerDarstellung.Cast<Shape>())
             {
-                VisualModel.Children.Remove(path);
-                foreach (TextBlock id in darstellung.LagerIDs.Cast<TextBlock>()) VisualModel.Children.Remove(id);
+                VisualTragwerkModel.Children.Remove(path);
+                foreach (TextBlock id in darstellung.LagerIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
             }
             lagerAn = false;
         }
@@ -132,7 +134,6 @@ public partial class TragwerkmodellVisualisieren
     {
         _ = new QuerschnittNeu(modell);
     }
-
     private void MenuMaterialNeu(object sender, RoutedEventArgs e)
     {
         _ = new MaterialNeu(modell);
@@ -160,10 +161,15 @@ public partial class TragwerkmodellVisualisieren
         StartFenster.berechnet = false;
     }
 
+    private void OnBtnZeitintegrationNew_Click(object sender, RoutedEventArgs e)
+    {
+        zeitintegrationNeu = new ZeitintegrationNeu(modell);
+    }
+
     private void OnBtnLöschen_Click(object sender, RoutedEventArgs e)
     {
         löschFlag = true;
-        _ = new DialogLöschStrukturobjekte(löschFlag);
+        dialogLöschen = new DialogLöschTragwerksObjekte(löschFlag);
     }
 
     private void Knoten_MouseDown(object sender, MouseButtonEventArgs e)
@@ -174,14 +180,14 @@ public partial class TragwerkmodellVisualisieren
     private void Knoten_MouseMove(object sender, MouseEventArgs e)
     {
         if (!isDragging) return;
-        var canvPosToWindow = VisualModel.TransformToAncestor(this).Transform(new Point(0, 0));
+        var canvPosToWindow = VisualTragwerkModel.TransformToAncestor(this).Transform(new Point(0, 0));
 
         if (sender is not Ellipse knoten) return;
         var upperlimit = canvPosToWindow.Y + knoten.Height / 2;
-        var lowerlimit = canvPosToWindow.Y + VisualModel.ActualHeight - knoten.Height / 2;
+        var lowerlimit = canvPosToWindow.Y + VisualTragwerkModel.ActualHeight - knoten.Height / 2;
 
         var leftlimit = canvPosToWindow.X + knoten.Width / 2;
-        var rightlimit = canvPosToWindow.X + VisualModel.ActualWidth - knoten.Width / 2;
+        var rightlimit = canvPosToWindow.X + VisualTragwerkModel.ActualWidth - knoten.Width / 2;
 
 
         var absmouseXpos = e.GetPosition(this).X;
@@ -190,7 +196,7 @@ public partial class TragwerkmodellVisualisieren
         if (!(absmouseXpos > leftlimit) || !(absmouseXpos < rightlimit)
                                         || !(absmouseYpos > upperlimit) || !(absmouseYpos < lowerlimit)) return;
 
-        mittelpunkt = new Point(e.GetPosition(VisualModel).X, e.GetPosition(VisualModel).Y);
+        mittelpunkt = new Point(e.GetPosition(VisualTragwerkModel).X, e.GetPosition(VisualTragwerkModel).Y);
 
         Canvas.SetLeft(knoten, mittelpunkt.X - Knoten.Width / 2);
         Canvas.SetTop(knoten, mittelpunkt.Y - Knoten.Height / 2);
@@ -209,19 +215,19 @@ public partial class TragwerkmodellVisualisieren
     {
         hitList.Clear();
         hitTextBlock.Clear();
-        var hitPoint = e.GetPosition(VisualModel);
+        var hitPoint = e.GetPosition(VisualTragwerkModel);
         hitArea = new EllipseGeometry(hitPoint, 1.0, 1.0);
-        VisualTreeHelper.HitTest(VisualModel, null, HitTestCallBack,
+        VisualTreeHelper.HitTest(VisualTragwerkModel, null, HitTestCallBack,
             new GeometryHitTestParameters(hitArea));
 
         // click auf Canvas weder Text noch Shape --> neuer Knoten wird mit Zeiger plaziert und bewegt
         if (hitList.Count == 0 && hitTextBlock.Count == 0)
         {
             if (löschFlag | neuerKnoten == null) return;
-            mittelpunkt = new Point(e.GetPosition(VisualModel).X, e.GetPosition(VisualModel).Y);
+            mittelpunkt = new Point(e.GetPosition(VisualTragwerkModel).X, e.GetPosition(VisualTragwerkModel).Y);
             Canvas.SetLeft(Knoten, mittelpunkt.X - Knoten.Width / 2);
             Canvas.SetTop(Knoten, mittelpunkt.Y - Knoten.Height / 2);
-            VisualModel.Children.Add(Knoten);
+            VisualTragwerkModel.Children.Add(Knoten);
             isKnoten = true;
             var koordinaten = darstellung.TransformBildPunkt(mittelpunkt);
             neuerKnoten.X.Text = koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
@@ -248,8 +254,9 @@ public partial class TragwerkmodellVisualisieren
                     {
                         modell.Elemente.Remove(element.ElementId);
                         StartFenster.tragwerksModell.Close();
+                        dialogLöschen.Close();
                     }
-                    return;
+                    continue;
                 }
 
                 MyPopup.IsOpen = true;
@@ -258,10 +265,7 @@ public partial class TragwerkmodellVisualisieren
                 {
                     if (modell.Elemente.TryGetValue(element.ElementId, out var feder))
                     {
-                        if (modell.Material.TryGetValue(feder.ElementMaterialId, out var material))
-                        {
-                        }
-
+                        if (modell.Material.TryGetValue(feder.ElementMaterialId, out var material)) { }
                         for (var i = 0; i < 3; i++)
                         {
                             if (material != null)
@@ -287,6 +291,7 @@ public partial class TragwerkmodellVisualisieren
                     }
                 }
 
+                sb.Append("\n");
             }
 
             // Lasten
@@ -295,16 +300,14 @@ public partial class TragwerkmodellVisualisieren
                 if (löschFlag)
                 {
                     if (MessageBox.Show("Knotenlast " + knotenlast.LastId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-                    {
-                    }
+                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
                     else
                     {
                         modell.Lasten.Remove(knotenlast.LastId);
                         StartFenster.tragwerksModell.Close();
+                        dialogLöschen.Close();
                     }
-
-                    return;
+                    continue;
                 }
 
                 MyPopup.IsOpen = true;
@@ -316,16 +319,22 @@ public partial class TragwerkmodellVisualisieren
 
                 sb.Append("\n");
             }
-            else if (modell.PunktLasten.TryGetValue(item.Name, out var abstraktElementLast))
+            else if (modell.PunktLasten.TryGetValue(item.Name, out var punktLast))
             {
                 if (löschFlag)
                 {
-                    modell.PunktLasten.Remove(item.Name);
-                    StartFenster.tragwerksModell.Close();
-                    return;
+                    if (MessageBox.Show("Punktlast " + punktLast.LastId + " wird gelöscht.", "Tragwerksmodell",
+                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
+                    else
+                    {
+                        modell.PunktLasten.Remove(punktLast.LastId);
+                        StartFenster.tragwerksModell.Close();
+                        dialogLöschen.Close();
+                    }
+                    continue;
                 }
 
-                var punktlast = (PunktLast)abstraktElementLast;
+                var punktlast = (PunktLast)punktLast;
                 MyPopup.IsOpen = true;
                 sb.Append("Punktlast\t= " + item.Name);
                 for (var i = 0; i < punktlast.Lastwerte.Length; i++)
@@ -339,9 +348,15 @@ public partial class TragwerkmodellVisualisieren
             {
                 if (löschFlag)
                 {
-                    modell.ElementLasten.Remove(item.Name);
-                    StartFenster.tragwerksModell.Close();
-                    return;
+                    if (MessageBox.Show("Elementlast " + elementlast.LastId + " wird gelöscht.", "Tragwerksmodell",
+                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
+                    else
+                    {
+                        modell.ElementLasten.Remove(elementlast.LastId);
+                        StartFenster.tragwerksModell.Close();
+                        dialogLöschen.Close();
+                    }
+                    continue;
                 }
 
                 MyPopup.IsOpen = true;
@@ -355,32 +370,36 @@ public partial class TragwerkmodellVisualisieren
             }
 
             // Lager
-            if (modell.Randbedingungen.TryGetValue(item.Name, out var lager))
+            else if (modell.Randbedingungen.TryGetValue(item.Name, out var lager))
             {
                 if (löschFlag)
                 {
                     if (MessageBox.Show("Lager " + lager.RandbedingungId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
+                    else
                     {
+                        modell.Randbedingungen.Remove(lager.RandbedingungId);
+                        StartFenster.tragwerksModell.Close();
+                        dialogLöschen.Close();
                     }
-
-                    modell.Randbedingungen.Remove(lager.RandbedingungId);
-                    StartFenster.tragwerksModell.Close();
-                    return;
+                    continue;
                 }
 
                 MyPopup.IsOpen = true;
                 sb.Append("Lager\t\t= " + lager.RandbedingungId);
                 sb.Append("\nfestgehalten\t= " + Lagertyp(lager.Typ));
                 if (lager.Typ == 1 | lager.Typ == 3 | lager.Typ == 7)
-                    sb.Append("\nLagerverschiebung x \t= " + lager.Vordefiniert[0]);
+                    sb.Append("\nvordefiniert Ux \t= " + lager.Vordefiniert[0]);
                 if (lager.Typ == 2 | lager.Typ == 3 | lager.Typ == 7)
-                    sb.Append("\nLagerverschiebung y \t= " + lager.Vordefiniert[1]);
+                    sb.Append("\nvordefiniert Uy \t= " + lager.Vordefiniert[1]);
                 if (lager.Typ == 4 | lager.Typ == 7)
-                    sb.Append("\nLagerverdrehung r \t= " + lager.Vordefiniert[2]);
-
-                sb.Append("\n");
+                    sb.Append("\nvordefiniert Phi \t= " + lager.Vordefiniert[2]);
             }
+
+            //sb.Append("\n");
+            MyPopupText.Text = sb.ToString();
+            if (dialogLöschen == null) continue;
+            dialogLöschen.Close();
         }
 
         // click auf Knotentext --> Eigenschaften eines vorhandenen Knotens werden interaktiv verändert
@@ -393,10 +412,11 @@ public partial class TragwerkmodellVisualisieren
                         MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
                 else
                 {
-                    modell.Knoten.Remove(knoten.Id);
+                    modell.Randbedingungen.Remove(knoten.Id);
                     StartFenster.tragwerksModell.Close();
+                    dialogLöschen.Close();
                 }
-                return;
+                continue;
             }
             if (item.Text != knoten.Id) _ = MessageBox.Show("Knoten Id kann hier nicht verändert werden", "Knotentext");
             neuerKnoten = new KnotenNeu(modell)
@@ -411,7 +431,7 @@ public partial class TragwerkmodellVisualisieren
                 (-knoten.Koordinaten[1] + darstellung.maxY) * darstellung.auflösung + darstellung.plazierungV);
             Canvas.SetLeft(Knoten, mittelpunkt.X - Knoten.Width / 2);
             Canvas.SetTop(Knoten, mittelpunkt.Y - Knoten.Height / 2);
-            VisualModel.Children.Add(Knoten);
+            VisualTragwerkModel.Children.Add(Knoten);
             isKnoten = true;
             MyPopup.IsOpen = false;
         }
@@ -432,8 +452,9 @@ public partial class TragwerkmodellVisualisieren
                     {
                         modell.Elemente.Remove(element.ElementId);
                         StartFenster.tragwerksModell.Close();
+                        dialogLöschen.Close();
                     }
-                    return;
+                    continue;
                 }
 
                 switch (element)
@@ -508,10 +529,11 @@ public partial class TragwerkmodellVisualisieren
                             MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
                     else
                     {
-                        modell.Elemente.Remove(knotenlast.LastId);
+                        modell.Lasten.Remove(knotenlast.LastId);
                         StartFenster.tragwerksModell.Close();
+                        dialogLöschen.Close();
                     }
-                    return;
+                    continue;
                 }
 
                 var last = new KnotenlastNeu(modell)
@@ -535,7 +557,9 @@ public partial class TragwerkmodellVisualisieren
                     {
                         modell.LinienLasten.Remove(linienlast.LastId);
                         StartFenster.tragwerksModell.Close();
+                        dialogLöschen.Close();
                     }
+                    continue;
                 }
                 _ = new LinienlastNeu(modell)
                 {
@@ -554,12 +578,14 @@ public partial class TragwerkmodellVisualisieren
                 if (löschFlag)
                 {
                     if (MessageBox.Show("Punktlast " + punktlast.LastId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No){}
+                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
                     else
                     {
                         modell.PunktLasten.Remove(punktlast.LastId);
                         StartFenster.tragwerksModell.Close();
+                        dialogLöschen.Close();
                     }
+                    continue;
                 }
 
                 var punktLast = (PunktLast)punktlast;
@@ -583,8 +609,9 @@ public partial class TragwerkmodellVisualisieren
                     {
                         modell.Randbedingungen.Remove(lager.RandbedingungId);
                         StartFenster.tragwerksModell.Close();
+                        dialogLöschen.Close();
                     }
-                    return;
+                    continue;
                 }
 
                 var lagerNeu = new LagerNeu(modell)
@@ -601,7 +628,6 @@ public partial class TragwerkmodellVisualisieren
             }
         }
     }
-
     private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         MyPopup.IsOpen = false;
@@ -641,7 +667,7 @@ public partial class TragwerkmodellVisualisieren
                 return HitTestResultBehavior.Stop;
         }
     }
-    
+
     private string Lagertyp(int typ)
     {
         var lagertyp = typ switch

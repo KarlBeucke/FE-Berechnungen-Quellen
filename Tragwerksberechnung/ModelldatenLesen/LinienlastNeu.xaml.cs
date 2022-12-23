@@ -12,12 +12,12 @@ public partial class LinienlastNeu
 {
     private readonly FeModell modell;
     private AbstraktElementLast vorhandeneLinienlast;
-    private readonly LinienlastKeys linienlastKeys;
+    private readonly TragwerkLastenKeys linienlastKeys;
     public LinienlastNeu(FeModell modell)
     {
         InitializeComponent();
         this.modell = modell;
-        linienlastKeys = new LinienlastKeys(modell);
+        linienlastKeys = new TragwerkLastenKeys(modell);
         linienlastKeys.Show();
         Show();
     }
@@ -120,6 +120,5 @@ public partial class LinienlastNeu
         linienlastKeys?.Close();
         Close();
         StartFenster.tragwerksModell.Close();
-        linienlastKeys?.Close();
     }
 }

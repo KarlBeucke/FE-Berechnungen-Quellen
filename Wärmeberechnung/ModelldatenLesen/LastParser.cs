@@ -19,7 +19,7 @@ public class LastParser
     public void ParseLasten(string[] lines, FeModell feModel)
     {
         modell = feModel;
-        p = new double[8];
+        //p = new double[8];
         ParseKnotenLast(lines);
         ParseLinienLast(lines);
         ParseElementLast3(lines);
@@ -43,7 +43,7 @@ public class LastParser
                         {
                             loadId = substrings[0];
                             nodeId = substrings[1];
-                            //p = new double[1];
+                            p = new double[1];
                             p[0] = double.Parse(substrings[2]);
                             knotenLast = new KnotenLast(loadId, nodeId, p);
                             modell.Lasten.Add(loadId, knotenLast);
@@ -76,7 +76,7 @@ public class LastParser
                             loadId = substrings[0];
                             startNodeId = substrings[1];
                             endNodeId = substrings[2];
-                            //p = new double[2];
+                            p = new double[2];
                             p[0] = double.Parse(substrings[3]);
                             p[1] = double.Parse(substrings[4]);
                             linienLast = new LinienLast(loadId, startNodeId, endNodeId, p);
@@ -109,7 +109,7 @@ public class LastParser
                         {
                             loadId = substrings[0];
                             elementId = substrings[1];
-                            //p = new double[3];
+                            p = new double[3];
                             p[0] = double.Parse(substrings[2]);
                             p[1] = double.Parse(substrings[3]);
                             p[2] = double.Parse(substrings[4]);
@@ -143,7 +143,7 @@ public class LastParser
                         {
                             loadId = substrings[0];
                             elementId = substrings[1];
-                            //p = new double[4];
+                            p = new double[4];
                             p[0] = double.Parse(substrings[2]);
                             p[1] = double.Parse(substrings[3]);
                             p[2] = double.Parse(substrings[4]);

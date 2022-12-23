@@ -32,7 +32,7 @@ public partial class StatikErgebnisseVisualisieren
         InitializeComponent();
         Show();
 
-        darstellung = new Darstellung(modell, VisualErgebnisse);
+        darstellung = new Darstellung(modell, VisualTragwerkErgebnisse);
 
         // unverformte Geometrie
         darstellung.UnverformteGeometrie();
@@ -59,7 +59,7 @@ public partial class StatikErgebnisseVisualisieren
         {
             foreach (Shape path in darstellung.Verformungen)
             {
-                VisualErgebnisse.Children.Remove(path);
+                VisualTragwerkErgebnisse.Children.Remove(path);
             }
             verformungenAn = false;
         }
@@ -70,13 +70,13 @@ public partial class StatikErgebnisseVisualisieren
         double maxNormalkraft = 0;
         if (querkräfteAn)
         {
-            foreach (Shape path in darstellung.QuerkraftListe) { VisualErgebnisse.Children.Remove(path); }
+            foreach (Shape path in darstellung.QuerkraftListe) { VisualTragwerkErgebnisse.Children.Remove(path); }
             querkräfteAn = false;
         }
         if (momenteAn)
         {
-            foreach (Shape path in darstellung.MomenteListe) { VisualErgebnisse.Children.Remove(path); }
-            VisualErgebnisse.Children.Remove(darstellung.maxMomentText);
+            foreach (Shape path in darstellung.MomenteListe) { VisualTragwerkErgebnisse.Children.Remove(path); }
+            VisualTragwerkErgebnisse.Children.Remove(darstellung.maxMomentText);
             momenteAn = false;
         }
         if (!normalkräfteAn)
@@ -113,7 +113,7 @@ public partial class StatikErgebnisseVisualisieren
         }
         else
         {
-            foreach (Shape path in darstellung.NormalkraftListe) { VisualErgebnisse.Children.Remove(path); }
+            foreach (Shape path in darstellung.NormalkraftListe) { VisualTragwerkErgebnisse.Children.Remove(path); }
             normalkräfteAn = false;
         }
     }
@@ -123,13 +123,13 @@ public partial class StatikErgebnisseVisualisieren
         double maxQuerkraft = 0;
         if (normalkräfteAn)
         {
-            foreach (Shape path in darstellung.NormalkraftListe) { VisualErgebnisse.Children.Remove(path); }
+            foreach (Shape path in darstellung.NormalkraftListe) { VisualTragwerkErgebnisse.Children.Remove(path); }
             normalkräfteAn = false;
         }
         if (momenteAn)
         {
-            foreach (Shape path in darstellung.MomenteListe) { VisualErgebnisse.Children.Remove(path); }
-            VisualErgebnisse.Children.Remove(darstellung.maxMomentText);
+            foreach (Shape path in darstellung.MomenteListe) { VisualTragwerkErgebnisse.Children.Remove(path); }
+            VisualTragwerkErgebnisse.Children.Remove(darstellung.maxMomentText);
             momenteAn = false;
         }
 
@@ -163,7 +163,7 @@ public partial class StatikErgebnisseVisualisieren
         }
         else
         {
-            foreach (Shape path in darstellung.QuerkraftListe) { VisualErgebnisse.Children.Remove(path); }
+            foreach (Shape path in darstellung.QuerkraftListe) { VisualTragwerkErgebnisse.Children.Remove(path); }
             querkräfteAn = false;
         }
     }
@@ -173,12 +173,12 @@ public partial class StatikErgebnisseVisualisieren
         double maxMoment = 0;
         if (normalkräfteAn)
         {
-            foreach (Shape path in darstellung.NormalkraftListe) { VisualErgebnisse.Children.Remove(path); }
+            foreach (Shape path in darstellung.NormalkraftListe) { VisualTragwerkErgebnisse.Children.Remove(path); }
             normalkräfteAn = false;
         }
         if (querkräfteAn)
         {
-            foreach (Shape path in darstellung.QuerkraftListe) { VisualErgebnisse.Children.Remove(path); }
+            foreach (Shape path in darstellung.QuerkraftListe) { VisualTragwerkErgebnisse.Children.Remove(path); }
             querkräfteAn = false;
         }
 
@@ -250,8 +250,8 @@ public partial class StatikErgebnisseVisualisieren
         }
         else
         {
-            foreach (Shape path in darstellung.MomenteListe) { VisualErgebnisse.Children.Remove(path); }
-            foreach (TextBlock maxWerte in darstellung.MaxTexte) { VisualErgebnisse.Children.Remove(maxWerte); }
+            foreach (Shape path in darstellung.MomenteListe) { VisualTragwerkErgebnisse.Children.Remove(path); }
+            foreach (TextBlock maxWerte in darstellung.MaxTexte) { VisualTragwerkErgebnisse.Children.Remove(maxWerte); }
             momenteAn = false;
         }
     }
@@ -265,7 +265,7 @@ public partial class StatikErgebnisseVisualisieren
         }
         else
         {
-            foreach (TextBlock id in darstellung.ElementIDs) { VisualErgebnisse.Children.Remove(id); }
+            foreach (TextBlock id in darstellung.ElementIDs) { VisualTragwerkErgebnisse.Children.Remove(id); }
             elementTexteAn = false;
         }
     }
@@ -278,7 +278,7 @@ public partial class StatikErgebnisseVisualisieren
         }
         else
         {
-            foreach (TextBlock id in darstellung.KnotenIDs) { VisualErgebnisse.Children.Remove(id); }
+            foreach (TextBlock id in darstellung.KnotenIDs) { VisualTragwerkErgebnisse.Children.Remove(id); }
             knotenTexteAn = false;
         }
     }
@@ -286,7 +286,7 @@ public partial class StatikErgebnisseVisualisieren
     private void BtnVerschiebung_Click(object sender, RoutedEventArgs e)
     {
         darstellung.überhöhungVerformung = int.Parse(Verschiebung.Text);
-        foreach (Shape path in darstellung.Verformungen) { VisualErgebnisse.Children.Remove(path); }
+        foreach (Shape path in darstellung.Verformungen) { VisualTragwerkErgebnisse.Children.Remove(path); }
         verformungenAn = false;
         darstellung.VerformteGeometrie();
         verformungenAn = true;
@@ -295,7 +295,7 @@ public partial class StatikErgebnisseVisualisieren
     private void BtnRotation_Click(object sender, RoutedEventArgs e)
     {
         darstellung.überhöhungRotation = int.Parse(Rotation.Text);
-        foreach (Shape path in darstellung.Verformungen) { VisualErgebnisse.Children.Remove(path); }
+        foreach (Shape path in darstellung.Verformungen) { VisualTragwerkErgebnisse.Children.Remove(path); }
         verformungenAn = false;
         darstellung.VerformteGeometrie();
         verformungenAn = true;
@@ -308,9 +308,9 @@ public partial class StatikErgebnisseVisualisieren
         // Shapes und TextBlocks werden am Hit-Punkt gesammelt und nach ID ausgewertet
         hitList.Clear();
         hitTextBlock.Clear();
-        var hitPoint = e.GetPosition(VisualErgebnisse);
+        var hitPoint = e.GetPosition(VisualTragwerkErgebnisse);
         hitArea = new EllipseGeometry(hitPoint, 0.2, 0.2);
-        VisualTreeHelper.HitTest(VisualErgebnisse, null, HitTestCallBack,
+        VisualTreeHelper.HitTest(VisualTragwerkErgebnisse, null, HitTestCallBack,
             new GeometryHitTestParameters(hitArea));
 
         MyPopup.IsOpen = false;

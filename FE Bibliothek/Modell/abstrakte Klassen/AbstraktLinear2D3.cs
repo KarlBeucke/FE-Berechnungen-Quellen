@@ -33,7 +33,7 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
             return Sx;
         }
 
-        protected static Point Schwerpunkt(AbstraktElement element)
+        public Point BerechneSchwerpunkt(AbstraktElement element)
         {
             var cg = new Point();
             var nodes = element.Knoten;

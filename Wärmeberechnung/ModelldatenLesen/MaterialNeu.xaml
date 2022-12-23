@@ -1,0 +1,50 @@
+﻿<Window x:Class="FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.MaterialNeu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+       Title="Neues Material" Height="280" Width="340">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="120"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="4" Margin="0,0,0,37.4" Grid.RowSpan="2">
+            Definition eines neuen Materials
+        </Label>
+
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Material ID:</Label>
+        <TextBox Name="MaterialId" Grid.Row="1" Grid.Column="1" Margin="10,7.8,0,0" Height="20" 
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="32" LostFocus="MaterialIdLostFocus"
+                 />
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">Leitfähigkeit x</Label>
+        <TextBox Name="LeitfähigkeitX" Grid.Row="2" Grid.Column="1" Margin="10,5.4,0,0" 
+                 HorizontalAlignment="Left" Width="45" Height="20"/>
+        <Label Grid.Row="3" Grid.Column="0" Margin="0,5.4,0,0">Leitfähigkeit y</Label>
+        <TextBox Name="LeitfähigkeitY" Grid.Row="3" Grid.Column="1" Margin="10,5.4,0,0" 
+                 HorizontalAlignment="Left" Width="45" Height="20"/>
+        <Label Grid.Row="4" Grid.Column="0" Margin="0,5.4,0,0.6">Leitfähigkeit z</Label>
+        <TextBox Name="LeitfähigkeitZ" Grid.Row="4" Grid.Column="1" Margin="10,5.4,0,0" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="45"/>
+        <Label Grid.Row="5" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">Dichte*Leitfähigkeit</Label>
+        <TextBox Name="DichteLeitfähigkeit" Grid.Row="5" Grid.Column="1" Margin="10,5.4,0,0" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="45"/>
+
+        <Button Grid.Row="6" Grid.Column="0" Width="50"  Height="26" Margin="5,0,0,4.6" 
+                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" >löschen</Button>
+        <Button IsDefault="True" Grid.Row="6" Width="35"  Height="26" Margin="12.2,0,0,4.2" 
+                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1">_Ok</Button>
+        <Button Grid.Row="6" Grid.Column="1" Height="26" Margin="55.2,0,-25.4,4.2" 
+                Click="BtnDialogCancel_Click" VerticalAlignment="Bottom">_Abbrechen</Button>
+    </Grid>
+</Window>

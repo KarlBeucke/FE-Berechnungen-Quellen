@@ -29,7 +29,7 @@ public partial class StationäreErgebnisseVisualisieren
     }
     private void ModelGrid_Loaded(object sender, RoutedEventArgs e)
     {
-        darstellung = new Darstellung(modell, VisualErgebnisse);
+        darstellung = new Darstellung(modell, VisualWärmeErgebnisse);
         darstellung.FestlegungAuflösung();
         darstellung.AlleElementeZeichnen();
         darstellung.KnotentemperaturZeichnen();
@@ -49,7 +49,7 @@ public partial class StationäreErgebnisseVisualisieren
             // entferne ALLE Textdarstellungen der Knotentemperaturen
             foreach (var knotenTemp in darstellung.Knotentemperaturen)
             {
-                VisualErgebnisse.Children.Remove(knotenTemp);
+                VisualWärmeErgebnisse.Children.Remove(knotenTemp);
             }
             knotenTemperaturAn = false;
         }
@@ -71,13 +71,13 @@ public partial class StationäreErgebnisseVisualisieren
             // entferne ALLE resultierenden Wärmeflussvektoren in Elementschwerpunkten
             foreach (Shape path in darstellung.WärmeVektoren)
             {
-                VisualErgebnisse.Children.Remove(path);
+                VisualWärmeErgebnisse.Children.Remove(path);
             }
 
             // entferne ALLE Textdarstellungen der Randbedingungen
             foreach (var rand in darstellung.RandKnoten)
             {
-                VisualErgebnisse.Children.Remove((TextBlock)rand);
+                VisualWärmeErgebnisse.Children.Remove((TextBlock)rand);
             }
             wärmeflussAn = false;
         }
@@ -94,7 +94,7 @@ public partial class StationäreErgebnisseVisualisieren
         {
             foreach (var path in darstellung.TemperaturElemente)
             {
-                VisualErgebnisse.Children.Remove(path);
+                VisualWärmeErgebnisse.Children.Remove(path);
             }
             elementTemperaturAn = false;
         }
@@ -104,9 +104,9 @@ public partial class StationäreErgebnisseVisualisieren
     {
         hitList.Clear();
         hitTextBlock.Clear();
-        var hitPoint = e.GetPosition(VisualErgebnisse);
+        var hitPoint = e.GetPosition(VisualWärmeErgebnisse);
         hitArea = new EllipseGeometry(hitPoint, 1, 1);
-        VisualTreeHelper.HitTest(VisualErgebnisse, null, HitTestCallBack,
+        VisualTreeHelper.HitTest(VisualWärmeErgebnisse, null, HitTestCallBack,
             new GeometryHitTestParameters(hitArea));
 
         MyPopup.IsOpen = true;

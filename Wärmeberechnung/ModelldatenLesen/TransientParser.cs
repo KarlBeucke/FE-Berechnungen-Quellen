@@ -53,32 +53,29 @@ public class TransientParser
         }
 
         // suche Anfangstemperaturen
+        // Liste "Anfangsbedingungen" wird in Klasse Zeitintegration des FeModell instantiiert
+        // Klasse Knotenwerte mit KnotenId und Werten ist in FEBibliothek definiert
         for (var i = 0; i < lines.Length; i++)
         {
-            // stationäre Lösung oder nodeId (incl. "alle")
+            // stationäre Lösung oder knotenId (incl. "alle") mit Knotenwerten
             if (lines[i] != "Anfangstemperaturen") continue;
             FeParser.EingabeGefunden += "\nAnfangstemperaturen";
-
-            var teilStrings = lines[i + 1].Split(delimiters);
-            if (teilStrings[0] == "stationäre Lösung")
+            do
             {
-                feModell.Zeitintegration.VonStationär = true;
-            }
-            else if (teilStrings.Length == 2) do
-                {
+                var teilStrings = lines[i + 1].Split(delimiters);
+                if (teilStrings[0] == "stationäre Lösung")
+                    feModell.Zeitintegration.VonStationär = true;
+                else if (teilStrings.Length == 2)
+                { 
                     // knotenId inkl. alle
                     var knotenId = teilStrings[0];
                     var t0 = double.Parse(teilStrings[1]);
                     var initial = new double[1];
                     initial[0] = t0;
                     feModell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(knotenId, initial));
-                    i++;
-                    teilStrings = lines[i + 1].Split(delimiters);
-                } while (lines[i + 1].Length != 0);
-            else
-            {
-                break;
-            }
+                }
+                i++;
+            } while (lines[i + 1].Length != 0);
         }
 
         // suche zeitabhängige Randtemperaturen, eingeprägte Temperatur am Rand

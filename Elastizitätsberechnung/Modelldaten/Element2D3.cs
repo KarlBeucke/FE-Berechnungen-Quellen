@@ -84,6 +84,16 @@ public class Element2D3 : AbstraktLinear2D3
         return elementSpannungen;
     }
 
+    public override Point BerechneSchwerpunkt()
+    {
+        if (!Modell.Elemente.TryGetValue(ElementId, out element))
+        {
+            throw new ModellAusnahme("Element2D3: " + ElementId + " nicht im Modell gefunden");
+        }
+        element.SetzElementReferenzen(Modell);
+        return BerechneSchwerpunkt(element);
+    }
+
     public override double[] BerechneElementZustand(double z0, double z1)
     {
         for (var i = 0; i < KnotenProElement; i++)
@@ -104,15 +114,5 @@ public class Element2D3 : AbstraktLinear2D3
             for (var j = 0; j < ElementFreiheitsgrade; j++)
                 SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
         }
-    }
-
-    public override Point BerechneSchwerpunkt()
-    {
-        if (!Modell.Elemente.TryGetValue(ElementId, out element))
-        {
-            throw new ModellAusnahme("Element2D3: " + ElementId + " nicht im Modell gefunden");
-        }
-        element.SetzElementReferenzen(Modell);
-        return Schwerpunkt(element);
     }
 }

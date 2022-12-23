@@ -19,7 +19,7 @@ public class Darstellung
     private readonly FeModell modell;
     private AbstraktElement aktElement;
     private Knoten knoten;
-    private readonly Canvas visualErgebnisse;
+    private readonly Canvas visual;
     public int zeitschritt;
     private double maxX;
     private double screenH, screenV;
@@ -30,40 +30,45 @@ public class Darstellung
     private double temp;
     private double minTemp = 100;
     private double maxTemp;
-    private const int RandOben = 60;
-    private const int RandLinks = 60;
+    public const int RandOben = 60;
+    public const int RandLinks = 60;
 
     public List<TextBlock> ElementIDs { get; }
     public List<TextBlock> KnotenIDs { get; }
     public List<TextBlock> LastKnoten { get; }
+    public List<Shape> LastLinien { get; }
     public List<Shape> LastElemente { get; }
     public List<TextBlock> Knotentemperaturen { get; }
     public List<TextBlock> Knotengradienten { get; }
     public List<Shape> TemperaturElemente { get; }
     public List<Shape> WärmeVektoren { get; }
     public List<TextBlock> RandKnoten { get; }
+    public List<TextBlock> Anfangsbedingungen { get; }
 
     public Darstellung(FeModell feModell, Canvas visual)
     {
         modell = feModell;
-        visualErgebnisse = visual;
+        this.visual = visual;
         KnotenIDs = new List<TextBlock>();
         ElementIDs = new List<TextBlock>();
+        //LastIDs = new List<TextBlock>();
         LastKnoten = new List<TextBlock>();
+        LastLinien = new List<Shape>();
         LastElemente = new List<Shape>();
         Knotentemperaturen = new List<TextBlock>();
         Knotengradienten = new List<TextBlock>();
         TemperaturElemente = new List<Shape>();
         WärmeVektoren = new List<Shape>();
         RandKnoten = new List<TextBlock>();
+        Anfangsbedingungen = new List<TextBlock>();
         FestlegungAuflösung();
     }
 
     public void FestlegungAuflösung()
     {
         const int rand = 100;
-        screenH = visualErgebnisse.ActualWidth;
-        screenV = visualErgebnisse.ActualHeight;
+        screenH = visual.ActualWidth;
+        screenV = visual.ActualHeight;
 
         foreach (var item in modell.Knoten)
         {
@@ -83,11 +88,11 @@ public class Darstellung
                 Name = "Knoten",
                 FontSize = 12,
                 Text = item.Key,
-                Foreground = Red
+                Foreground = Black
             };
             SetTop(id, (-item.Value.Koordinaten[1] + maxY) * auflösung + RandOben);
             SetLeft(id, item.Value.Koordinaten[0] * auflösung + RandLinks);
-            visualErgebnisse.Children.Add(id);
+            visual.Children.Add(id);
             KnotenIDs.Add(id);
         }
     }
@@ -107,7 +112,7 @@ public class Darstellung
         };
         SetLeft(knotenPath, RandLinks);
         SetTop(knotenPath, RandOben);
-        visualErgebnisse.Children.Add(knotenPath);
+        visual.Children.Add(knotenPath);
         return knotenPath;
     }
     public void ElementTexte()
@@ -125,7 +130,7 @@ public class Darstellung
             };
             SetTop(id, (-cg.Y + maxY) * auflösung + RandOben);
             SetLeft(id, cg.X * auflösung + RandLinks);
-            visualErgebnisse.Children.Add(id);
+            visual.Children.Add(id);
             ElementIDs.Add(id);
         }
     }
@@ -149,7 +154,7 @@ public class Darstellung
         };
         SetLeft(elementPath, RandLinks);
         SetTop(elementPath, RandOben);
-        visualErgebnisse.Children.Add(elementPath);
+        visual.Children.Add(elementPath);
     }
     public Shape ElementFillZeichnen(AbstraktElement element, Brush umrissFarbe, Color füllFarbe, double transparenz, double wichte)
     {
@@ -166,7 +171,7 @@ public class Darstellung
         };
         SetLeft(elementPath, RandLinks);
         SetTop(elementPath, RandOben);
-        visualErgebnisse.Children.Add(elementPath);
+        visual.Children.Add(elementPath);
         return elementPath;
     }
     private PathGeometry ElementUmrisse(AbstraktElement element)
@@ -190,6 +195,7 @@ public class Darstellung
 
     public void KnotenlastenZeichnen()
     {
+        const int lastOffset = 10;
         foreach (var item in modell.Lasten)
         {
             var knotenId = item.Value.KnotenId;
@@ -202,11 +208,29 @@ public class Darstellung
                 Text = lastWert.ToString(CurrentCulture),
                 Foreground = Red
             };
-            SetTop(knotenLast, lastPunkt.Y + RandOben + 10);
+            SetTop(knotenLast, lastPunkt.Y + RandOben + lastOffset);
             SetLeft(knotenLast, lastPunkt.X + RandLinks);
 
+
             LastKnoten.Add(knotenLast);
-            visualErgebnisse.Children.Add(knotenLast);
+            visual.Children.Add(knotenLast);
+        }
+        // zeitabhängige Knotenlasten
+        foreach (var zeitKnotenlast in from item 
+                     in modell.ZeitabhängigeKnotenLasten let zeitKnotenlast = new TextBlock
+                 {
+                     Name = "ZeitKnotenLast",
+                     Uid = item.Key,
+                     FontSize = 12,
+                     Text = item.Key,
+                     Foreground = DarkViolet
+                 } where modell.Knoten.TryGetValue(item.Value.KnotenId, out knoten) where knoten != null select zeitKnotenlast)
+        {
+            if (knoten == null) continue;
+            SetTop(zeitKnotenlast, (-knoten.Koordinaten[1] + maxY) * auflösung + RandOben + lastOffset);
+            SetLeft(zeitKnotenlast, knoten.Koordinaten[0] * auflösung + RandLinks);
+            visual.Children.Add(zeitKnotenlast);
+            LastKnoten.Add(zeitKnotenlast);
         }
     }
     public void ElementlastenZeichnen()
@@ -214,12 +238,117 @@ public class Darstellung
         foreach (var item in modell.ElementLasten)
         {
             if (modell.Elemente.TryGetValue(item.Value.ElementId, out var element)) { }
-            var elementLast = ElementFillZeichnen((Abstrakt2D)element, Black, Colors.Red, .2, 1);
-            LastElemente.Add(elementLast);
+            var pathGeometry = ElementUmrisse(element);
+            var füllung = new SolidColorBrush(Colors.Red) { Opacity = .2 };
+
+            Shape elementPath = new Path()
+            {
+                Name = item.Key,
+                Stroke = Black,
+                StrokeThickness = 2,
+                Fill = füllung,
+                Data = pathGeometry
+            };
+            SetLeft(elementPath, RandLinks);
+            SetTop(elementPath, RandOben);
+            visual.Children.Add(elementPath);
+
+            var abstrakt2D = (Abstrakt2D)element;
+            const int lastOffset = -15;
+            if (abstrakt2D != null)
+            {
+                var cg = abstrakt2D.BerechneSchwerpunkt();
+                var id = new TextBlock
+                {
+                    Name = "Last",
+                    Uid = item.Value.LastId,
+                    FontSize = 12,
+                    Text = item.Key,
+                    Foreground = Red
+                };
+                SetTop(id, (-cg.Y + maxY) * auflösung + RandOben + lastOffset);
+                SetLeft(id, cg.X * auflösung + RandLinks);
+                visual.Children.Add(id);
+                LastKnoten.Add(id);
+            }
+
+            LastElemente.Add(elementPath);
+        }
+        // zeitabhängige Elementlasten
+        foreach (var item in modell.ZeitabhängigeElementLasten)
+        {
+            if (modell.Elemente.TryGetValue(item.Value.ElementId, out var element)) { }
+            var pathGeometry = ElementUmrisse(element);
+            var füllung = new SolidColorBrush(Colors.Violet) { Opacity = .2 };
+
+            Shape elementPath = new Path()
+            {
+                Name = item.Key,
+                Stroke = Black,
+                StrokeThickness = 2,
+                Fill = füllung,
+                Data = pathGeometry
+            };
+            SetLeft(elementPath, RandLinks);
+            SetTop(elementPath, RandOben);
+            visual.Children.Add(elementPath);
+
+            var abstrakt2D = (Abstrakt2D)element;
+            const int lastOffset = -15;
+            if (abstrakt2D != null)
+            {
+                var cg = abstrakt2D.BerechneSchwerpunkt();
+                var id = new TextBlock
+                {
+                    Name = "ZeitElementLast",
+                    Uid = item.Value.LastId,
+                    FontSize = 12,
+                    Text = item.Key,
+                    Foreground = DarkViolet
+                };
+                SetTop(id, (-cg.Y + maxY) * auflösung + RandOben + lastOffset);
+                SetLeft(id, cg.X * auflösung + RandLinks);
+                visual.Children.Add(id);
+                LastKnoten.Add(id);
+            }
+
+            LastElemente.Add(elementPath);
+        }
+    }
+    public void LinienlastenZeichnen()
+    {
+        foreach (var item in modell.LinienLasten)
+        {
+            var linienlast = item.Value;
+            var pathFigure = new PathFigure();
+            var pathGeometry = new PathGeometry();
+
+            if (modell.Knoten.TryGetValue(linienlast.StartKnotenId, out knoten)) { }
+            var startPoint = TransformKnoten(knoten, auflösung, maxY);
+            pathFigure.StartPoint = startPoint;
+            if (modell.Knoten.TryGetValue(linienlast.EndKnotenId, out knoten)) { }
+            var endPoint = TransformKnoten(knoten, auflösung, maxY);
+            pathFigure.StartPoint = startPoint;
+            pathFigure.Segments.Add(new LineSegment(endPoint, true));
+
+            pathGeometry.Figures.Add(pathFigure);
+
+            Shape linienPath = new Path()
+            {
+                Name = linienlast.LastId,
+                Stroke = Red,
+                StrokeThickness = 5,
+                Data = pathGeometry
+            };
+            SetLeft(linienPath, RandLinks);
+            SetTop(linienPath, RandOben);
+            visual.Children.Add(linienPath);
+            LastLinien.Add(linienPath);
         }
     }
     public void RandbedingungenZeichnen()
     {
+        const int randOffset = 15;
         // zeichne den Wert einer jeden Randbedingung als Text an Randknoten
         foreach (var item in modell.Randbedingungen)
         {
@@ -227,20 +356,42 @@ public class Darstellung
             if (modell.Knoten.TryGetValue(knotenId, out knoten)) { }
             var fensterKnoten = TransformKnoten(knoten, auflösung, maxY);
 
-            var randWert = item.Value.Knoten.Reaktionen[0];
+            var randWert = item.Value.Vordefiniert[0];
             var randbedingung = new TextBlock
             {
                 Name = "Support",
                 Uid = item.Value.RandbedingungId,
                 FontSize = 12,
                 Text = randWert.ToString("N2"),
-                //Foreground = Brushes.DarkOliveGreen
-                Background = LightBlue
+                Foreground = DarkOliveGreen,
+                Background = LightGreen
+            };
+            RandKnoten.Add(randbedingung);
+            SetTop(randbedingung, fensterKnoten.Y + RandOben + randOffset);
+            SetLeft(randbedingung, fensterKnoten.X + RandLinks);
+            visual.Children.Add(randbedingung);
+        }
+
+        // zeitabhängige Randknoten
+        foreach (var item in modell.ZeitabhängigeRandbedingung)
+        {
+            var knotenId = item.Value.KnotenId;
+            if (modell.Knoten.TryGetValue(knotenId, out knoten)) { }
+            var fensterKnoten = TransformKnoten(knoten, auflösung, maxY);
+
+            var randbedingung = new TextBlock
+            {
+                Name = "ZeitRandbedingung",
+                Uid = item.Value.RandbedingungId,
+                FontSize = 12,
+                Text = item.Value.RandbedingungId,
+                Foreground = DarkGreen,
+                Background = LawnGreen
             };
             RandKnoten.Add(randbedingung);
             SetTop(randbedingung, fensterKnoten.Y + RandOben + 15);
             SetLeft(randbedingung, fensterKnoten.X + RandLinks);
-            visualErgebnisse.Children.Add(randbedingung);
+            visual.Children.Add(randbedingung);
         }
     }
     public void KnotentemperaturZeichnen()
@@ -265,15 +416,73 @@ public class Darstellung
             Knotentemperaturen.Add(id);
             SetTop(id, fensterKnoten.Y + RandOben);
             SetLeft(id, fensterKnoten.X + RandLinks);
-            visualErgebnisse.Children.Add(id);
+            visual.Children.Add(id);
         }
+    }
+
+    public void AnfangsbedingungenZeichnen()
+    {
+        const int anfangOffset = 15;
+        // zeichne Wert einer jeden Anfangsbedingung als Text an Knoten
+
+        foreach (var item in modell.Zeitintegration.Anfangsbedingungen)
+        {
+            var knotenwerte = (Knotenwerte)item;
+            var knotenId = knotenwerte.KnotenId;
+            if (knotenId == "alle") continue;
+
+            if (modell.Knoten.TryGetValue(knotenId, out knoten)) { }
+
+            var fensterKnoten = TransformKnoten(knoten, auflösung, maxY);
+
+            var anfangsbedingung = new TextBlock
+            {
+                Name = "Anfangsbedingung",
+                //Uid = "",
+                FontSize = 12,
+                Text = knotenwerte.Werte[0].ToString("N2"),
+                Foreground = Black,
+                Background = Turquoise
+            };
+            SetTop(anfangsbedingung, fensterKnoten.Y + RandOben + anfangOffset);
+            SetLeft(anfangsbedingung, fensterKnoten.X + RandLinks);
+            visual.Children.Add(anfangsbedingung);
+            Anfangsbedingungen.Add(anfangsbedingung);
+        }
+    }
+    public void AnfangsbedingungenZeichnen(string knotenId, double knotenwert, string anf)
+    {
+        const int randOffset = 15;
+        // zeichne den Wert einer Anfangsbedingung als Text an Knoten
+
+        if (modell.Knoten.TryGetValue(knotenId, out knoten)) { }
+        var fensterKnoten = TransformKnoten(knoten, auflösung, maxY);
+
+        var anfangsbedingung = new TextBlock
+        {
+            Name = "Anfangsbedingung",
+            Uid = anf,
+            FontSize = 12,
+            Text = knotenwert.ToString("N2"),
+            Foreground = Black,
+            Background = Turquoise
+        };
+        SetTop(anfangsbedingung, fensterKnoten.Y + RandOben + randOffset);
+        SetLeft(anfangsbedingung, fensterKnoten.X + RandLinks);
+        visual.Children.Add(anfangsbedingung);
+        Anfangsbedingungen.Add(anfangsbedingung);
+    }
+    public void AnfangsbedingungenEntfernen()
+    {
+        foreach (var item in Anfangsbedingungen) visual.Children.Remove(item);
+        Anfangsbedingungen.Clear();
     }
 
     public void ElementTemperaturZeichnen()
     {
         foreach (var path in TemperaturElemente)
         {
-            visualErgebnisse.Children.Remove(path);
+            visual.Children.Remove(path);
         }
         TemperaturElemente.Clear();
         foreach (var item in modell.Knoten)
@@ -318,7 +527,7 @@ public class Darstellung
             SetLeft(path, RandLinks);
             SetTop(path, RandOben);
             // zeichne Shape
-            visualErgebnisse.Children.Add(path);
+            visual.Children.Add(path);
         }
     }
     public void KnotengradientenZeichnen(int index)
@@ -342,14 +551,14 @@ public class Darstellung
             Knotengradienten.Add(id);
             SetTop(id, fensterKnoten.Y + RandOben + 15);
             SetLeft(id, fensterKnoten.X + RandLinks);
-            visualErgebnisse.Children.Add(id);
+            visual.Children.Add(id);
         }
     }
     public void WärmeflussvektorenZeichnen()
     {
         foreach (var path in WärmeVektoren)
         {
-            visualErgebnisse.Children.Remove(path);
+            visual.Children.Remove(path);
         }
         WärmeVektoren.Clear();
         double maxVektor = 0;
@@ -394,7 +603,7 @@ public class Darstellung
             SetLeft(path, RandLinks);
             SetTop(path, RandOben);
             // zeichne Shape
-            visualErgebnisse.Children.Add(path);
+            visual.Children.Add(path);
         }
     }
 
@@ -437,14 +646,14 @@ public class Darstellung
         SetLeft(zeitverlauf, RandLinks);
         SetTop(zeitverlauf, mY * auflösungV + RandOben);
         // zeichne Shape
-        visualErgebnisse.Children.Add(zeitverlauf);
+        visual.Children.Add(zeitverlauf);
     }
     public void Koordinatensystem(double tmin, double tmax, double max, double min)
     {
         const int rand = 20;
         const int maxOrdinateAnzeigen = 100;
-        screenH = visualErgebnisse.ActualWidth;
-        screenV = visualErgebnisse.ActualHeight;
+        screenH = visual.ActualWidth;
+        screenV = visual.ActualHeight;
         if (double.IsNaN(max)) { max = maxOrdinateAnzeigen; min = -max; }
         if ((max - min) < double.Epsilon) auflösungV = screenV - rand;
         else auflösungV = (screenV - rand) / (max - min);
@@ -458,7 +667,7 @@ public class Darstellung
             Y2 = max * auflösungV + RandOben,
             StrokeThickness = 2
         };
-        _ = visualErgebnisse.Children.Add(xAchse);
+        _ = visual.Children.Add(xAchse);
         var yAchse = new Line
         {
             Stroke = Black,
@@ -468,11 +677,18 @@ public class Darstellung
             Y2 = RandOben,
             StrokeThickness = 2
         };
-        visualErgebnisse.Children.Add(yAchse);
+        visual.Children.Add(yAchse);
     }
 
     private static Point TransformKnoten(Knoten knoten, double auflösung, double maxY)
     {
         return new Point(knoten.Koordinaten[0] * auflösung, (-knoten.Koordinaten[1] + maxY) * auflösung);
+    }
+    public double[] TransformBildPunkt(Point point)
+    {
+        var koordinaten = new double[2];
+        koordinaten[0] = (point.X - RandLinks) / auflösung;
+        koordinaten[1] = (-point.Y + RandOben) / auflösung + maxY;
+        return koordinaten;
     }
 }

@@ -63,7 +63,7 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
             Sx = MatrizenAlgebra.Mult(sz, zx);
             return Sx;
         }
-        protected static Point3D Schwerpunkt(AbstraktElement element)
+        protected Point3D BerechneSchwerpunkt3D(AbstraktElement element)
         {
             var cg = new Point3D();
             var nodes = element.Knoten;

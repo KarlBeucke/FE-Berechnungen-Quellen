@@ -475,7 +475,7 @@ public class Darstellung3D
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
             var normalXWert = elementSpannungen.Spannungen[0] * skalierung;
-            var schwerpunkt = element.ComputeCenterOfGravity3D();
+            var schwerpunkt = element.BerechneSchwerpunkt3D();
             schwerpunkt.Y = -schwerpunkt.Y;
 
             var start = (Point3D)((Vector3D)schwerpunkt + normalXRichtung * normalXWert / 2);
@@ -505,7 +505,7 @@ public class Darstellung3D
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
             var normalYWert = elementSpannungen.Spannungen[1] * skalierung;
-            var schwerpunkt = element.ComputeCenterOfGravity3D();
+            var schwerpunkt = element.BerechneSchwerpunkt3D();
             schwerpunkt.Y = -schwerpunkt.Y;
 
             var start = (Point3D)((Vector3D)schwerpunkt + normalYRichtung * normalYWert / 2);
@@ -535,7 +535,7 @@ public class Darstellung3D
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
             var schubXWert = elementSpannungen.Spannungen[2] * skalierung;
-            var schwerpunkt = element.ComputeCenterOfGravity3D();
+            var schwerpunkt = element.BerechneSchwerpunkt3D();
             schwerpunkt.Y = -schwerpunkt.Y;
 
             var start = (Point3D)((Vector3D)schwerpunkt + schubXRichtung * schubXWert / 2);
@@ -565,7 +565,7 @@ public class Darstellung3D
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
             var normalZWert = elementSpannungen.Spannungen[3] * skalierung;
-            var schwerpunkt = element.ComputeCenterOfGravity3D();
+            var schwerpunkt = element.BerechneSchwerpunkt3D();
             schwerpunkt.Y = -schwerpunkt.Y;
 
             var start = (Point3D)((Vector3D)schwerpunkt + normalZRichtung * normalZWert / 2);
@@ -594,7 +594,7 @@ public class Darstellung3D
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
             var schubYWert = elementSpannungen.Spannungen[4] * skalierung;
-            var schwerpunkt = element.ComputeCenterOfGravity3D();
+            var schwerpunkt = element.BerechneSchwerpunkt3D();
             schwerpunkt.Y = -schwerpunkt.Y;
 
             var start = (Point3D)((Vector3D)schwerpunkt + schubYRichtung * schubYWert / 2);
@@ -623,7 +623,7 @@ public class Darstellung3D
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
             var schubZWert = elementSpannungen.Spannungen[5] * skalierung;
-            var schwerpunkt = element.ComputeCenterOfGravity3D();
+            var schwerpunkt = element.BerechneSchwerpunkt3D();
             schwerpunkt.Y = -schwerpunkt.Y;
 
             var start = (Point3D)((Vector3D)schwerpunkt + schubZRichtung * schubZWert / 2);

@@ -16,7 +16,7 @@ public partial class StartFenster
 {
     private FeParser parse;
     private FeModell modell;
-    private Berechnung modellBerechnung;
+    public static Berechnung modellBerechnung;
     private OpenFileDialog dateiDialog;
     private string dateiPfad;
     public static Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren tragwerksModell;
@@ -25,7 +25,7 @@ public partial class StartFenster
     public static Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren stationäreErgebnisse;
 
     private string[] dateiZeilen;
-    private bool wärmeDaten, tragwerksDaten, zeitintegrationDaten;
+    public static bool wärmeDaten, tragwerksDaten, zeitintegrationDaten;
     public static bool berechnet, zeitintegrationBerechnet;
 
     public StartFenster()
@@ -99,6 +99,9 @@ public partial class StartFenster
         sb.Append(FeParser.EingabeGefunden + "\n\nWärmemodelldaten erfolgreich eingelesen");
         _ = MessageBox.Show(sb.ToString(), "Wärmeberechnung");
         sb.Clear();
+
+        wärmeModell = new Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren(modell);
+        wärmeModell.Show();
     }
     private void WärmedatenEditieren(object sender, RoutedEventArgs e)
     {
@@ -388,7 +391,7 @@ public partial class StartFenster
     }
     private void WärmedatenVisualisieren(object sender, RoutedEventArgs e)
     {
-        wärmeModell = new Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren(modell);
+        wärmeModell = new Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren(modell); 
         wärmeModell.Show();
     }
     private void WärmedatenBerechnen(object sender, EventArgs e)
@@ -464,9 +467,9 @@ public partial class StartFenster
     {
         if (modell != null)
         {
+            modellBerechnung = new Berechnung(modell);
             if (!berechnet)
             {
-                modellBerechnung = new Berechnung(modell);
                 modellBerechnung.BerechneSystemMatrix();
                 berechnet = true;
             }
@@ -893,13 +896,15 @@ public partial class StartFenster
     {
         if (modell != null)
         {
+            modellBerechnung ??= new Berechnung(modell);
             if (!berechnet)
             {
-                modellBerechnung = new Berechnung(modell);
                 modellBerechnung.BerechneSystemMatrix();
+                berechnet = true;
             }
             // default = 2 Eigenstates, falls nicht anders spezifiziert
             modell.Eigenzustand ??= new Eigenzustände("default", 2);
+            if (modell.Eigenzustand.Eigenwerte != null) return;
             modellBerechnung.Eigenzustände();
             _ = MessageBox.Show("Eigenfrequenzen erfolgreich ermittelt", "Tragwerksberechnung");
         }
@@ -912,13 +917,15 @@ public partial class StartFenster
     {
         if (modell != null)
         {
+            modellBerechnung ??= new Berechnung(modell);
             if (!berechnet)
             {
-                modellBerechnung = new Berechnung(modell);
                 modellBerechnung.BerechneSystemMatrix();
-                // default = 2 Eigenstates, falls nicht anders spezifiziert
-                modell.Eigenzustand ??= new Eigenzustände("default", 2);
+                berechnet = true;
             }
+            // default = 2 Eigenstates, falls nicht anders spezifiziert
+            modell.Eigenzustand ??= new Eigenzustände("default", 2);
+            if (modell.Eigenzustand.Eigenwerte != null) return;
             modellBerechnung.Eigenzustände();
             var eigen = new Tragwerksberechnung.Ergebnisse.EigenlösungAnzeigen(modell);
             eigen.Show();
@@ -932,13 +939,16 @@ public partial class StartFenster
     {
         if (modell != null)
         {
+            modellBerechnung ??= new Berechnung(modell);
             if (!berechnet)
             {
-                modellBerechnung = new Berechnung(modell);
                 modellBerechnung.BerechneSystemMatrix();
-                // default = 2 Eigenstates, falls nicht anders spezifiziert
-                modell.Eigenzustand ??= new Eigenzustände("default", 2);
+                berechnet = true;
             }
+
+            // default = 2 Eigenstates, falls nicht anders spezifiziert
+            modell.Eigenzustand ??= new Eigenzustände("default", 2);
+            if (modell.Eigenzustand.Eigenwerte != null) return;
             modellBerechnung.Eigenzustände();
             var visual = new Tragwerksberechnung.Ergebnisse.EigenlösungVisualisieren(modell);
             visual.Show();

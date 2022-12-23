@@ -18,10 +18,10 @@ public class Element3D8 : AbstraktLinear3D8
     private FeModell Modell { get; }
 
     // constructor
-    public Element3D8(string[] eKnotens, string materialId)
+    public Element3D8(string[] eKnotens, string materialId, FeModell modell)
     {
         WärmeStatus = new double[3];
-        if (Modell.Raumdimension != 3)
+        if (modell.Raumdimension != 3)
             _ = MessageBox.Show("Das Modell ist nicht 3D", "Wärmeberechnung");
 
         ElementFreiheitsgrade = 1;
@@ -30,7 +30,7 @@ public class Element3D8 : AbstraktLinear3D8
         Knoten = new Knoten[KnotenProElement];
         for (var i = 0; i < KnotenProElement; i++)
         {
-            if (Modell.Knoten.TryGetValue(KnotenIds[i], out var node)) { }
+            if (modell.Knoten.TryGetValue(KnotenIds[i], out var node)) { }
             Knoten[i] = node;
         }
         ElementMaterialId = materialId;
@@ -128,13 +128,14 @@ public class Element3D8 : AbstraktLinear3D8
                 SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
         }
     }
-    public override Point3D ComputeCenterOfGravity3D()
+
+    public override Point3D BerechneSchwerpunkt3D()
     {
         if (!Modell.Elemente.TryGetValue(ElementId, out element))
         {
             throw new ModellAusnahme("Element3D8: " + ElementId + " nicht im Modell gefunden");
         }
         element.SetzElementReferenzen(Modell);
-        return Schwerpunkt(element);
+        return BerechneSchwerpunkt3D(element);
     }
 }

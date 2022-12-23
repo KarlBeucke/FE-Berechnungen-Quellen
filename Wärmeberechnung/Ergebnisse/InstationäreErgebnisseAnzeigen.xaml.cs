@@ -84,7 +84,7 @@ public partial class InstationäreErgebnisseAnzeigen
 
         if (letzterKnoten != null)
         {
-            wärmeModell.VisualModel.Children.Remove(letzterKnoten);
+            wärmeModell.VisualWärmeModell.Children.Remove(letzterKnoten);
         }
         letzterKnoten = wärmeModell.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
@@ -130,14 +130,14 @@ public partial class InstationäreErgebnisseAnzeigen
         if (modell.Knoten.TryGetValue(knotenId, out knoten)) { }
         if (letzterKnoten != null)
         {
-            wärmeModell.VisualModel.Children.Remove(letzterKnoten);
+            wärmeModell.VisualWärmeModell.Children.Remove(letzterKnoten);
         }
         letzterKnoten = wärmeModell.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
     //LostFocus
     private void KeineKnotenwerteZeileSelected(object sender, RoutedEventArgs e)
     {
-        wärmeModell.VisualModel.Children.Remove(letzterKnoten);
+        wärmeModell.VisualWärmeModell.Children.Remove(letzterKnoten);
     }
 
     //WärmeflussvektorenGrid
@@ -171,7 +171,7 @@ public partial class InstationäreErgebnisseAnzeigen
         var element = cell.Value;
         if (letztesElement != null)
         {
-            wärmeModell.VisualModel.Children.Remove(letztesElement);
+            wärmeModell.VisualWärmeModell.Children.Remove(letztesElement);
         }
         letztesElement = wärmeModell.darstellung.ElementFillZeichnen((Abstrakt2D)element,
             Brushes.Black, Colors.Green, .2, 2);
@@ -179,7 +179,7 @@ public partial class InstationäreErgebnisseAnzeigen
     //LostFocus
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
-        wärmeModell.VisualModel.Children.Remove(letztesElement);
+        wärmeModell.VisualWärmeModell.Children.Remove(letztesElement);
         letzterKnoten = null;
     }
 

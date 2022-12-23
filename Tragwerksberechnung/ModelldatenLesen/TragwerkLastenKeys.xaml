@@ -1,0 +1,23 @@
+﻿<Window x:Class="FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.TragwerkLastenKeys"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="vorhandene Tragwerklastdefinitionen" Height="200" Width="300">
+    <Grid>
+        <ListView Margin="10" Name="TragwerklastenKeys">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding LastId}" />
+                    <GridViewColumn Header="Knoten" Width="50" DisplayMemberBinding="{Binding KnotenId}" />
+                    <GridViewColumn Header="Element" Width="50" DisplayMemberBinding="{Binding ElementId}" />
+                    <GridViewColumn Width="50" DisplayMemberBinding="{Binding Lastwerte[0], StringFormat=G3}"/>
+                    <GridViewColumn Width="50" DisplayMemberBinding="{Binding Lastwerte[1], StringFormat=G3}"/>
+                    <GridViewColumn Width="50" DisplayMemberBinding="{Binding Lastwerte[2], StringFormat=G3}"/>
+                    <GridViewColumn Width="50" DisplayMemberBinding="{Binding Lastwerte[3], StringFormat=G3}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

@@ -1,4 +1,5 @@
-﻿using FEBibliothek.Modell;
+﻿using System.Globalization;
+using FEBibliothek.Modell;
 using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
@@ -6,21 +7,57 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 public partial class ZeitDämpfungsratenNeu
 {
     private readonly FeModell modell;
+    private int eigenform;
     public ZeitDämpfungsratenNeu(FeModell modell)
     {
         InitializeComponent();
         this.modell = modell;
-        Show();
+        eigenform = StartFenster.tragwerksModell.zeitintegrationNeu.eigenForm;
+        if (eigenform > modell.Eigenzustand.DämpfungsRaten.Count)
+        {
+            Xi.Text = "";
+        }
+        else
+        {
+            var anfang = (ModaleWerte)modell.Eigenzustand.DämpfungsRaten[eigenform - 1];
+            Xi.Text = anfang.Dämpfung.ToString(CultureInfo.CurrentCulture);
+        }
+        ShowDialog();
     }
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
-        modell.Eigenzustand.DämpfungsRaten.
-            Add(new ModaleWerte(double.Parse(Xi.Text)));
-
+        // neues Dämpfungsmaß hinzufügen
+        if (eigenform > modell.Eigenzustand.DämpfungsRaten.Count)
+        {
+            modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(double.Parse(Xi.Text)));
+        }
+        // vorhandenes Dämpfungsmaß ändern
+        else
+        {
+            var anfang = (ModaleWerte)modell.Eigenzustand.DämpfungsRaten[eigenform];
+            anfang.Dämpfung = double.Parse(Xi.Text);
+        }
         Close();
     }
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();
+        StartFenster.tragwerksModell.zeitintegrationNeu.Close();
+    }
+
+    private void BtnLöschen_Click(object sender, RoutedEventArgs e)
+    {
+        modell.Eigenzustand.DämpfungsRaten.RemoveAt(eigenform);
+        eigenform = 0;
+        if (modell.Eigenzustand.DämpfungsRaten.Count <= 0)
+        {
+            Close();
+            StartFenster.tragwerksModell.zeitintegrationNeu.Close();
+            return;
+        }
+        var anfangsWerte = (ModaleWerte)modell.Eigenzustand.DämpfungsRaten[eigenform];
+        Xi.Text = anfangsWerte.Dämpfung.ToString("G2");
+        Close();
+        StartFenster.tragwerksModell.zeitintegrationNeu.Close();
     }
 }

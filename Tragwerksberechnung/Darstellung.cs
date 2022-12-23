@@ -30,7 +30,7 @@ public class Darstellung
     private const int MaxNormalkraftScreen = 30;
     private const int MaxQuerkraftScreen = 30;
     private const int MaxMomentScreen = 50;
-    private readonly Canvas visualErgebnisse;
+    private readonly Canvas visual;
     public TextBlock maxMomentText;
     public Point plazierungText;
 
@@ -45,11 +45,13 @@ public class Darstellung
     public List<object> NormalkraftListe { get; }
     public List<object> QuerkraftListe { get; }
     public List<object> MomenteListe { get; }
+    public List<TextBlock> Anfangsbedingungen { get; }
+
 
     public Darstellung(FeModell feModell, Canvas visual)
     {
         modell = feModell;
-        visualErgebnisse = visual;
+        this.visual = visual;
         ElementIDs = new List<object>();
         KnotenIDs = new List<object>();
         LastIDs = new List<object>();
@@ -60,13 +62,14 @@ public class Darstellung
         NormalkraftListe = new List<object>();
         QuerkraftListe = new List<object>();
         MomenteListe = new List<object>();
+        Anfangsbedingungen = new List<TextBlock>();
         MaxTexte = new List<object>();
         FestlegungAuflösung();
     }
     public void FestlegungAuflösung()
     {
-        screenH = visualErgebnisse.ActualWidth;
-        screenV = visualErgebnisse.ActualHeight;
+        screenH = visual.ActualWidth;
+        screenV = visual.ActualHeight;
 
         var x = new List<double>();
         var y = new List<double>();
@@ -106,7 +109,7 @@ public class Darstellung
         if (auflösungH < auflösung) auflösung = auflösungH;
 
     }
-
+    
     public void UnverformteGeometrie()
     {
         // Elementumrisse werden als Shape (PathGeometry) mit Namen hinzugefügt
@@ -134,7 +137,7 @@ public class Darstellung
         };
         SetLeft(tragwerkPath, plazierungH);
         SetTop(tragwerkPath, plazierungV);
-        visualErgebnisse.Children.Add(tragwerkPath);
+        visual.Children.Add(tragwerkPath);
     }
 
     public Shape KnotenZeigen(Knoten feKnoten, Brush farbe, double wichte)
@@ -153,7 +156,7 @@ public class Darstellung
         };
         SetLeft(knotenPath, plazierungH);
         SetTop(knotenPath, plazierungV);
-        visualErgebnisse.Children.Add(knotenPath);
+        visual.Children.Add(knotenPath);
         return knotenPath;
     }
     public Shape ElementZeichnen(AbstraktElement element, Brush farbe, double wichte)
@@ -203,7 +206,7 @@ public class Darstellung
         };
         SetLeft(elementPath, plazierungH);
         SetTop(elementPath, plazierungV);
-        visualErgebnisse.Children.Add(elementPath);
+        visual.Children.Add(elementPath);
         return elementPath;
     }
     public void VerformteGeometrie()
@@ -344,7 +347,7 @@ public class Darstellung
 
             SetLeft(path, plazierungH);
             SetTop(path, plazierungV);
-            visualErgebnisse.Children.Add(path);
+            visual.Children.Add(path);
             Verformungen.Add(path);
         }
     }
@@ -574,7 +577,7 @@ public class Darstellung
             };
             SetTop(id, (-cg.Y + maxY) * auflösung + plazierungV);
             SetLeft(id, cg.X * auflösung + plazierungH);
-            visualErgebnisse.Children.Add(id);
+            visual.Children.Add(id);
             ElementIDs.Add(id);
         }
     }
@@ -586,11 +589,11 @@ public class Darstellung
             {
                 FontSize = 12,
                 Text = item.Key,
-                Foreground = Red
+                Foreground = Black
             };
             SetTop(id, (-item.Value.Koordinaten[1] + maxY) * auflösung + plazierungV);
             SetLeft(id, item.Value.Koordinaten[0] * auflösung + plazierungH);
-            visualErgebnisse.Children.Add(id);
+            visual.Children.Add(id);
             KnotenIDs.Add(id);
         }
     }
@@ -638,7 +641,7 @@ public class Darstellung
 
             SetLeft(path, plazierungH);
             SetTop(path, plazierungV);
-            visualErgebnisse.Children.Add(path);
+            visual.Children.Add(path);
         }
         foreach (var item in modell.PunktLasten)
         {
@@ -654,7 +657,7 @@ public class Darstellung
 
             SetLeft(path, plazierungH);
             SetTop(path, plazierungV);
-            visualErgebnisse.Children.Add(path);
+            visual.Children.Add(path);
         }
         foreach (var item in modell.ElementLasten)
         {
@@ -676,7 +679,7 @@ public class Darstellung
 
             SetLeft(path, plazierungH);
             SetTop(path, plazierungV);
-            visualErgebnisse.Children.Add(path);
+            visual.Children.Add(path);
         }
     }
     private PathGeometry KnotenlastZeichnen(AbstraktLast knotenlast)
@@ -859,7 +862,7 @@ public class Darstellung
             {
                 FontSize = 12,
                 Text = item.Key,
-                Foreground = Black
+                Foreground = Red
             };
             if (modell.Knoten.TryGetValue(item.Value.KnotenId, out var lastKnoten))
             {
@@ -867,57 +870,46 @@ public class Darstellung
                 const int knotenOffset = 20;
                 SetTop(id, plazierungText.Y + plazierungV - knotenOffset);
                 SetLeft(id, plazierungText.X + plazierungH);
-                visualErgebnisse.Children.Add(id);
+                visual.Children.Add(id);
                 LastIDs.Add(id);
             }
         }
-        foreach (var item in modell.ElementLasten)
+        foreach (var item in modell.ElementLasten.
+                     Where(item => item.Value is LinienLast))
         {
-            if (item.Value is not { } lineload) continue;
-            const int knotenOffset = 10;
+            const int elementOffset = -20;
 
             var id = new TextBlock
             {
                 FontSize = 12,
                 Text = item.Key,
-                Foreground = Black
+                Foreground = Red
             };
-            plazierungText = TransformKnoten(item.Value.Element.Knoten[0], auflösung, maxY);
-            SetTop(id, plazierungText.Y + plazierungV + knotenOffset);
+            var plazierung = ((Vector)TransformKnoten(item.Value.Element.Knoten[0], auflösung, maxY)
+                              +(Vector)TransformKnoten(item.Value.Element.Knoten[1], auflösung, maxY))/2;
+            plazierungText = (Point)plazierung;
+            SetTop(id, plazierungText.Y + plazierungV + elementOffset);
             SetLeft(id, plazierungText.X + plazierungH);
-            visualErgebnisse.Children.Add(id);
+            visual.Children.Add(id);
             LastIDs.Add(id);
-
-            var id2 = new TextBlock
-            {
-                FontSize = 12,
-                Text = item.Key,
-                Foreground = Black
-            };
-            plazierungText = TransformKnoten(item.Value.Element.Knoten[1], auflösung, maxY);
-            SetTop(id2, plazierungText.Y + plazierungV + knotenOffset);
-            SetLeft(id2, plazierungText.X + plazierungH);
-            visualErgebnisse.Children.Add(id2);
-            LastIDs.Add(id2);
         }
         foreach (var item in modell.PunktLasten)
         {
             if (item.Value is not PunktLast last) continue;
-            var punktlast = last;
             var id = new TextBlock
             {
                 FontSize = 12,
                 Text = item.Key,
-                Foreground = Black
+                Foreground = Red
             };
 
             var startPoint = TransformKnoten(last.Element.Knoten[0], auflösung, maxY);
             var endPoint = TransformKnoten(last.Element.Knoten[1], auflösung, maxY);
-            plazierungText = startPoint + (endPoint- startPoint)*punktlast.Offset;
+            plazierungText = startPoint + (endPoint- startPoint)*last.Offset;
             const int knotenOffset = 15;
             SetTop(id, plazierungText.Y + plazierungV + knotenOffset);
             SetLeft(id, plazierungText.X + plazierungH);
-            visualErgebnisse.Children.Add(id);
+            visual.Children.Add(id);
             LastIDs.Add(id);
         }
     }
@@ -989,7 +981,7 @@ public class Darstellung
             SetLeft(path, plazierungH);
             SetTop(path, plazierungV);
             // zeichne Shape
-            visualErgebnisse.Children.Add(path);
+            visual.Children.Add(path);
         }
     }
     private PathGeometry EineFesthaltungZeichnen(Knoten lagerKnoten)
@@ -1085,7 +1077,7 @@ public class Darstellung
     {
         foreach (var item in modell.Randbedingungen)
         {
-            if (item.Value is not { } support) continue;
+            if (item.Value is not Lager) continue;
             var id = new TextBlock
             {
                 FontSize = 12,
@@ -1097,9 +1089,37 @@ public class Darstellung
             const int supportSymbol = 25;
             SetTop(id, plazierungText.Y + plazierungV + supportSymbol);
             SetLeft(id, plazierungText.X + plazierungH);
-            visualErgebnisse.Children.Add(id);
+            visual.Children.Add(id);
             LagerIDs.Add(id);
         }
+    }
+
+    public void AnfangsbedingungenZeichnen(string knotenId, double knotenwert, string anf)
+    {
+        const int randOffset = 15;
+        // zeichne den Wert einer Anfangsbedingung als Text an Knoten
+
+        if (modell.Knoten.TryGetValue(knotenId, out knoten)) { }
+        var fensterKnoten = TransformKnoten(knoten, auflösung, maxY);
+
+        var anfangsbedingung = new TextBlock
+        {
+            Name = "Anfangsbedingung",
+            Uid = anf,
+            FontSize = 12,
+            Text = knotenwert.ToString("N2"),
+            Foreground = Black,
+            Background = Turquoise
+        };
+        SetTop(anfangsbedingung, fensterKnoten.Y + RandOben + randOffset);
+        SetLeft(anfangsbedingung, fensterKnoten.X + RandLinks);
+        visual.Children.Add(anfangsbedingung);
+        Anfangsbedingungen.Add(anfangsbedingung);
+    }
+    public void AnfangsbedingungenEntfernen()
+    {
+        foreach (var item in Anfangsbedingungen) visual.Children.Remove(item);
+        Anfangsbedingungen.Clear();
     }
 
     //public void Beschleunigungen_Zeichnen()
@@ -1187,7 +1207,7 @@ public class Darstellung
             };
             SetLeft(path, plazierungH);
             SetTop(path, plazierungV);
-            visualErgebnisse.Children.Add(path);
+            visual.Children.Add(path);
             NormalkraftListe.Add(path);
         }
         else
@@ -1267,7 +1287,7 @@ public class Darstellung
                 };
                 SetLeft(path, plazierungH);
                 SetTop(path, plazierungV);
-                visualErgebnisse.Children.Add(path);
+                visual.Children.Add(path);
                 NormalkraftListe.Add(path);
             }
         }
@@ -1319,7 +1339,7 @@ public class Darstellung
             };
             SetLeft(path, plazierungH);
             SetTop(path, plazierungV);
-            visualErgebnisse.Children.Add(path);
+            visual.Children.Add(path);
             QuerkraftListe.Add(path);
         }
         // Element hat 1 Punkt- und/oder 1 Linienlast
@@ -1381,7 +1401,7 @@ public class Darstellung
                 };
                 SetLeft(path, plazierungH);
                 SetTop(path, plazierungV);
-                visualErgebnisse.Children.Add(path);
+                visual.Children.Add(path);
                 QuerkraftListe.Add(path);
 
                 // Querkraftlinie vom Lastangriffs- bis zum Endpunkt
@@ -1412,7 +1432,7 @@ public class Darstellung
                 };
                 SetLeft(path, plazierungH);
                 SetTop(path, plazierungV);
-                visualErgebnisse.Children.Add(path);
+                visual.Children.Add(path);
                 QuerkraftListe.Add(path);
             }
 
@@ -1468,7 +1488,7 @@ public class Darstellung
                 };
                 SetLeft(path, plazierungH);
                 SetTop(path, plazierungV);
-                visualErgebnisse.Children.Add(path);
+                visual.Children.Add(path);
                 QuerkraftListe.Add(path);
 
                 // Querkraftlinie auf der rechten Seite
@@ -1499,7 +1519,7 @@ public class Darstellung
                 };
                 SetLeft(path, plazierungH);
                 SetTop(path, plazierungV);
-                visualErgebnisse.Children.Add(path);
+                visual.Children.Add(path);
                 QuerkraftListe.Add(path);
             }
         }
@@ -1557,7 +1577,7 @@ public class Darstellung
             };
             SetLeft(path, plazierungH);
             SetTop(path, plazierungV);
-            visualErgebnisse.Children.Add(path);
+            visual.Children.Add(path);
             MomenteListe.Add(path);
         }
 
@@ -1629,7 +1649,7 @@ public class Darstellung
 
                     konstant = qa * abstandMmax;
                     linear = q / l * abstandMmax * abstandMmax / 2;
-                    mmax = element.ElementZustand[2] - element.ElementZustand[1] * abstandMmax
+                    mmax = element.ElementZustand[2] + element.ElementZustand[1] * abstandMmax
                            + konstant * abstandMmax / 2
                            + linear * abstandMmax / 3;
                 }
@@ -1769,7 +1789,7 @@ public class Darstellung
             };
             SetLeft(path, plazierungH);
             SetTop(path, plazierungV);
-            visualErgebnisse.Children.Add(path);
+            visual.Children.Add(path);
             MomenteListe.Add(path);
 
             maxMomentText = new TextBlock
@@ -1780,7 +1800,7 @@ public class Darstellung
             };
             SetTop(maxMomentText, maxPunkt.Y + plazierungV);
             SetLeft(maxMomentText, maxPunkt.X);
-            visualErgebnisse.Children.Add(maxMomentText);
+            visual.Children.Add(maxMomentText);
             MaxTexte.Add(maxMomentText);
         }
     }
@@ -1807,13 +1827,13 @@ public class Darstellung
         SetLeft(zeitverlauf, RandLinks);
         SetTop(zeitverlauf, mY * auflösungV + plazierungV);
         // zeichne Shape
-        visualErgebnisse.Children.Add(zeitverlauf);
+        visual.Children.Add(zeitverlauf);
     }
     public void Koordinatensystem(double tmin, double tmax, double max, double min)
     {
         const int rand = 20;
-        screenH = visualErgebnisse.ActualWidth;
-        screenV = visualErgebnisse.ActualHeight;
+        screenH = visual.ActualWidth;
+        screenV = visual.ActualHeight;
         if (double.IsPositiveInfinity(max)) auflösungV = screenV - rand;
         else auflösungV = (screenV - rand) / (max - min);
         auflösungH = (screenH - rand) / (tmax - tmin);
@@ -1826,7 +1846,7 @@ public class Darstellung
             Y2 = max * auflösungV + plazierungV,
             StrokeThickness = 2
         };
-        _ = visualErgebnisse.Children.Add(xAchse);
+        _ = visual.Children.Add(xAchse);
         var yAchse = new Line
         {
             Stroke = Black,
@@ -1836,7 +1856,7 @@ public class Darstellung
             Y2 = plazierungV,
             StrokeThickness = 2
         };
-        visualErgebnisse.Children.Add(yAchse);
+        visual.Children.Add(yAchse);
     }
     private static Vector RotateVectorScreen(Vector vec, double winkel)  // clockwise in degree
     {

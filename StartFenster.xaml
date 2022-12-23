@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="FE Berechnungen Stand November 2022
+        Title="FE Berechnungen Stand Dezember 2022
                                                             © Prof. Karl Beucke" Height="450" Width="780">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -131,15 +131,18 @@
                 <MenuItem Header="Knotenzeitverläufe visualisieren" HorizontalAlignment="Left" Height="20" Width="300" Margin="0,0,0,0" Click="KnotenzeitverläufeWärmeVisualisieren" />
             </MenuItem>
             <Button Height="30" Width="30" VerticalAlignment="Center" HorizontalAlignment="Left"
-                    Margin="-80,0,0,0" Background="Yellow">
+                    Margin="-80,0,0,0" Background="Yellow"
+                    Click="WärmedatenEinlesen">
                 <TextBlock FontWeight="Bold" Height="21">neu</TextBlock>
             </Button>
             <Button Height="30" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"
-                    Margin="-60,0,0,0" Background="Yellow">
+                    Margin="-60,0,0,0" Background="Yellow"
+                    Click="WärmedatenVisualisieren">
                 <TextBlock FontWeight="Bold" Height="21">Modell</TextBlock>
             </Button>
             <Button Height="30" Width="60" VerticalAlignment="Center" HorizontalAlignment="Left"
-                    Margin="-20,0,0,0" Background="Yellow">
+                    Margin="-20,0,0,0" Background="Yellow"
+                    Click="WärmeberechnungErgebnisseVisualisieren">
                 <TextBlock FontWeight="Bold" Height="21">Ergebnis</TextBlock>
             </Button>
         </Menu>

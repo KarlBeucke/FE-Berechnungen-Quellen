@@ -35,14 +35,14 @@ public partial class StationäreErgebnisseAnzeigen
         var knoten = cell.Value;
         if (letzterKnoten != null)
         {
-            StartFenster.stationäreErgebnisse.VisualErgebnisse.Children.Remove(letzterKnoten);
+            StartFenster.stationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(letzterKnoten);
         }
         letzterKnoten = StartFenster.stationäreErgebnisse.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
     //LostFocus
     private void KeinKnotenSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.stationäreErgebnisse.VisualErgebnisse.Children.Remove(letzterKnoten);
+        StartFenster.stationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(letzterKnoten);
         letztesElement = null;
     }
 
@@ -78,7 +78,7 @@ public partial class StationäreErgebnisseAnzeigen
         var element = cell.Value;
         if (letztesElement != null)
         {
-            StartFenster.stationäreErgebnisse.VisualErgebnisse.Children.Remove(letztesElement);
+            StartFenster.stationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(letztesElement);
         }
         letztesElement = StartFenster.stationäreErgebnisse.darstellung.ElementFillZeichnen((Abstrakt2D)element,
             Brushes.Black, Colors.Green, .2, 2);
@@ -86,7 +86,7 @@ public partial class StationäreErgebnisseAnzeigen
     //LostFocus
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.stationäreErgebnisse.VisualErgebnisse.Children.Remove(letztesElement);
+        StartFenster.stationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(letztesElement);
         letzterKnoten = null;
     }
 
