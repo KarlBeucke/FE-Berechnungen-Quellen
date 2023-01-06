@@ -17,8 +17,8 @@ public partial class StationäreErgebnisseVisualisieren
     private readonly FeModell modell;
     public Darstellung darstellung;
     private bool knotenTemperaturAn, elementTemperaturAn, wärmeflussAn;
-    private readonly List<object> hitList = new List<object>();
-    private readonly List<TextBlock> hitTextBlock = new List<TextBlock>();
+    private readonly List<object> hitList = new();
+    private readonly List<TextBlock> hitTextBlock = new();
     private EllipseGeometry hitArea;
 
     public StationäreErgebnisseVisualisieren(FeModell model)
@@ -77,7 +77,7 @@ public partial class StationäreErgebnisseVisualisieren
             // entferne ALLE Textdarstellungen der Randbedingungen
             foreach (var rand in darstellung.RandKnoten)
             {
-                VisualWärmeErgebnisse.Children.Remove((TextBlock)rand);
+                VisualWärmeErgebnisse.Children.Remove(rand);
             }
             wärmeflussAn = false;
         }
@@ -112,38 +112,41 @@ public partial class StationäreErgebnisseVisualisieren
         MyPopup.IsOpen = true;
 
         var sb = new StringBuilder();
+        string done="";
         foreach (var item in hitList.Where(item => item != null))
         {
             switch (item)
             {
                 case Polygon polygon:
+                {
+                    MyPopup.IsOpen = true;
+                    if (modell.Elemente.TryGetValue(polygon.Name, out var multiKnotenElement))
                     {
-                        MyPopup.IsOpen = true;
-                        if (modell.Elemente.TryGetValue(polygon.Name, out var multiKnotenElement))
-                        {
-                            var element2D = (Abstrakt2D)multiKnotenElement;
-                            var elementTemperaturen = element2D.BerechneElementZustand(0, 0);
-                            sb.Append("\nElement\t= " + element2D.ElementId);
-                            sb.Append("\nElementmitte Tx\t= " + elementTemperaturen[0].ToString("F2"));
-                            sb.Append("\nElementmitte Ty\t= " + elementTemperaturen[1].ToString("F2") + "\n");
-                        }
-                        MyPopupText.Text = sb.ToString();
-                        break;
+                        var element2D = (Abstrakt2D)multiKnotenElement;
+                        var elementTemperaturen = element2D.BerechneElementZustand(0, 0);
+                        sb.Append("Element\t= " + element2D.ElementId);
+                        sb.Append("\nElementmitte Tx\t= " + elementTemperaturen[0].ToString("F2"));
+                        sb.Append("\nElementmitte Ty\t= " + elementTemperaturen[1].ToString("F2") + "\n");
                     }
+                    MyPopupText.Text = sb.ToString();
+                    break;
+                }
                 case Path path:
+                {
+                    if (path.Name == done) break;
+                    MyPopup.IsOpen = true;
+                    if (modell.Elemente.TryGetValue(path.Name, out var multiKnotenElement))
                     {
-                        MyPopup.IsOpen = true;
-                        if (modell.Elemente.TryGetValue(path.Name, out var multiKnotenElement))
-                        {
-                            var element2D = (Abstrakt2D)multiKnotenElement;
-                            var elementTemperaturen = element2D.BerechneElementZustand(0, 0);
-                            sb.Append("\nElement\t= " + element2D.ElementId);
-                            sb.Append("\nElementmitte Tx\t= " + elementTemperaturen[0].ToString("F2"));
-                            sb.Append("\nElementmitte Ty\t= " + elementTemperaturen[1].ToString("F2") + "\n");
-                        }
-                        MyPopupText.Text = sb.ToString();
-                        break;
+                        var element2D = (Abstrakt2D)multiKnotenElement;
+                        var elementTemperaturen = element2D.BerechneElementZustand(0, 0);
+                        sb.Append("Element\t= " + element2D.ElementId);
+                        sb.Append("\nElementmitte Tx\t= " + elementTemperaturen[0].ToString("F2"));
+                        sb.Append("\nElementmitte Ty\t= " + elementTemperaturen[1].ToString("F2") + "\n");
                     }
+                    MyPopupText.Text = sb.ToString();
+                    done = path.Name;
+                    break;
+                }
             }
         }
 

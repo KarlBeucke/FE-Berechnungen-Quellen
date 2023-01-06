@@ -513,7 +513,7 @@ namespace FEBibliothek.Modell
                         case 0:
                             {
                                 // Datei einlesen
-                                const string inputDirectory = "\\FE Programm\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                                const string inputDirectory = "\\FE-Berechnungen-App\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
                                 const int spalte = 1;
                                 AusDatei(inputDirectory, spalte, vordefinierteTemperatur);
                                 break;
@@ -747,10 +747,10 @@ namespace FEBibliothek.Modell
                     var knotenFreiheitsgrad = item.Value.KnotenFreiheitsgrad;
 
                     var masse = systemGleichungen.DiagonalMatrix;
-                    foreach (var item2 in modell.Knoten)
+                    foreach (var index in modell.Knoten.Select(item2 => 
+                                 item2.Value.SystemIndizes).Where(index => 
+                                 !systemGleichungen.Status[index[knotenFreiheitsgrad]]))
                     {
-                        var index = item2.Value.SystemIndizes;
-                        if (systemGleichungen.Status[index[knotenFreiheitsgrad]]) continue;
                         for (var k = 0; k < anregung.Count; k++)
                             anregung[k][index[knotenFreiheitsgrad]] = -masse[index[knotenFreiheitsgrad]] * force[k];
                     }
@@ -789,17 +789,10 @@ namespace FEBibliothek.Modell
             try
             {
                 zeilen = File.ReadAllLines(pfad);
-                var werteProZeile = zeilen[0].Split(delimiters).Length;
-                if (zeilen.Length * werteProZeile > last.Count)
-                {
-                    _ = MessageBox.Show(" Anregungsdatei ist NICHT konsistent mit der gegebenen Anzahl von Zeitschritten!!!",
-                        "Berechnung AusDatei");
-                    return;
-                }
             }
             catch (IOException ex)
             {
-                _ = MessageBox.Show(ex + " Anregungsfunktion konnte nicht aus Datei gelesen werden!!!", "Analysis FromFile");
+                _ = MessageBox.Show(ex + " Anregungsfunktion konnte nicht aus Datei gelesen werden!!!", "Berechnung.AusDatei");
                 return;
             }
             // Anregungsfunktion[timeSteps]
@@ -811,12 +804,9 @@ namespace FEBibliothek.Modell
                 foreach (var zeile in zeilen)
                 {
                     substrings = zeile.Split(delimiters);
-                    foreach (var word in substrings) { werte.Add(double.Parse(word)); }
+                    werte.AddRange(substrings.Select(double.Parse));
                 }
-
-                var schritte = last.Count;
-                if (schritte > werte.Count) schritte = werte.Count;
-                for (var i = 0; i < schritte; i++) { last[i] = werte[i]; }
+                for (var i = 0; i < werte.Count; i++) { last[i] = werte[i]; }
             }
             else
             {
@@ -826,9 +816,41 @@ namespace FEBibliothek.Modell
                 for (var k = 0; k < schritte; k++)
                 {
                     substrings = zeilen[k].Split(delimiters);
-                    last[k] = double.Parse(substrings[spalte]);
+                    last[k] = double.Parse(substrings[spalte-1]);
                 }
             }
+        }
+        public List<double> AusDatei(string inputDirectory)
+        {
+            var delimiters = new[] { '\t' };
+            var werte = new List<double>();
+
+            var datei = new OpenFileDialog
+            {
+                Filter = "All files (*.*)|*.*",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            };
+            datei.InitialDirectory += inputDirectory;
+
+            if (datei.ShowDialog() != true)
+                return werte;
+            var pfad = datei.FileName;
+
+            try
+            {
+                var zeilen = File.ReadAllLines(pfad);
+                foreach (var zeile in zeilen)
+                {
+                    var substrings = zeile.Split(delimiters);
+                    werte.AddRange(substrings.Select(double.Parse));
+                }
+            }
+            catch (IOException ex)
+            {
+                _ = MessageBox.Show(ex + " Anregungsfunktion konnte nicht aus Datei gelesen werden!!!", "Analysis FromFile");
+                return werte;
+            }
+            return werte;
         }
         private static void StückweiseLinear(double dt, IReadOnlyList<double> intervall, IList<double> last)
         {

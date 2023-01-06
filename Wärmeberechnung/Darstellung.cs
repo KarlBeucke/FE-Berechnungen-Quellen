@@ -513,11 +513,11 @@ public class Darstellung
             var rot = FromArgb(intens, 255, 0, 0);
             var myBrush = new SolidColorBrush(rot);
 
-
             Shape path = new Path()
             {
                 Stroke = Blue,
                 StrokeThickness = 1,
+                Name = aktElement.ElementId,
                 Opacity = 0.5,
                 Fill = myBrush,
                 Data = pathGeometry

@@ -35,12 +35,13 @@ public partial class ElementNeu
         {
             modell.Elemente.Remove(ElementId.Text);
         }
-        var knotenIds = new string[2];
-        knotenIds[0] = Knoten1Id.Text;
-        if (Knoten2Id.Text.Length != 0) knotenIds[1] = Knoten2Id.Text;
-
+        
+        string[] knotenIds;
         if (Element2D2Check.IsChecked != null && (bool)Element2D2Check.IsChecked)
         {
+            knotenIds = new string[2];
+            knotenIds[0] = Knoten1Id.Text;
+            if (Knoten2Id.Text.Length != 0) knotenIds[1] = Knoten2Id.Text;
             var element = new Element2D2(knotenIds, MaterialId.Text, modell)
             {
                 ElementId = ElementId.Text
@@ -49,6 +50,9 @@ public partial class ElementNeu
         }
         else if (Element2D3Check.IsChecked != null && (bool)Element2D3Check.IsChecked)
         {
+            knotenIds = new string[3];
+            knotenIds[0] = Knoten1Id.Text;
+            if (Knoten2Id.Text.Length != 0) knotenIds[1] = Knoten2Id.Text;
             if (Knoten3Id.Text.Length != 0) knotenIds[2] = Knoten3Id.Text;
             var element = new Element2D3(knotenIds, MaterialId.Text, modell)
             {
@@ -58,6 +62,9 @@ public partial class ElementNeu
         }
         else if (Element2D4Check.IsChecked != null && (bool)Element2D4Check.IsChecked)
         {
+            knotenIds = new string[4];
+            knotenIds[0] = Knoten1Id.Text;
+            if (Knoten2Id.Text.Length != 0) knotenIds[1] = Knoten2Id.Text;
             if (Knoten3Id.Text.Length != 0) knotenIds[2] = Knoten3Id.Text;
             if (Knoten4Id.Text.Length != 0) knotenIds[3] = Knoten4Id.Text;
             var element = new Element2D4(knotenIds, MaterialId.Text, modell)
@@ -68,6 +75,9 @@ public partial class ElementNeu
         }
         else if (Element3D8Check.IsChecked != null && (bool)Element3D8Check.IsChecked)
         {
+            knotenIds = new string[8];
+            knotenIds[0] = Knoten1Id.Text;
+            if (Knoten2Id.Text.Length != 0) knotenIds[1] = Knoten2Id.Text;
             if (Knoten3Id.Text.Length != 0) knotenIds[2] = Knoten3Id.Text;
             if (Knoten4Id.Text.Length != 0) knotenIds[3] = Knoten4Id.Text;
             if (Knoten5Id.Text.Length != 0) knotenIds[4] = Knoten5Id.Text;

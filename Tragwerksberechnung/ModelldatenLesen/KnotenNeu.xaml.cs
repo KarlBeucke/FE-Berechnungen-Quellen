@@ -8,6 +8,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 public partial class KnotenNeu
 {
     private readonly FeModell modell;
+
     public KnotenNeu()
     {
         InitializeComponent();
@@ -19,6 +20,8 @@ public partial class KnotenNeu
         // aktiviere Ereignishandler für Canvas
         StartFenster.tragwerksModell.VisualTragwerkModel.Background = System.Windows.Media.Brushes.Transparent;
         Show();
+        var knotenKeys = new KnotenKeys(modell) { Owner = this };
+        knotenKeys.Show();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -53,7 +56,7 @@ public partial class KnotenNeu
         {
             var dimension = modell.Raumdimension;
             var koordinaten = new double[dimension];
-            int anzahlKnotenDof = 3;
+            var anzahlKnotenDof = 3;
             if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
             if (X.Text.Length > 0) koordinaten[0] = double.Parse(X.Text);
             if (Y.Text.Length > 0) koordinaten[1] = double.Parse(Y.Text);

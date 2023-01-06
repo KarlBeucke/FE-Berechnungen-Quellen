@@ -970,13 +970,19 @@ public partial class StartFenster
             _ = MessageBox.Show("Daten für Zeitintegration sind noch nicht spezifiziert", "Tragwerksberechnung");
         }
     }
+    private void AnregungVisualisieren(object sender, RoutedEventArgs e)
+    {
+        modellBerechnung ??= new Berechnung(modell);
+        var anregung = new Tragwerksberechnung.ModelldatenAnzeigen.AnregungVisualisieren(modell);
+        anregung.Show();
+    }
     private void DynamischeBerechnung(object sender, RoutedEventArgs e)
     {
         if (zeitintegrationDaten)
         {
             if (!berechnet)
             {
-                modellBerechnung = new Berechnung(modell);
+                modellBerechnung ??= new Berechnung(modell);
                 modellBerechnung.BerechneSystemMatrix();
                 modellBerechnung.BerechneSystemVektor();
                 modellBerechnung.LöseGleichungen();
@@ -1270,6 +1276,7 @@ public partial class StartFenster
                 }
         }
     }
+
     private void ElastizitätsdatenBerechnen(object sender, RoutedEventArgs e)
     {
         if (modell == null)

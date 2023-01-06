@@ -26,7 +26,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>25</ApplicationRevision>
+    <ApplicationRevision>30</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -169,6 +169,9 @@
     <Compile Include="Tragwerksberechnung\Ergebnisse\StatikErgebnisseVisualisieren.cs">
       <DependentUpon>StatikErgebnisseVisualisieren.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tragwerksberechnung\ModelldatenAnzeigen\AnregungVisualisieren.xaml.cs">
+      <DependentUpon>AnregungVisualisieren.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenAnzeigen\DialogLöschTragwerksObjekte.xaml.cs">
       <DependentUpon>DialogLöschTragwerksObjekte.xaml</DependentUpon>
     </Compile>
@@ -183,6 +186,9 @@
       <DependentUpon>TragwerkmodellVisualisieren.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\ElementParser.cs" />
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenKeys.xaml.cs">
+      <DependentUpon>KnotenKeys.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\LagerKeys.xaml.cs">
       <DependentUpon>LagerKeys.xaml</DependentUpon>
     </Compile>
@@ -455,6 +461,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenAnzeigen\AnregungVisualisieren.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Tragwerksberechnung\ModelldatenAnzeigen\DialogLöschTragwerksObjekte.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -472,6 +482,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Tragwerksberechnung\ModelldatenLesen\ElementKeys.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenKeys.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

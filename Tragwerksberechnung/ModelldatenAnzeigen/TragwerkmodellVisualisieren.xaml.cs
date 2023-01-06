@@ -112,7 +112,7 @@ public partial class TragwerkmodellVisualisieren
             foreach (Shape path in darstellung.LagerDarstellung.Cast<Shape>())
             {
                 VisualTragwerkModel.Children.Remove(path);
-                foreach (TextBlock id in darstellung.LagerIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
+                foreach (var id in darstellung.LagerIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
             }
             lagerAn = false;
         }
@@ -120,50 +120,49 @@ public partial class TragwerkmodellVisualisieren
 
     private void OnBtnKnotenNeu_Click(object sender, RoutedEventArgs e)
     {
-        neuerKnoten = new KnotenNeu(modell);
+        neuerKnoten = new KnotenNeu(modell) { Topmost = true, Owner = (Window)Parent };
         StartFenster.berechnet = false;
     }
-    
+
     private void MenuBalkenElementNeu(object sender, RoutedEventArgs e)
     {
-        _ = new ElementNeu(modell);
+        _ = new ElementNeu(modell) { Topmost = true, Owner = (Window)Parent };
         StartFenster.berechnet = false;
-        //Close();
     }
     private void MenuQuerschnittNeu(object sender, RoutedEventArgs e)
     {
-        _ = new QuerschnittNeu(modell);
+        _ = new QuerschnittNeu(modell) { Topmost = true, Owner = (Window)Parent };
     }
     private void MenuMaterialNeu(object sender, RoutedEventArgs e)
     {
-        _ = new MaterialNeu(modell);
+        _ = new MaterialNeu(modell) { Topmost = true, Owner = (Window)Parent };
     }
 
     private void MenuKnotenlastNeu(object sender, RoutedEventArgs e)
     {
-        _ = new KnotenlastNeu(modell);
+        _ = new KnotenlastNeu(modell) { Topmost = true, Owner = (Window)Parent };
         StartFenster.berechnet = false;
     }
     private void MenuLinienlastNeu(object sender, RoutedEventArgs e)
     {
-        _ = new LinienlastNeu(modell);
+        _ = new LinienlastNeu(modell) { Topmost = true, Owner = (Window)Parent };
         StartFenster.berechnet = false;
     }
     private void MenuPunktlastNeu(object sender, RoutedEventArgs e)
     {
-        _ = new PunktlastNeu(modell);
+        _ = new PunktlastNeu(modell) { Topmost = true, Owner = (Window)Parent };
         StartFenster.berechnet = false;
     }
 
     private void OnBtnLagerNeu_Click(object sender, RoutedEventArgs e)
     {
-        _ = new LagerNeu(modell);
+        _ = new LagerNeu(modell) { Topmost = true, Owner = (Window)Parent };
         StartFenster.berechnet = false;
     }
 
     private void OnBtnZeitintegrationNew_Click(object sender, RoutedEventArgs e)
     {
-        zeitintegrationNeu = new ZeitintegrationNeu(modell);
+        zeitintegrationNeu = new ZeitintegrationNeu(modell) { Topmost = true };
     }
 
     private void OnBtnLöschen_Click(object sender, RoutedEventArgs e)

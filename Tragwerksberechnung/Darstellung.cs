@@ -1807,7 +1807,6 @@ public class Darstellung
     // Zeitverlauf wird ab tmin dargestellt
     public void ZeitverlaufZeichnen(double dt, double tmin, double tmax, double mY, double[] ordinaten)
     {
-
         var zeitverlauf = new Polyline
         {
             Stroke = Red,
