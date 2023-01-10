@@ -770,7 +770,7 @@ namespace FEBibliothek.Modell
         }
 
         // zeitabhängige Eingabedaten
-        private void AusDatei(string inputDirectory, int spalte, IList<double> last)
+        public void AusDatei(string inputDirectory, int spalte, IList<double> last)
         {
             string[] zeilen, substrings;
             var delimiters = new[] { '\t' };
@@ -811,12 +811,10 @@ namespace FEBibliothek.Modell
             else
             {
                 // lies alle Werte einer bestimmten Spalte col [][0-n]
-                var schritte = last.Count;
-                if (schritte > zeilen.Length) schritte = zeilen.Length;
-                for (var k = 0; k < schritte; k++)
+                foreach (var zeile in zeilen)
                 {
-                    substrings = zeilen[k].Split(delimiters);
-                    last[k] = double.Parse(substrings[spalte-1]);
+                    substrings = zeile.Split(delimiters);
+                    last.Add(double.Parse(substrings[spalte - 1]));
                 }
             }
         }

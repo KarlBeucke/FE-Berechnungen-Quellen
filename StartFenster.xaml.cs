@@ -463,6 +463,12 @@ public partial class StartFenster
             zeitintegrationBerechnet = false;
         }
     }
+    private void WärmeAnregungVisualisieren(object sender, RoutedEventArgs e)
+    {
+        modellBerechnung ??= new Berechnung(modell);
+        var anregung = new Wärmeberechnung.ModelldatenAnzeigen.AnregungVisualisieren(modell);
+        anregung.Show();
+    }
     private void EigenlösungWärmeBerechnen(object sender, RoutedEventArgs e)
     {
         if (modell != null)

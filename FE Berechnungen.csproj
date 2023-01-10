@@ -26,7 +26,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>30</ApplicationRevision>
+    <ApplicationRevision>31</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -281,6 +281,9 @@
     </Compile>
     <Compile Include="Wärmeberechnung\Ergebnisse\StationäreErgebnisseVisualisieren.xaml.cs">
       <DependentUpon>StationäreErgebnisseVisualisieren.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Wärmeberechnung\ModelldatenAnzeigen\AnregungVisualisieren.xaml.cs">
+      <DependentUpon>AnregungVisualisieren.xaml</DependentUpon>
     </Compile>
     <Compile Include="Wärmeberechnung\ModelldatenAnzeigen\DialogLöschWärmemodellobjekt.xaml.cs">
       <DependentUpon>DialogLöschWärmemodellobjekt.xaml</DependentUpon>
@@ -582,6 +585,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Wärmeberechnung\Ergebnisse\StationäreErgebnisseVisualisieren.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Wärmeberechnung\ModelldatenAnzeigen\AnregungVisualisieren.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
