@@ -1,5 +1,4 @@
 ﻿using FEBibliothek.Modell;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,8 +12,7 @@ public partial class AnregungVisualisieren
     private readonly Darstellung darstellung;
     private readonly double dt, tmax, tmin;
     private double anregungMax, anregungMin;
-    private IList<double> werte;
-    //private double[] excitation;
+    private readonly double[] anregung;
 
     public AnregungVisualisieren(FeModell feModell)
     {
@@ -26,6 +24,8 @@ public partial class AnregungVisualisieren
         dt = feModell.Zeitintegration.Dt;
         tmin = 0;
         tmax = feModell.Zeitintegration.Tmax;
+        var nSteps = (int)(tmax / dt) + 1;
+        anregung = new double[nSteps];
 
         // Initialization of drawing canvas
         darstellung = new Darstellung(feModell, VisualAnregung);
@@ -35,16 +35,13 @@ public partial class AnregungVisualisieren
     {
         const string inputDirectory = "\\FE-Berechnungen-App\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
         // lies Ordinatenwerte im Zeitintervall dt aus Datei
-        werte = new List<double>();
-        StartFenster.modellBerechnung.AusDatei(inputDirectory,1,werte);
-        anregungMax = werte.Max();
+        StartFenster.modellBerechnung.AusDatei(inputDirectory,1,anregung);
+        anregungMax = anregung.Max();
         anregungMin = -anregungMax;
 
         // Textdarstellung von Zeitdauer der Anregung mit Anzahl Datenpunkten und Zeitintervall
-        AnregungsText(werte.Count * dt, werte.Count);
+        AnregungsText(anregung.Length * dt, anregung.Length);
 
-        var anregung = new double[werte.Count];
-        for (var i = 0; i < werte.Count; i++) anregung[i] = werte[i];
         darstellung.Koordinatensystem(tmin, tmax, anregungMax, anregungMin);
         darstellung.ZeitverlaufZeichnen(dt, tmin, tmax, anregungMax, anregung);
     }

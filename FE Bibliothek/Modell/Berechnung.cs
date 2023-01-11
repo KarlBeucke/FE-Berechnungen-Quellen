@@ -797,16 +797,15 @@ namespace FEBibliothek.Modell
             }
             // Anregungsfunktion[timeSteps]
             // Datei enthält nur Anregungswerte im VORGEGEBENEM ZEITSCHRITT dt
+            var werte = new List<double>();
             if (spalte < 0)
             {
                 // lies alle Werte einer Datei
-                var werte = new List<double>();
                 foreach (var zeile in zeilen)
                 {
                     substrings = zeile.Split(delimiters);
                     werte.AddRange(substrings.Select(double.Parse));
                 }
-                for (var i = 0; i < werte.Count; i++) { last[i] = werte[i]; }
             }
             else
             {
@@ -814,9 +813,10 @@ namespace FEBibliothek.Modell
                 foreach (var zeile in zeilen)
                 {
                     substrings = zeile.Split(delimiters);
-                    last.Add(double.Parse(substrings[spalte - 1]));
+                    werte.Add(double.Parse(substrings[spalte - 1]));
                 }
             }
+            for (var i = 0; i < werte.Count; i++) { last[i] = werte[i]; }
         }
         public List<double> AusDatei(string inputDirectory)
         {
