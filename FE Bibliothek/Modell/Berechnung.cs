@@ -513,6 +513,8 @@ namespace FEBibliothek.Modell
                         case 0:
                             {
                                 // Datei einlesen
+                                _ = MessageBox.Show("Randbedingung " + item.Key + " Daten aus Datei", "Heat Transfer Analysis");
+
                                 const string inputDirectory = "\\FE-Berechnungen-App\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
                                 const int spalte = 1;
                                 AusDatei(inputDirectory, spalte, vordefinierteTemperatur);
@@ -816,7 +818,14 @@ namespace FEBibliothek.Modell
                     werte.Add(double.Parse(substrings[spalte - 1]));
                 }
             }
-            for (var i = 0; i < werte.Count; i++) { last[i] = werte[i]; }
+            if (werte.Count <= last.Count)
+            {
+                for (var i = 0; i < werte.Count; i++) { last[i] = werte[i]; }
+            }
+            else
+            {
+                for (var i = 0; i < last.Count; i++) { last[i] = werte[i]; }
+            }
         }
         public List<double> AusDatei(string inputDirectory)
         {
