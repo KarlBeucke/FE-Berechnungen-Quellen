@@ -77,7 +77,7 @@ public partial class KnotenlastNeu
         }
         lastenKeys?.Close();
         Close();
-        StartFenster.tragwerksModell.Close();
+        StartFenster.tragwerkVisual.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -114,6 +114,6 @@ public partial class KnotenlastNeu
         modell.Lasten.Remove(LastId.Text);
         lastenKeys?.Close();
         Close();
-        StartFenster.tragwerksModell.Close();
+        StartFenster.tragwerkVisual.Close();
     }
 }

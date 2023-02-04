@@ -79,7 +79,7 @@ public partial class LinienlastNeu
         }
         linienlastKeys?.Close();
         Close();
-        StartFenster.tragwerksModell.Close();
+        StartFenster.tragwerkVisual.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -119,6 +119,6 @@ public partial class LinienlastNeu
         modell.ElementLasten.Remove(LastId.Text);
         linienlastKeys?.Close();
         Close();
-        StartFenster.tragwerksModell.Close();
+        StartFenster.tragwerkVisual.Close();
     }
 }

@@ -62,14 +62,14 @@ public partial class TragwerkdatenAnzeigen
         removeKey = knoten.Id;
         if (letzterKnoten != null)
         {
-            StartFenster.tragwerksModell.VisualTragwerkModel.Children.Remove(letzterKnoten);
+            StartFenster.tragwerkVisual.VisualTragwerkModel.Children.Remove(letzterKnoten);
         }
         letzterKnoten =
-            StartFenster.tragwerksModell.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+            StartFenster.tragwerkVisual.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
     private void KeinKnotenSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.tragwerksModell.VisualTragwerkModel.Children.Remove(letzterKnoten);
+        StartFenster.tragwerkVisual.VisualTragwerkModel.Children.Remove(letzterKnoten);
     }
 
     private void ElementeGrid_Loaded(object sender, RoutedEventArgs e)
@@ -104,13 +104,13 @@ public partial class TragwerkdatenAnzeigen
         removeKey = element.ElementId;
         if (letztesElement != null)
         {
-            StartFenster.tragwerksModell.VisualTragwerkModel.Children.Remove(letztesElement);
+            StartFenster.tragwerkVisual.VisualTragwerkModel.Children.Remove(letztesElement);
         }
-        letztesElement = StartFenster.tragwerksModell.darstellung.ElementZeichnen(element, Brushes.Green, 5);
+        letztesElement = StartFenster.tragwerkVisual.darstellung.ElementZeichnen(element, Brushes.Green, 5);
     }
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.tragwerksModell.VisualTragwerkModel.Children.Remove(letztesElement);
+        StartFenster.tragwerkVisual.VisualTragwerkModel.Children.Remove(letztesElement);
     }
 
     private void Material_Loaded(object sender, RoutedEventArgs e)

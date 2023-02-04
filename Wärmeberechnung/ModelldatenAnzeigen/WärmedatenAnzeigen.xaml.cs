@@ -59,14 +59,14 @@ public partial class WärmedatenAnzeigen
         removeKey = knoten.Id;
         if (letzterKnoten != null)
         {
-            StartFenster.wärmeModell.VisualWärmeModell.Children.Remove(letzterKnoten);
+            StartFenster.wärmeVisual.VisualWärmeModell.Children.Remove(letzterKnoten);
         }
-        letzterKnoten = StartFenster.wärmeModell.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        letzterKnoten = StartFenster.wärmeVisual.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
     //LostFocus
     private void KeinKnotenSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.wärmeModell.VisualWärmeModell.Children.Remove(letzterKnoten);
+        StartFenster.wärmeVisual.VisualWärmeModell.Children.Remove(letzterKnoten);
     }
 
     private void Elemente_Loaded(object sender, RoutedEventArgs e)
@@ -103,14 +103,14 @@ public partial class WärmedatenAnzeigen
         removeKey = element.ElementId;
         if (letztesElement != null)
         {
-            StartFenster.wärmeModell.VisualWärmeModell.Children.Remove(letztesElement);
+            StartFenster.wärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
         }
-        letztesElement = StartFenster.wärmeModell.darstellung.ElementFillZeichnen((Abstrakt2D)element,
+        letztesElement = StartFenster.wärmeVisual.darstellung.ElementFillZeichnen((Abstrakt2D)element,
             Brushes.Black, Colors.Green, .2, 2);
     }
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.wärmeModell.VisualWärmeModell.Children.Remove(letztesElement);
+        StartFenster.wärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
     }
 
     private void Material_Loaded(object sender, RoutedEventArgs e)

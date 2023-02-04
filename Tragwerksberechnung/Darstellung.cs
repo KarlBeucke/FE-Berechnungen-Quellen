@@ -1674,12 +1674,14 @@ public class Darstellung
                 // nur Linien-, keine Punktlast
                 if (!elementHatPunktLast)
                 {
-                    // maxPunkt als maximales Moment, Kontrollpunkt durch Überhöhung (controlOffset) des max. Momentes
+                    // maxPunkt an maximalem Moment ist Kontrollpunkt
                     maxPunkt = startPunkt + abstandMmax / element.balkenLänge * (endPunkt - startPunkt)
                                - vec2 * kontrollAbstand * mmaxSkaliert;
                     nächsterPunkt = endPunkt + vec2 * moment2Skaliert;
                     pathFigure.Segments.Add(new QuadraticBezierSegment(maxPunkt, nächsterPunkt, true));
                     pathFigure.Segments.Add(new LineSegment(endPunkt, true));
+                    // maxPunkt des Bezier-Spline (für Text) ist etwa 1/2 des Kontrollpunkts
+                    maxPunkt.Y /= 2;
                 }
 
                 // Element hat Punktlast

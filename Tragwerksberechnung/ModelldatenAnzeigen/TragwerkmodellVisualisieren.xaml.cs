@@ -252,7 +252,7 @@ public partial class TragwerkmodellVisualisieren
                     else
                     {
                         modell.Elemente.Remove(element.ElementId);
-                        StartFenster.tragwerksModell.Close();
+                        StartFenster.tragwerkVisual.Close();
                         dialogLöschen.Close();
                     }
                     continue;
@@ -303,7 +303,7 @@ public partial class TragwerkmodellVisualisieren
                     else
                     {
                         modell.Lasten.Remove(knotenlast.LastId);
-                        StartFenster.tragwerksModell.Close();
+                        StartFenster.tragwerkVisual.Close();
                         dialogLöschen.Close();
                     }
                     continue;
@@ -327,7 +327,7 @@ public partial class TragwerkmodellVisualisieren
                     else
                     {
                         modell.PunktLasten.Remove(punktLast.LastId);
-                        StartFenster.tragwerksModell.Close();
+                        StartFenster.tragwerkVisual.Close();
                         dialogLöschen.Close();
                     }
                     continue;
@@ -352,7 +352,7 @@ public partial class TragwerkmodellVisualisieren
                     else
                     {
                         modell.ElementLasten.Remove(elementlast.LastId);
-                        StartFenster.tragwerksModell.Close();
+                        StartFenster.tragwerkVisual.Close();
                         dialogLöschen.Close();
                     }
                     continue;
@@ -378,7 +378,7 @@ public partial class TragwerkmodellVisualisieren
                     else
                     {
                         modell.Randbedingungen.Remove(lager.RandbedingungId);
-                        StartFenster.tragwerksModell.Close();
+                        StartFenster.tragwerkVisual.Close();
                         dialogLöschen.Close();
                     }
                     continue;
@@ -412,7 +412,7 @@ public partial class TragwerkmodellVisualisieren
                 else
                 {
                     modell.Randbedingungen.Remove(knoten.Id);
-                    StartFenster.tragwerksModell.Close();
+                    StartFenster.tragwerkVisual.Close();
                     dialogLöschen.Close();
                 }
                 continue;
@@ -450,7 +450,7 @@ public partial class TragwerkmodellVisualisieren
                     else
                     {
                         modell.Elemente.Remove(element.ElementId);
-                        StartFenster.tragwerksModell.Close();
+                        StartFenster.tragwerkVisual.Close();
                         dialogLöschen.Close();
                     }
                     continue;
@@ -529,7 +529,7 @@ public partial class TragwerkmodellVisualisieren
                     else
                     {
                         modell.Lasten.Remove(knotenlast.LastId);
-                        StartFenster.tragwerksModell.Close();
+                        StartFenster.tragwerkVisual.Close();
                         dialogLöschen.Close();
                     }
                     continue;
@@ -555,7 +555,7 @@ public partial class TragwerkmodellVisualisieren
                     else
                     {
                         modell.LinienLasten.Remove(linienlast.LastId);
-                        StartFenster.tragwerksModell.Close();
+                        StartFenster.tragwerkVisual.Close();
                         dialogLöschen.Close();
                     }
                     continue;
@@ -581,7 +581,7 @@ public partial class TragwerkmodellVisualisieren
                     else
                     {
                         modell.PunktLasten.Remove(punktlast.LastId);
-                        StartFenster.tragwerksModell.Close();
+                        StartFenster.tragwerkVisual.Close();
                         dialogLöschen.Close();
                     }
                     continue;
@@ -607,7 +607,7 @@ public partial class TragwerkmodellVisualisieren
                     else
                     {
                         modell.Randbedingungen.Remove(lager.RandbedingungId);
-                        StartFenster.tragwerksModell.Close();
+                        StartFenster.tragwerkVisual.Close();
                         dialogLöschen.Close();
                     }
                     continue;

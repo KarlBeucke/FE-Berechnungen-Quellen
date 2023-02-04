@@ -60,7 +60,7 @@ public partial class ZeitElementtemperaturNeu
         }
         lastenKeys?.Close();
         Close();
-        StartFenster.wärmeModell.Close();
+        StartFenster.wärmeVisual.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -75,7 +75,7 @@ public partial class ZeitElementtemperaturNeu
         modell.ZeitabhängigeElementLasten.Remove(LastId.Text);
         lastenKeys?.Close();
         Close();
-        StartFenster.wärmeModell.Close();
+        StartFenster.wärmeVisual.Close();
     }
 
     private void LastIdLostFocus(object sender, RoutedEventArgs e)

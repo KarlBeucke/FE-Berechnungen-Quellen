@@ -263,7 +263,7 @@ public partial class WärmemodellVisualisieren
                     else
                     {
                         modell.Elemente.Remove(abstractElement.ElementId);
-                        StartFenster.wärmeModell.Close();
+                        StartFenster.wärmeVisual.Close();
                     }
                 }
 
@@ -322,7 +322,7 @@ public partial class WärmemodellVisualisieren
                     else
                     {
                         modell.LinienLasten.Remove(last.LastId);
-                        StartFenster.wärmeModell.Close();
+                        StartFenster.wärmeVisual.Close();
                     }
 
                 }
@@ -342,7 +342,7 @@ public partial class WärmemodellVisualisieren
                     else
                     {
                         modell.ElementLasten.Remove(elementLast.LastId);
-                        StartFenster.wärmeModell.Close();
+                        StartFenster.wärmeVisual.Close();
                     }
                 }
                 modell.Elemente.TryGetValue(elementLast.ElementId, out abstractElement);
@@ -382,7 +382,7 @@ public partial class WärmemodellVisualisieren
                     else
                     {
                         modell.ZeitabhängigeElementLasten.Remove(zeitElementLast.LastId);
-                        StartFenster.wärmeModell.Close();
+                        StartFenster.wärmeVisual.Close();
                     }
                 }
 
@@ -413,7 +413,7 @@ public partial class WärmemodellVisualisieren
                 else
                 {
                     modell.Knoten.Remove(knoten.Id);
-                    StartFenster.wärmeModell.Close();
+                    StartFenster.wärmeVisual.Close();
                 }
                 return;
             }
@@ -449,7 +449,7 @@ public partial class WärmemodellVisualisieren
                     else
                     {
                         modell.Elemente.Remove(element.ElementId);
-                        StartFenster.wärmeModell.Close();
+                        StartFenster.wärmeVisual.Close();
                     }
                 }
 
@@ -517,7 +517,7 @@ public partial class WärmemodellVisualisieren
                     else
                     {
                         modell.Randbedingungen.Remove(knotenlast.LastId);
-                        StartFenster.wärmeModell.Close();
+                        StartFenster.wärmeVisual.Close();
                     }
                 }
                 _ = new RandbdingungNeu(modell)
@@ -537,7 +537,7 @@ public partial class WärmemodellVisualisieren
                     else
                     {
                         modell.ZeitabhängigeKnotenLasten.Remove(zeitKnotenlast.LastId);
-                        StartFenster.wärmeModell.Close();
+                        StartFenster.wärmeVisual.Close();
                     }
                 }
                 var zeitKnotentemperatur = new ZeitKnotentemperaturNeu(modell)
@@ -582,7 +582,7 @@ public partial class WärmemodellVisualisieren
                     else
                     {
                         modell.ElementLasten.Remove(elementLast.LastId);
-                        StartFenster.wärmeModell.Close();
+                        StartFenster.wärmeVisual.Close();
                     }
                 }
                 var elementlast = new ElementlastNeu(modell)
@@ -642,7 +642,7 @@ public partial class WärmemodellVisualisieren
                     else
                     {
                         modell.ZeitabhängigeElementLasten.Remove(zeitElementlast.LastId);
-                        StartFenster.wärmeModell.Close();
+                        StartFenster.wärmeVisual.Close();
                     }
                 }
                 var elementlast = new ZeitElementtemperaturNeu(modell)
@@ -674,7 +674,7 @@ public partial class WärmemodellVisualisieren
                     else
                     {
                         modell.Randbedingungen.Remove(randbedingung.RandbedingungId);
-                        StartFenster.wärmeModell.Close();
+                        StartFenster.wärmeVisual.Close();
                     }
                 }
                 _ = new RandbdingungNeu(modell)
@@ -694,7 +694,7 @@ public partial class WärmemodellVisualisieren
                     else
                     {
                         modell.ZeitabhängigeRandbedingung.Remove(zeitRandbedingung.RandbedingungId);
-                        StartFenster.wärmeModell.Close();
+                        StartFenster.wärmeVisual.Close();
                     }
                 }
                 

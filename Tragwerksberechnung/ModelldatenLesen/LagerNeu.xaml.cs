@@ -84,7 +84,7 @@ public partial class LagerNeu
 
         lagerKeys?.Close();
         Close();
-        StartFenster.tragwerksModell.Close();
+        StartFenster.tragwerkVisual.Close();
     }
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
@@ -121,7 +121,7 @@ public partial class LagerNeu
         modell.Randbedingungen.Remove(LagerId.Text);
         lagerKeys?.Close();
         Close();
-        StartFenster.tragwerksModell.Close();
+        StartFenster.tragwerkVisual.Close();
         lagerKeys?.Close();
     }
 }

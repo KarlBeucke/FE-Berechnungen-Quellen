@@ -12,7 +12,7 @@ public partial class ZeitDämpfungsratenNeu
     {
         InitializeComponent();
         this.modell = modell;
-        eigenform = StartFenster.tragwerksModell.zeitintegrationNeu.eigenForm;
+        eigenform = StartFenster.tragwerkVisual.zeitintegrationNeu.eigenForm;
         if (eigenform > modell.Eigenzustand.DämpfungsRaten.Count)
         {
             Xi.Text = "";
@@ -42,7 +42,7 @@ public partial class ZeitDämpfungsratenNeu
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();
-        StartFenster.tragwerksModell.zeitintegrationNeu.Close();
+        StartFenster.tragwerkVisual.zeitintegrationNeu.Close();
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
@@ -52,12 +52,12 @@ public partial class ZeitDämpfungsratenNeu
         if (modell.Eigenzustand.DämpfungsRaten.Count <= 0)
         {
             Close();
-            StartFenster.tragwerksModell.zeitintegrationNeu.Close();
+            StartFenster.tragwerkVisual.zeitintegrationNeu.Close();
             return;
         }
         var anfangsWerte = (ModaleWerte)modell.Eigenzustand.DämpfungsRaten[eigenform];
         Xi.Text = anfangsWerte.Dämpfung.ToString("G2");
         Close();
-        StartFenster.tragwerksModell.zeitintegrationNeu.Close();
+        StartFenster.tragwerkVisual.zeitintegrationNeu.Close();
     }
 }

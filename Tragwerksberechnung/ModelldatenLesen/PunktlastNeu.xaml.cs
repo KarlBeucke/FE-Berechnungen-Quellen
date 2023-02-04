@@ -70,7 +70,7 @@ public partial class PunktlastNeu
         }
         punktlastKeys?.Close();
         Close();
-        StartFenster.tragwerksModell.Close();
+        StartFenster.tragwerkVisual.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -107,7 +107,7 @@ public partial class PunktlastNeu
         modell.PunktLasten.Remove(LastId.Text);
         punktlastKeys?.Close();
         Close();
-        StartFenster.tragwerksModell.Close();
+        StartFenster.tragwerkVisual.Close();
         punktlastKeys?.Close();
     }
 }

@@ -125,7 +125,7 @@ public partial class ZeitRandtemperaturNeu
         }
         randbedingungenKeys?.Close();
         Close();
-        StartFenster.wärmeModell.Close();
+        StartFenster.wärmeVisual.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -140,7 +140,7 @@ public partial class ZeitRandtemperaturNeu
         modell.ZeitabhängigeRandbedingung.Remove(RandbedingungId.Text);
         randbedingungenKeys?.Close();
         Close();
-        StartFenster.wärmeModell.Close();
+        StartFenster.wärmeVisual.Close();
     }
 
     private void RandbedingungIdLostFocus(object sender, RoutedEventArgs e)

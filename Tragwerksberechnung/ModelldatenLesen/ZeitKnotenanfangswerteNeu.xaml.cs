@@ -11,7 +11,7 @@ public partial class ZeitKnotenanfangswerteNeu
     {
         InitializeComponent();
         this.modell = modell;
-        aktuell = StartFenster.tragwerksModell.zeitintegrationNeu.aktuell;
+        aktuell = StartFenster.tragwerkVisual.zeitintegrationNeu.aktuell;
         var anfang = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell];
         KnotenId.Text = anfang.KnotenId;
         Dof1D0.Text = anfang.Werte[0].ToString("G2");
@@ -34,7 +34,7 @@ public partial class ZeitKnotenanfangswerteNeu
         if (KnotenId.Text.Length == 0) Close();
 
         // neue Anfangsbedingung hinzufügen
-        if (StartFenster.tragwerksModell.zeitintegrationNeu.aktuell > modell.Zeitintegration.Anfangsbedingungen.Count)
+        if (StartFenster.tragwerkVisual.zeitintegrationNeu.aktuell > modell.Zeitintegration.Anfangsbedingungen.Count)
         {
             if (KnotenId.Text == "") return;
             var knotenId = KnotenId.Text;
@@ -78,7 +78,7 @@ public partial class ZeitKnotenanfangswerteNeu
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();
-        StartFenster.tragwerksModell.zeitintegrationNeu.Close();
+        StartFenster.tragwerkVisual.zeitintegrationNeu.Close();
     }
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
@@ -87,7 +87,7 @@ public partial class ZeitKnotenanfangswerteNeu
         if (modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
         {
             Close();
-            StartFenster.tragwerksModell.zeitintegrationNeu.Close();
+            StartFenster.tragwerkVisual.zeitintegrationNeu.Close();
             return;
         }
         var anfangsWerte = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell];
@@ -107,6 +107,6 @@ public partial class ZeitKnotenanfangswerteNeu
             Dof3V0.Text = anfangsWerte.Werte[5].ToString("G2");
         }
         Close();
-        StartFenster.tragwerksModell.zeitintegrationNeu.Close();
+        StartFenster.tragwerkVisual.zeitintegrationNeu.Close();
     }
 }

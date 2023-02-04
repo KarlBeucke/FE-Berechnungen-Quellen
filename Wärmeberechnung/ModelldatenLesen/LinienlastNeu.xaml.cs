@@ -61,7 +61,7 @@ public partial class LinienlastNeu
         }
         lastenKeys?.Close();
         Close();
-        StartFenster.wärmeModell.Close();
+        StartFenster.wärmeVisual.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -76,7 +76,7 @@ public partial class LinienlastNeu
         modell.LinienLasten.Remove(LinienlastId.Text);
         lastenKeys?.Close();
         Close();
-        StartFenster.wärmeModell.Close();
+        StartFenster.wärmeVisual.Close();
     }
 
     private void LinienlastIdLostFocus(object sender, RoutedEventArgs e)

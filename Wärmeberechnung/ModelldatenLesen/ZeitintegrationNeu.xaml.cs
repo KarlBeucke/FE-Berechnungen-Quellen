@@ -114,7 +114,7 @@ public partial class ZeitintegrationNeu
             try { modell.Zeitintegration.Parameter1 = double.Parse(Parameter.Text, CultureInfo.InvariantCulture); }
             catch (FormatException) { _ = MessageBox.Show("parameter alfa has wrong format", "neue Zeitintegration"); return; }
         }
-        StartFenster.wärmeModell.darstellung.AnfangsbedingungenEntfernen();
+        StartFenster.wärmeVisual.darstellung.AnfangsbedingungenEntfernen();
         anfangstemperaturenNeu?.Close();
         Close();
     }
@@ -132,14 +132,14 @@ public partial class ZeitintegrationNeu
         {
             anfangstemperaturenNeu.KnotenId.Text = "";
             anfangstemperaturenNeu.Anfangstemperatur.Text = "";
-            StartFenster.wärmeModell.zeitintegrationNeu.Anfangsbedingungen.Text = aktuell.ToString(CultureInfo.CurrentCulture);
+            StartFenster.wärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text = aktuell.ToString(CultureInfo.CurrentCulture);
         }
         else
         {
             var knotenwerte = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell-1];
-            StartFenster.wärmeModell.zeitintegrationNeu.Anfangsbedingungen.Text =
+            StartFenster.wärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text =
                 aktuell.ToString(CultureInfo.CurrentCulture);
-            StartFenster.wärmeModell.zeitintegrationNeu.Show();
+            StartFenster.wärmeVisual.zeitintegrationNeu.Show();
             if (modell.Zeitintegration.VonStationär)
             {
                 anfangstemperaturenNeu.StationäreLösung.IsChecked = true;
@@ -155,8 +155,8 @@ public partial class ZeitintegrationNeu
                 anfangstemperaturenNeu.KnotenId.Text = knotenwerte.KnotenId;
                 anfangstemperaturenNeu.Anfangstemperatur.Text = knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
                 var anf = aktuell.ToString("D");
-                StartFenster.wärmeModell.zeitintegrationNeu.Anfangsbedingungen.Text = anf;
-                StartFenster.wärmeModell.darstellung.AnfangsbedingungenZeichnen(knotenwerte.KnotenId, knotenwerte.Werte[0], anf);
+                StartFenster.wärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text = anf;
+                StartFenster.wärmeVisual.darstellung.AnfangsbedingungenZeichnen(knotenwerte.KnotenId, knotenwerte.Werte[0], anf);
             }
         }
     }

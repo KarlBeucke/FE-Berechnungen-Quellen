@@ -11,7 +11,7 @@ public partial class ZeitAnfangstemperaturNeu
     {
         InitializeComponent();
         this.modell = modell;
-        aktuell = StartFenster.wärmeModell.zeitintegrationNeu.aktuell;
+        aktuell = StartFenster.wärmeVisual.zeitintegrationNeu.aktuell;
         if (modell.Zeitintegration.VonStationär)
         {
             StationäreLösung.IsChecked = true;
@@ -44,7 +44,7 @@ public partial class ZeitAnfangstemperaturNeu
         }
 
         // neue Anfangsbedingung hinzufügen
-        if (StartFenster.wärmeModell.zeitintegrationNeu.aktuell > modell.Zeitintegration.Anfangsbedingungen.Count)
+        if (StartFenster.wärmeVisual.zeitintegrationNeu.aktuell > modell.Zeitintegration.Anfangsbedingungen.Count)
         {
             if (KnotenId.Text == "") return;
             var werte = new double[1];
@@ -67,7 +67,7 @@ public partial class ZeitAnfangstemperaturNeu
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();
-        StartFenster.wärmeModell.zeitintegrationNeu.Close();
+        StartFenster.wärmeVisual.zeitintegrationNeu.Close();
     }
 
     private void BtnDelete_Click(object sender, RoutedEventArgs e)
@@ -77,7 +77,7 @@ public partial class ZeitAnfangstemperaturNeu
         if (modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
         {
             Close();
-            StartFenster.wärmeModell.zeitintegrationNeu.Close();
+            StartFenster.wärmeVisual.zeitintegrationNeu.Close();
             return;
         }
         var anfang = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell];
@@ -85,6 +85,6 @@ public partial class ZeitAnfangstemperaturNeu
         Anfangstemperatur.Text = anfang.Werte[0].ToString("G2");
         StationäreLösung.IsChecked = modell.Zeitintegration.VonStationär;
         Close();
-        StartFenster.wärmeModell.zeitintegrationNeu.Close();
+        StartFenster.wärmeVisual.zeitintegrationNeu.Close();
     }
 }

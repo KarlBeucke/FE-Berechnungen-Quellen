@@ -130,14 +130,14 @@ public partial class ZeitintegrationNeu
             anfangswerteNeu.Dof1D0.Text = ""; anfangswerteNeu.Dof1V0.Text = "";
             anfangswerteNeu.Dof2D0.Text = ""; anfangswerteNeu.Dof2V0.Text = "";
             anfangswerteNeu.Dof3D0.Text = ""; anfangswerteNeu.Dof3V0.Text = "";
-            StartFenster.tragwerksModell.zeitintegrationNeu.Anfangsbedingungen.Text = aktuell.ToString(CultureInfo.CurrentCulture);
+            StartFenster.tragwerkVisual.zeitintegrationNeu.Anfangsbedingungen.Text = aktuell.ToString(CultureInfo.CurrentCulture);
         }
         else
         {
             var knotenwerte = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell - 1];
-            StartFenster.tragwerksModell.zeitintegrationNeu.Anfangsbedingungen.Text =
+            StartFenster.tragwerkVisual.zeitintegrationNeu.Anfangsbedingungen.Text =
                 aktuell.ToString(CultureInfo.CurrentCulture);
-            StartFenster.tragwerksModell.zeitintegrationNeu.Show();
+            StartFenster.tragwerkVisual.zeitintegrationNeu.Show();
 
             anfangswerteNeu.KnotenId.Text = knotenwerte.KnotenId;
             anfangswerteNeu.Dof1D0.Text = knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
@@ -154,19 +154,19 @@ public partial class ZeitintegrationNeu
                 anfangswerteNeu.Dof3V0.Text = knotenwerte.Werte[5].ToString(CultureInfo.CurrentCulture);
             }
             var anf = aktuell.ToString("D");
-            StartFenster.tragwerksModell.zeitintegrationNeu.Anfangsbedingungen.Text = anf;
+            StartFenster.tragwerkVisual.zeitintegrationNeu.Anfangsbedingungen.Text = anf;
         }
     }
 
     private void DämpfungsratenNext(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         eigenForm++;
-        StartFenster.tragwerksModell.zeitintegrationNeu.Eigenform.Text =
+        StartFenster.tragwerkVisual.zeitintegrationNeu.Eigenform.Text =
             eigenForm.ToString(CultureInfo.CurrentCulture);
         _ = new ZeitDämpfungsratenNeu(modell);
 
         var modalwerte = (ModaleWerte)modell.Eigenzustand.DämpfungsRaten[eigenForm - 1];
-        StartFenster.tragwerksModell.zeitintegrationNeu.Dämpfungsraten.Text = modalwerte.Dämpfung.ToString(CultureInfo.CurrentCulture);
+        StartFenster.tragwerkVisual.zeitintegrationNeu.Dämpfungsraten.Text = modalwerte.Dämpfung.ToString(CultureInfo.CurrentCulture);
     }
 
     private void EigenformKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
