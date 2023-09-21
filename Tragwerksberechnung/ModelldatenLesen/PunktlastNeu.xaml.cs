@@ -10,7 +10,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 public partial class PunktlastNeu
 {
     private readonly FeModell modell;
-    private readonly TragwerkLastenKeys punktlastKeys; 
+    private readonly TragwerkLastenKeys punktlastKeys;
     public PunktlastNeu(FeModell modell)
     {
         InitializeComponent();
@@ -91,7 +91,7 @@ public partial class PunktlastNeu
 
         // vorhandene Punktlastdefinition
         modell.PunktLasten.TryGetValue(LastId.Text, out var last);
-        Debug.Assert(last != null, nameof(last) + " != null"); 
+        Debug.Assert(last != null, nameof(last) + " != null");
 
         var punktlast = (PunktLast)last;
         LastId.Text = punktlast.LastId;

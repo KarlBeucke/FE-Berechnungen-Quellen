@@ -1,9 +1,9 @@
-﻿using System;
+﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Markup;
-using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
@@ -136,7 +136,7 @@ public partial class ZeitintegrationNeu
         }
         else
         {
-            var knotenwerte = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell-1];
+            var knotenwerte = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell - 1];
             StartFenster.wärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text =
                 aktuell.ToString(CultureInfo.CurrentCulture);
             StartFenster.wärmeVisual.zeitintegrationNeu.Show();

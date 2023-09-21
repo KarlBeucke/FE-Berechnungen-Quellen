@@ -749,8 +749,8 @@ namespace FEBibliothek.Modell
                     var knotenFreiheitsgrad = item.Value.KnotenFreiheitsgrad;
 
                     var masse = systemGleichungen.DiagonalMatrix;
-                    foreach (var index in modell.Knoten.Select(item2 => 
-                                 item2.Value.SystemIndizes).Where(index => 
+                    foreach (var index in modell.Knoten.Select(item2 =>
+                                 item2.Value.SystemIndizes).Where(index =>
                                  !systemGleichungen.Status[index[knotenFreiheitsgrad]]))
                     {
                         for (var k = 0; k < anregung.Count; k++)

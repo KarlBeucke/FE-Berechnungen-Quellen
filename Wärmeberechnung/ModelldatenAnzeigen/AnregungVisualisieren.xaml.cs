@@ -35,7 +35,7 @@ public partial class AnregungVisualisieren
     {
         const string inputDirectory = "\\FE-Berechnungen-App\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
         // lies Ordinatenwerte im Zeitintervall dt aus Datei
-        StartFenster.modellBerechnung.AusDatei(inputDirectory,1,anregung);
+        StartFenster.modellBerechnung.AusDatei(inputDirectory, 1, anregung);
         anregungMax = anregung.Max();
         anregungMin = -anregungMax;
 
@@ -47,7 +47,7 @@ public partial class AnregungVisualisieren
     }
     private void AnregungsText(double duration, int nSteps)
     {
-        var anregungsWerte = duration.ToString("N2") + " [s] resp. " + (duration/60/60).ToString("N0") + "[h]  Anregung mit "
+        var anregungsWerte = duration.ToString("N2") + " [s] resp. " + (duration / 60 / 60).ToString("N0") + "[h]  Anregung mit "
                              + nSteps + " Anregungswerten im Zeitintervall dt = " + dt.ToString("N3");
         var anregungTextBlock = new TextBlock
         {

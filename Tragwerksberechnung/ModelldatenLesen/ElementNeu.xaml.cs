@@ -158,21 +158,21 @@ public partial class ElementNeu
                 EndknotenId.Text = vorhandenesElement.KnotenIds[1];
                 break;
             case BiegebalkenGelenk:
-            {
-                BalkenCheck.IsChecked = true;
-                switch (vorhandenesElement.Typ)
                 {
-                    case 1:
-                        Gelenk1.IsChecked = true;
-                        break;
-                    case 2:
-                        Gelenk2.IsChecked = true;
-                        break;
+                    BalkenCheck.IsChecked = true;
+                    switch (vorhandenesElement.Typ)
+                    {
+                        case 1:
+                            Gelenk1.IsChecked = true;
+                            break;
+                        case 2:
+                            Gelenk2.IsChecked = true;
+                            break;
+                    }
+                    FachwerkCheck.IsChecked = false;
+                    EndknotenId.Text = vorhandenesElement.KnotenIds[1];
+                    break;
                 }
-                FachwerkCheck.IsChecked = false;
-                EndknotenId.Text = vorhandenesElement.KnotenIds[1];
-                break;
-            }
             case FederElement:
                 FederCheck.IsChecked = true;
                 break;

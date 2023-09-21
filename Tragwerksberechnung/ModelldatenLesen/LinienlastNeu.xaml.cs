@@ -64,13 +64,13 @@ public partial class LinienlastNeu
         {
             var inElement = false;
             var elementId = "";
-            double pxa = 0, pxb = 0, pya = 0,pyb = 0;
+            double pxa = 0, pxb = 0, pya = 0, pyb = 0;
             if (ElementId.Text.Length > 0) elementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
             if (Pxa.Text.Length > 0) pxa = double.Parse(Pxa.Text);
             if (Pya.Text.Length > 0) pya = double.Parse(Pya.Text);
             if (Pxb.Text.Length > 0) pxb = double.Parse(Pxb.Text);
             if (Pyb.Text.Length > 0) pyb = double.Parse(Pyb.Text);
-            if (InElement.IsChecked != null && (bool) InElement.IsChecked) inElement = true;
+            if (InElement.IsChecked != null && (bool)InElement.IsChecked) inElement = true;
             var linienlast = new LinienLast(elementId, pxa, pya, pxb, pyb, inElement)
             {
                 LastId = linienlastId

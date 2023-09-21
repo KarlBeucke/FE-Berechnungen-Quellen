@@ -51,7 +51,7 @@ public partial class MaterialNeu
             if (EModul.Text.Length > 0)
             {
                 var eModul = double.Parse(EModul.Text);
-                double poisson=0, masse=0;
+                double poisson = 0, masse = 0;
                 if (Poisson.Text.Length > 0) poisson = double.Parse(Poisson.Text);
                 if (Masse.Text.Length > 0) masse = double.Parse(Masse.Text);
                 material = new Material(eModul, poisson, masse)
@@ -63,7 +63,7 @@ public partial class MaterialNeu
                 FederY.Text = "";
                 FederPhi.Text = "";
             }
-            else if(FederX.Text.Length > 0 | FederY.Text.Length > 0 | FederPhi.Text.Length > 0)
+            else if (FederX.Text.Length > 0 | FederY.Text.Length > 0 | FederPhi.Text.Length > 0)
             {
                 EModul.Text = "";
                 Poisson.Text = "";
@@ -115,7 +115,7 @@ public partial class MaterialNeu
         if (!vorhandenesMaterial.Feder)
         {
             EModul.Text = vorhandenesMaterial.MaterialWerte[0].ToString("G3", CultureInfo.CurrentCulture);
-            if(Poisson.Text =="") Poisson.Text = vorhandenesMaterial.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
+            if (Poisson.Text == "") Poisson.Text = vorhandenesMaterial.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
             Masse.Text = vorhandenesMaterial.MaterialWerte[2].ToString("G3", CultureInfo.CurrentCulture);
             FederX.Text = "";
             FederY.Text = "";

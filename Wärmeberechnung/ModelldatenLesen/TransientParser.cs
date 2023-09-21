@@ -66,7 +66,7 @@ public class TransientParser
                 if (teilStrings[0] == "stationäre Lösung")
                     feModell.Zeitintegration.VonStationär = true;
                 else if (teilStrings.Length == 2)
-                { 
+                {
                     // knotenId inkl. alle
                     var knotenId = teilStrings[0];
                     var t0 = double.Parse(teilStrings[1]);

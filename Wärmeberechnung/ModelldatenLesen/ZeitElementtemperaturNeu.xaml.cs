@@ -92,7 +92,7 @@ public partial class ZeitElementtemperaturNeu
 
         // vorhandene zeitabhängige Elementlastdefinition
         modell.ZeitabhängigeElementLasten.TryGetValue(LastId.Text, out vorhandeneLast);
-        Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null"); 
+        Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null");
 
         LastId.Text = vorhandeneLast.LastId;
 

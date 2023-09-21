@@ -25,7 +25,7 @@ public partial class RandbdingungNeu
     {
         var randbedingungId = RandbedingungId.Text;
         var knotenId = KnotenId.Text;
-        double temperatur =0;
+        double temperatur = 0;
         if (randbedingungId == "")
         {
             _ = MessageBox.Show("Randbedingung Id muss definiert sein", "neue Randbedingung");

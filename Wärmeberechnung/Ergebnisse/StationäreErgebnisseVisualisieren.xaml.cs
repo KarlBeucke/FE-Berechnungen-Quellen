@@ -112,41 +112,41 @@ public partial class StationäreErgebnisseVisualisieren
         MyPopup.IsOpen = true;
 
         var sb = new StringBuilder();
-        string done="";
+        string done = "";
         foreach (var item in hitList.Where(item => item != null))
         {
             switch (item)
             {
                 case Polygon polygon:
-                {
-                    MyPopup.IsOpen = true;
-                    if (modell.Elemente.TryGetValue(polygon.Name, out var multiKnotenElement))
                     {
-                        var element2D = (Abstrakt2D)multiKnotenElement;
-                        var elementTemperaturen = element2D.BerechneElementZustand(0, 0);
-                        sb.Append("Element\t= " + element2D.ElementId);
-                        sb.Append("\nElementmitte Tx\t= " + elementTemperaturen[0].ToString("F2"));
-                        sb.Append("\nElementmitte Ty\t= " + elementTemperaturen[1].ToString("F2") + "\n");
+                        MyPopup.IsOpen = true;
+                        if (modell.Elemente.TryGetValue(polygon.Name, out var multiKnotenElement))
+                        {
+                            var element2D = (Abstrakt2D)multiKnotenElement;
+                            var elementTemperaturen = element2D.BerechneElementZustand(0, 0);
+                            sb.Append("Element\t= " + element2D.ElementId);
+                            sb.Append("\nElementmitte Tx\t= " + elementTemperaturen[0].ToString("F2"));
+                            sb.Append("\nElementmitte Ty\t= " + elementTemperaturen[1].ToString("F2") + "\n");
+                        }
+                        MyPopupText.Text = sb.ToString();
+                        break;
                     }
-                    MyPopupText.Text = sb.ToString();
-                    break;
-                }
                 case Path path:
-                {
-                    if (path.Name == done) break;
-                    MyPopup.IsOpen = true;
-                    if (modell.Elemente.TryGetValue(path.Name, out var multiKnotenElement))
                     {
-                        var element2D = (Abstrakt2D)multiKnotenElement;
-                        var elementTemperaturen = element2D.BerechneElementZustand(0, 0);
-                        sb.Append("Element\t= " + element2D.ElementId);
-                        sb.Append("\nElementmitte Tx\t= " + elementTemperaturen[0].ToString("F2"));
-                        sb.Append("\nElementmitte Ty\t= " + elementTemperaturen[1].ToString("F2") + "\n");
+                        if (path.Name == done) break;
+                        MyPopup.IsOpen = true;
+                        if (modell.Elemente.TryGetValue(path.Name, out var multiKnotenElement))
+                        {
+                            var element2D = (Abstrakt2D)multiKnotenElement;
+                            var elementTemperaturen = element2D.BerechneElementZustand(0, 0);
+                            sb.Append("Element\t= " + element2D.ElementId);
+                            sb.Append("\nElementmitte Tx\t= " + elementTemperaturen[0].ToString("F2"));
+                            sb.Append("\nElementmitte Ty\t= " + elementTemperaturen[1].ToString("F2") + "\n");
+                        }
+                        MyPopupText.Text = sb.ToString();
+                        done = path.Name;
+                        break;
                     }
-                    MyPopupText.Text = sb.ToString();
-                    done = path.Name;
-                    break;
-                }
             }
         }
 

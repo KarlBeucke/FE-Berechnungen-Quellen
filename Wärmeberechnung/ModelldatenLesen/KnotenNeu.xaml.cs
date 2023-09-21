@@ -1,5 +1,4 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
+﻿using FEBibliothek.Modell;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;

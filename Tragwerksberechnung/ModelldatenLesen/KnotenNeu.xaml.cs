@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using FEBibliothek.Modell;
-using System.Windows;
+﻿using FEBibliothek.Modell;
+using System.Diagnostics;
 using System.Globalization;
+using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -35,7 +35,7 @@ public partial class KnotenNeu
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
-        
+
         var knotenId = KnotenId.Text;
 
         if (knotenId == "")

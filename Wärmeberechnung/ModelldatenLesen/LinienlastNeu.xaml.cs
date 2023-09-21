@@ -1,10 +1,10 @@
-﻿using FEBibliothek.Modell;
+﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
-using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
@@ -92,8 +92,8 @@ public partial class LinienlastNeu
 
         // vorhandene Linienlastdefinition
         modell.LinienLasten.TryGetValue(LinienlastId.Text, out vorhandeneLast);
-        Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null"); 
-        
+        Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null");
+
         LinienlastId.Text = vorhandeneLast.LastId;
         StartknotenId.Text = vorhandeneLast.StartKnotenId;
         Start.Text = vorhandeneLast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);

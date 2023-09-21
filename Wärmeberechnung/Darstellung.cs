@@ -216,15 +216,19 @@ public class Darstellung
             visual.Children.Add(knotenLast);
         }
         // zeitabhängige Knotenlasten
-        foreach (var zeitKnotenlast in from item 
-                     in modell.ZeitabhängigeKnotenLasten let zeitKnotenlast = new TextBlock
-                 {
-                     Name = "ZeitKnotenLast",
-                     Uid = item.Key,
-                     FontSize = 12,
-                     Text = item.Key,
-                     Foreground = DarkViolet
-                 } where modell.Knoten.TryGetValue(item.Value.KnotenId, out knoten) where knoten != null select zeitKnotenlast)
+        foreach (var zeitKnotenlast in from item
+                     in modell.ZeitabhängigeKnotenLasten
+                                       let zeitKnotenlast = new TextBlock
+                                       {
+                                           Name = "ZeitKnotenLast",
+                                           Uid = item.Key,
+                                           FontSize = 12,
+                                           Text = item.Key,
+                                           Foreground = DarkViolet
+                                       }
+                                       where modell.Knoten.TryGetValue(item.Value.KnotenId, out knoten)
+                                       where knoten != null
+                                       select zeitKnotenlast)
         {
             if (knoten == null) continue;
             SetTop(zeitKnotenlast, (-knoten.Koordinaten[1] + maxY) * auflösung + RandOben + lastOffset);

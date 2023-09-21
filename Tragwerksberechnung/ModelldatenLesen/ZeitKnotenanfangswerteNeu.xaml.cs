@@ -48,17 +48,17 @@ public partial class ZeitKnotenanfangswerteNeu
                 switch (nodalDof)
                 {
                     case 2:
-                    {
-                        if (Dof2D0.Text != string.Empty) { anfangsWerte[2] = double.Parse(Dof2D0.Text); }
-                        if (Dof2V0.Text != string.Empty) { anfangsWerte[3] = double.Parse(Dof2V0.Text); }
-                        break;
-                    }
+                        {
+                            if (Dof2D0.Text != string.Empty) { anfangsWerte[2] = double.Parse(Dof2D0.Text); }
+                            if (Dof2V0.Text != string.Empty) { anfangsWerte[3] = double.Parse(Dof2V0.Text); }
+                            break;
+                        }
                     case 3:
-                    {
-                        if (Dof3D0.Text != string.Empty) { anfangsWerte[4] = double.Parse(Dof3D0.Text); }
-                        if (Dof3V0.Text != string.Empty) { anfangsWerte[5] = double.Parse(Dof3V0.Text); }
-                        break;
-                    }
+                        {
+                            if (Dof3D0.Text != string.Empty) { anfangsWerte[4] = double.Parse(Dof3D0.Text); }
+                            if (Dof3V0.Text != string.Empty) { anfangsWerte[5] = double.Parse(Dof3V0.Text); }
+                            break;
+                        }
                 }
                 modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(KnotenId.Text, anfangsWerte));
             }

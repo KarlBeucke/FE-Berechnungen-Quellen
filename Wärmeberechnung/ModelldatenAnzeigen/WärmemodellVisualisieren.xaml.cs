@@ -1,4 +1,6 @@
-﻿using FEBibliothek.Modell;
+﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
+using FEBibliothek.Modell;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,8 +11,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
@@ -149,7 +149,7 @@ public partial class WärmemodellVisualisieren
         Knoten.ReleaseMouseCapture();
         isDragging = false;
     }
-    
+
     private void OnBtnKnotenNeu_Click(object sender, RoutedEventArgs e)
     {
         neuerKnoten = new KnotenNeu(modell);
@@ -181,7 +181,7 @@ public partial class WärmemodellVisualisieren
         _ = new ElementlastNeu(modell);
         StartFenster.berechnet = false;
     }
-    
+
     private void MenuZeitKnotenlastNeu(object sender, RoutedEventArgs e)
     {
         _ = new ZeitKnotentemperaturNeu(modell);
@@ -272,41 +272,41 @@ public partial class WärmemodellVisualisieren
                 switch (abstractElement)
                 {
                     case Element2D2:
-                    {
-                        sb.Append("Knoten 1 = " + abstractElement.KnotenIds[0]);
-                        sb.Append("Knoten 2 = " + abstractElement.KnotenIds[1]);
-                        if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
                         {
-                            sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
-                        }
+                            sb.Append("Knoten 1 = " + abstractElement.KnotenIds[0]);
+                            sb.Append("Knoten 2 = " + abstractElement.KnotenIds[1]);
+                            if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
+                            {
+                                sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                     case Element2D3:
-                    {
-                        sb.Append("\nKnoten 1 = " + abstractElement.KnotenIds[0]);
-                        sb.Append("\nKnoten 2 = " + abstractElement.KnotenIds[1]);
-                        sb.Append("\nKnoten 3 = " + abstractElement.KnotenIds[2]);
-                        if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
                         {
-                            sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
-                        }
+                            sb.Append("\nKnoten 1 = " + abstractElement.KnotenIds[0]);
+                            sb.Append("\nKnoten 2 = " + abstractElement.KnotenIds[1]);
+                            sb.Append("\nKnoten 3 = " + abstractElement.KnotenIds[2]);
+                            if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
+                            {
+                                sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                     case Element2D4:
-                    {
-                        sb.Append("Knoten 1 = " + abstractElement.KnotenIds[0]);
-                        sb.Append("Knoten 2 = " + abstractElement.KnotenIds[1]);
-                        sb.Append("Knoten 3 = " + abstractElement.KnotenIds[2]);
-                        sb.Append("Knoten 4 = " + abstractElement.KnotenIds[3]);
-                        if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
                         {
-                            sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
-                        }
+                            sb.Append("Knoten 1 = " + abstractElement.KnotenIds[0]);
+                            sb.Append("Knoten 2 = " + abstractElement.KnotenIds[1]);
+                            sb.Append("Knoten 3 = " + abstractElement.KnotenIds[2]);
+                            sb.Append("Knoten 4 = " + abstractElement.KnotenIds[3]);
+                            if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
+                            {
+                                sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                 }
                 sb.Append("\n");
             }
@@ -371,7 +371,7 @@ public partial class WärmemodellVisualisieren
                         break;
                 }
             }
-            
+
             // zeitabhängige Elementlasten
             else if (modell.ZeitabhängigeElementLasten.TryGetValue(item.Name, out var zeitElementLast))
             {
@@ -445,7 +445,7 @@ public partial class WärmemodellVisualisieren
                 if (löschFlag)
                 {
                     if (MessageBox.Show("Element " + element.ElementId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No){ }
+                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
                     else
                     {
                         modell.Elemente.Remove(element.ElementId);
@@ -506,7 +506,7 @@ public partial class WärmemodellVisualisieren
                         break;
                 }
             }
-            
+
             // Textdarstellung ist Knotenlast
             else if (modell.Lasten.TryGetValue(item.Uid, out var knotenlast))
             {
@@ -524,7 +524,7 @@ public partial class WärmemodellVisualisieren
                 {
                     RandbedingungId = { Text = knotenlast.LastId },
                     KnotenId = { Text = knotenlast.KnotenId },
-                    Temperatur = { Text = knotenlast.Lastwerte[0].ToString("g3")}
+                    Temperatur = { Text = knotenlast.Lastwerte[0].ToString("g3") }
                 };
             }
             // Textdarstellung ist zeitabhängige Knotenlast
@@ -592,7 +592,7 @@ public partial class WärmemodellVisualisieren
                     Knoten1 = { Text = elementLast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
                     Knoten2 = { Text = elementLast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) }
                 };
-                for (var i = 0; i <elementLast.Lastwerte.Length ;i++)
+                for (var i = 0; i < elementLast.Lastwerte.Length; i++)
                 {
                     switch (i)
                     {
@@ -647,10 +647,10 @@ public partial class WärmemodellVisualisieren
                 }
                 var elementlast = new ZeitElementtemperaturNeu(modell)
                 {
-                    LastId = {Text = zeitElementlast.LastId},
-                    ElementId = {Text = zeitElementlast.ElementId},
-                    P0 = {Text = zeitElementlast.P[0].ToString("G2")}, 
-                    P1 = {Text = zeitElementlast.P[1].ToString("G2")}
+                    LastId = { Text = zeitElementlast.LastId },
+                    ElementId = { Text = zeitElementlast.ElementId },
+                    P0 = { Text = zeitElementlast.P[0].ToString("G2") },
+                    P1 = { Text = zeitElementlast.P[1].ToString("G2") }
                 };
                 switch (zeitElementlast.P.Length)
                 {
@@ -663,7 +663,7 @@ public partial class WärmemodellVisualisieren
                         break;
                 }
             }
-            
+
             // Textdarstellung ist Randtemperatur
             else if (modell.Randbedingungen.TryGetValue(item.Uid, out var randbedingung))
             {
@@ -697,7 +697,7 @@ public partial class WärmemodellVisualisieren
                         StartFenster.wärmeVisual.Close();
                     }
                 }
-                
+
                 var rand = new ZeitRandtemperaturNeu(modell)
                 {
                     RandbedingungId = { Text = zeitRandbedingung.RandbedingungId },
@@ -723,7 +723,7 @@ public partial class WärmemodellVisualisieren
                         {
                             sb.Append(intervall[i].ToString("N0"));
                             sb.Append(";");
-                            sb.Append(intervall[i+1].ToString("N0"));
+                            sb.Append(intervall[i + 1].ToString("N0"));
                             sb.Append(" ");
                         }
                         rand.Linear.Text = sb.ToString();

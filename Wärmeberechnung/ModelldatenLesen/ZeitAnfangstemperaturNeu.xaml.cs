@@ -72,7 +72,7 @@ public partial class ZeitAnfangstemperaturNeu
 
     private void BtnDelete_Click(object sender, RoutedEventArgs e)
     {
-        modell.Zeitintegration.Anfangsbedingungen.RemoveAt(aktuell+1);
+        modell.Zeitintegration.Anfangsbedingungen.RemoveAt(aktuell + 1);
         aktuell = 0;
         if (modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
         {

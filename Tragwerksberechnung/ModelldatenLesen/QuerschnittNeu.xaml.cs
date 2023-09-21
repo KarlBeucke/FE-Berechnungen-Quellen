@@ -51,13 +51,13 @@ public partial class QuerschnittNeu
             if (Fläche.Text != string.Empty)
             {
                 double ixx = 0;
-                var fläche= double.Parse(Fläche.Text);
+                var fläche = double.Parse(Fläche.Text);
                 if (Ixx.Text != string.Empty) ixx = double.Parse(Ixx.Text);
                 querschnitt = new Querschnitt(fläche, ixx)
                 {
                     QuerschnittId = querschnittId
                 };
-                modell.Querschnitt.Add(querschnittId,querschnitt );
+                modell.Querschnitt.Add(querschnittId, querschnitt);
             }
         }
         querschnittKeys?.Close();
