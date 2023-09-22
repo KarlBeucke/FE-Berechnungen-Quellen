@@ -1595,6 +1595,8 @@ public class Darstellung
             }
 
             // zeichne Momentenlinie, nur Punkt-, keine Linienlast
+            const int anzahlProEinheit = 10;
+            var inkrement = 1.0 / anzahlProEinheit;
             if (elementHatPunktLast && !elementHatLinienLast)
             {
                 // Linie von Moment1 skaliert nach Mmax skaliert
@@ -1628,8 +1630,6 @@ public class Darstellung
                 var qa = linienLast.Lastwerte[1];
                 var qb = linienLast.Lastwerte[3];
                 var l = element.balkenLänge;
-                const double anzahlProEinheit = 10;
-                const double inkrement = 1 / anzahlProEinheit;
 
                 var anzahl = (int)(l / inkrement);
                 var polyLinePointArray = new Point[anzahl + 2];
@@ -1693,9 +1693,8 @@ public class Darstellung
                 // zeichne Momentenlinie,  Element hat Punktlast
                 else
                 {
-                    double m = 0;
+                    double m;
                     var abstandPunktlast = punktLastO * element.balkenLänge;
-
                     // Unstetigkeit an Punktlast
                     // qa <= qb   Gleichlast oder Dreieckslast linear steigend
                     if (Math.Abs(qb) >= Math.Abs(qa))
@@ -1707,26 +1706,14 @@ public class Darstellung
                         maxPunkt = startPunkt + vec * abstandPunktlast * auflösung
                                               + vec2 * mmax / skalierungMoment * MaxMomentScreen;
 
-                        for (var i = 0; i <= abstandPunktlast / inkrement; i++)
+                        for (var i = 0; i <= anzahl; i++)
                         {
                             var x = i * inkrement;
                             m = element.ElementZustand[2] - element.ElementZustand[1] * x
                                 + qa * x * x / 2
                                 + (qb - qa) * x * x / 6;
+                            if (x > abstandPunktlast) m += punktLast.Lastwerte[1] * (x - abstandPunktlast);
                             var mPoint = new Point((element.Knoten[0].Koordinaten[0] + x) * auflösung,
-                                element.Knoten[0].Koordinaten[1] + m / skalierungMoment * MaxMomentScreen);
-                            polyLinePointArray[i] = mPoint;
-                        }
-
-                        var start = (int)(abstandPunktlast / inkrement) + 1;
-                        var mp = m;
-                        var qp = element.ElementZustand[1] - qa * abstandPunktlast
-                                       - (qb - qa) / l * abstandPunktlast * abstandPunktlast / 2 - punktLast!.Lastwerte[1];
-                        for (var i = start; i <= anzahl; i++)
-                        {
-                            var x = (i - start + 1) * inkrement;
-                            m = mp - qp * x + qa * x * x / 2 + (qb - qa) * x * x / 6;
-                            var mPoint = new Point((element.Knoten[0].Koordinaten[0] + abstandPunktlast + x) * auflösung,
                                 element.Knoten[0].Koordinaten[1] + m / skalierungMoment * MaxMomentScreen);
                             polyLinePointArray[i] = mPoint;
                         }
@@ -1752,28 +1739,17 @@ public class Darstellung
                     // Dreieckslast linear fallend, lokale Koordinate von rechts
                     else
                     {
-                        for (var i = 0; i <= abstandPunktlast / inkrement; i++)
+                        polyLinePointArray = new Point[anzahl + 2];
+                        for (var i = 0; i <= anzahl; i++)
                         {
+                            // lokale x-Koordinate vom Balkenende 0 <= x <= abstandPunktlast
                             var x = i * inkrement;
-                            m = element.ElementZustand[5] - element.ElementZustand[4] * x
-                                + qa * x * x / 2
-                                + (qb - qa) * x * x / 6;
-                            var mPoint = new Point((element.Knoten[1].Koordinaten[0] - x) * auflösung,
-                                element.Knoten[0].Koordinaten[1] + m / skalierungMoment * MaxMomentScreen);
-                            polyLinePointArray[anzahl - i] = mPoint;
-                        }
-
-                        var start = (int)(abstandPunktlast / inkrement) + 1;
-                        var mp = m;
-                        var qp = element.ElementZustand[1] - qa * abstandPunktlast
-                                                           - (qb - qa) / l * abstandPunktlast * abstandPunktlast / 2 - punktLast!.Lastwerte[1];
-                        for (var i = start; i <= anzahl; i++)
-                        {
-                            var x = (i - start + 1) * inkrement;
-                            m = mp - qp * x + qa * x * x / 2 + (qb - qa) * x * x / 6;
-                            var mPoint = new Point((element.Knoten[0].Koordinaten[0] + abstandPunktlast + x) * auflösung,
-                                element.Knoten[0].Koordinaten[1] + m / skalierungMoment * MaxMomentScreen);
-                            polyLinePointArray[i] = mPoint;
+                            // M(x) = Mb - Qb*x + qb*x*x/2 + (qa-qb)*y*y/3
+                            m = element.ElementZustand[5] + element.ElementZustand[4] * x
+                                          + qb * x * x / 2 + (qa - qb) * x * x / 6;
+                            if (x > abstandPunktlast) m += punktLast.Lastwerte[1] * (x - abstandPunktlast);
+                            polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - x) * auflösung,
+                                element.Knoten[1].Koordinaten[1] + m / skalierungMoment * MaxMomentScreen);
                         }
 
                         polyLinePointArray[anzahl + 1] = endPunkt;
