@@ -1706,13 +1706,24 @@ public class Darstellung
                         maxPunkt = startPunkt + vec * abstandPunktlast * auflösung
                                               + vec2 * mmax / skalierungMoment * MaxMomentScreen;
 
-                        for (var i = 0; i <= anzahl; i++)
+                        var anzahlPunktlast = (int)((l-abstandPunktlast) / inkrement);
+                        for (var i = 0; i <= anzahlPunktlast; i++)
                         {
                             var x = i * inkrement;
                             m = element.ElementZustand[2] - element.ElementZustand[1] * x
                                 + qa * x * x / 2
                                 + (qb - qa) * x * x / 6;
-                            if (x > abstandPunktlast) m += punktLast.Lastwerte[1] * (x - abstandPunktlast);
+                            var mPoint = new Point((element.Knoten[0].Koordinaten[0] + x) * auflösung,
+                                element.Knoten[0].Koordinaten[1] + m / skalierungMoment * MaxMomentScreen);
+                            polyLinePointArray[i] = mPoint;
+                        }
+                        for (var i = anzahlPunktlast+1; i <= anzahl; i++)
+                        {
+                            var x = i * inkrement;
+                            m = element.ElementZustand[2] - element.ElementZustand[1] * x
+                                + qa * x * x / 2
+                                + (qb - qa) * x * x / 6
+                                + punktLast.Lastwerte[1] * (x - abstandPunktlast);
                             var mPoint = new Point((element.Knoten[0].Koordinaten[0] + x) * auflösung,
                                 element.Knoten[0].Koordinaten[1] + m / skalierungMoment * MaxMomentScreen);
                             polyLinePointArray[i] = mPoint;
@@ -1739,15 +1750,26 @@ public class Darstellung
                     // Dreieckslast linear fallend, lokale Koordinate von rechts
                     else
                     {
+                        var anzahlPunktlast = (int)((l-abstandPunktlast) / inkrement);
                         polyLinePointArray = new Point[anzahl + 2];
-                        for (var i = 0; i <= anzahl; i++)
+                        for (var i = 0; i <= anzahlPunktlast; i++)
                         {
-                            // lokale x-Koordinate vom Balkenende 0 <= x <= abstandPunktlast
+                            // lokale x-Koordinate vom Balkenende 0 <= x <= (l-abstandPunktlast)
                             var x = i * inkrement;
                             // M(x) = Mb - Qb*x + qb*x*x/2 + (qa-qb)*y*y/3
                             m = element.ElementZustand[5] + element.ElementZustand[4] * x
-                                          + qb * x * x / 2 + (qa - qb) * x * x / 6;
-                            if (x > abstandPunktlast) m += punktLast.Lastwerte[1] * (x - abstandPunktlast);
+                                                          + qb * x * x / 2 + (qa - qb) * x * x / 6;
+                            polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - x) * auflösung,
+                                element.Knoten[1].Koordinaten[1] + m / skalierungMoment * MaxMomentScreen);
+                        }
+                        for (var i = anzahlPunktlast+1; i <= anzahl; i++)
+                        {
+                            // lokale x-Koordinate vom Balkenende (l-abstandPunktlast) < x <= l
+                            var x = i * inkrement;
+                            // M(x) = Mb - Qb*x + qb*x*x/2 + (qa-qb)*y*y/3
+                            m = element.ElementZustand[5] + element.ElementZustand[4] * x
+                                                          + qb * x * x / 2 + (qa - qb) * x * x / 6
+                                                          + punktLast.Lastwerte[1] * (x - abstandPunktlast);
                             polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - x) * auflösung,
                                 element.Knoten[1].Koordinaten[1] + m / skalierungMoment * MaxMomentScreen);
                         }
