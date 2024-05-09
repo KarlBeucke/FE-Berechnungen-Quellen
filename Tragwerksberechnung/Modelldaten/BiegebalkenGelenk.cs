@@ -1,80 +1,89 @@
 ﻿using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using FEBibliothek.Werkzeuge;
-using System.Linq;
 using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
 public class BiegebalkenGelenk : AbstraktBalken
 {
-    private readonly FeModell modell;
-    private AbstraktElement element;
-    protected Knoten knoten;
-    private readonly double[] massenMatrix = new double[6];
+    private readonly FeModell _modell;
+    private double _emodul, _masse, _fläche, _trägheitsmoment;
+    private AbstraktElement _element;
+    private readonly double[] _massenMatrix = new double[6];
 
-    private readonly int erster = 1;
-    private readonly int zweiter = 2;
+    private const int Erster = 1;
+    private const int Zweiter = 2;
 
-    // temp Variable für ein Gelenk
-    private double invkll;
-    private double[,] steifigkeitsMatrix = new double[6, 6];
-    private double[,] redSteifigkeitsMatrix = new double[5, 5];
+    // temporäre Variable für ein Gelenk
+    private double _invkll;
+    private double[,] _steifigkeitsMatrix = new double[6, 6];
+    private double[,] _redSteifigkeitsMatrix = new double[5, 5];
 
-    private readonly double[,] kcc = new double[5, 5];
-    private readonly double[] klc = new double[5];
-    private readonly double[] kcl = new double[5];
-    private readonly double[] kll = new double[1];
-    private readonly double[] kllxklc = new double[5];
-    private readonly double[,] kclxkllxklc = new double[5, 5];
-    private readonly double[] uc = new double[5];
-    private double[] kcxuc = new double[5];
+    private readonly double[,] _kcc = new double[5, 5];
+    private readonly double[] _klc = new double[5];
+    private readonly double[] _kcl = new double[5];
+    private readonly double[] _kll = new double[1];
+    private readonly double[] _kllxklc = new double[5];
+    private readonly double[,] _kclxkllxklc = new double[5, 5];
+    private readonly double[] _uc = new double[5];
+    private double[] _kcxuc = new double[5];
 
-    // dof Identifikatoren
-    private readonly int[] clow = { 0, 1, 3, 4, 5 };
-    private readonly int[] llow = { 2 };
-    private readonly int[] chigh = { 0, 1, 2, 3, 4 };
-    private readonly int[] lhigh = { 5 };
+    // Identifikatoren der Freiheitsgrade
+    private readonly int[] _clow = [0, 1, 3, 4, 5];
+    private readonly int[] _llow = [2];
+    private readonly int[] _chigh = [0, 1, 2, 3, 4];
+    private readonly int[] _lhigh = [5];
 
-    private readonly int[] c;
-    private readonly int[] l;
+    private readonly int[] _c;
+    private readonly int[] _l;
 
     public BiegebalkenGelenk(string[] eKnotenIds, string eMaterialId, string eQuerschnittId, FeModell feModell, int typ)
     {
-        modell = feModell;
+        _modell = feModell;
         ElementFreiheitsgrade = 3;
         KnotenIds = eKnotenIds;
         ElementMaterialId = eMaterialId;
         ElementQuerschnittId = eQuerschnittId;
         KnotenProElement = 2;
         Knoten = new Knoten[2];
+        if (!_modell.Material.TryGetValue(eMaterialId, out var material)) return;
+        _emodul = E == 0 ? material.MaterialWerte[0] : E;
         Typ = typ;
         ElementZustand = new double[6];
         ElementVerformungen = new double[6];
 
         Typ = typ;
-        if (Typ == erster)
+        switch (Typ)
         {
-            c = clow;
-            l = llow;
+            case Erster:
+                _c = _clow;
+                _l = _llow;
+                break;
+            case Zweiter:
+                _c = _chigh;
+                _l = _lhigh;
+                break;
+            default:
+                throw new ModellAusnahme("BiegebalkenGelenk: Gelenktyp wurde nicht erkannt!");
         }
-        else if (Typ == zweiter)
-        {
-            c = chigh;
-            l = lhigh;
-        }
-        else throw new ModellAusnahme("BiegebalkenGelenk: Gelenktyp wurde nicht erkannt!");
     }
 
-    // ... berechne lokale Steigigkeit ................................
+    // berechne lokale Steifigkeit
     private double[,] BerechneLokaleSteifigkeitsmatrix()
     {
         BerechneGeometrie();
-        var h2 = ElementMaterial.MaterialWerte[0] * ElementQuerschnitt.QuerschnittsWerte[1];          // EI
-        var c1 = ElementMaterial.MaterialWerte[0] * ElementQuerschnitt.QuerschnittsWerte[0] / balkenLänge; // AE/L
-        var c2 = (12.0 * h2) / balkenLänge / balkenLänge / balkenLänge;
-        var c3 = (6.0 * h2) / balkenLänge / balkenLänge;
-        var c4 = (4.0 * h2) / balkenLänge;
+
+        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) return null;
+        _emodul = E == 0 ? material.MaterialWerte[0] : E;
+        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt)) return null;
+        _fläche = A == 0 ? querschnitt.QuerschnittsWerte[0] : A;
+        _trägheitsmoment = I == 0 ? querschnitt.QuerschnittsWerte[1] : I;
+        var h2 = _emodul * _trägheitsmoment;      // EI
+        var c1 = _emodul * _fläche / BalkenLänge; // AE/L
+        var c2 = (12.0 * h2) / BalkenLänge / BalkenLänge / BalkenLänge;
+        var c3 = (6.0 * h2) / BalkenLänge / BalkenLänge;
+        var c4 = (4.0 * h2) / BalkenLänge;
         var c5 = 0.5 * c4;
 
         double[,] lokaleSteifigkeitsmatrix = {{ c1,  0,  0, -c1,  0,  0},
@@ -86,20 +95,18 @@ public class BiegebalkenGelenk : AbstraktBalken
         return lokaleSteifigkeitsmatrix;
     }
 
-    //private double[] ComputeLoadVector(AbstractElementLoad ael, bool inElementCoordinateSystem)
+    //private double[] BerechneLastVektor(AbstraktElementLast ael, bool inElementCoordinateSystem)
     //{
-    //    var superLoadVector = ComputeLoadVector(ael, inElementCoordinateSystem);
+    //    var superLoadVector = BerechneLastVektor(ael, inElementCoordinateSystem);
     //    Array.Copy(superLoadVector, 0, p, 0, 6); //length 6, calculates the kcc, kcl ... matrices for this element
 
-    //    if (inElementCoordinateSystem)
-    //        ComputeLocalMatrix();
-    //    else
-    //        ComputeMatrix();
-    //    if (Type == first)
+    //    if (inElementCoordinateSystem) BerechneElementMatrix();
+
+    //    if (Typ == Erster)
     //    {
     //        pc[0] = p[0]; pc[1] = p[1]; pc[2] = p[3]; pc[3] = p[4]; pc[4] = p[5]; pl[0] = p[2];
     //    }
-    //    else if (Type == second)
+    //    else if (Typ == Zweiter)
     //    {
     //        pc[0] = p[0]; pc[1] = p[1]; pc[2] = p[2]; pc[3] = p[3]; pc[4] = p[4]; pl[0] = p[5];
     //    }
@@ -130,10 +137,10 @@ public class BiegebalkenGelenk : AbstraktBalken
                 var m31 = matrix[i + 2, k];
                 var m32 = matrix[i + 2, k + 1];
 
-                var e11 = rotationsMatrix[0, 0];
-                var e12 = rotationsMatrix[0, 1];
-                var e21 = rotationsMatrix[1, 0];
-                var e22 = rotationsMatrix[1, 1];
+                var e11 = RotationsMatrix[0, 0];
+                var e12 = RotationsMatrix[0, 1];
+                var e21 = RotationsMatrix[1, 0];
+                var e22 = RotationsMatrix[1, 1];
 
                 var h11 = e11 * m11 + e12 * m21;
                 var h12 = e11 * m12 + e12 * m22;
@@ -160,52 +167,52 @@ public class BiegebalkenGelenk : AbstraktBalken
         ElementVerformungen = BerechneZustandsvektor();
 
         // Beitrag der Knotenverformungen
-        kcxuc = MatrizenAlgebra.Mult(matrix, ElementVerformungen);
+        _kcxuc = MatrizenAlgebra.Mult(matrix, ElementVerformungen);
 
         // Beitrag der Balkenlasten
-        foreach (var last in modell.ElementLasten.Select(item => item.Value))
+        foreach (var item in _modell.PunktLasten)
         {
-            if (last is AbstraktElementLast linienLast)
-            {
-                var ll = (LinienLast)linienLast;
-                ElementVerformungen = ll.BerechneLokalenLastVektor();
-                for (var k = 0; k < 5; k++) kcxuc[k] -= ElementVerformungen[k];
-            }
-
-            if (!(last is AbstraktElementLast punktLast)) continue;
-            {
-                var last1 = (PunktLast)punktLast;
-                ElementVerformungen = last1.BerechneLokalenLastVektor();
-                for (var k = 0; k < 5; k++) kcxuc[k] -= ElementVerformungen[k];
-            }
+            if (item.Value is not PunktLast punktLast) continue;
+            ElementVerformungen = punktLast.BerechneLokalenLastVektor();
+            for (var k = 0; k < 5; k++) _kcxuc[k] -= ElementVerformungen[k];
+            break;
         }
 
-        if (Typ == erster)
+        foreach (var item in _modell.ElementLasten)
         {
-            ElementZustand[0] = -kcxuc[0];
-            ElementZustand[1] = -kcxuc[1];
-            ElementZustand[2] = 0.0;
-            ElementZustand[3] = kcxuc[2];
-            ElementZustand[4] = kcxuc[3];
-            ElementZustand[5] = kcxuc[4];
+            if (item.Value is not LinienLast linienLast) continue;
+            ElementVerformungen = linienLast.BerechneLokalenLastVektor();
+            for (var k = 0; k < 5; k++) _kcxuc[k] -= ElementVerformungen[k];
+            break;
         }
-        else if (Typ == zweiter)
+
+        switch (Typ)
         {
-            ElementZustand[0] = -kcxuc[0];
-            ElementZustand[1] = -kcxuc[1];
-            ElementZustand[2] = -kcxuc[2];
-            ElementZustand[3] = kcxuc[3];
-            ElementZustand[4] = kcxuc[4];
-            ElementZustand[5] = 0.0;
+            case Erster:
+                ElementZustand[0] = -_kcxuc[0];
+                ElementZustand[1] = -_kcxuc[1];
+                ElementZustand[2] = 0.0;
+                ElementZustand[3] = _kcxuc[2];
+                ElementZustand[4] = _kcxuc[3];
+                ElementZustand[5] = _kcxuc[4];
+                break;
+            case Zweiter:
+                ElementZustand[0] = -_kcxuc[0];
+                ElementZustand[1] = -_kcxuc[1];
+                ElementZustand[2] = -_kcxuc[2];
+                ElementZustand[3] = _kcxuc[3];
+                ElementZustand[4] = _kcxuc[4];
+                ElementZustand[5] = 0.0;
+                break;
         }
         return ElementZustand;
     }
 
-    // ... berechne Verformungsvektor für Rahmenelemente .............
+    // berechne Verformungsvektor für Rahmenelemente
     public int[] HolSystemIndizes()
     {
         int[] indizes;
-        if (Typ == erster)
+        if (Typ == Erster)
         {
             var reduced = new int[5];
             indizes = Knoten[0].SystemIndizes;
@@ -218,7 +225,7 @@ public class BiegebalkenGelenk : AbstraktBalken
             return reduced;
         }
 
-        if (Typ != zweiter) throw new ModellAusnahme("BiegebalkenGelenk GetSystemIndices: ungültiger Gelenktyp");
+        if (Typ != Zweiter) throw new ModellAusnahme("BiegebalkenGelenk GetSystemIndices: ungültiger Gelenktyp");
         {
             var reduziert = new int[5];
             indizes = Knoten[0].SystemIndizes;
@@ -238,20 +245,22 @@ public class BiegebalkenGelenk : AbstraktBalken
          *
          *  | Kcc - Kcl*Kll^-1*klc |
          */
+
+    // reduzierte Steifigkeitsmatrix
     private double[,] KondensierMatrix(double[,] ke)
     {
-        MatrizenAlgebra.ExtractSubMatrix(ke, kcc, c);
-        MatrizenAlgebra.ExtractSubMatrix(ke, kcl, c, l);
-        MatrizenAlgebra.ExtractSubMatrix(ke, klc, l, c);
-        MatrizenAlgebra.ExtractSubMatrix(ke, kll, l, l);
-        invkll = 1 / kll[0];
-        for (var k = 0; k < 5; k++) kllxklc[k] = invkll * klc[k];
+        MatrizenAlgebra.ExtractSubMatrix(ke, _kcc, _c);
+        MatrizenAlgebra.ExtractSubMatrix(ke, _kcl, _c, _l);
+        MatrizenAlgebra.ExtractSubMatrix(ke, _klc, _l, _c);
+        MatrizenAlgebra.ExtractSubMatrix(ke, _kll, _l, _l);
+        _invkll = 1 / _kll[0];
+        for (var k = 0; k < 5; k++) _kllxklc[k] = _invkll * _klc[k];
         for (var i = 0; i < 5; i++)
-            for (var j = 0; j < 5; j++) kclxkllxklc[i, j] = kcl[j] * kllxklc[i];
+            for (var j = 0; j < 5; j++) _kclxkllxklc[i, j] = _kcl[j] * _kllxklc[i];
         for (var i = 0; i < 5; i++)
-            for (var j = 0; j < 5; j++) redSteifigkeitsMatrix[i, j] = kcc[i, j] - kclxkllxklc[i, j];
+            for (var j = 0; j < 5; j++) _redSteifigkeitsMatrix[i, j] = _kcc[i, j] - _kclxkllxklc[i, j];
         //MatrixAlgebra.Subtract(redStiffnessMatrix, kcc, kclxkllxklc);
-        return redSteifigkeitsMatrix;
+        return _redSteifigkeitsMatrix;
     }
 
     private double[,] BerechneLokaleReduzierteMatrix()
@@ -260,77 +269,88 @@ public class BiegebalkenGelenk : AbstraktBalken
     }
     public override double[,] BerechneElementMatrix()
     {
-        steifigkeitsMatrix = BerechneLokaleSteifigkeitsmatrix();
+        _steifigkeitsMatrix = BerechneLokaleSteifigkeitsmatrix();
         // transform local matrix to compute global stiffness
-        steifigkeitsMatrix = TransformMatrix(steifigkeitsMatrix);
+        _steifigkeitsMatrix = TransformMatrix(_steifigkeitsMatrix);
 
-        redSteifigkeitsMatrix = KondensierMatrix(steifigkeitsMatrix);
-        return redSteifigkeitsMatrix;
+        _redSteifigkeitsMatrix = KondensierMatrix(_steifigkeitsMatrix);
+        return _redSteifigkeitsMatrix;
     }
     public override double[] BerechneDiagonalMatrix()
     {
-        if (ElementMaterial.MaterialWerte.Length < 3)
+        if (ElementMaterial.MaterialWerte.Length < 3 && M == 0)
         {
             throw new ModellAusnahme("BiegebalkenGelenk " + ElementId + ", spezifische Masse noch nicht definiert");
         }
-        // Me = speyifische masse * fläche * 0.5*balkenlänge
-        massenMatrix[0] = massenMatrix[1] = massenMatrix[3] = massenMatrix[4] =
-            ElementMaterial.MaterialWerte[2] * ElementQuerschnitt.QuerschnittsWerte[0] * balkenLänge / 2;
-        massenMatrix[2] = massenMatrix[5] = 1;
-        return massenMatrix;
+        // Me = spezifische masse * fläche * 0.5*balkenlänge
+        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) return null;
+        _masse = M == 0 ? material.MaterialWerte[2] : M;
+        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt)) return null;
+        _fläche = A == 0 ? querschnitt.QuerschnittsWerte[0] : A;
+
+        _massenMatrix[0] = _massenMatrix[1] = _massenMatrix[3] = _massenMatrix[4] = _masse * _fläche * BalkenLänge / 2;
+        _massenMatrix[2] = _massenMatrix[5] = 1;
+        return _massenMatrix;
     }
     public override void SetzElementSystemIndizes()
     {
         SystemIndizesElement = new int[5];
         var counter = 0;
-        if (Typ == erster)
+        switch (Typ)
         {
-            for (var j = 0; j < ElementFreiheitsgrade - 1; j++)
-                SystemIndizesElement[counter++] = Knoten[0].SystemIndizes[j];
-            for (var j = 0; j < ElementFreiheitsgrade; j++)
-                SystemIndizesElement[counter++] = Knoten[1].SystemIndizes[j];
+            case Erster:
+                {
+                    for (var j = 0; j < ElementFreiheitsgrade - 1; j++)
+                        SystemIndizesElement[counter++] = Knoten[0].SystemIndizes[j];
+                    for (var j = 0; j < ElementFreiheitsgrade; j++)
+                        SystemIndizesElement[counter++] = Knoten[1].SystemIndizes[j];
+                    break;
+                }
+            case Zweiter:
+                {
+                    for (var j = 0; j < ElementFreiheitsgrade; j++)
+                        SystemIndizesElement[counter++] = Knoten[0].SystemIndizes[j];
+                    for (var j = 0; j < ElementFreiheitsgrade - 1; j++)
+                        SystemIndizesElement[counter++] = Knoten[1].SystemIndizes[j];
+                    break;
+                }
+            default:
+                throw new ModellAusnahme("BiegebalkenGelenk SetSystemIndices: Gelenktyp wurde nicht erkannt!");
         }
-        else if (Typ == zweiter)
-        {
-            for (var j = 0; j < ElementFreiheitsgrade; j++)
-                SystemIndizesElement[counter++] = Knoten[0].SystemIndizes[j];
-            for (var j = 0; j < ElementFreiheitsgrade - 1; j++)
-                SystemIndizesElement[counter++] = Knoten[1].SystemIndizes[j];
-        }
-        else throw new ModellAusnahme("BiegebalkenGelenk SetSystemIndices: Gelenktyp wurde nicht erkannt!");
     }
     public override double[] BerechneZustandsvektor()
     {
         BerechneGeometrie();
-        if (Typ == erster)
+        switch (Typ)
         {
-            uc[0] = Knoten[0].Knotenfreiheitsgrade[0] * cos + Knoten[0].Knotenfreiheitsgrade[1] * sin;
-            uc[1] = Knoten[0].Knotenfreiheitsgrade[0] * -sin + Knoten[0].Knotenfreiheitsgrade[1] * cos;
-            uc[2] = Knoten[1].Knotenfreiheitsgrade[0] * cos + Knoten[1].Knotenfreiheitsgrade[1] * sin;
-            uc[3] = Knoten[1].Knotenfreiheitsgrade[0] * -sin + Knoten[1].Knotenfreiheitsgrade[1] * cos;
-            uc[4] = Knoten[1].Knotenfreiheitsgrade[2];
+            case Erster:
+                _uc[0] = Knoten[0].Knotenfreiheitsgrade[0] * Cos + Knoten[0].Knotenfreiheitsgrade[1] * Sin;
+                _uc[1] = Knoten[0].Knotenfreiheitsgrade[0] * -Sin + Knoten[0].Knotenfreiheitsgrade[1] * Cos;
+                _uc[2] = Knoten[1].Knotenfreiheitsgrade[0] * Cos + Knoten[1].Knotenfreiheitsgrade[1] * Sin;
+                _uc[3] = Knoten[1].Knotenfreiheitsgrade[0] * -Sin + Knoten[1].Knotenfreiheitsgrade[1] * Cos;
+                _uc[4] = Knoten[1].Knotenfreiheitsgrade[2];
+                break;
+            case Zweiter:
+                _uc[0] = Knoten[0].Knotenfreiheitsgrade[0] * Cos + Knoten[0].Knotenfreiheitsgrade[1] * Sin;
+                _uc[1] = Knoten[0].Knotenfreiheitsgrade[0] * -Sin + Knoten[0].Knotenfreiheitsgrade[1] * Cos;
+                _uc[2] = Knoten[0].Knotenfreiheitsgrade[2];
+                _uc[3] = Knoten[1].Knotenfreiheitsgrade[0] * Cos + Knoten[1].Knotenfreiheitsgrade[1] * Sin;
+                _uc[4] = Knoten[1].Knotenfreiheitsgrade[0] * -Sin + Knoten[1].Knotenfreiheitsgrade[1] * Cos;
+                break;
         }
-        else if (Typ == zweiter)
-        {
-            uc[0] = Knoten[0].Knotenfreiheitsgrade[0] * cos + Knoten[0].Knotenfreiheitsgrade[1] * sin;
-            uc[1] = Knoten[0].Knotenfreiheitsgrade[0] * -sin + Knoten[0].Knotenfreiheitsgrade[1] * cos;
-            uc[2] = Knoten[0].Knotenfreiheitsgrade[2];
-            uc[3] = Knoten[1].Knotenfreiheitsgrade[0] * cos + Knoten[1].Knotenfreiheitsgrade[1] * sin;
-            uc[4] = Knoten[1].Knotenfreiheitsgrade[0] * -sin + Knoten[1].Knotenfreiheitsgrade[1] * cos;
-        }
-        return uc;
+        return _uc;
     }
     public override double[] BerechneElementZustand(double z0, double z1)
     {
-        return uc;
+        return _uc;
     }
 
     public override Point BerechneSchwerpunkt()
     {
-        if (!modell.Elemente.TryGetValue(ElementId, out element))
+        if (!_modell.Elemente.TryGetValue(ElementId, out _element))
         {
             throw new ModellAusnahme("BiegebalkenGelenk: " + ElementId + " nicht im Modell gefunden");
         }
-        return Schwerpunkt(element);
+        return Schwerpunkt(_element);
     }
 }

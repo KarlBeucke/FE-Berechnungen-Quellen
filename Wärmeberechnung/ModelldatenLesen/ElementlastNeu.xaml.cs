@@ -119,7 +119,7 @@ public partial class ElementlastNeu
             }
             lastenKeys?.Close();
             Close();
-            StartFenster.wärmeVisual.Close();
+            StartFenster.WärmeVisual.Close();
         }
     }
 
@@ -177,6 +177,6 @@ public partial class ElementlastNeu
         modell.ElementLasten.Remove(ElementlastId.Text);
         lastenKeys?.Close();
         Close();
-        StartFenster.wärmeVisual.Close();
+        StartFenster.WärmeVisual.Close();
     }
 }

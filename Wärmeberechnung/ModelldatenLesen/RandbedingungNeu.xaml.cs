@@ -54,7 +54,7 @@ public partial class RandbdingungNeu
         }
         randbedingungenKeys?.Close();
         Close();
-        StartFenster.wärmeVisual.Close();
+        StartFenster.WärmeVisual.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -69,7 +69,7 @@ public partial class RandbdingungNeu
         modell.Randbedingungen.Remove(RandbedingungId.Text);
         randbedingungenKeys?.Close();
         Close();
-        StartFenster.wärmeVisual.Close();
+        StartFenster.WärmeVisual.Close();
     }
 
     private void RandbedingungIdLostFocus(object sender, RoutedEventArgs e)

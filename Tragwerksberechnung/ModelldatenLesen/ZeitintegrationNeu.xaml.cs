@@ -9,17 +9,17 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class ZeitintegrationNeu
 {
-    private readonly FeModell modell;
-    public int aktuell, eigenForm;
-    private ZeitKnotenanfangswerteNeu anfangswerteNeu;
+    private readonly FeModell _modell;
+    public int Aktuell, EigenForm;
+    private ZeitKnotenanfangswerteNeu _anfangswerteNeu;
     public ZeitintegrationNeu(FeModell modell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
         InitializeComponent();
-        this.modell = modell;
+        _modell = modell;
         if (modell.Eigenzustand != null)
         {
-            eigenForm = 1;
+            EigenForm = 1;
             Eigenlösung.Text = modell.Eigenzustand.AnzahlZustände.ToString(CultureInfo.InvariantCulture);
         }
         if (modell.Eigenzustand != null && modell.Eigenzustand.DämpfungsRaten.Count > 0)
@@ -100,21 +100,21 @@ public partial class ZeitintegrationNeu
         try { anzahl = int.Parse(Eigenlösung.Text, CultureInfo.CurrentCulture); }
         catch (FormatException) { _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration"); return; }
 
-        if (StartFenster.modellBerechnung == null) modellBerechnung = new Berechnung(modell);
-        modell.Eigenzustand ??= new Eigenzustände("Tmin", anzahl);
+        if (StartFenster.ModellBerechnung == null) modellBerechnung = new Berechnung(_modell);
+        _modell.Eigenzustand ??= new Eigenzustände("Tmin", anzahl);
 
-        if (modell.Eigenzustand.Eigenwerte == null)
+        if (_modell.Eigenzustand.Eigenwerte == null)
         {
-            if (!StartFenster.berechnet)
+            if (!StartFenster.Berechnet)
             {
                 modellBerechnung?.BerechneSystemMatrix();
-                StartFenster.berechnet = true;
+                StartFenster.Berechnet = true;
             }
-            modell.Eigenzustand = new Eigenzustände("Tmin", anzahl);
-            if (modellBerechnung != null | !StartFenster.zeitintegrationBerechnet) modellBerechnung?.Eigenzustände();
+            _modell.Eigenzustand = new Eigenzustände("Tmin", anzahl);
+            if (modellBerechnung != null | !StartFenster.ZeitintegrationBerechnet) modellBerechnung?.Eigenzustände();
         }
 
-        var omegaMax = modell.Eigenzustand.Eigenwerte[anzahl - 1];
+        var omegaMax = _modell.Eigenzustand.Eigenwerte[anzahl - 1];
         // kleinste Periode für größten Eigenwert in Lösung
         var tmin = 2 * Math.PI / Math.Sqrt(omegaMax);
         Zeitintervall.Text = tmin.ToString("F3");
@@ -122,59 +122,59 @@ public partial class ZeitintegrationNeu
 
     private void AnfangsbedingungNext(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        aktuell++;
-        anfangswerteNeu ??= new ZeitKnotenanfangswerteNeu(modell);
-        if (modell.Zeitintegration.Anfangsbedingungen.Count < aktuell)
+        Aktuell++;
+        _anfangswerteNeu ??= new ZeitKnotenanfangswerteNeu(_modell);
+        if (_modell.Zeitintegration.Anfangsbedingungen.Count < Aktuell)
         {
-            anfangswerteNeu.KnotenId.Text = "";
-            anfangswerteNeu.Dof1D0.Text = ""; anfangswerteNeu.Dof1V0.Text = "";
-            anfangswerteNeu.Dof2D0.Text = ""; anfangswerteNeu.Dof2V0.Text = "";
-            anfangswerteNeu.Dof3D0.Text = ""; anfangswerteNeu.Dof3V0.Text = "";
-            StartFenster.tragwerkVisual.zeitintegrationNeu.Anfangsbedingungen.Text = aktuell.ToString(CultureInfo.CurrentCulture);
+            _anfangswerteNeu.KnotenId.Text = "";
+            _anfangswerteNeu.Dof1D0.Text = ""; _anfangswerteNeu.Dof1V0.Text = "";
+            _anfangswerteNeu.Dof2D0.Text = ""; _anfangswerteNeu.Dof2V0.Text = "";
+            _anfangswerteNeu.Dof3D0.Text = ""; _anfangswerteNeu.Dof3V0.Text = "";
+            StartFenster.TragwerkVisual.ZeitintegrationNeu.Anfangsbedingungen.Text = Aktuell.ToString(CultureInfo.CurrentCulture);
         }
         else
         {
-            var knotenwerte = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell - 1];
-            StartFenster.tragwerkVisual.zeitintegrationNeu.Anfangsbedingungen.Text =
-                aktuell.ToString(CultureInfo.CurrentCulture);
-            StartFenster.tragwerkVisual.zeitintegrationNeu.Show();
+            var knotenwerte = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[Aktuell - 1];
+            StartFenster.TragwerkVisual.ZeitintegrationNeu.Anfangsbedingungen.Text =
+                Aktuell.ToString(CultureInfo.CurrentCulture);
+            StartFenster.TragwerkVisual.ZeitintegrationNeu.Show();
 
-            anfangswerteNeu.KnotenId.Text = knotenwerte.KnotenId;
-            anfangswerteNeu.Dof1D0.Text = knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
-            anfangswerteNeu.Dof1V0.Text = knotenwerte.Werte[1].ToString(CultureInfo.CurrentCulture);
+            _anfangswerteNeu.KnotenId.Text = knotenwerte.KnotenId;
+            _anfangswerteNeu.Dof1D0.Text = knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
+            _anfangswerteNeu.Dof1V0.Text = knotenwerte.Werte[1].ToString(CultureInfo.CurrentCulture);
             if (knotenwerte.Werte.Length > 2)
             {
-                anfangswerteNeu.Dof2D0.Text = knotenwerte.Werte[2].ToString(CultureInfo.CurrentCulture);
-                anfangswerteNeu.Dof2V0.Text = knotenwerte.Werte[3].ToString(CultureInfo.CurrentCulture);
+                _anfangswerteNeu.Dof2D0.Text = knotenwerte.Werte[2].ToString(CultureInfo.CurrentCulture);
+                _anfangswerteNeu.Dof2V0.Text = knotenwerte.Werte[3].ToString(CultureInfo.CurrentCulture);
             }
 
             if (knotenwerte.Werte.Length > 4)
             {
-                anfangswerteNeu.Dof3D0.Text = knotenwerte.Werte[4].ToString(CultureInfo.CurrentCulture);
-                anfangswerteNeu.Dof3V0.Text = knotenwerte.Werte[5].ToString(CultureInfo.CurrentCulture);
+                _anfangswerteNeu.Dof3D0.Text = knotenwerte.Werte[4].ToString(CultureInfo.CurrentCulture);
+                _anfangswerteNeu.Dof3V0.Text = knotenwerte.Werte[5].ToString(CultureInfo.CurrentCulture);
             }
-            var anf = aktuell.ToString("D");
-            StartFenster.tragwerkVisual.zeitintegrationNeu.Anfangsbedingungen.Text = anf;
+            var anf = Aktuell.ToString("D");
+            StartFenster.TragwerkVisual.ZeitintegrationNeu.Anfangsbedingungen.Text = anf;
         }
     }
 
     private void DämpfungsratenNext(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        eigenForm++;
-        StartFenster.tragwerkVisual.zeitintegrationNeu.Eigenform.Text =
-            eigenForm.ToString(CultureInfo.CurrentCulture);
-        _ = new ZeitDämpfungsratenNeu(modell);
+        EigenForm++;
+        StartFenster.TragwerkVisual.ZeitintegrationNeu.Eigenform.Text =
+            EigenForm.ToString(CultureInfo.CurrentCulture);
+        _ = new ZeitDämpfungsratenNeu(_modell);
 
-        var modalwerte = (ModaleWerte)modell.Eigenzustand.DämpfungsRaten[eigenForm - 1];
-        StartFenster.tragwerkVisual.zeitintegrationNeu.Dämpfungsraten.Text = modalwerte.Dämpfung.ToString(CultureInfo.CurrentCulture);
+        var modalwerte = (ModaleWerte)_modell.Eigenzustand.DämpfungsRaten[EigenForm - 1];
+        StartFenster.TragwerkVisual.ZeitintegrationNeu.Dämpfungsraten.Text = modalwerte.Dämpfung.ToString(CultureInfo.CurrentCulture);
     }
 
     private void EigenformKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         if (Eigenform.Text.Length == 0) return;
-        if (int.Parse(Eigenform.Text) > modell.Eigenzustand.AnzahlZustände) return;
-        eigenForm = int.Parse(Eigenform.Text);
-        Dämpfungsraten.Text = modell.Eigenzustand.DämpfungsRaten[eigenForm].ToString();
+        if (int.Parse(Eigenform.Text) > _modell.Eigenzustand.AnzahlZustände) return;
+        EigenForm = int.Parse(Eigenform.Text);
+        Dämpfungsraten.Text = _modell.Eigenzustand.DämpfungsRaten[EigenForm].ToString();
     }
 
     private void EigenformGotFocus(object sender, RoutedEventArgs e)
@@ -184,7 +184,7 @@ public partial class ZeitintegrationNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        modell.Zeitintegration = null;
+        _modell.Zeitintegration = null;
         Close();
     }
 
@@ -196,7 +196,7 @@ public partial class ZeitintegrationNeu
             return;
         }
 
-        if (modell.Zeitintegration == null)
+        if (_modell.Zeitintegration == null)
         {
             short methode;
             int anzahlEigenlösungen;
@@ -210,7 +210,7 @@ public partial class ZeitintegrationNeu
 
             try { anzahlEigenlösungen = int.Parse(Eigenlösung.Text, CultureInfo.CurrentCulture); }
             catch (FormatException) { _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration"); return; }
-            modell.Eigenzustand = new Eigenzustände("eigen", anzahlEigenlösungen);
+            _modell.Eigenzustand = new Eigenzustände("eigen", anzahlEigenlösungen);
 
             if (Newmark.IsChecked == true)
             {
@@ -222,7 +222,7 @@ public partial class ZeitintegrationNeu
                 try { gamma = double.Parse(Gamma.Text, CultureInfo.CurrentCulture); }
                 catch (FormatException) { _ = MessageBox.Show("Parameter Gamma hat falsches Format", "neue Zeitintegration"); return; }
 
-                modell.Zeitintegration = new Zeitintegration(tmax, dt, methode, beta, gamma);
+                _modell.Zeitintegration = new Zeitintegration(tmax, dt, methode, beta, gamma);
             }
             else if (Wilson.IsChecked == true)
             {
@@ -230,7 +230,7 @@ public partial class ZeitintegrationNeu
                 double theta;
                 try { theta = double.Parse(Theta.Text, CultureInfo.CurrentCulture); }
                 catch (FormatException) { _ = MessageBox.Show("Parameter Theta hat falsches Format", "neue Zeitintegration"); return; }
-                modell.Zeitintegration = new Zeitintegration(tmax, dt, methode, theta);
+                _modell.Zeitintegration = new Zeitintegration(tmax, dt, methode, theta);
             }
             else if (Taylor.IsChecked == true)
             {
@@ -238,50 +238,50 @@ public partial class ZeitintegrationNeu
                 double alfa;
                 try { alfa = double.Parse(Alfa.Text, CultureInfo.CurrentCulture); }
                 catch (FormatException) { _ = MessageBox.Show("Parameter Alfa hat falsches Format", "neue Zeitintegration"); return; }
-                modell.Zeitintegration = new Zeitintegration(tmax, dt, methode, alfa);
+                _modell.Zeitintegration = new Zeitintegration(tmax, dt, methode, alfa);
             }
-            StartFenster.zeitintegrationDaten = true;
+            StartFenster.ZeitintegrationDaten = true;
         }
         else
         {
-            try { modell.Eigenzustand.AnzahlZustände = int.Parse(Eigenlösung.Text, CultureInfo.CurrentCulture); }
+            try { _modell.Eigenzustand.AnzahlZustände = int.Parse(Eigenlösung.Text, CultureInfo.CurrentCulture); }
             catch (FormatException) { _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration"); return; }
 
-            if (modell.Zeitintegration == null) return;
-            try { modell.Zeitintegration.Dt = double.Parse(Zeitintervall.Text, CultureInfo.CurrentCulture); }
+            if (_modell.Zeitintegration == null) return;
+            try { _modell.Zeitintegration.Dt = double.Parse(Zeitintervall.Text, CultureInfo.CurrentCulture); }
             catch (FormatException) { _ = MessageBox.Show("Zeitschritt deltaT hat falsches Format", "neue Zeitintegration"); }
 
-            try { modell.Zeitintegration.Tmax = double.Parse(MaximalZeit.Text); }
+            try { _modell.Zeitintegration.Tmax = double.Parse(MaximalZeit.Text); }
             catch (FormatException) { _ = MessageBox.Show("maximale Integrationszeit hat falsches Format", "neue Zeitintegration"); }
 
             if (Dämpfungsraten.Text.Length == 0)
             {
-                if (modell.Eigenzustand.DämpfungsRaten.Count > 0) modell.Eigenzustand.DämpfungsRaten.Clear();
+                if (_modell.Eigenzustand.DämpfungsRaten.Count > 0) _modell.Eigenzustand.DämpfungsRaten.Clear();
                 Eigenform.Text = "";
-                eigenForm = 0;
+                EigenForm = 0;
             }
             else
             {
-                try { modell.Eigenzustand.DämpfungsRaten[0] = double.Parse(Dämpfungsraten.Text); }
+                try { _modell.Eigenzustand.DämpfungsRaten[0] = double.Parse(Dämpfungsraten.Text); }
                 catch (FormatException) { _ = MessageBox.Show("DämpfungsRaten hat falsches Format", "neue Zeitintegration"); }
             }
 
             if (Newmark.IsChecked == true)
             {
-                try { modell.Zeitintegration.Parameter1 = double.Parse(Beta.Text, CultureInfo.InvariantCulture); }
+                try { _modell.Zeitintegration.Parameter1 = double.Parse(Beta.Text, CultureInfo.InvariantCulture); }
                 catch (FormatException) { _ = MessageBox.Show("Parameter beta hat falsches Format", "neue Zeitintegration"); }
 
-                try { modell.Zeitintegration.Parameter2 = double.Parse(Gamma.Text, CultureInfo.CurrentCulture); }
+                try { _modell.Zeitintegration.Parameter2 = double.Parse(Gamma.Text, CultureInfo.CurrentCulture); }
                 catch (FormatException) { _ = MessageBox.Show("Parameter gamma hat falsches Format", "neue Zeitintegration"); }
             }
             else if (Wilson.IsChecked == true)
             {
-                try { modell.Zeitintegration.Parameter1 = double.Parse(Theta.Text, CultureInfo.CurrentCulture); }
+                try { _modell.Zeitintegration.Parameter1 = double.Parse(Theta.Text, CultureInfo.CurrentCulture); }
                 catch (FormatException) { _ = MessageBox.Show("Parameter theta hat falsches Format", "neue Zeitintegration"); }
             }
             else if (Taylor.IsChecked == true)
             {
-                try { modell.Zeitintegration.Parameter1 = double.Parse(Alfa.Text, CultureInfo.CurrentCulture); }
+                try { _modell.Zeitintegration.Parameter1 = double.Parse(Alfa.Text, CultureInfo.CurrentCulture); }
                 catch (FormatException) { _ = MessageBox.Show("Parameter alfa hat falsches Format", "neue Zeitintegration"); }
             }
         }

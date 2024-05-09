@@ -129,7 +129,7 @@ public partial class ZeitKnotentemperaturNeu
         }
         Close();
         lastenKeys?.Close();
-        StartFenster.wärmeVisual.Close();
+        StartFenster.WärmeVisual.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -143,13 +143,13 @@ public partial class ZeitKnotentemperaturNeu
         if (!modell.ZeitabhängigeKnotenLasten.ContainsKey(LastId.Text)) return;
         modell.ZeitabhängigeKnotenLasten.Remove(LastId.Text);
         Close();
-        StartFenster.wärmeVisual.Close();
+        StartFenster.WärmeVisual.Close();
 
         if (!modell.ZeitabhängigeKnotenLasten.Keys.Contains(LastId.Text)) return;
         modell.ZeitabhängigeKnotenLasten.Remove(LastId.Text);
         lastenKeys?.Close();
         Close();
-        StartFenster.wärmeVisual.Close();
+        StartFenster.WärmeVisual.Close();
     }
 
     private void LastIdLostFocus(object sender, RoutedEventArgs e)

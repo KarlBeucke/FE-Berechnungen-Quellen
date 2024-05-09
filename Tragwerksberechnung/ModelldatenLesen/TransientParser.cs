@@ -8,7 +8,7 @@ internal class TransientParser
 {
     private string[] substrings;
     private readonly char[] delimiters = { '\t', ';' };
-    public bool zeitintegrationDaten;
+    public bool ZeitintegrationDaten;
 
     public void ParseZeitintegration(string[] lines, FeModell feModell)
     {
@@ -64,7 +64,7 @@ internal class TransientParser
                 default:
                     throw new ParseAusnahme((i + 2) + ": Zeitintegration, falsche Anzahl Parameter");
             }
-            zeitintegrationDaten = true;
+            ZeitintegrationDaten = true;
         }
 
         // suche "Dämpfung"

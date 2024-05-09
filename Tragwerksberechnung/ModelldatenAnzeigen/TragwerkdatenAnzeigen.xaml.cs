@@ -16,41 +16,41 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
 public partial class TragwerkdatenAnzeigen
 {
-    private readonly FeModell modell;
-    private string removeKey;
-    private Shape letztesElement;
-    private Shape letzterKnoten;
+    private readonly FeModell _modell;
+    private string _removeKey;
+    private Shape _letztesElement;
+    private Shape _letzterKnoten;
 
     public TragwerkdatenAnzeigen(FeModell feModell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
-        modell = feModell;
+        _modell = feModell;
         InitializeComponent();
-        letzterKnoten = null;
-        letztesElement = null;
+        _letzterKnoten = null;
+        _letztesElement = null;
     }
 
     private void Knoten_Loaded(object sender, RoutedEventArgs e)
     {
-        var knoten = modell.Knoten.Select(item => item.Value).ToList();
+        var knoten = _modell.Knoten.Select(item => item.Value).ToList();
         KnotenGrid = sender as DataGrid;
         if (KnotenGrid != null) KnotenGrid.ItemsSource = knoten;
     }
     private void NeuerKnoten(object sender, MouseButtonEventArgs e)
     {
-        _ = new KnotenNeu(modell);
-        StartFenster.berechnet = false;
+        _ = new KnotenNeu(_modell);
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
-    private void KnotenZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Knoten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Knoten.Remove(_removeKey);
+        StartFenster.Berechnet = false;
         Close();
 
-        var tragwerk = new TragwerkdatenAnzeigen(modell);
+        var tragwerk = new TragwerkdatenAnzeigen(_modell);
         tragwerk.Show();
     }
     //SelectionChanged
@@ -59,40 +59,40 @@ public partial class TragwerkdatenAnzeigen
         if (KnotenGrid.SelectedCells.Count <= 0) return;
         var cellInfo = KnotenGrid.SelectedCells[0];
         var knoten = (Knoten)cellInfo.Item;
-        removeKey = knoten.Id;
-        if (letzterKnoten != null)
+        _removeKey = knoten.Id;
+        if (_letzterKnoten != null)
         {
-            StartFenster.tragwerkVisual.VisualTragwerkModel.Children.Remove(letzterKnoten);
+            StartFenster.TragwerkVisual.VisualTragwerkModel.Children.Remove(_letzterKnoten);
         }
-        letzterKnoten =
-            StartFenster.tragwerkVisual.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        _letzterKnoten =
+            StartFenster.TragwerkVisual.Darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
     private void KeinKnotenSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.tragwerkVisual.VisualTragwerkModel.Children.Remove(letzterKnoten);
+        StartFenster.TragwerkVisual.VisualTragwerkModel.Children.Remove(_letzterKnoten);
     }
 
     private void ElementeGrid_Loaded(object sender, RoutedEventArgs e)
     {
-        var elemente = modell.Elemente.Select(item => item.Value).ToList();
+        var elemente = _modell.Elemente.Select(item => item.Value).ToList();
         ElementGrid = sender as DataGrid;
         if (ElementGrid != null) ElementGrid.ItemsSource = elemente;
     }
     private void NeuesElement(object sender, MouseButtonEventArgs e)
     {
-        _ = new ElementNeu(modell);
-        StartFenster.berechnet = false;
+        _ = new ElementNeu(_modell);
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
-    private void ElementZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void ElementZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Elemente.Remove(removeKey);
-        StartFenster.berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Elemente.Remove(_removeKey);
+        StartFenster.Berechnet = false;
         Close();
 
-        var tragwerk = new TragwerkdatenAnzeigen(modell);
+        var tragwerk = new TragwerkdatenAnzeigen(_modell);
         tragwerk.Show();
     }
     //SelectionChanged
@@ -101,38 +101,38 @@ public partial class TragwerkdatenAnzeigen
         if (ElementGrid.SelectedCells.Count <= 0) return;
         var cellInfo = ElementGrid.SelectedCells[0];
         var element = (Abstrakt2D)cellInfo.Item;
-        removeKey = element.ElementId;
-        if (letztesElement != null)
+        _removeKey = element.ElementId;
+        if (_letztesElement != null)
         {
-            StartFenster.tragwerkVisual.VisualTragwerkModel.Children.Remove(letztesElement);
+            StartFenster.TragwerkVisual.VisualTragwerkModel.Children.Remove(_letztesElement);
         }
-        letztesElement = StartFenster.tragwerkVisual.darstellung.ElementZeichnen(element, Brushes.Green, 5);
+        _letztesElement = StartFenster.TragwerkVisual.Darstellung.ElementZeichnen(element, Brushes.Green, 5);
     }
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.tragwerkVisual.VisualTragwerkModel.Children.Remove(letztesElement);
+        StartFenster.TragwerkVisual.VisualTragwerkModel.Children.Remove(_letztesElement);
     }
 
     private void Material_Loaded(object sender, RoutedEventArgs e)
     {
-        var material = modell.Material.Select(item => item.Value).ToList();
+        var material = _modell.Material.Select(item => item.Value).ToList();
         MaterialGrid = sender as DataGrid;
         if (MaterialGrid != null) MaterialGrid.ItemsSource = material;
     }
     private void NeuesMaterial(object sender, MouseButtonEventArgs e)
     {
-        _ = new MaterialNeu(modell);
+        _ = new MaterialNeu(_modell);
         Close();
     }
     //UnloadingRow
-    private void MaterialZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void MaterialZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Material.Remove(removeKey);
-        StartFenster.berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Material.Remove(_removeKey);
+        StartFenster.Berechnet = false;
         Close();
 
-        var tragwerk = new TragwerkdatenAnzeigen(modell);
+        var tragwerk = new TragwerkdatenAnzeigen(_modell);
         tragwerk.Show();
     }
     //SelectionChanged
@@ -141,29 +141,29 @@ public partial class TragwerkdatenAnzeigen
         if (MaterialGrid.SelectedCells.Count <= 0) return;
         var cellInfo = MaterialGrid.SelectedCells[0];
         var material = (Material)cellInfo.Item;
-        removeKey = material.MaterialId;
+        _removeKey = material.MaterialId;
     }
 
     private void Querschnitt_Loaded(object sender, RoutedEventArgs e)
     {
-        var querschnitt = modell.Querschnitt.Select(item => item.Value).ToList();
+        var querschnitt = _modell.Querschnitt.Select(item => item.Value).ToList();
         QuerschnittGrid = sender as DataGrid;
         if (QuerschnittGrid != null) QuerschnittGrid.ItemsSource = querschnitt;
     }
     private void NeuerQuerschnitt(object sender, MouseButtonEventArgs e)
     {
-        _ = new QuerschnittNeu(modell);
+        _ = new QuerschnittNeu(_modell);
         Close();
     }
     //UnloadingRow
-    private void QuerschnittZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void QuerschnittZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Querschnitt.Remove(removeKey);
-        StartFenster.berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Querschnitt.Remove(_removeKey);
+        StartFenster.Berechnet = false;
         Close();
 
-        var tragwerk = new TragwerkdatenAnzeigen(modell);
+        var tragwerk = new TragwerkdatenAnzeigen(_modell);
         tragwerk.Show();
     }
     //SelectionChanged
@@ -172,17 +172,16 @@ public partial class TragwerkdatenAnzeigen
         if (QuerschnittGrid.SelectedCells.Count <= 0) return;
         var cellInfo = QuerschnittGrid.SelectedCells[0];
         var querschnitt = (Querschnitt)cellInfo.Item;
-        removeKey = querschnitt.QuerschnittId;
+        _removeKey = querschnitt.QuerschnittId;
     }
 
     private void Lager_Loaded(object sender, RoutedEventArgs e)
     {
         var lager = new List<AbstraktRandbedingung>();
-        foreach (var item in modell.Randbedingungen)
+        foreach (var item in _modell.Randbedingungen)
         {
             for (var i = 0; i < item.Value.Vordefiniert.Length; i++)
             {
-                //if (!item.Value.Restrained[i]) item.Value.Prescribed[i] = Double.NaN;
                 if (!item.Value.Festgehalten[i]) item.Value.Vordefiniert[i] = double.PositiveInfinity;
             }
             lager.Add(item.Value);
@@ -193,19 +192,19 @@ public partial class TragwerkdatenAnzeigen
     private void NeuesLager(object sender, MouseButtonEventArgs e)
     {
         const double vorX = 0, vorY = 0, vorRot = 0;
-        _ = new LagerNeu(modell, vorX, vorY, vorRot);
-        StartFenster.berechnet = false;
+        _ = new LagerNeu(_modell, vorX, vorY, vorRot);
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
-    private void LagerZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void LagerZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Randbedingungen.Remove(removeKey);
-        StartFenster.berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Randbedingungen.Remove(_removeKey);
+        StartFenster.Berechnet = false;
         Close();
 
-        var tragwerk = new TragwerkdatenAnzeigen(modell);
+        var tragwerk = new TragwerkdatenAnzeigen(_modell);
         tragwerk.Show();
     }
     //SelectionChanged
@@ -214,30 +213,30 @@ public partial class TragwerkdatenAnzeigen
         if (LagerGrid.SelectedCells.Count <= 0) return;
         var cellInfo = LagerGrid.SelectedCells[0];
         var lager = (Lager)cellInfo.Item;
-        removeKey = lager.RandbedingungId;
+        _removeKey = lager.RandbedingungId;
     }
 
     private void Knotenlast_Loaded(object sender, RoutedEventArgs e)
     {
-        var lasten = modell.Lasten.Select(item => item.Value).ToList();
+        var lasten = _modell.Lasten.Select(item => item.Value).ToList();
         KnotenlastGrid = sender as DataGrid;
         if (KnotenlastGrid != null) KnotenlastGrid.ItemsSource = lasten;
     }
     private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
     {
-        _ = new KnotenlastNeu(modell, String.Empty, String.Empty, 0, 0, 0);
-        StartFenster.berechnet = false;
+        _ = new KnotenlastNeu(_modell, String.Empty, String.Empty, 0, 0, 0);
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
-    private void KnotenlastZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenlastZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Lasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Lasten.Remove(_removeKey);
+        StartFenster.Berechnet = false;
         Close();
 
-        var tragwerk = new TragwerkdatenAnzeigen(modell);
+        var tragwerk = new TragwerkdatenAnzeigen(_modell);
         tragwerk.Show();
     }
     //SelectionChanged
@@ -246,30 +245,30 @@ public partial class TragwerkdatenAnzeigen
         if (KnotenlastGrid.SelectedCells.Count <= 0) return;
         var cellInfo = KnotenlastGrid.SelectedCells[0];
         var knotenlast = (AbstraktLast)cellInfo.Item;
-        removeKey = knotenlast.LastId;
+        _removeKey = knotenlast.LastId;
     }
 
     private void Punktlast_Loaded(object sender, RoutedEventArgs e)
     {
-        var lasten = modell.PunktLasten.Select(item => item.Value).ToList();
+        var lasten = _modell.PunktLasten.Select(item => item.Value).ToList();
         PunktlastGrid = sender as DataGrid;
         if (PunktlastGrid != null) PunktlastGrid.ItemsSource = lasten;
     }
     private void NeuePunktlast(object sender, MouseButtonEventArgs e)
     {
-        _ = new PunktlastNeu(modell, string.Empty, string.Empty, 0, 0, 0);
-        StartFenster.berechnet = false;
+        _ = new PunktlastNeu(_modell, string.Empty, string.Empty, 0, 0, 0);
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
-    private void PunktlastZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void PunktlastZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.PunktLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        if (_removeKey == null) return;
+        _modell.PunktLasten.Remove(_removeKey);
+        StartFenster.Berechnet = false;
         Close();
 
-        var tragwerk = new TragwerkdatenAnzeigen(modell);
+        var tragwerk = new TragwerkdatenAnzeigen(_modell);
         tragwerk.Show();
     }
     //SelectionChanged
@@ -278,31 +277,31 @@ public partial class TragwerkdatenAnzeigen
         if (PunktlastGrid.SelectedCells.Count <= 0) return;
         var cellInfo = PunktlastGrid.SelectedCells[0];
         var punktlast = (AbstraktElementLast)cellInfo.Item;
-        removeKey = punktlast.LastId;
+        _removeKey = punktlast.LastId;
     }
 
     private void Linienlast_Loaded(object sender, RoutedEventArgs e)
     {
-        var lasten = modell.ElementLasten.
+        var lasten = _modell.ElementLasten.
             Select(item => item.Value).ToList();
         LinienlastGrid = sender as DataGrid;
         if (LinienlastGrid != null) LinienlastGrid.ItemsSource = lasten;
     }
     private void NeueLinienlast(object sender, MouseButtonEventArgs e)
     {
-        _ = new LinienlastNeu(modell, string.Empty, string.Empty, 0, 0, 0, 0, true);
-        StartFenster.berechnet = false;
+        _ = new LinienlastNeu(_modell, string.Empty, string.Empty, 0, 0, 0, 0, true);
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
-    private void LinienlastZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void LinienlastZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.ElementLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        if (_removeKey == null) return;
+        _modell.ElementLasten.Remove(_removeKey);
+        StartFenster.Berechnet = false;
         Close();
 
-        var tragwerk = new TragwerkdatenAnzeigen(modell);
+        var tragwerk = new TragwerkdatenAnzeigen(_modell);
         tragwerk.Show();
     }
     //SelectionChanged
@@ -311,11 +310,11 @@ public partial class TragwerkdatenAnzeigen
         if (LinienlastGrid.SelectedCells.Count <= 0) return;
         var cellInfo = LinienlastGrid.SelectedCells[0];
         var linienlast = (LinienLast)cellInfo.Item;
-        removeKey = linienlast.LastId;
+        _removeKey = linienlast.LastId;
     }
 
     private void Model_Changed(object sender, DataGridCellEditEndingEventArgs e)
     {
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
     }
 }

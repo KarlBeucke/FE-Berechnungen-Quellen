@@ -4,7 +4,7 @@ namespace FE_Berechnungen.Dateieingabe;
 
 public partial class NeuerDateiname
 {
-    public string dateiName;
+    public string DateiName;
     public NeuerDateiname()
     {
         InitializeComponent();
@@ -12,7 +12,7 @@ public partial class NeuerDateiname
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
-        dateiName = Dateiname.Text;
+        DateiName = Dateiname.Text;
         DialogResult = true;
     }
 

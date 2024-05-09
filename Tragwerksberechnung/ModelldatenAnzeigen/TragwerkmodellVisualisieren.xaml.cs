@@ -1,10 +1,10 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,23 +16,26 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
 public partial class TragwerkmodellVisualisieren
 {
-    private readonly FeModell modell;
-    public readonly Darstellung darstellung;
-    private bool lastenAn = true, lagerAn = true, knotenTexteAn = true, elementTexteAn = true;
+    private readonly FeModell _modell;
+    public readonly Darstellung Darstellung;
+    private bool _lastenAn = true, _lagerAn = true, _knotenTexteAn = true, _elementTexteAn = true;
 
     //alle gefundenen "Shapes" werden in dieser Liste gesammelt
-    private readonly List<Shape> hitList = new();
+    private readonly List<Shape> _hitList = [];
     //alle gefundenen "TextBlocks" werden in dieser Liste gesammelt
-    private readonly List<TextBlock> hitTextBlock = new();
-    private EllipseGeometry hitArea;
+    private readonly List<TextBlock> _hitTextBlock = [];
+    private EllipseGeometry _hitArea;
 
-    private KnotenNeu neuerKnoten;
-    private Point mittelpunkt;
-    private bool isDragging;
-    public bool isKnoten;
-    private bool löschFlag;
-    private DialogLöschTragwerksObjekte dialogLöschen;
-    public ZeitintegrationNeu zeitintegrationNeu;
+    private KnotenNeu _neuerKnoten;
+    private Point _mittelpunkt;
+    private bool _isDragging;
+    private bool _isElement, _isKnotenlast, _isLinienlast, _isPunktlast, _isLager;
+    private ElementNeu _elementNeu;
+    private KnotenlastNeu _knotenlastNeu;
+    private LinienlastNeu _linienlastNeu;
+    private PunktlastNeu _punktlastNeu;
+    private LagerNeu _lagerNeu;
+    public ZeitintegrationNeu ZeitintegrationNeu;
 
     public TragwerkmodellVisualisieren(FeModell feModell)
     {
@@ -41,144 +44,143 @@ public partial class TragwerkmodellVisualisieren
         VisualTragwerkModel.Children.Remove(Knoten);
         Show();
         VisualTragwerkModel.Background = Brushes.Transparent;
-        modell = feModell;
-        darstellung = new Darstellung(feModell, VisualTragwerkModel);
-        darstellung.UnverformteGeometrie();
+        _modell = feModell;
+        Darstellung = new Darstellung(feModell, VisualTragwerkModel);
+        Darstellung.UnverformteGeometrie();
 
         // mit Knoten und Element Ids
-        darstellung.KnotenTexte();
-        darstellung.ElementTexte();
+        Darstellung.KnotenTexte();
+        Darstellung.ElementTexte();
         // mit Lasten und Auflagerdarstellungen und Ids
-        darstellung.LastenZeichnen();
-        darstellung.LastTexte();
-        darstellung.LagerZeichnen();
-        darstellung.LagerTexte();
+        Darstellung.LastenZeichnen();
+        Darstellung.LastTexte();
+        Darstellung.LagerZeichnen();
+        Darstellung.LagerTexte();
     }
 
     private void OnBtnKnotenIDs_Click(object sender, RoutedEventArgs e)
     {
-        if (!knotenTexteAn)
+        if (!_knotenTexteAn)
         {
-            darstellung.KnotenTexte();
-            knotenTexteAn = true;
+            Darstellung.KnotenTexte();
+            _knotenTexteAn = true;
         }
         else
         {
-            foreach (var id in darstellung.KnotenIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
-            knotenTexteAn = false;
+            foreach (var id in Darstellung.KnotenIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
+            _knotenTexteAn = false;
         }
     }
     private void OnBtnElementIDs_Click(object sender, RoutedEventArgs e)
     {
-        if (!elementTexteAn)
+        if (!_elementTexteAn)
         {
-            darstellung.ElementTexte();
-            elementTexteAn = true;
+            Darstellung.ElementTexte();
+            _elementTexteAn = true;
         }
         else
         {
-            foreach (TextBlock id in darstellung.ElementIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
-            elementTexteAn = false;
+            foreach (var id in Darstellung.ElementIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
+            _elementTexteAn = false;
         }
     }
     private void OnBtnLasten_Click(object sender, RoutedEventArgs e)
     {
-        if (!lastenAn)
+        if (!_lastenAn)
         {
-            darstellung.LastenZeichnen();
-            darstellung.LastTexte();
-            lastenAn = true;
+            Darstellung.LastenZeichnen();
+            Darstellung.LastTexte();
+            _lastenAn = true;
         }
         else
         {
-            foreach (var lasten in darstellung.LastVektoren.Cast<Shape>())
+            foreach (var lasten in Darstellung.LastVektoren.Cast<Shape>())
             {
                 VisualTragwerkModel.Children.Remove(lasten);
-                foreach (var id in darstellung.LastIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
+                foreach (var id in Darstellung.LastIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
             }
-            lastenAn = false;
+            _lastenAn = false;
         }
     }
     private void OnBtnLager_Click(object sender, RoutedEventArgs e)
     {
-        if (!lagerAn)
+        if (!_lagerAn)
         {
-            darstellung.LagerZeichnen();
-            darstellung.LagerTexte();
-            lagerAn = true;
+            Darstellung.LagerZeichnen();
+            Darstellung.LagerTexte();
+            _lagerAn = true;
         }
         else
         {
-            foreach (Shape path in darstellung.LagerDarstellung.Cast<Shape>())
+            foreach (var path in Darstellung.LagerDarstellung.Cast<Shape>())
             {
                 VisualTragwerkModel.Children.Remove(path);
-                foreach (var id in darstellung.LagerIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
+                foreach (var id in Darstellung.LagerIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
             }
-            lagerAn = false;
+            _lagerAn = false;
         }
     }
 
     private void OnBtnKnotenNeu_Click(object sender, RoutedEventArgs e)
     {
-        neuerKnoten = new KnotenNeu(modell) { Topmost = true, Owner = (Window)Parent };
-        StartFenster.berechnet = false;
+        _neuerKnoten = new KnotenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        StartFenster.Berechnet = false;
     }
 
     private void MenuBalkenElementNeu(object sender, RoutedEventArgs e)
     {
-        _ = new ElementNeu(modell) { Topmost = true, Owner = (Window)Parent };
-        StartFenster.berechnet = false;
+        _isElement = true;
+        _elementNeu = new ElementNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        StartFenster.Berechnet = false;
     }
     private void MenuQuerschnittNeu(object sender, RoutedEventArgs e)
     {
-        _ = new QuerschnittNeu(modell) { Topmost = true, Owner = (Window)Parent };
+        _ = new QuerschnittNeu(_modell) { Topmost = true, Owner = (Window)Parent };
     }
     private void MenuMaterialNeu(object sender, RoutedEventArgs e)
     {
-        _ = new MaterialNeu(modell) { Topmost = true, Owner = (Window)Parent };
+        _ = new MaterialNeu(_modell) { Topmost = true, Owner = (Window)Parent };
     }
 
     private void MenuKnotenlastNeu(object sender, RoutedEventArgs e)
     {
-        _ = new KnotenlastNeu(modell) { Topmost = true, Owner = (Window)Parent };
-        StartFenster.berechnet = false;
+        _isKnotenlast = true;
+        _knotenlastNeu = new KnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        StartFenster.Berechnet = false;
     }
     private void MenuLinienlastNeu(object sender, RoutedEventArgs e)
     {
-        _ = new LinienlastNeu(modell) { Topmost = true, Owner = (Window)Parent };
-        StartFenster.berechnet = false;
+        _isLinienlast = true;
+        _linienlastNeu = new LinienlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        StartFenster.Berechnet = false;
     }
     private void MenuPunktlastNeu(object sender, RoutedEventArgs e)
     {
-        _ = new PunktlastNeu(modell) { Topmost = true, Owner = (Window)Parent };
-        StartFenster.berechnet = false;
+        _isPunktlast = true;
+        _punktlastNeu = new PunktlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        StartFenster.Berechnet = false;
     }
 
     private void OnBtnLagerNeu_Click(object sender, RoutedEventArgs e)
     {
-        _ = new LagerNeu(modell) { Topmost = true, Owner = (Window)Parent };
-        StartFenster.berechnet = false;
+        _isLager = true;
+        _lagerNeu = new LagerNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        StartFenster.Berechnet = false;
     }
 
     private void OnBtnZeitintegrationNew_Click(object sender, RoutedEventArgs e)
     {
-        zeitintegrationNeu = new ZeitintegrationNeu(modell) { Topmost = true };
-    }
-
-    private void OnBtnLöschen_Click(object sender, RoutedEventArgs e)
-    {
-        löschFlag = true;
-        dialogLöschen = new DialogLöschTragwerksObjekte(löschFlag);
+        ZeitintegrationNeu = new ZeitintegrationNeu(_modell) { Topmost = true };
     }
 
     private void Knoten_MouseDown(object sender, MouseButtonEventArgs e)
     {
         Knoten.CaptureMouse();
-        isDragging = true;
+        _isDragging = true;
     }
     private void Knoten_MouseMove(object sender, MouseEventArgs e)
     {
-        if (!isDragging) return;
+        if (!_isDragging) return;
         var canvPosToWindow = VisualTragwerkModel.TransformToAncestor(this).Transform(new Point(0, 0));
 
         if (sender is not Ellipse knoten) return;
@@ -195,442 +197,339 @@ public partial class TragwerkmodellVisualisieren
         if (!(absmouseXpos > leftlimit) || !(absmouseXpos < rightlimit)
                                         || !(absmouseYpos > upperlimit) || !(absmouseYpos < lowerlimit)) return;
 
-        mittelpunkt = new Point(e.GetPosition(VisualTragwerkModel).X, e.GetPosition(VisualTragwerkModel).Y);
+        _mittelpunkt = new Point(e.GetPosition(VisualTragwerkModel).X, e.GetPosition(VisualTragwerkModel).Y);
 
-        Canvas.SetLeft(knoten, mittelpunkt.X - Knoten.Width / 2);
-        Canvas.SetTop(knoten, mittelpunkt.Y - Knoten.Height / 2);
+        Canvas.SetLeft(knoten, _mittelpunkt.X - Knoten.Width / 2);
+        Canvas.SetTop(knoten, _mittelpunkt.Y - Knoten.Height / 2);
 
-        var koordinaten = darstellung.TransformBildPunkt(mittelpunkt);
-        neuerKnoten.X.Text = koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
-        neuerKnoten.Y.Text = koordinaten[1].ToString("N2", CultureInfo.CurrentCulture);
+        var koordinaten = Darstellung.TransformBildPunkt(_mittelpunkt);
+        _neuerKnoten.X.Text = koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
+        _neuerKnoten.Y.Text = koordinaten[1].ToString("N2", CultureInfo.CurrentCulture);
     }
     private void Knoten_MouseUp(object sender, MouseButtonEventArgs e)
     {
         Knoten.ReleaseMouseCapture();
-        isDragging = false;
+        _isDragging = false;
     }
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        hitList.Clear();
-        hitTextBlock.Clear();
+        _hitList.Clear();
+        _hitTextBlock.Clear();
         var hitPoint = e.GetPosition(VisualTragwerkModel);
-        hitArea = new EllipseGeometry(hitPoint, 1.0, 1.0);
+        _hitArea = new EllipseGeometry(hitPoint, 1.0, 1.0);
         VisualTreeHelper.HitTest(VisualTragwerkModel, null, HitTestCallBack,
-            new GeometryHitTestParameters(hitArea));
+            new GeometryHitTestParameters(_hitArea));
 
-        // click auf Canvas weder Text noch Shape --> neuer Knoten wird mit Zeiger plaziert und bewegt
-        if (hitList.Count == 0 && hitTextBlock.Count == 0)
+        // click auf Canvas weder Text noch Shape ⇾ neuer Knoten wird mit Zeiger platziert und bewegt
+        if (_hitList.Count == 0 && _hitTextBlock.Count == 0)
         {
-            if (löschFlag | neuerKnoten == null) return;
-            mittelpunkt = new Point(e.GetPosition(VisualTragwerkModel).X, e.GetPosition(VisualTragwerkModel).Y);
-            Canvas.SetLeft(Knoten, mittelpunkt.X - Knoten.Width / 2);
-            Canvas.SetTop(Knoten, mittelpunkt.Y - Knoten.Height / 2);
+            if (_neuerKnoten == null) return;
+            _mittelpunkt = new Point(e.GetPosition(VisualTragwerkModel).X, e.GetPosition(VisualTragwerkModel).Y);
+            Canvas.SetLeft(Knoten, _mittelpunkt.X - Knoten.Width / 2);
+            Canvas.SetTop(Knoten, _mittelpunkt.Y - Knoten.Height / 2);
             VisualTragwerkModel.Children.Add(Knoten);
-            isKnoten = true;
-            var koordinaten = darstellung.TransformBildPunkt(mittelpunkt);
-            neuerKnoten.X.Text = koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
-            neuerKnoten.Y.Text = koordinaten[1].ToString("N2", CultureInfo.CurrentCulture);
-            MyPopup.IsOpen = false;
+            var koordinaten = Darstellung.TransformBildPunkt(_mittelpunkt);
+            _neuerKnoten.X.Text = koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
+            _neuerKnoten.Y.Text = koordinaten[1].ToString("N2", CultureInfo.CurrentCulture);
             return;
         }
 
-        var sb = new StringBuilder();
         // click auf Shape Darstellungen
-        foreach (var item in hitList)
+        foreach (var item in _hitList)
         {
-            if (isKnoten | item is not Path) return;
+            if (_isElement || _isKnotenlast) break;
             if (item.Name == null) continue;
 
             // Elemente
-            if (modell.Elemente.TryGetValue(item.Name, out var element))
-            {
-                if (löschFlag)
-                {
-                    if (MessageBox.Show("Element " + element.ElementId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                    else
-                    {
-                        modell.Elemente.Remove(element.ElementId);
-                        StartFenster.tragwerkVisual.Close();
-                        dialogLöschen.Close();
-                    }
-                    continue;
-                }
-
-                MyPopup.IsOpen = true;
-                sb.Append("Element\t= " + element.ElementId);
-                if (element is FederElement)
-                {
-                    if (modell.Elemente.TryGetValue(element.ElementId, out var feder))
-                    {
-                        if (modell.Material.TryGetValue(feder.ElementMaterialId, out var material)) { }
-                        for (var i = 0; i < 3; i++)
-                        {
-                            if (material != null)
-                                sb.Append("\nFedersteifigkeit " + i + "\t= " +
-                                          material.MaterialWerte[i].ToString("g3"));
-                        }
-                    }
-                }
-                else
-                {
-                    sb.Append("\nKnoten 1\t= " + element.KnotenIds[0]);
-                    sb.Append("\nKnoten 2\t= " + element.KnotenIds[1]);
-                    if (modell.Material.TryGetValue(element.ElementMaterialId, out var material))
-                    {
-                        sb.Append("\nE-Modul\t= " + material.MaterialWerte[0].ToString("g3"));
-                    }
-
-                    if (modell.Querschnitt.TryGetValue(element.ElementQuerschnittId, out var querschnitt))
-                    {
-                        sb.Append("\nFläche\t= " + querschnitt.QuerschnittsWerte[0]);
-                        if (querschnitt.QuerschnittsWerte.Length > 1)
-                            sb.Append("\nIxx\t= " + querschnitt.QuerschnittsWerte[1].ToString("g3"));
-                    }
-                }
-
-                sb.Append("\n");
-            }
+            if (_modell.Elemente.TryGetValue(item.Name, out var element))
+                ElementNeu(element);
 
             // Lasten
-            if (modell.Lasten.TryGetValue(item.Name, out var knotenlast))
-            {
-                if (löschFlag)
-                {
-                    if (MessageBox.Show("Knotenlast " + knotenlast.LastId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                    else
-                    {
-                        modell.Lasten.Remove(knotenlast.LastId);
-                        StartFenster.tragwerkVisual.Close();
-                        dialogLöschen.Close();
-                    }
-                    continue;
-                }
-
-                MyPopup.IsOpen = true;
-                sb.Append("Last\t= " + item.Name);
-                for (var i = 0; i < knotenlast.Lastwerte.Length; i++)
-                {
-                    sb.Append("\nLastwert " + i + "\t= " + knotenlast.Lastwerte[i]);
-                }
-
-                sb.Append("\n");
-            }
-            else if (modell.PunktLasten.TryGetValue(item.Name, out var punktLast))
-            {
-                if (löschFlag)
-                {
-                    if (MessageBox.Show("Punktlast " + punktLast.LastId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                    else
-                    {
-                        modell.PunktLasten.Remove(punktLast.LastId);
-                        StartFenster.tragwerkVisual.Close();
-                        dialogLöschen.Close();
-                    }
-                    continue;
-                }
-
-                var punktlast = (PunktLast)punktLast;
-                MyPopup.IsOpen = true;
-                sb.Append("Punktlast\t= " + item.Name);
-                for (var i = 0; i < punktlast.Lastwerte.Length; i++)
-                {
-                    sb.Append("\nLastwert " + i + "\t= " + punktlast.Lastwerte[i]);
-                }
-                sb.Append("\nLastoffset auf element\t= " + punktlast.Offset);
-                sb.Append("\n");
-            }
-            else if (modell.ElementLasten.TryGetValue(item.Name, out var elementlast))
-            {
-                if (löschFlag)
-                {
-                    if (MessageBox.Show("Elementlast " + elementlast.LastId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                    else
-                    {
-                        modell.ElementLasten.Remove(elementlast.LastId);
-                        StartFenster.tragwerkVisual.Close();
-                        dialogLöschen.Close();
-                    }
-                    continue;
-                }
-
-                MyPopup.IsOpen = true;
-                sb.Append("Last\t= " + elementlast.LastId);
-                for (var i = 0; i < elementlast.Lastwerte.Length; i++)
-                {
-                    sb.Append("\nLastwert " + i + "\t= " + elementlast.Lastwerte[i]);
-                }
-
-                sb.Append("\n");
-            }
+            if (_modell.Lasten.TryGetValue(item.Name, out var knotenlast))
+                KnotenlastNeu(knotenlast);
+            else if (_modell.PunktLasten.TryGetValue(item.Name, out var punktlast))
+                PunktlastNeu(punktlast);
+            else if (_modell.ElementLasten.TryGetValue(item.Name, out var elementlast))
+                LinienlastNeu(elementlast);
 
             // Lager
-            else if (modell.Randbedingungen.TryGetValue(item.Name, out var lager))
-            {
-                if (löschFlag)
-                {
-                    if (MessageBox.Show("Lager " + lager.RandbedingungId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                    else
-                    {
-                        modell.Randbedingungen.Remove(lager.RandbedingungId);
-                        StartFenster.tragwerkVisual.Close();
-                        dialogLöschen.Close();
-                    }
-                    continue;
-                }
-
-                MyPopup.IsOpen = true;
-                sb.Append("Lager\t\t= " + lager.RandbedingungId);
-                sb.Append("\nfestgehalten\t= " + Lagertyp(lager.Typ));
-                if (lager.Typ == 1 | lager.Typ == 3 | lager.Typ == 7)
-                    sb.Append("\nvordefiniert Ux \t= " + lager.Vordefiniert[0]);
-                if (lager.Typ == 2 | lager.Typ == 3 | lager.Typ == 7)
-                    sb.Append("\nvordefiniert Uy \t= " + lager.Vordefiniert[1]);
-                if (lager.Typ == 4 | lager.Typ == 7)
-                    sb.Append("\nvordefiniert Phi \t= " + lager.Vordefiniert[2]);
-            }
-
-            //sb.Append("\n");
-            MyPopupText.Text = sb.ToString();
-            if (dialogLöschen == null) continue;
-            dialogLöschen.Close();
+            else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
+                LagerNeu(lager);
         }
 
-        // click auf Knotentext --> Eigenschaften eines vorhandenen Knotens werden interaktiv verändert
-        foreach (var item in hitTextBlock)
+        // click auf Textdarstellungen
+        foreach (var item in _hitTextBlock)
         {
-            if (!modell.Knoten.TryGetValue(item.Text, out var knoten)) continue;
-            if (löschFlag)
-            {
-                if (MessageBox.Show("Knoten " + knoten.Id + " wird gelöscht.", "Tragwerksmodell",
-                        MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                else
-                {
-                    modell.Randbedingungen.Remove(knoten.Id);
-                    StartFenster.tragwerkVisual.Close();
-                    dialogLöschen.Close();
-                }
-                continue;
-            }
-            if (item.Text != knoten.Id) _ = MessageBox.Show("Knoten Id kann hier nicht verändert werden", "Knotentext");
-            neuerKnoten = new KnotenNeu(modell)
-            {
-                KnotenId = { Text = item.Text },
-                AnzahlDof = { Text = knoten.AnzahlKnotenfreiheitsgrade.ToString("N0", CultureInfo.CurrentCulture) },
-                X = { Text = knoten.Koordinaten[0].ToString("N2", CultureInfo.CurrentCulture) },
-                Y = { Text = knoten.Koordinaten[1].ToString("N2", CultureInfo.CurrentCulture) }
-            };
+            // Textdarstellung ist ein Knoten
+            if (_modell.Knoten.TryGetValue(item.Text, out var knoten))
+                KnotenNeu(knoten);
 
-            mittelpunkt = new Point(knoten.Koordinaten[0] * darstellung.auflösung + darstellung.plazierungH,
-                (-knoten.Koordinaten[1] + darstellung.maxY) * darstellung.auflösung + darstellung.plazierungV);
-            Canvas.SetLeft(Knoten, mittelpunkt.X - Knoten.Width / 2);
-            Canvas.SetTop(Knoten, mittelpunkt.Y - Knoten.Height / 2);
-            VisualTragwerkModel.Children.Add(Knoten);
-            isKnoten = true;
-            MyPopup.IsOpen = false;
-        }
-        MyPopupText.Text = sb.ToString();
-
-        // click auf Textdarstellungen - ausser Knotentexte (werden oben gesondert behandelt)
-        if (isKnoten) return;
-        foreach (var item in hitTextBlock)
-        {
             // Textdarstellung ist ein Element
-            if (modell.Elemente.TryGetValue(item.Text, out var element))
-            {
-                if (löschFlag)
-                {
-                    if (MessageBox.Show("Element " + element.ElementId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                    else
-                    {
-                        modell.Elemente.Remove(element.ElementId);
-                        StartFenster.tragwerkVisual.Close();
-                        dialogLöschen.Close();
-                    }
-                    continue;
-                }
+            if (_modell.Elemente.TryGetValue(item.Text, out var element))
+                ElementNeu(element);
 
-                switch (element)
-                {
-                    case FederElement:
-                        {
-                            _ = new ElementNeu(modell)
-                            {
-                                FederCheck = { IsChecked = true },
-                                ElementId = { Text = item.Text },
-                                StartknotenId = { Text = element.KnotenIds[0] },
-                                MaterialId = { Text = element.ElementMaterialId }
-                            };
-                            break;
-                        }
-                    case Fachwerk:
-                        {
-                            _ = new ElementNeu(modell)
-                            {
-                                FachwerkCheck = { IsChecked = true },
-                                Gelenk1 = { IsChecked = true },
-                                Gelenk2 = { IsChecked = true },
-                                ElementId = { Text = item.Text },
-                                StartknotenId = { Text = element.KnotenIds[0] },
-                                EndknotenId = { Text = element.KnotenIds[1] },
-                                MaterialId = { Text = element.ElementMaterialId },
-                                QuerschnittId = { Text = element.ElementQuerschnittId }
-                            };
-                            break;
-                        }
-                    case Biegebalken:
-                        {
-                            _ = new ElementNeu(modell)
-                            {
-                                BalkenCheck = { IsChecked = true },
-                                ElementId = { Text = item.Text },
-                                StartknotenId = { Text = element.KnotenIds[0] },
-                                EndknotenId = { Text = element.KnotenIds[1] },
-                                MaterialId = { Text = element.ElementMaterialId },
-                                QuerschnittId = { Text = element.ElementQuerschnittId },
-                                Gelenk1 = { IsChecked = false },
-                                Gelenk2 = { IsChecked = false }
-                            };
-                            break;
-                        }
-                    case BiegebalkenGelenk:
-                        {
-                            var neuesElement = new ElementNeu(modell)
-                            {
-                                BalkenCheck = { IsChecked = true },
-                                ElementId = { Text = item.Text },
-                                StartknotenId = { Text = element.KnotenIds[0] },
-                                EndknotenId = { Text = element.KnotenIds[1] },
-                                MaterialId = { Text = element.ElementMaterialId },
-                                QuerschnittId = { Text = element.ElementQuerschnittId }
-                            };
-                            switch (element.Typ)
-                            {
-                                case 1: { neuesElement.Gelenk1.IsChecked = true; break; }
-                                case 2: { neuesElement.Gelenk2.IsChecked = true; break; }
-                            }
-                            break;
-                        }
-                }
-            }
             // Textdarstellung ist eine Knotenlast
-            else if (modell.Lasten.TryGetValue(item.Text, out var knotenlast))
-            {
-                if (löschFlag)
-                {
-                    if (MessageBox.Show("Knotenlast " + knotenlast.LastId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                    else
-                    {
-                        modell.Lasten.Remove(knotenlast.LastId);
-                        StartFenster.tragwerkVisual.Close();
-                        dialogLöschen.Close();
-                    }
-                    continue;
-                }
+            else if (_modell.Lasten.TryGetValue(item.Text, out var knotenlast))
+                KnotenlastNeu(knotenlast);
 
-                var last = new KnotenlastNeu(modell)
-                {
-                    LastId = { Text = item.Text },
-                    KnotenId = { Text = knotenlast.KnotenId.ToString(CultureInfo.CurrentCulture) },
-                    Px = { Text = knotenlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
-                    Py = { Text = knotenlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) }
-                };
-                if (knotenlast.Lastwerte.Length > 2) last.M.Text = knotenlast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
-
-            }
             // Textdarstellung ist eine Elementlast (Linienlast)
-            else if (modell.ElementLasten.TryGetValue(item.Text, out var linienlast))
+            else if (_modell.ElementLasten.TryGetValue(item.Text, out var linienlast))
             {
-                if (löschFlag)
-                {
-                    if (MessageBox.Show("Linienlast " + linienlast.LastId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                    else
-                    {
-                        modell.LinienLasten.Remove(linienlast.LastId);
-                        StartFenster.tragwerkVisual.Close();
-                        dialogLöschen.Close();
-                    }
-                    continue;
-                }
-                _ = new LinienlastNeu(modell)
-                {
-                    LastId = { Text = item.Text },
-                    ElementId = { Text = linienlast.ElementId.ToString(CultureInfo.CurrentCulture) },
-                    Pxa = { Text = linienlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
-                    Pya = { Text = linienlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
-                    Pxb = { Text = linienlast.Lastwerte[2].ToString(CultureInfo.CurrentCulture) },
-                    Pyb = { Text = linienlast.Lastwerte[3].ToString(CultureInfo.CurrentCulture) },
-                    InElement = { IsChecked = linienlast.InElementKoordinatenSystem }
-                };
+                LinienlastNeu(linienlast);
             }
-            // Textdarstellung ist eine Punktlast
-            else if (modell.PunktLasten.TryGetValue(item.Text, out var punktlast))
-            {
-                if (löschFlag)
-                {
-                    if (MessageBox.Show("Punktlast " + punktlast.LastId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                    else
-                    {
-                        modell.PunktLasten.Remove(punktlast.LastId);
-                        StartFenster.tragwerkVisual.Close();
-                        dialogLöschen.Close();
-                    }
-                    continue;
-                }
 
-                var punktLast = (PunktLast)punktlast;
-                _ = new PunktlastNeu(modell)
-                {
-                    LastId = { Text = item.Text },
-                    ElementId = { Text = punktlast.ElementId.ToString(CultureInfo.CurrentCulture) },
-                    Px = { Text = punktLast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
-                    Py = { Text = punktLast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
-                    Offset = { Text = punktLast.Offset.ToString(CultureInfo.CurrentCulture) },
-                };
+            // Textdarstellung ist eine Punktlast
+            else if (_modell.PunktLasten.TryGetValue(item.Text, out var punktlast))
+            {
+                PunktlastNeu(punktlast);
             }
             // Textdarstellung ist ein Lager
-            else if (modell.Randbedingungen.TryGetValue(item.Text, out var lager))
+            else if (_modell.Randbedingungen.TryGetValue(item.Text, out var lager))
             {
-                if (löschFlag)
-                {
-                    if (MessageBox.Show("Lager " + lager.RandbedingungId + " wird gelöscht.", "Tragwerksmodell",
-                            MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) { }
-                    else
-                    {
-                        modell.Randbedingungen.Remove(lager.RandbedingungId);
-                        StartFenster.tragwerkVisual.Close();
-                        dialogLöschen.Close();
-                    }
-                    continue;
-                }
-
-                var lagerNeu = new LagerNeu(modell)
-                {
-                    LagerId = { Text = item.Text },
-                    KnotenId = { Text = lager.KnotenId.ToString(CultureInfo.CurrentCulture) },
-                    Xfest = { IsChecked = lager.Typ == 1 | lager.Typ == 3 | lager.Typ == 7 },
-                    Yfest = { IsChecked = lager.Typ == 2 | lager.Typ == 3 | lager.Typ == 7 },
-                    Rfest = { IsChecked = lager.Typ == 4 | lager.Typ == 7 }
-                };
-                if ((bool)lagerNeu.Xfest.IsChecked) lagerNeu.VorX.Text = lager.Vordefiniert[0].ToString("0.00");
-                if ((bool)lagerNeu.Yfest.IsChecked) lagerNeu.VorY.Text = lager.Vordefiniert[1].ToString("0.00");
-                if ((bool)lagerNeu.Rfest.IsChecked) lagerNeu.VorRot.Text = lager.Vordefiniert[2].ToString("0.00");
+                LagerNeu(lager);
             }
         }
     }
-    private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+
+    private void KnotenNeu(Knoten knoten)
     {
-        MyPopup.IsOpen = false;
+        // Knotentext angeklickt bei Definition eines neuen Elementes
+        if (_isElement)
+        {
+            if (_elementNeu.StartknotenId.Text == string.Empty) _elementNeu.StartknotenId.Text = knoten.Id;
+            else
+            {
+                _elementNeu.EndknotenId.Text = knoten.Id;
+                _elementNeu.ElementId.Text = _elementNeu.StartknotenId.Text + knoten.Id;
+            }
+            _elementNeu.Show();
+            return;
+        }
+
+        // Knotentext angeklickt bei Definition einer neuen Knotenlast
+        if (_isKnotenlast)
+        {
+            _knotenlastNeu.KnotenId.Text = knoten.Id;
+            _knotenlastNeu.LastId.Text = "kl" + knoten.Id;
+            _knotenlastNeu.Show();
+            return;
+        }
+
+        // Knotentext angeklickt bei Definition eines neuen Lagers
+        if (_isLager)
+        {
+            _lagerNeu.KnotenId.Text = knoten.Id;
+            _lagerNeu.LagerId.Text = "kl" + knoten.Id;
+            _lagerNeu.Show();
+            return;
+        }
+
+        _neuerKnoten = new KnotenNeu(_modell)
+        {
+            Topmost = true,
+            Owner = (Window)Parent,
+            KnotenId = { Text = knoten.Id },
+            AnzahlDof = { Text = knoten.AnzahlKnotenfreiheitsgrade.ToString("N0", CultureInfo.CurrentCulture) },
+            X = { Text = knoten.Koordinaten[0].ToString("N2", CultureInfo.CurrentCulture) },
+            Y = { Text = knoten.Koordinaten[1].ToString("N2", CultureInfo.CurrentCulture) }
+        };
+
+        _mittelpunkt = new Point(knoten.Koordinaten[0] * Darstellung.Auflösung + Darstellung.PlazierungH,
+            (-knoten.Koordinaten[1] + Darstellung.MaxY) * Darstellung.Auflösung + Darstellung.PlazierungV);
+        Canvas.SetLeft(Knoten, _mittelpunkt.X - Knoten.Width / 2);
+        Canvas.SetTop(Knoten, _mittelpunkt.Y - Knoten.Height / 2);
+        VisualTragwerkModel.Children.Add(Knoten);
     }
+
+    private void ElementNeu(AbstraktElement element)
+    {
+        // anderer Elementtext angeklickt beim Erstellen eines neuen Elementes
+        // Material- und Querschnitteigenschaften werden übernommen
+        if (_isElement)
+        {
+            _elementNeu.MaterialId.Text = element.ElementMaterialId;
+            _elementNeu.QuerschnittId.Text = element.ElementQuerschnittId;
+            _elementNeu.Show();
+            return;
+        }
+
+        // Elementtext angeklickt bei Definition einer neuen Linienlast
+        if (_isLinienlast)
+        {
+            _linienlastNeu.ElementId.Text = element.ElementId;
+            _linienlastNeu.LastId.Text = "ll" + element.ElementId;
+            _linienlastNeu.Show();
+            return;
+        }
+
+        // Elementtext angeklickt bei Definition einer neuen Punktlast
+        if (_isPunktlast)
+        {
+            _punktlastNeu.ElementId.Text = element.ElementId;
+            _punktlastNeu.LastId.Text = "pl" + element.ElementId;
+            _punktlastNeu.Show();
+            return;
+        }
+
+        // Elementeigenschaften können editiert werden
+        switch (element)
+        {
+            case FederElement:
+                {
+                    _ = new ElementNeu(_modell)
+                    {
+                        FederCheck = { IsChecked = true },
+                        ElementId = { Text = element.ElementId },
+                        StartknotenId = { Text = element.KnotenIds[0] },
+                        MaterialId = { Text = element.ElementMaterialId }
+                    };
+                    break;
+                }
+            case Fachwerk:
+                {
+                    if (_modell.Material.TryGetValue(element.ElementMaterialId, out var material)) { }
+                    var emodul = element.E > 0 ? element.E : material!.MaterialWerte[0];
+                    var masse = element.M > 0 ? element.M : material!.MaterialWerte[2];
+
+                    if (_modell.Querschnitt.TryGetValue(element.ElementQuerschnittId, out var querschnitt)) { }
+                    var fläche = element.A > 0 ? element.A : querschnitt!.QuerschnittsWerte[0];
+
+                    _ = new ElementNeu(_modell)
+                    {
+                        FachwerkCheck = { IsChecked = true },
+                        ElementId = { Text = element.ElementId },
+                        StartknotenId = { Text = element.KnotenIds[0] },
+                        EndknotenId = { Text = element.KnotenIds[1] },
+                        MaterialId = { Text = element.ElementMaterialId },
+                        EModul = { Text = emodul.ToString("E2", CultureInfo.CurrentCulture) },
+                        Masse = { Text = masse.ToString("E2", CultureInfo.CurrentCulture) },
+                        QuerschnittId = { Text = element.ElementQuerschnittId },
+                        Fläche = { Text = fläche.ToString("E2", CultureInfo.CurrentCulture) },
+                        Gelenk1 = { IsChecked = true },
+                        Gelenk2 = { IsChecked = true }
+                    };
+                    break;
+                }
+            case Biegebalken:
+                {
+                    if (_modell.Material.TryGetValue(element.ElementMaterialId, out var material)) { }
+                    var emodul = element.E > 0 ? element.E : material!.MaterialWerte[0];
+                    var masse = element.M > 0 ? element.M : material!.MaterialWerte[2];
+
+                    if (_modell.Querschnitt.TryGetValue(element.ElementQuerschnittId, out var querschnitt)) { }
+                    var fläche = element.A > 0 ? element.A : querschnitt!.QuerschnittsWerte[0];
+                    var trägheitsmoment = element.I > 0 ? element.I : querschnitt!.QuerschnittsWerte[1];
+
+                    _ = new ElementNeu(_modell)
+                    {
+                        BalkenCheck = { IsChecked = true },
+                        ElementId = { Text = element.ElementId },
+                        StartknotenId = { Text = element.KnotenIds[0] },
+                        EndknotenId = { Text = element.KnotenIds[1] },
+                        MaterialId = { Text = element.ElementMaterialId },
+                        EModul = { Text = emodul.ToString("E2", CultureInfo.CurrentCulture) },
+                        Masse = { Text = masse.ToString("E2", CultureInfo.CurrentCulture) },
+                        QuerschnittId = { Text = element.ElementQuerschnittId },
+                        Fläche = { Text = fläche.ToString("E2", CultureInfo.CurrentCulture) },
+                        Trägheitsmoment = { Text = trägheitsmoment.ToString("E2", CultureInfo.CurrentCulture) },
+                        Gelenk1 = { IsChecked = false },
+                        Gelenk2 = { IsChecked = false }
+                    };
+                    break;
+                }
+            case BiegebalkenGelenk:
+                {
+                    if (_modell.Material.TryGetValue(element.ElementMaterialId, out var material)) { }
+                    var emodul = element.E > 0 ? element.E : material!.MaterialWerte[0];
+                    var masse = element.M > 0 ? element.M : material!.MaterialWerte[2];
+
+                    if (_modell.Querschnitt.TryGetValue(element.ElementQuerschnittId, out var querschnitt)) { }
+                    var fläche = element.A > 0 ? element.A : querschnitt!.QuerschnittsWerte[0];
+                    var trägheitsmoment = element.I > 0 ? element.I : querschnitt!.QuerschnittsWerte[1];
+
+                    var neuesElement = new ElementNeu(_modell)
+                    {
+                        BalkenCheck = { IsChecked = true },
+                        ElementId = { Text = element.ElementId },
+                        StartknotenId = { Text = element.KnotenIds[0] },
+                        EndknotenId = { Text = element.KnotenIds[1] },
+                        MaterialId = { Text = element.ElementMaterialId },
+                        EModul = { Text = emodul.ToString("E2", CultureInfo.CurrentCulture) },
+                        Masse = { Text = masse.ToString("E2", CultureInfo.CurrentCulture) },
+                        QuerschnittId = { Text = element.ElementQuerschnittId },
+                        Fläche = { Text = fläche.ToString("E2", CultureInfo.CurrentCulture) },
+                        Trägheitsmoment = { Text = trägheitsmoment.ToString("E2", CultureInfo.CurrentCulture) }
+                    };
+                    switch (element.Typ)
+                    {
+                        case 1: { neuesElement.Gelenk1.IsChecked = true; break; }
+                        case 2: { neuesElement.Gelenk2.IsChecked = true; break; }
+                    }
+                    break;
+                }
+        }
+        _isElement = false;
+    }
+
+    private void KnotenlastNeu(AbstraktLast knotenlast)
+    {
+        _knotenlastNeu = new KnotenlastNeu(_modell)
+        {
+            LastId = { Text = knotenlast.LastId },
+            KnotenId = { Text = knotenlast.KnotenId.ToString(CultureInfo.CurrentCulture) },
+            Px = { Text = knotenlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
+            Py = { Text = knotenlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) }
+        };
+        if (knotenlast.Lastwerte.Length > 2) _knotenlastNeu.M.Text = knotenlast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
+        _isKnotenlast = false;
+    }
+
+    private void PunktlastNeu(AbstraktElementLast punktLast)
+    {
+        var punktlast = (PunktLast)punktLast;
+        _punktlastNeu = new PunktlastNeu(_modell)
+        {
+            LastId = { Text = punktlast.LastId },
+            ElementId = { Text = punktlast.ElementId.ToString(CultureInfo.CurrentCulture) },
+            Px = { Text = punktlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
+            Py = { Text = punktlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
+            Offset = { Text = punktlast.Offset.ToString(CultureInfo.CurrentCulture) }
+        };
+        _isPunktlast = false;
+    }
+
+    private void LinienlastNeu(AbstraktElementLast linienlast)
+    {
+        _linienlastNeu = new LinienlastNeu(_modell)
+        {
+            LastId = { Text = linienlast.LastId },
+            ElementId = { Text = linienlast.ElementId.ToString(CultureInfo.CurrentCulture) },
+            Pxa = { Text = linienlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
+            Pya = { Text = linienlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
+            Pxb = { Text = linienlast.Lastwerte[2].ToString(CultureInfo.CurrentCulture) },
+            Pyb = { Text = linienlast.Lastwerte[3].ToString(CultureInfo.CurrentCulture) },
+            InElement = { IsChecked = linienlast.InElementKoordinatenSystem }
+        };
+        _isLinienlast = false;
+    }
+
+    private void LagerNeu(AbstraktRandbedingung lager)
+    {
+        _lagerNeu = new LagerNeu(_modell)
+        {
+            LagerId = { Text = lager.RandbedingungId },
+            KnotenId = { Text = lager.KnotenId.ToString(CultureInfo.CurrentCulture) },
+            Xfest = { IsChecked = lager.Typ == 1 | lager.Typ == 3 | lager.Typ == 7 },
+            Yfest = { IsChecked = lager.Typ == 2 | lager.Typ == 3 | lager.Typ == 7 },
+            Rfest = { IsChecked = lager.Typ == 4 | lager.Typ == 7 }
+        };
+        if ((bool)_lagerNeu.Xfest.IsChecked) _lagerNeu.VorX.Text = lager.Vordefiniert[0].ToString("0.00");
+        if ((bool)_lagerNeu.Yfest.IsChecked) _lagerNeu.VorY.Text = lager.Vordefiniert[1].ToString("0.00");
+        if ((bool)_lagerNeu.Rfest.IsChecked) _lagerNeu.VorRot.Text = lager.Vordefiniert[2].ToString("0.00");
+        _isLager = false;
+    }
+
     private HitTestResultBehavior HitTestCallBack(HitTestResult result)
     {
         var intersectionDetail = ((GeometryHitTestResult)result).IntersectionDetail;
@@ -643,10 +542,10 @@ public partial class TragwerkmodellVisualisieren
                 switch (result.VisualHit)
                 {
                     case Shape hit:
-                        hitList.Add(hit);
+                        _hitList.Add(hit);
                         break;
                     case TextBlock hit:
-                        hitTextBlock.Add(hit);
+                        _hitTextBlock.Add(hit);
                         break;
                 }
                 return HitTestResultBehavior.Continue;
@@ -656,7 +555,7 @@ public partial class TragwerkmodellVisualisieren
                 switch (result.VisualHit)
                 {
                     case Shape hit:
-                        hitList.Add(hit);
+                        _hitList.Add(hit);
                         break;
                 }
                 return HitTestResultBehavior.Continue;
@@ -667,16 +566,16 @@ public partial class TragwerkmodellVisualisieren
         }
     }
 
-    private string Lagertyp(int typ)
-    {
-        var lagertyp = typ switch
-        {
-            1 => "x",
-            2 => "y",
-            3 => "xy",
-            7 => "xyr",
-            _ => ""
-        };
-        return lagertyp;
-    }
+    //private static string Lagertyp(int typ)
+    //{
+    //    var lagertyp = typ switch
+    //    {
+    //        1 => "x",
+    //        2 => "y",
+    //        3 => "xy",
+    //        7 => "xyr",
+    //        _ => ""
+    //    };
+    //    return lagertyp;
+    //}
 }

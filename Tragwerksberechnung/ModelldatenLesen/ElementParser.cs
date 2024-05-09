@@ -7,18 +7,18 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public class ElementParser
 {
-    private string[] substrings;
-    private int nodesPerElement;
-    private string elementId;
-    private string[] nodeIds;
-    private AbstraktElement element;
-    private FeModell modell;
-    private readonly char[] delimiters = { '\t' };
+    private string[] _substrings;
+    private int _nodesPerElement;
+    private string _elementId;
+    private string[] _nodeIds;
+    private AbstraktElement _element;
+    private FeModell _modell;
+    private readonly char[] _delimiters = ['\t'];
 
-    // parsing a new model to be read from file
+    // Elementdefinitionen werden aus Datei gelesen
     public void ParseElements(string[] lines, FeModell feModell)
     {
-        modell = feModell;
+        _modell = feModell;
         ParseFachwerk(lines);
         ParseBiegebalken(lines);
         ParseFederelement(lines);
@@ -28,31 +28,31 @@ public class ElementParser
 
     private void ParseFachwerk(IReadOnlyList<string> lines)
     {
-        nodesPerElement = 2;
+        _nodesPerElement = 2;
         for (var i = 0; i < lines.Count; i++)
         {
             if (lines[i] != "Fachwerk") continue;
             FeParser.EingabeGefunden += "\nFachwerk";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                switch (substrings.Length)
+                _substrings = lines[i + 1].Split(_delimiters);
+                switch (_substrings.Length)
                 {
                     case 5:
                         {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            for (var k = 0; k < nodesPerElement; k++)
+                            _elementId = _substrings[0];
+                            _nodeIds = new string[_nodesPerElement];
+                            for (var k = 0; k < _nodesPerElement; k++)
                             {
-                                nodeIds[k] = substrings[k + 1];
+                                _nodeIds[k] = _substrings[k + 1];
                             }
-                            var querschnittId = substrings[3];
-                            var materialId = substrings[4];
-                            element = new Fachwerk(nodeIds, querschnittId, materialId, modell)
+                            var materialId = _substrings[3];
+                            var querschnittId = _substrings[4];
+                            _element = new Fachwerk(_nodeIds, materialId, querschnittId, _modell)
                             {
-                                ElementId = elementId
+                                ElementId = _elementId
                             };
-                            modell.Elemente.Add(elementId, element);
+                            _modell.Elemente.Add(_elementId, _element);
                             i++;
                             break;
                         }
@@ -65,31 +65,31 @@ public class ElementParser
     }
     private void ParseBiegebalken(IReadOnlyList<string> lines)
     {
-        nodesPerElement = 2;
+        _nodesPerElement = 2;
         for (var i = 0; i < lines.Count; i++)
         {
             if (lines[i] != "Biegebalken") continue;
             FeParser.EingabeGefunden += "\nBiegebalken";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                switch (substrings.Length)
+                _substrings = lines[i + 1].Split(_delimiters);
+                switch (_substrings.Length)
                 {
                     case 5:
                         {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            for (var k = 0; k < nodesPerElement; k++)
+                            _elementId = _substrings[0];
+                            _nodeIds = new string[_nodesPerElement];
+                            for (var k = 0; k < _nodesPerElement; k++)
                             {
-                                nodeIds[k] = substrings[k + 1];
+                                _nodeIds[k] = _substrings[k + 1];
                             }
-                            var querschnittId = substrings[3];
-                            var materialId = substrings[4];
-                            element = new Biegebalken(nodeIds, querschnittId, materialId, modell)
+                            var materialId = _substrings[3];
+                            var querschnittId = _substrings[4];
+                            _element = new Biegebalken(_nodeIds, materialId, querschnittId, _modell)
                             {
-                                ElementId = elementId
+                                ElementId = _elementId
                             };
-                            modell.Elemente.Add(elementId, element);
+                            _modell.Elemente.Add(_elementId, _element);
                             i++;
                             break;
                         }
@@ -102,46 +102,38 @@ public class ElementParser
     }
     private void ParseBiegebalkenGelenk(IReadOnlyList<string> lines)
     {
-        nodesPerElement = 2;
+        _nodesPerElement = 2;
         for (var i = 0; i < lines.Count; i++)
         {
             if (lines[i] != "BiegebalkenGelenk") continue;
             FeParser.EingabeGefunden += "\nBiegebalkenGelenk";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
+                _substrings = lines[i + 1].Split(_delimiters);
 
-                switch (substrings.Length)
+                switch (_substrings.Length)
                 {
                     case 6:
                         {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            for (var k = 0; k < nodesPerElement; k++)
+                            _elementId = _substrings[0];
+                            _nodeIds = new string[_nodesPerElement];
+                            for (var k = 0; k < _nodesPerElement; k++)
                             {
-                                nodeIds[k] = substrings[k + 1];
+                                _nodeIds[k] = _substrings[k + 1];
                             }
-                            var querschnittId = substrings[3];
-                            var materialId = substrings[4];
-                            int type;
-                            switch (short.Parse(substrings[5]))
+                            var materialId = _substrings[3];
+                            var querschnittId = _substrings[4];
+                            var type = short.Parse(_substrings[5]) switch
                             {
-                                //if (string.Equals(gelenk, "F", StringComparison.OrdinalIgnoreCase)) type = 1;
-                                //else if (string.Equals(gelenk, "S", StringComparison.OrdinalIgnoreCase)) type = 2;
-                                case 1:
-                                    type = 1;
-                                    break;
-                                case 2:
-                                    type = 2;
-                                    break;
-                                default:
-                                    throw new ParseAusnahme((i + 2) + ": BiegebalkenGelenk, falscher Gelenktyp");
-                            }
-                            element = new BiegebalkenGelenk(nodeIds, materialId, querschnittId, modell, type)
-                            {
-                                ElementId = elementId
+                                1 => 1,
+                                2 => 2,
+                                _ => throw new ParseAusnahme((i + 2) + ": BiegebalkenGelenk, falscher Gelenktyp")
                             };
-                            modell.Elemente.Add(elementId, element);
+                            _element = new BiegebalkenGelenk(_nodeIds, materialId, querschnittId, _modell, type)
+                            {
+                                ElementId = _elementId
+                            };
+                            _modell.Elemente.Add(_elementId, _element);
                             i++;
                             break;
                         }
@@ -155,32 +147,32 @@ public class ElementParser
 
     private void ParseFederelement(IReadOnlyList<string> lines)
     {
-        nodesPerElement = 1;
+        _nodesPerElement = 1;
         for (var i = 0; i < lines.Count; i++)
         {
             if (lines[i] != "Federelement") continue;
             FeParser.EingabeGefunden += "\nFederelement";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                switch (substrings.Length)
+                _substrings = lines[i + 1].Split(_delimiters);
+                switch (_substrings.Length)
                 {
                     case 3:
                         {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            nodeIds[0] = substrings[1];
-                            var materialId = substrings[2];
-                            var federLager = new FederElement(nodeIds, materialId, modell)
+                            _elementId = _substrings[0];
+                            _nodeIds = new string[_nodesPerElement];
+                            _nodeIds[0] = _substrings[1];
+                            var materialId = _substrings[2];
+                            var federLager = new FederElement(_nodeIds, materialId, _modell)
                             {
-                                ElementId = elementId
+                                ElementId = _elementId
                             };
-                            modell.Elemente.Add(elementId, federLager);
+                            _modell.Elemente.Add(_elementId, federLager);
                             i++;
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Federelement, falsche Anzahl Parameter");
+                        throw new ParseAusnahme(i + 2 + ": Federelement, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -194,25 +186,25 @@ public class ElementParser
             FeParser.EingabeGefunden += "\nQuerschnitt";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                switch (substrings.Length)
+                _substrings = lines[i + 1].Split(_delimiters);
+                switch (_substrings.Length)
                 {
                     case 2:
                         {
-                            var querschnittId = substrings[0];
-                            var fläche = double.Parse(substrings[1]);
+                            var querschnittId = _substrings[0];
+                            var fläche = double.Parse(_substrings[1]);
                             var querschnitt = new Querschnitt(fläche) { QuerschnittId = querschnittId };
-                            modell.Querschnitt.Add(querschnittId, querschnitt);
+                            _modell.Querschnitt.Add(querschnittId, querschnitt);
                             i++;
                             break;
                         }
                     case 3:
                         {
-                            var querschnittId = substrings[0];
-                            var flaeche = double.Parse(substrings[1]);
-                            var ixx = double.Parse(substrings[2]);
-                            var querschnitt = new Querschnitt(flaeche, ixx) { QuerschnittId = querschnittId };
-                            modell.Querschnitt.Add(querschnittId, querschnitt);
+                            var querschnittId = _substrings[0];
+                            var fläche = double.Parse(_substrings[1]);
+                            var ixx = double.Parse(_substrings[2]);
+                            var querschnitt = new Querschnitt(fläche, ixx) { QuerschnittId = querschnittId };
+                            _modell.Querschnitt.Add(querschnittId, querschnitt);
                             i++;
                             break;
                         }

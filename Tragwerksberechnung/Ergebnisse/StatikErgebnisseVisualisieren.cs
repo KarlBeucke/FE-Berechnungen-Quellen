@@ -16,76 +16,82 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 
 public partial class StatikErgebnisseVisualisieren
 {
-    private readonly FeModell modell;
-    private bool elementTexteAn = true, knotenTexteAn = true,
-        verformungenAn, normalkräfteAn, querkräfteAn, momenteAn;
+    private readonly FeModell _modell;
+    private bool _elementTexteAn = true, _knotenTexteAn = true,
+                 _verformungenAn, _normalkräfteAn, _querkräfteAn, _momenteAn;
 
-    public readonly Darstellung darstellung;
-    private readonly List<Shape> hitList = new();
-    private readonly List<TextBlock> hitTextBlock = new();
-    private EllipseGeometry hitArea;
-    private bool momentenMaxTexte;
+    public readonly Darstellung Darstellung;
+    private readonly List<Shape> _hitList = [];
+    private readonly List<TextBlock> _hitTextBlock = [];
+    private EllipseGeometry _hitArea;
+    private bool _momentenMaxTexte;
 
     public StatikErgebnisseVisualisieren(FeModell feModell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
-        modell = feModell;
+        _modell = feModell;
         InitializeComponent();
         Show();
 
-        darstellung = new Darstellung(modell, VisualTragwerkErgebnisse);
+        Darstellung = new Darstellung(_modell, VisualTragwerkErgebnisse);
 
         // unverformte Geometrie
-        darstellung.UnverformteGeometrie();
+        Darstellung.UnverformteGeometrie();
 
         // mit Element Ids
-        darstellung.ElementTexte();
+        Darstellung.ElementTexte();
 
         // mit Knoten Ids
-        darstellung.KnotenTexte();
+        Darstellung.KnotenTexte();
 
         // Faktor für Überhöhung des Verformungszustands
-        darstellung.überhöhungVerformung = int.Parse(Verschiebung.Text);
-        darstellung.überhöhungRotation = int.Parse(Rotation.Text);
+        Darstellung.ÜberhöhungVerformung = int.Parse(Verschiebung.Text);
+        Darstellung.ÜberhöhungRotation = int.Parse(Rotation.Text);
     }
 
     private void BtnVerformung_Click(object sender, RoutedEventArgs e)
     {
-        if (!verformungenAn)
+        if (!_verformungenAn)
         {
-            darstellung.VerformteGeometrie();
-            verformungenAn = true;
+            Darstellung.VerformteGeometrie();
+            _verformungenAn = true;
         }
         else
         {
-            foreach (var path in darstellung.Verformungen.Cast<Shape>())
+            foreach (var path in Darstellung.Verformungen.Cast<Shape>())
             {
                 VisualTragwerkErgebnisse.Children.Remove(path);
             }
-            verformungenAn = false;
+            _verformungenAn = false;
         }
     }
 
     private void BtnNormalkraft_Click(object sender, RoutedEventArgs e)
     {
         double maxNormalkraft = 0;
-        if (querkräfteAn)
+        if (_querkräfteAn)
         {
-            foreach (var path in darstellung.QuerkraftListe.Cast<Shape>()) { VisualTragwerkErgebnisse.Children.Remove(path); }
-            querkräfteAn = false;
+            foreach (var path in Darstellung.QuerkraftListe.Cast<Shape>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(path);
+            }
+            _querkräfteAn = false;
         }
-        if (momenteAn)
+        if (_momenteAn)
         {
-            foreach (var path in darstellung.MomenteListe.Cast<Shape>()) { VisualTragwerkErgebnisse.Children.Remove(path); }
-            VisualTragwerkErgebnisse.Children.Remove(darstellung.maxMomentText);
-            momenteAn = false;
+            foreach (var path in Darstellung.MomenteListe.Cast<Shape>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(path);
+            }
+            VisualTragwerkErgebnisse.Children.Remove(Darstellung.MaxMomentText);
+            _momenteAn = false;
         }
-        if (!normalkräfteAn)
+        if (!_normalkräfteAn)
         {
             // Bestimmung der maximalen Normalkraft
             IEnumerable<AbstraktBalken> Beams()
             {
-                foreach (var item in modell.Elemente)
+                foreach (var item in _modell.Elemente)
                 {
                     if (item.Value is AbstraktBalken beam) { yield return beam; }
                 }
@@ -108,38 +114,47 @@ public partial class StatikErgebnisseVisualisieren
             foreach (var beam in Beams())
             {
                 _ = beam.BerechneStabendkräfte();
-                darstellung.Normalkraft_Zeichnen(beam, maxNormalkraft, false);
+                Darstellung.Normalkraft_Zeichnen(beam, maxNormalkraft, false);
             }
-            normalkräfteAn = true;
+            _normalkräfteAn = true;
         }
         else
         {
-            foreach (var path in darstellung.NormalkraftListe.Cast<Shape>()) { VisualTragwerkErgebnisse.Children.Remove(path); }
-            normalkräfteAn = false;
+            foreach (var path in Darstellung.NormalkraftListe.Cast<Shape>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(path);
+            }
+            _normalkräfteAn = false;
         }
     }
 
     private void BtnQuerkraft_Click(object sender, RoutedEventArgs e)
     {
         double maxQuerkraft = 0;
-        if (normalkräfteAn)
+        if (_normalkräfteAn)
         {
-            foreach (var path in darstellung.NormalkraftListe.Cast<Shape>()) { VisualTragwerkErgebnisse.Children.Remove(path); }
-            normalkräfteAn = false;
+            foreach (var path in Darstellung.NormalkraftListe.Cast<Shape>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(path);
+            }
+            _normalkräfteAn = false;
         }
-        if (momenteAn)
+        if (_momenteAn)
         {
-            foreach (var path in darstellung.MomenteListe.Cast<Shape>()) { VisualTragwerkErgebnisse.Children.Remove(path); }
-            VisualTragwerkErgebnisse.Children.Remove(darstellung.maxMomentText);
-            momenteAn = false;
+            foreach (var path in Darstellung.MomenteListe.Cast<Shape>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(path);
+            }
+            VisualTragwerkErgebnisse.Children.Remove(Darstellung.MaxMomentText);
+            _momenteAn = false;
         }
 
-        if (!querkräfteAn)
+        if (!_querkräfteAn)
         {
             // Bestimmung der maximalen Querkraft
             IEnumerable<AbstraktBalken> Beams()
             {
-                foreach (var item in modell.Elemente)
+                foreach (var item in _modell.Elemente)
                 {
                     if (item.Value is AbstraktBalken beam) { yield return beam; }
                 }
@@ -148,8 +163,16 @@ public partial class StatikErgebnisseVisualisieren
             {
                 beam.ElementZustand = beam.BerechneStabendkräfte();
                 if (beam.ElementZustand.Length <= 2) { continue; }
-                if (Math.Abs(beam.ElementZustand[1]) > maxQuerkraft) { maxQuerkraft = Math.Abs(beam.ElementZustand[1]); }
-                if (Math.Abs(beam.ElementZustand[4]) > maxQuerkraft) { maxQuerkraft = Math.Abs(beam.ElementZustand[4]); }
+
+                if (Math.Abs(beam.ElementZustand[1]) > maxQuerkraft)
+                {
+                    maxQuerkraft = Math.Abs(beam.ElementZustand[1]);
+                }
+
+                if (Math.Abs(beam.ElementZustand[4]) > maxQuerkraft)
+                {
+                    maxQuerkraft = Math.Abs(beam.ElementZustand[4]);
+                }
             }
 
             // skalierte Querkraftverläufe zeichnen
@@ -158,37 +181,46 @@ public partial class StatikErgebnisseVisualisieren
                 var elementlast = false;
                 if (beam.ElementZustand.Length <= 2) { continue; }
                 if (Math.Abs(beam.ElementZustand[1] - beam.ElementZustand[4]) > double.Epsilon) { elementlast = true; }
-                darstellung.Querkraft_Zeichnen(beam, maxQuerkraft, elementlast);
+                Darstellung.Querkraft_Zeichnen(beam, maxQuerkraft, elementlast);
             }
-            querkräfteAn = true;
+            _querkräfteAn = true;
         }
         else
         {
-            foreach (var path in darstellung.QuerkraftListe.Cast<Shape>()) { VisualTragwerkErgebnisse.Children.Remove(path); }
-            querkräfteAn = false;
+            foreach (var path in Darstellung.QuerkraftListe.Cast<Shape>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(path);
+            }
+            _querkräfteAn = false;
         }
     }
 
     private void BtnMomente_Click(object sender, RoutedEventArgs e)
     {
         double maxMoment = 0;
-        if (normalkräfteAn)
+        if (_normalkräfteAn)
         {
-            foreach (Shape path in darstellung.NormalkraftListe) { VisualTragwerkErgebnisse.Children.Remove(path); }
-            normalkräfteAn = false;
+            foreach (var path in Darstellung.NormalkraftListe.Cast<Shape>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(path);
+            }
+            _normalkräfteAn = false;
         }
-        if (querkräfteAn)
+        if (_querkräfteAn)
         {
-            foreach (Shape path in darstellung.QuerkraftListe) { VisualTragwerkErgebnisse.Children.Remove(path); }
-            querkräfteAn = false;
+            foreach (var path in Darstellung.QuerkraftListe.Cast<Shape>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(path);
+            }
+            _querkräfteAn = false;
         }
 
-        if (!momenteAn)
+        if (!_momenteAn)
         {
             // Bestimmung des maximalen Biegemoments
             IEnumerable<AbstraktBalken> Beams()
             {
-                foreach (var item in modell.Elemente)
+                foreach (var item in _modell.Elemente)
                 {
                     if (item.Value is AbstraktBalken beam) { yield return beam; }
                 }
@@ -209,21 +241,23 @@ public partial class StatikErgebnisseVisualisieren
                 double lokalesMoment;
                 IEnumerable<PunktLast> PunktLasten()
                 {
-                    foreach (var last in modell.PunktLasten.Select(item =>
-                                 (PunktLast)item.Value).Where(last => modell.Elemente.TryGetValue(last.ElementId, out element)))
+                    foreach (var last in _modell.PunktLasten.Select(item =>
+                                 (PunktLast)item.Value).
+                                 Where(last => _modell.Elemente.TryGetValue(last.ElementId, out element)))
                     { yield return last; }
                 }
                 foreach (var last in PunktLasten())
                 {
                     lastBalken = (AbstraktBalken)element;
-                    lokalesMoment = lastBalken.ElementZustand[1] * last.Offset * lastBalken.balkenLänge;
+                    lokalesMoment = lastBalken.ElementZustand[1] * last.Offset * lastBalken.BalkenLänge;
                     if (Math.Abs(lokalesMoment) > maxMoment) { maxMoment = Math.Abs(lokalesMoment); }
                 }
 
                 IEnumerable<LinienLast> LinienLasten()
                 {
-                    foreach (var last in modell.ElementLasten.Select(item =>
-                                 (LinienLast)item.Value).Where(last => modell.Elemente.TryGetValue(last.ElementId, out element)))
+                    foreach (var last in _modell.ElementLasten.Select(item =>
+                                 (LinienLast)item.Value).
+                                 Where(last => _modell.Elemente.TryGetValue(last.ElementId, out element)))
                     { yield return last; }
                 }
                 foreach (var last in LinienLasten())
@@ -233,8 +267,8 @@ public partial class StatikErgebnisseVisualisieren
                     // für Skalierung nur Gleichlast mit max. Lastordinate betrachtet
                     var max = Math.Abs(last.Lastwerte[1]);
                     if (Math.Abs(last.Lastwerte[3]) > max) max = last.Lastwerte[3];
-                    lokalesMoment = stabEndkräfte[1] * lastBalken.balkenLänge / 2 -
-                                    max * lastBalken.balkenLänge / 2 * lastBalken.balkenLänge / 4;
+                    lokalesMoment = stabEndkräfte[1] * lastBalken.BalkenLänge / 2 -
+                                    max * lastBalken.BalkenLänge / 2 * lastBalken.BalkenLänge / 4;
                     if (Math.Abs(lokalesMoment) > maxMoment) { maxMoment = Math.Abs(lokalesMoment); }
                 }
             }
@@ -245,61 +279,80 @@ public partial class StatikErgebnisseVisualisieren
                 var elementlast = false;
                 if (beam.ElementZustand.Length <= 2) { continue; }
                 if (Math.Abs(beam.ElementZustand[1] - beam.ElementZustand[4]) > double.Epsilon) { elementlast = true; }
-                darstellung.Momente_Zeichnen(beam, maxMoment, elementlast);
+                Darstellung.Momente_Zeichnen(beam, maxMoment, elementlast);
             }
-            momenteAn = true;
+            _momenteAn = true;
         }
         else
         {
-            foreach (var path in darstellung.MomenteListe.Cast<Shape>()) { VisualTragwerkErgebnisse.Children.Remove(path); }
-            foreach (var maxWerte in darstellung.MomentenMaxTexte.Cast<TextBlock>()) { VisualTragwerkErgebnisse.Children.Remove(maxWerte); }
-            momenteAn = false;
+            foreach (var path in Darstellung.MomenteListe.Cast<Shape>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(path);
+            }
+
+            foreach (var maxWerte in Darstellung.MomentenMaxTexte.Cast<TextBlock>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(maxWerte);
+            }
+            _momenteAn = false;
         }
     }
 
     private void BtnElementIDs_Click(object sender, RoutedEventArgs e)
     {
-        if (!elementTexteAn)
+        if (!_elementTexteAn)
         {
-            darstellung.ElementTexte();
-            elementTexteAn = true;
+            Darstellung.ElementTexte();
+            _elementTexteAn = true;
         }
         else
         {
-            foreach (TextBlock id in darstellung.ElementIDs) { VisualTragwerkErgebnisse.Children.Remove(id); }
-            elementTexteAn = false;
+            foreach (var id in Darstellung.ElementIDs.Cast<TextBlock>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(id);
+            }
+            _elementTexteAn = false;
         }
     }
     private void BtnKnotenIDs_Click(object sender, RoutedEventArgs e)
     {
-        if (!knotenTexteAn)
+        if (!_knotenTexteAn)
         {
-            darstellung.KnotenTexte();
-            knotenTexteAn = true;
+            Darstellung.KnotenTexte();
+            _knotenTexteAn = true;
         }
         else
         {
-            foreach (TextBlock id in darstellung.KnotenIDs) { VisualTragwerkErgebnisse.Children.Remove(id); }
-            knotenTexteAn = false;
+            foreach (var id in Darstellung.KnotenIDs.Cast<TextBlock>())
+            {
+                VisualTragwerkErgebnisse.Children.Remove(id);
+            }
+            _knotenTexteAn = false;
         }
     }
 
     private void BtnVerschiebung_Click(object sender, RoutedEventArgs e)
     {
-        darstellung.überhöhungVerformung = int.Parse(Verschiebung.Text);
-        foreach (Shape path in darstellung.Verformungen) { VisualTragwerkErgebnisse.Children.Remove(path); }
-        verformungenAn = false;
-        darstellung.VerformteGeometrie();
-        verformungenAn = true;
+        Darstellung.ÜberhöhungVerformung = int.Parse(Verschiebung.Text);
+        foreach (var path in Darstellung.Verformungen.Cast<Shape>())
+        {
+            VisualTragwerkErgebnisse.Children.Remove(path);
+        }
+        _verformungenAn = false;
+        Darstellung.VerformteGeometrie();
+        _verformungenAn = true;
     }
 
     private void BtnRotation_Click(object sender, RoutedEventArgs e)
     {
-        darstellung.überhöhungRotation = int.Parse(Rotation.Text);
-        foreach (Shape path in darstellung.Verformungen) { VisualTragwerkErgebnisse.Children.Remove(path); }
-        verformungenAn = false;
-        darstellung.VerformteGeometrie();
-        verformungenAn = true;
+        Darstellung.ÜberhöhungRotation = int.Parse(Rotation.Text);
+        foreach (var path in Darstellung.Verformungen.Cast<Shape>())
+        {
+            VisualTragwerkErgebnisse.Children.Remove(path);
+        }
+        _verformungenAn = false;
+        Darstellung.VerformteGeometrie();
+        _verformungenAn = true;
     }
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -307,24 +360,24 @@ public partial class StatikErgebnisseVisualisieren
         // In der Methode "UnverformteGeometrie" werden Elemente und Knoten als Path bzw TextBlock gezeichnet.
         // Deren IDs werden als "Name" an jeden einzelnen Path bzw als Text an jeden einzelnen TextBlock angehängt
         // Shapes und TextBlocks werden am Hit-Punkt gesammelt und nach ID ausgewertet
-        hitList.Clear();
-        hitTextBlock.Clear();
+        _hitList.Clear();
+        _hitTextBlock.Clear();
         var hitPoint = e.GetPosition(VisualTragwerkErgebnisse);
-        hitArea = new EllipseGeometry(hitPoint, 0.2, 0.2);
+        _hitArea = new EllipseGeometry(hitPoint, 0.2, 0.2);
         VisualTreeHelper.HitTest(VisualTragwerkErgebnisse, null, HitTestCallBack,
-            new GeometryHitTestParameters(hitArea));
+            new GeometryHitTestParameters(_hitArea));
 
         MyPopup.IsOpen = false;
 
         var sb = new StringBuilder();
 
-        foreach (var item in hitTextBlock.Where(item => item != null).
+        foreach (var item in _hitTextBlock.Where(item => item != null).
                      Where(item => item.Text != string.Empty))
         {
             sb.Clear();
             MyPopup.IsOpen = true;
 
-            if (modell.Knoten.TryGetValue(item.Text, out var knoten))
+            if (_modell.Knoten.TryGetValue(item.Text, out var knoten))
             {
                 sb.Append("Knoten = " + knoten.Id);
                 sb.Append("\nux\t= " + knoten.Knotenfreiheitsgrade[0].ToString("F4"));
@@ -342,7 +395,7 @@ public partial class StatikErgebnisseVisualisieren
                 return;
             }
 
-            if (!modell.Elemente.TryGetValue(item.Text, out var linienElement)) { continue; }
+            if (!_modell.Elemente.TryGetValue(item.Text, out var linienElement)) { continue; }
             sb.Clear();
             if (linienElement is FederElement)
             {
@@ -377,24 +430,24 @@ public partial class StatikErgebnisseVisualisieren
             MyPopupText.Text = sb.ToString();
             return;
         }
-        foreach (var unused in hitList.Where(item => item is { Name: "Biegemomente" }))
+        foreach (var unused in _hitList.Where(item => item is { Name: "Biegemomente" }))
         {
             MyPopup.IsOpen = false;
-            if (!momentenMaxTexte)
+            if (!_momentenMaxTexte)
             {
-                foreach (var momentenMaxText in darstellung.MomentenMaxTexte.Cast<TextBlock>())
+                foreach (var momentenMaxText in Darstellung.MomentenMaxTexte.Cast<TextBlock>())
                 {
                     VisualTragwerkErgebnisse.Children.Add(momentenMaxText);
                 }
-                momentenMaxTexte = true;
+                _momentenMaxTexte = true;
             }
             else
             {
-                foreach (var momentenMaxText in darstellung.MomentenMaxTexte.Cast<TextBlock>())
+                foreach (var momentenMaxText in Darstellung.MomentenMaxTexte.Cast<TextBlock>())
                 {
                     VisualTragwerkErgebnisse.Children.Remove(momentenMaxText);
                 }
-                momentenMaxTexte = false;
+                _momentenMaxTexte = false;
             }
         }
     }
@@ -411,10 +464,10 @@ public partial class StatikErgebnisseVisualisieren
                 switch (result.VisualHit)
                 {
                     case Shape hit:
-                        hitList.Add(hit);
+                        _hitList.Add(hit);
                         break;
                     case TextBlock hit:
-                        hitTextBlock.Add(hit);
+                        _hitTextBlock.Add(hit);
                         break;
                 }
                 return HitTestResultBehavior.Continue;
@@ -424,7 +477,7 @@ public partial class StatikErgebnisseVisualisieren
                 switch (result.VisualHit)
                 {
                     case Shape hit:
-                        hitList.Add(hit);
+                        _hitList.Add(hit);
                         break;
                 }
                 return HitTestResultBehavior.Continue;

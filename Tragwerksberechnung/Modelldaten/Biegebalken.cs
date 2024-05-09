@@ -8,22 +8,22 @@ namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
 public class Biegebalken : AbstraktBalken
 {
-    protected AbstraktMaterial material;
-    private AbstraktElement element;
-    protected Querschnitt querschnitt;
-    private readonly FeModell modell;
+    protected AbstraktMaterial Material;
+    private AbstraktElement _element;
+    protected Querschnitt Querschnitt;
+    private readonly FeModell _modell;
 
-    private double[,] steifigkeitsMatrix = new double[6, 6];
-    private readonly double[] massenMatrix = new double[6];
+    private double _emodul, _masse, _fläche, _trägheitsmoment;
+    private double[,] _steifigkeitsMatrix = new double[6, 6];
+    private readonly double[] _massenMatrix = new double[6];
 
     //private readonly double[] shapeFunction = new double[6];
-    private readonly double[] lastVektor = new double[6];
+    private readonly double[] _lastVektor = new double[6];
     //private readonly double gaussPoint = 1.0 / Math.Sqrt(3.0);
 
-    // ... Konstruktor ........................................................
-    public Biegebalken(string[] eKnotenIds, string eQuerschnittId, string eMaterialId, FeModell feModell)
+    public Biegebalken(string[] eKnotenIds, string eMaterialId, string eQuerschnittId, FeModell feModell)
     {
-        modell = feModell;
+        _modell = feModell;
         KnotenIds = eKnotenIds;
         ElementQuerschnittId = eQuerschnittId;
         ElementMaterialId = eMaterialId;
@@ -34,24 +34,29 @@ public class Biegebalken : AbstraktBalken
         ElementVerformungen = new double[6];
     }
 
-    // ... berechne Elementmatrix ........................................
     public override double[,] BerechneElementMatrix()
     {
-        steifigkeitsMatrix = BerechneLokaleMatrix();
-        // ... transformiere lokale Matrix in globale Steifigkeitsmatrix ....
-        steifigkeitsMatrix = TransformMatrix(steifigkeitsMatrix);
-        return steifigkeitsMatrix;
+        _steifigkeitsMatrix = BerechneLokaleMatrix();
+        // transformiere lokale Matrix in globale Steifigkeitsmatrix
+        _steifigkeitsMatrix = TransformMatrix(_steifigkeitsMatrix);
+        return _steifigkeitsMatrix;
     }
 
-    // ... berechne lokale Steifigkeitsmatrix ...............................
+    // berechne lokale Steifigkeitsmatrix
     private double[,] BerechneLokaleMatrix()
     {
         BerechneGeometrie();
-        var h2 = ElementMaterial.MaterialWerte[0] * ElementQuerschnitt.QuerschnittsWerte[1];          // EI
-        var c1 = ElementMaterial.MaterialWerte[0] * ElementQuerschnitt.QuerschnittsWerte[0] / balkenLänge; // EA/L
-        var c2 = (12.0 * h2) / balkenLänge / balkenLänge / balkenLänge;
-        var c3 = (6.0 * h2) / balkenLänge / balkenLänge;
-        var c4 = (4.0 * h2) / balkenLänge;
+
+        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) return null;
+        _emodul = E == 0 ? material.MaterialWerte[0] : E;
+        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt)) return null;
+        _fläche = A == 0 ? querschnitt.QuerschnittsWerte[0] : A;
+        _trägheitsmoment = I == 0 ? querschnitt.QuerschnittsWerte[1] : I;
+        var h2 = _emodul * _trägheitsmoment;      // EI
+        var c1 = _emodul * _fläche / BalkenLänge; // EA/L
+        var c2 = 12.0 * h2 / BalkenLänge / BalkenLänge / BalkenLänge;
+        var c3 = 6.0 * h2 / BalkenLänge / BalkenLänge;
+        var c4 = 4.0 * h2 / BalkenLänge;
         var c5 = 0.5 * c4;
 
         double[,] lokaleMatrix = {{ c1,  0,  0, -c1,  0,  0},
@@ -63,25 +68,30 @@ public class Biegebalken : AbstraktBalken
         return lokaleMatrix;
     }
 
-    // ....berechne diagonal Massenmatrix.................................
+    // berechne diagonal Massenmatrix
     public override double[] BerechneDiagonalMatrix()
     {
-        if (ElementMaterial.MaterialWerte.Length < 3)
+        if (ElementMaterial.MaterialWerte.Length < 3 && M == 0)
         {
             throw new ModellAusnahme("Biegebalken " + ElementId + ", spezifische Masse noch nicht definiert");
         }
+
+        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) return null;
+        _masse = M == 0 ? material.MaterialWerte[2] : M;
+        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt)) return null;
+        _fläche = A == 0 ? querschnitt.QuerschnittsWerte[0] : A;
+
         // Verschiebungen: Me = spezifische masse * fläche * 0.5*balkenLänge
-        massenMatrix[0] = massenMatrix[1] = massenMatrix[3] = massenMatrix[4] =
-            ElementMaterial.MaterialWerte[2] * ElementQuerschnitt.QuerschnittsWerte[0] * balkenLänge / 2;
+        _massenMatrix[0] = _massenMatrix[1] = _massenMatrix[3] = _massenMatrix[4] = _masse * _fläche * BalkenLänge / 2;
         // Rotationsmassen = 0
-        massenMatrix[2] = massenMatrix[5] = 0.0;
-        return massenMatrix;
+        _massenMatrix[2] = _massenMatrix[5] = 0.0;
+        return _massenMatrix;
     }
 
     public double[] BerechneLastVektor(AbstraktLast ael, bool inElementCoordinateSystem)
     {
         BerechneGeometrie();
-        for (var i = 0; i < lastVektor.Length; i++) { lastVektor[i] = 0.0; }
+        for (var i = 0; i < _lastVektor.Length; i++) { _lastVektor[i] = 0.0; }
 
         switch (ael)
         {
@@ -90,10 +100,10 @@ public class Biegebalken : AbstraktBalken
                     double na, nb, qa, qb;
                     if (!ll.IstInElementKoordinatenSystem())
                     {
-                        na = ll.Lastwerte[0] * cos + ll.Lastwerte[0] * sin;
-                        nb = ll.Lastwerte[2] * cos + ll.Lastwerte[2] * sin;
-                        qa = ll.Lastwerte[1] * -sin + ll.Lastwerte[1] * cos;
-                        qb = ll.Lastwerte[3] * -sin + ll.Lastwerte[3] * cos;
+                        na = ll.Lastwerte[0] * Cos + ll.Lastwerte[0] * Sin;
+                        nb = ll.Lastwerte[2] * Cos + ll.Lastwerte[2] * Sin;
+                        qa = ll.Lastwerte[1] * -Sin + ll.Lastwerte[1] * Cos;
+                        qb = ll.Lastwerte[3] * -Sin + ll.Lastwerte[3] * Cos;
                     }
                     else
                     {
@@ -103,31 +113,31 @@ public class Biegebalken : AbstraktBalken
                         qb = ll.Lastwerte[3];
                     }
 
-                    lastVektor[0] = na * 0.5 * balkenLänge;
-                    lastVektor[3] = nb * 0.5 * balkenLänge;
+                    _lastVektor[0] = na * 0.5 * BalkenLänge;
+                    _lastVektor[3] = nb * 0.5 * BalkenLänge;
 
                     // konstante Linienlast
                     if (Math.Abs(qa - qb) < double.Epsilon)
                     {
-                        lastVektor[1] = lastVektor[4] = qa * 0.5 * balkenLänge;
-                        lastVektor[2] = qa * balkenLänge * balkenLänge / 12;
-                        lastVektor[5] = -qa * balkenLänge * balkenLänge / 12;
+                        _lastVektor[1] = _lastVektor[4] = qa * 0.5 * BalkenLänge;
+                        _lastVektor[2] = qa * BalkenLänge * BalkenLänge / 12;
+                        _lastVektor[5] = -qa * BalkenLänge * BalkenLänge / 12;
                     }
                     // Dreieckslast steigend von a nach b
                     else if (Math.Abs(qa) < Math.Abs(qb))
                     {
-                        lastVektor[1] = qa * 0.5 * balkenLänge + (qb - qa) * 3 / 20 * balkenLänge;
-                        lastVektor[4] = qa * 0.5 * balkenLänge + (qb - qa) * 7 / 20 * balkenLänge;
-                        lastVektor[2] = qa * balkenLänge * balkenLänge / 12 + (qb - qa) * balkenLänge * balkenLänge / 30;
-                        lastVektor[5] = -qa * balkenLänge * balkenLänge / 12 - (qb - qa) * balkenLänge * balkenLänge / 20;
+                        _lastVektor[1] = qa * 0.5 * BalkenLänge + (qb - qa) * 3 / 20 * BalkenLänge;
+                        _lastVektor[4] = qa * 0.5 * BalkenLänge + (qb - qa) * 7 / 20 * BalkenLänge;
+                        _lastVektor[2] = qa * BalkenLänge * BalkenLänge / 12 + (qb - qa) * BalkenLänge * BalkenLänge / 30;
+                        _lastVektor[5] = -qa * BalkenLänge * BalkenLänge / 12 - (qb - qa) * BalkenLänge * BalkenLänge / 20;
                     }
                     // Dreieckslast fallend von a nach b
                     else if (Math.Abs(qa) > Math.Abs(qb))
                     {
-                        lastVektor[1] = qb * 0.5 * balkenLänge + (qa - qb) * 7 / 20 * balkenLänge;
-                        lastVektor[4] = qb * 0.5 * balkenLänge + (qa - qb) * 3 / 20 * balkenLänge;
-                        lastVektor[2] = qb * balkenLänge * balkenLänge / 12 + (qa - qb) * balkenLänge * balkenLänge / 20;
-                        lastVektor[5] = -qb * balkenLänge * balkenLänge / 12 - (qa - qb) * balkenLänge * balkenLänge / 30;
+                        _lastVektor[1] = qb * 0.5 * BalkenLänge + (qa - qb) * 7 / 20 * BalkenLänge;
+                        _lastVektor[4] = qb * 0.5 * BalkenLänge + (qa - qb) * 3 / 20 * BalkenLänge;
+                        _lastVektor[2] = qb * BalkenLänge * BalkenLänge / 12 + (qa - qb) * BalkenLänge * BalkenLänge / 20;
+                        _lastVektor[5] = -qb * BalkenLänge * BalkenLänge / 12 - (qa - qb) * BalkenLänge * BalkenLänge / 30;
                     }
                     break;
                 }
@@ -139,8 +149,8 @@ public class Biegebalken : AbstraktBalken
 
                     if (!pl.IstInElementKoordinatenSystem())
                     {
-                        xLoad = pl.Lastwerte[0] * cos + pl.Lastwerte[1] * sin;
-                        yLoad = pl.Lastwerte[0] * -sin + pl.Lastwerte[1] * cos;
+                        xLoad = pl.Lastwerte[0] * Cos + pl.Lastwerte[1] * Sin;
+                        yLoad = pl.Lastwerte[0] * -Sin + pl.Lastwerte[1] * Cos;
                     }
                     else
                     {
@@ -148,31 +158,31 @@ public class Biegebalken : AbstraktBalken
                         yLoad = pl.Lastwerte[1];
                     }
 
-                    var a = pl.Offset * balkenLänge;
-                    var b = balkenLänge - a;
-                    lastVektor[0] = xLoad / 2;
-                    lastVektor[1] = yLoad * b * b / balkenLänge / balkenLänge / balkenLänge * (balkenLänge + 2 * a);
-                    lastVektor[2] = yLoad * a * b * b / balkenLänge / balkenLänge;
-                    lastVektor[3] = xLoad / 2;
-                    lastVektor[4] = yLoad * a * a / balkenLänge / balkenLänge / balkenLänge * (balkenLänge + 2 * b);
-                    lastVektor[5] = -yLoad * a * a * b / balkenLänge / balkenLänge;
+                    var a = pl.Offset * BalkenLänge;
+                    var b = BalkenLänge - a;
+                    _lastVektor[0] = xLoad / 2;
+                    _lastVektor[1] = yLoad * b * b / BalkenLänge / BalkenLänge / BalkenLänge * (BalkenLänge + 2 * a);
+                    _lastVektor[2] = yLoad * a * b * b / BalkenLänge / BalkenLänge;
+                    _lastVektor[3] = xLoad / 2;
+                    _lastVektor[4] = yLoad * a * a / BalkenLänge / BalkenLänge / BalkenLänge * (BalkenLänge + 2 * b);
+                    _lastVektor[5] = -yLoad * a * a * b / BalkenLänge / BalkenLänge;
                     break;
                 }
             default:
                 throw new ModellAusnahme("Last " + ael + " wird in diesem Elementtyp nicht unterstützt ");
         }
 
-        if (inElementCoordinateSystem) return lastVektor;
+        if (inElementCoordinateSystem) return _lastVektor;
         var tmpLastVektor = new double[6];
-        Array.Copy(lastVektor, tmpLastVektor, lastVektor.Length);
-        // transforms the loadvector to the global coordinate system.
-        lastVektor[0] = tmpLastVektor[0] * cos + tmpLastVektor[1] * -sin;
-        lastVektor[1] = tmpLastVektor[0] * sin + tmpLastVektor[1] * cos;
-        lastVektor[2] = tmpLastVektor[2];
-        lastVektor[3] = tmpLastVektor[3] * cos + tmpLastVektor[4] * -sin;
-        lastVektor[4] = tmpLastVektor[3] * sin + tmpLastVektor[4] * cos;
-        lastVektor[5] = tmpLastVektor[5];
-        return lastVektor;
+        Array.Copy(_lastVektor, tmpLastVektor, _lastVektor.Length);
+        // transformiert den Lastvektor in das globale Koordinatensystem
+        _lastVektor[0] = tmpLastVektor[0] * Cos + tmpLastVektor[1] * -Sin;
+        _lastVektor[1] = tmpLastVektor[0] * Sin + tmpLastVektor[1] * Cos;
+        _lastVektor[2] = tmpLastVektor[2];
+        _lastVektor[3] = tmpLastVektor[3] * Cos + tmpLastVektor[4] * -Sin;
+        _lastVektor[4] = tmpLastVektor[3] * Sin + tmpLastVektor[4] * Cos;
+        _lastVektor[5] = tmpLastVektor[5];
+        return _lastVektor;
     }
 
     //private void GetShapeFunctionValues(double z)
@@ -207,10 +217,10 @@ public class Biegebalken : AbstraktBalken
                 var m31 = matrix[i + 2, k];
                 var m32 = matrix[i + 2, k + 1];
 
-                var e11 = rotationsMatrix[0, 0];
-                var e12 = rotationsMatrix[0, 1];
-                var e21 = rotationsMatrix[1, 0];
-                var e22 = rotationsMatrix[1, 1];
+                var e11 = RotationsMatrix[0, 0];
+                var e12 = RotationsMatrix[0, 1];
+                var e21 = RotationsMatrix[1, 0];
+                var e22 = RotationsMatrix[1, 1];
 
                 var h11 = e11 * m11 + e12 * m21;
                 var h12 = e11 * m12 + e12 * m22;
@@ -231,27 +241,27 @@ public class Biegebalken : AbstraktBalken
         return matrix;
     }
 
-    // ... berechne Stabendkräfte ........................
+    // berechne Stabendkräfte
     public override double[] BerechneStabendkräfte()
     {
         var lokaleMatrix = BerechneLokaleMatrix();
         var vektor = BerechneZustandsvektor();
 
-        // contribution of the node deformations
+        // Beitrag der Knotendeformationen
         ElementZustand = MatrizenAlgebra.Mult(lokaleMatrix, vektor);
 
-        // contribution of the beam loads
-        foreach (var item in modell.PunktLasten)
+        // Beitrag der Balkenlasten
+        foreach (var item in _modell.PunktLasten)
         {
-            if (!(item.Value is PunktLast punktLast)) continue;
+            if (item.Value is not PunktLast punktLast) continue;
             if (punktLast.ElementId != ElementId) continue;
             vektor = punktLast.BerechneLokalenLastVektor();
             for (var i = 0; i < vektor.Length; i++) ElementZustand[i] -= vektor[i];
         }
 
-        foreach (var item in modell.ElementLasten)
+        foreach (var item in _modell.ElementLasten)
         {
-            if (!(item.Value is LinienLast linienLast)) continue;
+            if (item.Value is not LinienLast linienLast) continue;
             if (linienLast.ElementId != ElementId) continue;
             vektor = linienLast.BerechneLokalenLastVektor();
             for (var i = 0; i < vektor.Length; i++) ElementZustand[i] -= vektor[i];
@@ -262,7 +272,7 @@ public class Biegebalken : AbstraktBalken
         return ElementZustand;
     }
 
-    // ... berechne Verformungsvektor von Biegebalkenelementen .............
+    // berechne Verformungsvektor von Biegebalkenelementen
     public override double[] BerechneZustandsvektor()
     {
         BerechneGeometrie();
@@ -272,19 +282,19 @@ public class Biegebalken : AbstraktBalken
             ElementVerformungen[i] = Knoten[0].Knotenfreiheitsgrade[i];
             ElementVerformungen[i + ndof] = Knoten[1].Knotenfreiheitsgrade[i];
         }
-        // transformier in das lokale Koordinatensystem
-        var temp0 = rotationsMatrix[0, 0] * ElementVerformungen[0]
-                    + rotationsMatrix[1, 0] * ElementVerformungen[1];
+        // transformiere in das lokale Koordinatensystem
+        var temp0 = RotationsMatrix[0, 0] * ElementVerformungen[0]
+                    + RotationsMatrix[1, 0] * ElementVerformungen[1];
 
-        var temp1 = rotationsMatrix[0, 1] * ElementVerformungen[0]
-                    + rotationsMatrix[1, 1] * ElementVerformungen[1];
+        var temp1 = RotationsMatrix[0, 1] * ElementVerformungen[0]
+                    + RotationsMatrix[1, 1] * ElementVerformungen[1];
         ElementVerformungen[0] = temp0;
         ElementVerformungen[1] = temp1;
 
-        temp0 = rotationsMatrix[0, 0] * ElementVerformungen[3]
-                + rotationsMatrix[1, 0] * ElementVerformungen[4];
-        temp1 = rotationsMatrix[0, 1] * ElementVerformungen[3]
-                + rotationsMatrix[1, 1] * ElementVerformungen[4];
+        temp0 = RotationsMatrix[0, 0] * ElementVerformungen[3]
+                + RotationsMatrix[1, 0] * ElementVerformungen[4];
+        temp1 = RotationsMatrix[0, 1] * ElementVerformungen[3]
+                + RotationsMatrix[1, 1] * ElementVerformungen[4];
         ElementVerformungen[3] = temp0;
         ElementVerformungen[4] = temp1;
 
@@ -308,10 +318,10 @@ public class Biegebalken : AbstraktBalken
     }
     public override Point BerechneSchwerpunkt()
     {
-        if (!modell.Elemente.TryGetValue(ElementId, out element))
+        if (!_modell.Elemente.TryGetValue(ElementId, out _element))
         {
             throw new ModellAusnahme("Biegebalken: " + ElementId + " nicht im Modell gefunden");
         }
-        return Schwerpunkt(element);
+        return Schwerpunkt(_element);
     }
 }

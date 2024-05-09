@@ -88,7 +88,7 @@ public partial class ElementNeu
             modell.Elemente.Add(ElementId.Text, element);
         }
         Close();
-        StartFenster.tragwerkVisual.Close();
+        StartFenster.TragwerkVisual.Close();
         elementKeys?.Close();
     }
 
@@ -104,7 +104,7 @@ public partial class ElementNeu
         modell.Elemente.Remove(ElementId.Text);
         elementKeys?.Close();
         Close();
-        StartFenster.wärmeVisual.Close();
+        StartFenster.WärmeVisual.Close();
     }
 
     private void ElementIdLostFocus(object sender, RoutedEventArgs e)

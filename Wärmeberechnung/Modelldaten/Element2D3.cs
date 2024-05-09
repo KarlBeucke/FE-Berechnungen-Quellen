@@ -7,12 +7,12 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
 public class Element2D3 : AbstraktLinear2D3
 {
-    private AbstraktElement element;
-    private double[,] elementMatrix = new double[3, 3];
-    private Material material;
-    private Knoten knoten;
+    private AbstraktElement _element;
+    private double[,] _elementMatrix = new double[3, 3];
+    private Material _material;
+    private Knoten _knoten;
     public double[] SpezifischeWärmeMatrix { get; }
-    private readonly double[] elementTemperaturen = new double[3];   // at element nodes
+    private readonly double[] _elementTemperaturen = new double[3];   // an Elementknoten
     public FeModell Modell { get; }
     public Element2D3(string[] eKnotens, string eMaterialId, FeModell feModell)
     {
@@ -40,26 +40,26 @@ public class Element2D3 : AbstraktLinear2D3
     {
         BerechneGeometrie();
         if (Modell.Material.TryGetValue(ElementMaterialId, out var abstraktMaterial)) { }
-        material = (Material)abstraktMaterial;
-        ElementMaterial = material;
-        if (material == null) return elementMatrix;
-        var leitfähigkeit = material.MaterialWerte[0];
+        _material = (Material)abstraktMaterial;
+        ElementMaterial = _material;
+        if (_material == null) return _elementMatrix;
+        var leitfähigkeit = _material.MaterialWerte[0];
         // Ke = area*c*Sx*SxT
-        elementMatrix = MatrizenAlgebra.RectMultMatrixTransposed(0.5 * Determinant * leitfähigkeit, Sx, Sx);
+        _elementMatrix = MatrizenAlgebra.RectMultMatrixTransposed(0.5 * Determinant * leitfähigkeit, Sx, Sx);
 
-        return elementMatrix;
+        return _elementMatrix;
     }
     // ....berechne diagonale spezifische Wärme Matrix .................................
     public override double[] BerechneDiagonalMatrix()
     {
         BerechneGeometrie();
-        // Me = dichte * leitfähigkeit * 0.5*determinante / 3    (area/3)
-        SpezifischeWärmeMatrix[0] = material.MaterialWerte[3] * Determinant / 6;
+        // Me = dichte * leitfähigkeit * 0.5*determinante/3 (area/3)
+        SpezifischeWärmeMatrix[0] = _material.MaterialWerte[3] * Determinant / 6;
         SpezifischeWärmeMatrix[1] = SpezifischeWärmeMatrix[0];
         if (SpezifischeWärmeMatrix.Length > 2) SpezifischeWärmeMatrix[2] = SpezifischeWärmeMatrix[0];
         return SpezifischeWärmeMatrix;
     }
-    // ....Compute the heat state at the midpoint of the element......
+    // berechne Wärmezustand an Mittelpunkten der Elemente
     public override double[] BerechneZustandsvektor()
     {
         var elementZustand = new double[2];
@@ -71,21 +71,20 @@ public class Element2D3 : AbstraktLinear2D3
         var elementWärmeStatus = new double[2];             // in element
         BerechneGeometrie();
         if (Modell.Material.TryGetValue(ElementMaterialId, out var abstractMaterial)) { }
-        material = (Material)abstractMaterial;
-        ElementMaterial = material;
-        if (Modell.Elemente.TryGetValue(ElementId, out element))
+        _material = (Material)abstractMaterial;
+        ElementMaterial = _material;
+        if (Modell.Elemente.TryGetValue(ElementId, out _element))
         {
-            for (var i = 0; i < element.Knoten.Length; i++)
+            for (var i = 0; i < _element.Knoten.Length; i++)
             {
-                if (Modell.Knoten.TryGetValue(element.KnotenIds[i], out knoten)) { }
+                if (Modell.Knoten.TryGetValue(_element.KnotenIds[i], out _knoten)) { }
 
-                //Debug.Assert(node != null, nameof(node) + " != null");
-                if (knoten != null) elementTemperaturen[i] = knoten.Knotenfreiheitsgrade[0];
+                if (_knoten != null) _elementTemperaturen[i] = _knoten.Knotenfreiheitsgrade[0];
             }
 
-            if (material == null) return elementWärmeStatus;
-            var leitfähigkeit = material.MaterialWerte[0];
-            elementWärmeStatus = MatrizenAlgebra.MultTransposed(-leitfähigkeit, Sx, elementTemperaturen);
+            if (_material == null) return elementWärmeStatus;
+            var leitfähigkeit = _material.MaterialWerte[0];
+            elementWärmeStatus = MatrizenAlgebra.MultTransposed(-leitfähigkeit, Sx, _elementTemperaturen);
         }
         else
         {
@@ -106,11 +105,11 @@ public class Element2D3 : AbstraktLinear2D3
     }
     public override Point BerechneSchwerpunkt()
     {
-        if (!Modell.Elemente.TryGetValue(ElementId, out element))
+        if (!Modell.Elemente.TryGetValue(ElementId, out _element))
         {
             throw new ModellAusnahme("Element2D3: " + ElementId + " nicht im Modell gefunden");
         }
-        element.SetzElementReferenzen(Modell);
-        return BerechneSchwerpunkt(element);
+        _element.SetzElementReferenzen(Modell);
+        return BerechneSchwerpunkt(_element);
     }
 }

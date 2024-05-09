@@ -111,14 +111,14 @@ public partial class InstationäreDatenAnzeigen
     private void NeueAnfangstemperatur(object sender, MouseButtonEventArgs e)
     {
         _ = new ZeitAnfangstemperaturNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
     private void AnfangstemperaturZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
         modell.Zeitintegration.Anfangsbedingungen.RemoveAt(removeIndex);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var wärme = new InstationäreDatenAnzeigen(modell);
@@ -136,7 +136,7 @@ public partial class InstationäreDatenAnzeigen
     private void NeueRandtemperatur(object sender, MouseButtonEventArgs e)
     {
         _ = new ZeitRandtemperaturNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //SelectionChanged
@@ -173,7 +173,7 @@ public partial class InstationäreDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeRandbedingung.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
@@ -182,7 +182,7 @@ public partial class InstationäreDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeRandbedingung.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
@@ -191,7 +191,7 @@ public partial class InstationäreDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeRandbedingung.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
@@ -200,7 +200,7 @@ public partial class InstationäreDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeRandbedingung.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
@@ -210,7 +210,7 @@ public partial class InstationäreDatenAnzeigen
     private void NeueKnotentemperatur(object sender, MouseButtonEventArgs e)
     {
         _ = new ZeitKnotentemperaturNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //SelectionChanged
@@ -241,7 +241,7 @@ public partial class InstationäreDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
@@ -250,7 +250,7 @@ public partial class InstationäreDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
@@ -259,7 +259,7 @@ public partial class InstationäreDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
@@ -269,7 +269,7 @@ public partial class InstationäreDatenAnzeigen
     private void NeueElementtemperatur(object sender, MouseButtonEventArgs e)
     {
         _ = new ZeitElementtemperaturNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //SelectionChanged
@@ -277,7 +277,7 @@ public partial class InstationäreDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeElementLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var wärme = new InstationäreDatenAnzeigen(modell);
@@ -288,7 +288,7 @@ public partial class InstationäreDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeElementLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var wärme = new InstationäreDatenAnzeigen(modell);
@@ -298,6 +298,6 @@ public partial class InstationäreDatenAnzeigen
     // ************************* Model wurde verändert ********************************
     private void Model_Changed(object sender, DataGridCellEditEndingEventArgs e)
     {
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
     }
 }

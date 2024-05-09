@@ -8,7 +8,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 public class TransientParser
 {
     private string[] substrings;
-    public bool zeitintegrationDaten;
+    public bool ZeitintegrationDaten;
     public void ParseZeitintegration(string[] lines, FeModell feModell)
     {
         var delimiters = new[] { '\t' };
@@ -48,7 +48,7 @@ public class TransientParser
             var dt = double.Parse(teilStrings[2]);
             var alfa = double.Parse(teilStrings[3]);
             feModell.Zeitintegration = new Zeitintegration(tmax, dt, alfa) { Id = teilStrings[0], VonStationär = false };
-            zeitintegrationDaten = true;
+            ZeitintegrationDaten = true;
             break;
         }
 

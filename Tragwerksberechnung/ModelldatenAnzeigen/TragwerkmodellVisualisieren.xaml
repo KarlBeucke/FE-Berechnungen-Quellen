@@ -20,7 +20,6 @@
                     <ColumnDefinition Width="90" />
                     <ColumnDefinition Width="90" />
                     <ColumnDefinition Width="90" />
-                    <ColumnDefinition Width="90" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40" />
@@ -69,9 +68,8 @@
                     <Button Grid.Column="0" IsDefault="False" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                             Width="70" Click="OnBtnKnotenNeu_Click" Padding="0,-2,0,0" Height="15" 
                             Margin="12,0,0,11" VerticalContentAlignment="Center">Knoten</Button>
-                    <Menu Grid.Column="1" HorizontalAlignment="Center" Height="15"
-                          VerticalAlignment="Center" Width="70" FlowDirection="LeftToRight">
-                        <MenuItem Header="Elemente" Margin ="0,4,0,1"  Height="20" Width="70"
+                    <Menu Grid.Column="1" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight" Margin="0,15,0,12">
+                        <MenuItem Header="Elemente"  Height="18" Width="65"
                                   Padding="5,0,0,0" VerticalAlignment="Center">
                             <MenuItem Header="Element" HorizontalAlignment="Left" Height="20" Width="250" 
                                       Margin="0,0,0,0" Click="MenuBalkenElementNeu"/>
@@ -82,10 +80,10 @@
                                       Margin="0,0,0,0" Click="MenuMaterialNeu"/>
                         </MenuItem>
                     </Menu>
-                    <Menu Grid.Column="2" HorizontalAlignment="Center" Height="15"
-                          VerticalAlignment="Center" Width="70" FlowDirection="LeftToRight">
-                        <MenuItem Header="Lasten" Height="14" Width="70" Margin="0,2,0,0"
-                                  Padding="5,-2,0,0" VerticalAlignment="Top">
+                    <Menu Grid.Column="2" HorizontalAlignment="Center" Height="14"
+                          VerticalAlignment="Bottom" Width="70" FlowDirection="LeftToRight" Margin="0,0,0,12">
+                        <MenuItem Header="Lasten"  Height="17" Width="60"
+                                  Padding="5,0,0,0" VerticalAlignment="Center">
                             <MenuItem Header="Knotenlast" HorizontalAlignment="Left" Height="20" Width="250" 
                                       Margin="0,0,0,0" Click="MenuKnotenlastNeu"/>
                             <MenuItem Header="Linienlast" HorizontalAlignment="Left" Height="20" Width="250" 
@@ -97,24 +95,20 @@
                     <Button Grid.Column="3" IsDefault="False" HorizontalAlignment="Center" VerticalAlignment="Top"
                             Width="82" Click="OnBtnLagerNeu_Click" Padding="0,-2,0,0" Height="15" 
                             Margin="0,14,0,0">Lager</Button>
-                    <Button Grid.Column="4" IsDefault="False" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Width="82" Click="OnBtnZeitintegrationNew_Click" Padding="0,-2,0,0" Height="15" 
-                            Margin="0,14,0,0">Zeitintegration</Button>
-                </Grid>
-
-                <Grid Column="10"  HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" 
-                      Width="90" FlowDirection="LeftToRight" Background="LightCoral">
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Width="82" Click="OnBtnLöschen_Click" Padding="0,-2,0,0" Height="15" 
-                            Margin="0,14,0,0">Löschen</Button>
+                    <Button Grid.Column="4" IsDefault="False" VerticalAlignment="Top" Click="OnBtnZeitintegrationNew_Click" Padding="0,-2,0,0" Height="15" 
+                            Margin="9,14,-9,0">Zeitintegration</Button>
                 </Grid>
             </Grid>
 
             <Grid Row="1">
-                <Canvas x:Name="VisualTragwerkModel" Height="650" Width="1201" ScrollViewer.CanContentScroll="True"
-                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                        MouseLeftButtonDown="OnMouseLeftButtonDown"
-                        MouseRightButtonDown="OnMouseRightButtonDown" Grid.ColumnSpan="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="554*"/>
+                    <ColumnDefinition Width="47*"/>
+                    <ColumnDefinition Width="601*"/>
+                </Grid.ColumnDefinitions>
+                <Canvas x:Name="VisualTragwerkModel" Height="650" Width="1201" Grid.ColumnSpan="3"
+                        ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                        MouseLeftButtonDown="OnMouseLeftButtonDown">
                     <Popup x:Name="MyPopup" Placement="MousePoint">
                         <TextBlock x:Name="MyPopupText" Background="LightBlue" Foreground="Blue" Padding="10"/>
                     </Popup>

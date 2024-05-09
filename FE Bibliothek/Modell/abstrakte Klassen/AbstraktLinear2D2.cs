@@ -5,9 +5,9 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
 {
     public abstract class AbstraktLinear2D2 : Abstrakt2D
     {
-        public double balkenLänge;
-        protected double sin, cos;
-        protected double[,] rotationsMatrix = new double[2, 2];
+        public double BalkenLänge;
+        protected double Sin, Cos;
+        protected readonly double[,] RotationsMatrix = new double[2, 2];
         private double[] Sx { get; set; } = new double[4];
 
         //public double ComputeLength()
@@ -22,16 +22,16 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
             var delx = Knoten[1].Koordinaten[0] - Knoten[0].Koordinaten[0];
             var dely = Knoten[1].Koordinaten[1] - Knoten[0].Koordinaten[1];
             //var angle = Math.Atan2(dely, delx);
-            balkenLänge = Math.Sqrt(delx * delx + dely * dely);
-            sin = dely / balkenLänge;
-            cos = delx / balkenLänge;
-            rotationsMatrix[0, 0] = cos; rotationsMatrix[1, 0] = sin;
-            rotationsMatrix[0, 1] = -sin; rotationsMatrix[1, 1] = cos;
+            BalkenLänge = Math.Sqrt(delx * delx + dely * dely);
+            Sin = dely / BalkenLänge;
+            Cos = delx / BalkenLänge;
+            RotationsMatrix[0, 0] = Cos; RotationsMatrix[1, 0] = Sin;
+            RotationsMatrix[0, 1] = -Sin; RotationsMatrix[1, 1] = Cos;
         }
 
         protected double[] BerechneSx()
         {
-            Sx[0] = -cos; Sx[1] = -sin; Sx[2] = cos; Sx[3] = sin;
+            Sx[0] = -Cos; Sx[1] = -Sin; Sx[2] = Cos; Sx[3] = Sin;
             return Sx;
         }
         public override void SetzElementSystemIndizes()

@@ -39,10 +39,10 @@ public partial class ZeitintegrationNeu
 
         if (modell.Eigenzustand.Eigenwerte == null)
         {
-            if (!StartFenster.berechnet)
+            if (!StartFenster.Berechnet)
             {
                 modellBerechnung.BerechneSystemMatrix();
-                StartFenster.berechnet = true;
+                StartFenster.Berechnet = true;
             }
             modell.Eigenzustand = new Eigenzustände("neu", anzahl);
             modellBerechnung.Eigenzustände();
@@ -98,7 +98,7 @@ public partial class ZeitintegrationNeu
 
             modell.Eigenzustand = new Eigenzustände("eigen", anzahlEigenlösungen);
             modell.Zeitintegration = new Zeitintegration(tmax, dt, alfa) { VonStationär = false };
-            StartFenster.zeitintegrationDaten = true;
+            StartFenster.ZeitintegrationDaten = true;
         }
         else
         {
@@ -114,7 +114,7 @@ public partial class ZeitintegrationNeu
             try { modell.Zeitintegration.Parameter1 = double.Parse(Parameter.Text, CultureInfo.InvariantCulture); }
             catch (FormatException) { _ = MessageBox.Show("parameter alfa has wrong format", "neue Zeitintegration"); return; }
         }
-        StartFenster.wärmeVisual.darstellung.AnfangsbedingungenEntfernen();
+        StartFenster.WärmeVisual.darstellung.AnfangsbedingungenEntfernen();
         anfangstemperaturenNeu?.Close();
         Close();
     }
@@ -132,14 +132,14 @@ public partial class ZeitintegrationNeu
         {
             anfangstemperaturenNeu.KnotenId.Text = "";
             anfangstemperaturenNeu.Anfangstemperatur.Text = "";
-            StartFenster.wärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text = aktuell.ToString(CultureInfo.CurrentCulture);
+            StartFenster.WärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text = aktuell.ToString(CultureInfo.CurrentCulture);
         }
         else
         {
             var knotenwerte = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell - 1];
-            StartFenster.wärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text =
+            StartFenster.WärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text =
                 aktuell.ToString(CultureInfo.CurrentCulture);
-            StartFenster.wärmeVisual.zeitintegrationNeu.Show();
+            StartFenster.WärmeVisual.zeitintegrationNeu.Show();
             if (modell.Zeitintegration.VonStationär)
             {
                 anfangstemperaturenNeu.StationäreLösung.IsChecked = true;
@@ -155,8 +155,8 @@ public partial class ZeitintegrationNeu
                 anfangstemperaturenNeu.KnotenId.Text = knotenwerte.KnotenId;
                 anfangstemperaturenNeu.Anfangstemperatur.Text = knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
                 var anf = aktuell.ToString("D");
-                StartFenster.wärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text = anf;
-                StartFenster.wärmeVisual.darstellung.AnfangsbedingungenZeichnen(knotenwerte.KnotenId, knotenwerte.Werte[0], anf);
+                StartFenster.WärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text = anf;
+                StartFenster.WärmeVisual.darstellung.AnfangsbedingungenZeichnen(knotenwerte.KnotenId, knotenwerte.Werte[0], anf);
             }
         }
     }

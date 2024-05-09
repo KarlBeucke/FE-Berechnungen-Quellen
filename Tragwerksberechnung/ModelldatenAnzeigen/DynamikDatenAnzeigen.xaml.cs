@@ -77,14 +77,14 @@ public partial class DynamikDatenAnzeigen
     private void NeueDämpfungsraten(object sender, MouseButtonEventArgs e)
     {
         _ = new ZeitDämpfungsratenNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
     private void DämpfungZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
         modell.Eigenzustand.DämpfungsRaten.RemoveAt(removeIndex);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var tragwerk = new DynamikDatenAnzeigen(modell);
@@ -102,14 +102,14 @@ public partial class DynamikDatenAnzeigen
     private void NeueKnotenanfangswerte(object sender, MouseButtonEventArgs e)
     {
         _ = new ZeitKnotenanfangswerteNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
     private void AnfangswerteZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
         modell.Zeitintegration.Anfangsbedingungen.RemoveAt(removeIndex);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var tragwerk = new DynamikDatenAnzeigen(modell);
@@ -127,7 +127,7 @@ public partial class DynamikDatenAnzeigen
     private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
     {
         _ = new ZeitKnotenlastNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
@@ -135,7 +135,7 @@ public partial class DynamikDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
         var tragwerk = new DynamischeErgebnisseAnzeigen(modell);
         tragwerk.Show();
@@ -144,7 +144,7 @@ public partial class DynamikDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
         var tragwerk = new DynamischeErgebnisseAnzeigen(modell);
         tragwerk.Show();
@@ -153,7 +153,7 @@ public partial class DynamikDatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
         var tragwerk = new DynamischeErgebnisseAnzeigen(modell);
         tragwerk.Show();
@@ -184,6 +184,6 @@ public partial class DynamikDatenAnzeigen
     // ************************* Modell muss neu berechnet werden ****************
     private void Model_Changed(object sender, DataGridCellEditEndingEventArgs e)
     {
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
     }
 }

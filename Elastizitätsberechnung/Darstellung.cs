@@ -16,20 +16,17 @@ namespace FE_Berechnungen.Elastizitätsberechnung;
 
 public class Darstellung
 {
-    private readonly FeModell modell;
-    private Knoten knoten;
-    private readonly Canvas visualErgebnisse;
-    private double screenH, screenV;
-    private double minX, maxX, minY, maxY;
-    private double auflösungH;
-    private double lastAuflösung;
+    private readonly FeModell _modell;
+    private Knoten _knoten;
+    private readonly Canvas _visualErgebnisse;
+    private int _randOben = 60;
+    private double _screenH, _screenV, _minX, _maxX, _minY, _maxY;
+    private double _auflösung, _auflösungH, _lastAuflösung;
     private const double Eps = 1.0E-10;
-    private int randOben = 60;
     private const int RandLinks = 60;
     private const double PlazierungText = 45;
-    private double auflösung;
-    public double überhöhungVerformung = 1;
-    private readonly double maxScreenLength = 40;
+    public double ÜberhöhungVerformung = 1;
+    private const double MaxScreenLength = 40;
     public List<object> ElementIDs { get; }
     public List<object> KnotenIDs { get; }
     public List<object> Verformungen { get; }
@@ -37,62 +34,62 @@ public class Darstellung
     public List<object> LagerDarstellung { get; }
     public List<object> Spannungen { get; }
     public List<object> Reaktionen { get; }
-    private double vektorskalierung;
+    private double _vektorskalierung;
 
     public Darstellung(FeModell feModell, Canvas visual)
     {
-        modell = feModell;
-        visualErgebnisse = visual;
-        ElementIDs = new List<object>();
-        KnotenIDs = new List<object>();
-        Verformungen = new List<object>();
-        LastVektoren = new List<object>();
-        LagerDarstellung = new List<object>();
-        Spannungen = new List<object>();
-        Reaktionen = new List<object>();
+        _modell = feModell;
+        _visualErgebnisse = visual;
+        ElementIDs = [];
+        KnotenIDs = [];
+        Verformungen = [];
+        LastVektoren = [];
+        LagerDarstellung = [];
+        Spannungen = [];
+        Reaktionen = [];
         FestlegungAuflösung();
     }
     private void FestlegungAuflösung()
     {
-        screenH = visualErgebnisse.ActualWidth;
-        screenV = visualErgebnisse.ActualHeight;
+        _screenH = _visualErgebnisse.ActualWidth;
+        _screenV = _visualErgebnisse.ActualHeight;
 
         var x = new List<double>();
         var y = new List<double>();
-        foreach (var item in modell.Knoten)
+        foreach (var item in _modell.Knoten)
         {
             x.Add(item.Value.Koordinaten[0]);
-            maxX = x.Max(); minX = x.Min();
+            _maxX = x.Max(); _minX = x.Min();
             y.Add(item.Value.Koordinaten[1]);
-            maxY = y.Max(); minY = y.Min();
+            _maxY = y.Max(); _minY = y.Min();
         }
 
-        var delta = Math.Abs(maxX - minX);
+        var delta = Math.Abs(_maxX - _minX);
         if (delta < 1)
         {
-            auflösungH = screenH - 5 * RandLinks;
+            _auflösungH = _screenH - 5 * RandLinks;
         }
         else
         {
-            auflösungH = (screenH - 5 * RandLinks) / delta;
+            _auflösungH = (_screenH - 5 * RandLinks) / delta;
         }
 
-        delta = Math.Abs(maxY - minY);
+        delta = Math.Abs(_maxY - _minY);
         if (delta < 1)
         {
-            auflösung = screenV - 5 * randOben;
-            randOben = (int)(0.5 * screenV);
+            _auflösung = _screenV - 5 * _randOben;
+            _randOben = (int)(0.5 * _screenV);
         }
         else
         {
-            auflösung = (screenV - 5 * randOben) / delta;
+            _auflösung = (_screenV - 5 * _randOben) / delta;
         }
-        if (auflösungH < auflösung) auflösung = auflösungH;
+        if (_auflösungH < _auflösung) _auflösung = _auflösungH;
     }
 
     public void KnotenTexte()
     {
-        foreach (var item in modell.Knoten)
+        foreach (var item in _modell.Knoten)
         {
             var id = new TextBlock
             {
@@ -101,17 +98,17 @@ public class Darstellung
                 Text = item.Key,
                 Foreground = Red
             };
-            SetTop(id, (-item.Value.Koordinaten[1] + maxY) * auflösung + PlazierungText);
-            SetLeft(id, item.Value.Koordinaten[0] * auflösung + RandLinks);
-            visualErgebnisse.Children.Add(id);
+            SetTop(id, (-item.Value.Koordinaten[1] + _maxY) * _auflösung + PlazierungText);
+            SetLeft(id, item.Value.Koordinaten[0] * _auflösung + RandLinks);
+            _visualErgebnisse.Children.Add(id);
             KnotenIDs.Add(id);
         }
     }
     public void ElementTexte()
     {
-        foreach (var item in modell.Elemente)
+        foreach (var item in _modell.Elemente)
         {
-            Abstrakt2D element = (Abstrakt2D)item.Value;
+            var element = (Abstrakt2D)item.Value;
             var cg = element.BerechneSchwerpunkt();
             var id = new TextBlock
             {
@@ -120,16 +117,16 @@ public class Darstellung
                 Text = item.Key,
                 Foreground = Blue
             };
-            SetTop(id, (-cg.Y + maxY) * auflösung + PlazierungText);
-            SetLeft(id, cg.X * auflösung + RandLinks);
-            visualErgebnisse.Children.Add(id);
+            SetTop(id, (-cg.Y + _maxY) * _auflösung + PlazierungText);
+            SetLeft(id, cg.X * _auflösung + RandLinks);
+            _visualErgebnisse.Children.Add(id);
             ElementIDs.Add(id);
         }
     }
 
     public void ElementeZeichnen()
     {
-        foreach (var item in modell.Elemente)
+        foreach (var item in _modell.Elemente)
         {
             AktElementZeichnen(item.Value);
         }
@@ -146,14 +143,14 @@ public class Darstellung
             StrokeThickness = 2
         };
         SetLeft(elementPolygon, RandLinks);
-        SetTop(elementPolygon, randOben);
-        visualErgebnisse.Children.Add(elementPolygon);
+        SetTop(elementPolygon, _randOben);
+        _visualErgebnisse.Children.Add(elementPolygon);
     }
     private void AktElementZeichnen(AbstraktElement element)
     {
         // Knoten am Elementanfang
-        if (modell.Knoten.TryGetValue(element.KnotenIds[0], out var node)) { }
-        var startPunkt = TransformKnoten(node, auflösung, maxY);
+        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out var node)) { }
+        var startPunkt = TransformKnoten(node, _auflösung, _maxY);
 
         switch (element)
         {
@@ -164,8 +161,8 @@ public class Darstellung
                     var elementPointCollection = new PointCollection { startPunkt };
                     for (var i = 1; i < element.KnotenIds.Length; i++)
                     {
-                        if (modell.Knoten.TryGetValue(element.KnotenIds[i], out node)) { }
-                        var endPunkt = TransformKnoten(node, auflösung, maxY);
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out node)) { }
+                        var endPunkt = TransformKnoten(node, _auflösung, _maxY);
                         elementPointCollection.Add(endPunkt);
                     }
                     PolygonZeichnen(element, elementPointCollection);
@@ -176,13 +173,13 @@ public class Darstellung
 
     public void VerformteGeometrie()
     {
-        if (!StartFenster.berechnet)
+        if (!StartFenster.Berechnet)
         {
-            var analysis = new Berechnung(modell);
+            var analysis = new Berechnung(_modell);
             analysis.BerechneSystemMatrix();
             analysis.BerechneSystemVektor();
             analysis.LöseGleichungen();
-            StartFenster.berechnet = true;
+            StartFenster.Berechnet = true;
         }
         //int überhöhung = 1;
         //const int rotationÜberhöhung = 1;
@@ -190,9 +187,9 @@ public class Darstellung
 
         IEnumerable<AbstraktElement> Elements()
         {
-            foreach (var item in modell.Elemente)
+            foreach (var item in _modell.Elemente)
             {
-                if (item.Value is AbstraktElement element)
+                if (item.Value is { } element)
                 {
                     yield return element;
                 }
@@ -207,14 +204,14 @@ public class Darstellung
             {
                 case Element2D3 _:
                     {
-                        if (modell.Knoten.TryGetValue(element.KnotenIds[0], out knoten)) { }
-                        var start = TransformVerformtenKnoten(knoten, auflösung, maxY);
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten)) { }
+                        var start = TransformVerformtenKnoten(_knoten, _auflösung, _maxY);
                         pathFigure.StartPoint = start;
 
                         for (var i = 1; i < element.KnotenIds.Length; i++)
                         {
-                            if (modell.Knoten.TryGetValue(element.KnotenIds[i], out knoten)) { }
-                            var end = TransformVerformtenKnoten(knoten, auflösung, maxY);
+                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten)) { }
+                            var end = TransformVerformtenKnoten(_knoten, _auflösung, _maxY);
                             pathFigure.Segments.Add(new LineSegment(end, true));
                         }
                         break;
@@ -236,9 +233,9 @@ public class Darstellung
         };
         // setz oben/links Position zum Zeichnen auf dem Canvas
         SetLeft(path, RandLinks);
-        SetTop(path, randOben);
+        SetTop(path, _randOben);
         // zeichne Shape
-        visualErgebnisse.Children.Add(path);
+        _visualErgebnisse.Children.Add(path);
         Verformungen.Add(path);
     }
 
@@ -250,26 +247,26 @@ public class Darstellung
         // Knotenlasten
         double maxLastWert = 1;
         const int maxLastScreen = 50;
-        foreach (var item in modell.Lasten)
+        foreach (var item in _modell.Lasten)
         {
             last = item.Value;
             if (Math.Abs(last.Lastwerte[0]) > maxLastWert) maxLastWert = Math.Abs(last.Lastwerte[0]);
             if (Math.Abs(last.Lastwerte[1]) > maxLastWert) maxLastWert = Math.Abs(last.Lastwerte[1]);
         }
-        foreach (var item in modell.PunktLasten)
+        foreach (var item in _modell.PunktLasten)
         {
             last = item.Value;
             if (Math.Abs(last.Lastwerte[0]) > maxLastWert) maxLastWert = Math.Abs(last.Lastwerte[0]);
             if (Math.Abs(last.Lastwerte[1]) > maxLastWert) maxLastWert = Math.Abs(last.Lastwerte[1]);
         }
-        foreach (var linienLast in modell.ElementLasten.Select(item => (AbstraktLinienlast)item.Value))
+        foreach (var linienLast in _modell.ElementLasten.Select(item => (AbstraktLinienlast)item.Value))
         {
             if (Math.Abs(linienLast.Lastwerte[0]) > maxLastWert) maxLastWert = Math.Abs(linienLast.Lastwerte[0]);
             if (Math.Abs(linienLast.Lastwerte[1]) > maxLastWert) maxLastWert = Math.Abs(linienLast.Lastwerte[1]);
         }
-        lastAuflösung = maxLastScreen / maxLastWert;
+        _lastAuflösung = maxLastScreen / maxLastWert;
 
-        foreach (var item in modell.Lasten)
+        foreach (var item in _modell.Lasten)
         {
             last = item.Value;
             var pathGeometry = KnotenlastZeichnen(last);
@@ -283,10 +280,10 @@ public class Darstellung
             LastVektoren.Add(path);
 
             SetLeft(path, RandLinks);
-            SetTop(path, randOben);
-            visualErgebnisse.Children.Add(path);
+            SetTop(path, _randOben);
+            _visualErgebnisse.Children.Add(path);
         }
-        foreach (var item in modell.ElementLasten)
+        foreach (var item in _modell.ElementLasten)
         {
             var linienlast = (AbstraktLinienlast)item.Value;
             var pathGeometry = LinienlastZeichnen(linienlast);
@@ -305,8 +302,8 @@ public class Darstellung
             LastVektoren.Add(path);
 
             SetLeft(path, RandLinks);
-            SetTop(path, randOben);
-            visualErgebnisse.Children.Add(path);
+            SetTop(path, _randOben);
+            _visualErgebnisse.Children.Add(path);
         }
     }
     private PathGeometry KnotenlastZeichnen(AbstraktLast knotenlast)
@@ -315,15 +312,15 @@ public class Darstellung
         var pathFigure = new PathFigure();
         const int lastPfeilGroesse = 10;
 
-        if (modell.Knoten.TryGetValue(knotenlast.KnotenId, out var lastKnoten)) { }
+        if (_modell.Knoten.TryGetValue(knotenlast.KnotenId, out var lastKnoten)) { }
 
         if (lastKnoten != null)
         {
-            var endPoint = new Point(lastKnoten.Koordinaten[0] * auflösung - knotenlast.Lastwerte[0] * lastAuflösung,
-                (-lastKnoten.Koordinaten[1] + maxY) * auflösung + knotenlast.Lastwerte[1] * lastAuflösung);
+            var endPoint = new Point(lastKnoten.Koordinaten[0] * _auflösung - knotenlast.Lastwerte[0] * _lastAuflösung,
+                (-lastKnoten.Koordinaten[1] + _maxY) * _auflösung + knotenlast.Lastwerte[1] * _lastAuflösung);
             pathFigure.StartPoint = endPoint;
 
-            var startPoint = TransformKnoten(lastKnoten, auflösung, maxY);
+            var startPoint = TransformKnoten(lastKnoten, _auflösung, _maxY);
             pathFigure.Segments.Add(new LineSegment(startPoint, true));
 
             var vector = startPoint - endPoint;
@@ -370,18 +367,18 @@ public class Darstellung
         var pathFigure = new PathFigure();
         const int lastPfeilGroesse = 8;
         const int linienkraftÜberhöhung = 1;
-        var linienLastAuflösung = linienkraftÜberhöhung * lastAuflösung;
+        var linienLastAuflösung = linienkraftÜberhöhung * _lastAuflösung;
 
-        last.SetzElementlastReferenzen(modell);
-        if (modell.Elemente.TryGetValue(linienlast.ElementId, out var element)) { }
+        last.SetzElementlastReferenzen(_modell);
+        if (_modell.Elemente.TryGetValue(linienlast.ElementId, out var element)) { }
         if (element == null) return pathGeometry;
 
-        if (modell.Knoten.TryGetValue(element.KnotenIds[0], out var startKnoten)) { }
-        var startPunkt = TransformKnoten(startKnoten, auflösung, maxY);
+        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out var startKnoten)) { }
+        var startPunkt = TransformKnoten(startKnoten, _auflösung, _maxY);
 
         // zweiter Elementknoten 
-        if (modell.Knoten.TryGetValue(element.KnotenIds[1], out var endKnoten)) { }
-        var endPunkt = TransformKnoten(endKnoten, auflösung, maxY);
+        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out var endKnoten)) { }
+        var endPunkt = TransformKnoten(endKnoten, _auflösung, _maxY);
         var vector = endPunkt - startPunkt;
 
         pathFigure.StartPoint = startPunkt;
@@ -427,13 +424,13 @@ public class Darstellung
 
     public void FesthaltungenZeichnen()
     {
-        foreach (var item in modell.Randbedingungen)
+        foreach (var item in _modell.Randbedingungen)
         {
             var lager = item.Value;
             var pathGeometry = new PathGeometry();
 
-            if (modell.Knoten.TryGetValue(lager.KnotenId, out var lagerKnoten)) { }
-            var drehPunkt = TransformKnoten(lagerKnoten, auflösung, maxY);
+            if (_modell.Knoten.TryGetValue(lager.KnotenId, out var lagerKnoten)) { }
+            var drehPunkt = TransformKnoten(lagerKnoten, _auflösung, _maxY);
 
             switch (lager.Typ)
             {
@@ -443,7 +440,7 @@ public class Darstellung
                     {
                         pathGeometry = EineFesthaltungZeichnen(lagerKnoten);
                         double drehWinkel = 45;
-                        if (lagerKnoten != null && (lagerKnoten.Koordinaten[0] - minX) < (maxX - lagerKnoten.Koordinaten[0])) drehWinkel = -45;
+                        if (lagerKnoten != null && (lagerKnoten.Koordinaten[0] - _minX) < (_maxX - lagerKnoten.Koordinaten[0])) drehWinkel = -45;
                         pathGeometry.Transform = new RotateTransform(drehWinkel, drehPunkt.X, drehPunkt.Y);
                         break;
                     }
@@ -464,9 +461,9 @@ public class Darstellung
 
             // setz oben/links Position zum Zeichnen auf dem Canvas
             SetLeft(path, RandLinks);
-            SetTop(path, randOben);
+            SetTop(path, _randOben);
             // zeichne Shape
-            visualErgebnisse.Children.Add(path);
+            _visualErgebnisse.Children.Add(path);
         }
     }
     private PathGeometry EineFesthaltungZeichnen(Knoten lagerKnoten)
@@ -475,7 +472,7 @@ public class Darstellung
         var pathFigure = new PathFigure();
         const int lagerSymbol = 20;
 
-        var startPoint = TransformKnoten(lagerKnoten, auflösung, maxY);
+        var startPoint = TransformKnoten(lagerKnoten, _auflösung, _maxY);
         pathFigure.StartPoint = startPoint;
 
         var endPoint = new Point(startPoint.X - lagerSymbol, startPoint.Y + lagerSymbol);
@@ -498,7 +495,7 @@ public class Darstellung
         var pathFigure = new PathFigure();
         const int lagerSymbol = 20;
 
-        var startPoint = TransformKnoten(lagerKnoten, auflösung, maxY);
+        var startPoint = TransformKnoten(lagerKnoten, _auflösung, _maxY);
         pathFigure.StartPoint = startPoint;
 
         var endPoint = new Point(startPoint.X - lagerSymbol, startPoint.Y + lagerSymbol);
@@ -532,18 +529,18 @@ public class Darstellung
     {
         double[] elementSpannung;
         double maxVektor = 0;
-        foreach (var abstract2D in modell.Elemente.Select(item => (Abstrakt2D)item.Value))
+        foreach (var abstract2D in _modell.Elemente.Select(item => (Abstrakt2D)item.Value))
         {
             elementSpannung = abstract2D.BerechneZustandsvektor();
             maxVektor = elementSpannung.Select(Math.Abs).Prepend(maxVektor).Max();
         }
-        vektorskalierung = maxScreenLength / maxVektor;
+        _vektorskalierung = MaxScreenLength / maxVektor;
 
-        foreach (var abstract2D in modell.Elemente.Select(item => (Abstrakt2D)item.Value))
+        foreach (var abstract2D in _modell.Elemente.Select(item => (Abstrakt2D)item.Value))
         {
             elementSpannung = abstract2D.BerechneZustandsvektor();
-            var sigxx = elementSpannung[0] * vektorskalierung;
-            var sigyy = elementSpannung[1] * vektorskalierung;
+            var sigxx = elementSpannung[0] * _vektorskalierung;
+            var sigyy = elementSpannung[1] * _vektorskalierung;
             var cg = abstract2D.BerechneSchwerpunkt();
             // zeichne den resultierenden Vektor mit seinem Mittelpunkt im Elementschwerpunkt
             // füge am Endpunkt Pfeilspitzen an und füge Wärmeflusspfeil zur pathGeometry hinzu
@@ -552,7 +549,7 @@ public class Darstellung
     }
     private void SpannungenElemente(Point cg, double sigxx, double sigyy)
     {
-        var mittelpunkt = new Point(cg.X * auflösung, (-cg.Y + maxY) * auflösung);
+        var mittelpunkt = new Point(cg.X * _auflösung, (-cg.Y + _maxY) * _auflösung);
 
         // Spannungspfeil in x-Richtung
         var farbe = Black;
@@ -576,9 +573,9 @@ public class Darstellung
 
             // setz oben/links Position zum Zeichnen auf dem Canvas
             SetLeft(path, RandLinks);
-            SetTop(path, randOben);
+            SetTop(path, _randOben);
             // zeichne Shape
-            visualErgebnisse.Children.Add(path);
+            _visualErgebnisse.Children.Add(path);
         }
 
         // Spannungspfeil in y-Richtung
@@ -604,9 +601,9 @@ public class Darstellung
 
             // setz oben/links Position zum Zeichnen auf dem Canvas
             SetLeft(path, RandLinks);
-            SetTop(path, randOben);
+            SetTop(path, _randOben);
             // zeichne Shape
-            visualErgebnisse.Children.Add(path);
+            _visualErgebnisse.Children.Add(path);
         }
     }
     private static PathGeometry Spannungspfeil(Point punkt, double länge, double winkel)
@@ -629,31 +626,31 @@ public class Darstellung
         double[] reaktionen;
         double maxVektor = 0;
         var knotenIds = new List<string>();
-        foreach (var randbedingung in modell.Randbedingungen.Select(item => item.Value))
+        foreach (var randbedingung in _modell.Randbedingungen.Select(item => item.Value))
         {
             if (knotenIds.Contains(randbedingung.KnotenId)) break;
             knotenIds.Add(randbedingung.KnotenId);
-            if (!modell.Knoten.TryGetValue(randbedingung.KnotenId, out knoten)) break;
-            reaktionen = knoten.Reaktionen;
+            if (!_modell.Knoten.TryGetValue(randbedingung.KnotenId, out _knoten)) break;
+            reaktionen = _knoten.Reaktionen;
             maxVektor = reaktionen.Select(Math.Abs).Prepend(maxVektor).Max();
         }
 
         const double maxPfeillänge = 50;
-        vektorskalierung = maxPfeillänge / maxVektor;
+        _vektorskalierung = maxPfeillänge / maxVektor;
 
-        foreach (var randbedingung in modell.Randbedingungen.Select(item => item.Value))
+        foreach (var randbedingung in _modell.Randbedingungen.Select(item => item.Value))
         {
-            if (!modell.Knoten.TryGetValue(randbedingung.KnotenId, out knoten)) break;
-            reaktionen = knoten.Reaktionen;
-            var kx = reaktionen[0] * vektorskalierung;
-            var ky = reaktionen[1] * vektorskalierung;
-            knoten = randbedingung.Knoten;
-            KnotenReaktionen(knoten, kx, ky);
+            if (!_modell.Knoten.TryGetValue(randbedingung.KnotenId, out _knoten)) break;
+            reaktionen = _knoten.Reaktionen;
+            var kx = reaktionen[0] * _vektorskalierung;
+            var ky = reaktionen[1] * _vektorskalierung;
+            _knoten = randbedingung.Knoten;
+            KnotenReaktionen(_knoten, kx, ky);
         }
     }
     private void KnotenReaktionen(Knoten lagerKnoten, double kx, double ky)
     {
-        var punkt = new Point(lagerKnoten.Koordinaten[0] * auflösung, (-lagerKnoten.Koordinaten[1] + maxY) * auflösung);
+        var punkt = new Point(lagerKnoten.Koordinaten[0] * _auflösung, (-lagerKnoten.Koordinaten[1] + _maxY) * _auflösung);
         var farbe = Black;
 
         // Reaktionspfeil in x-Richtung
@@ -675,9 +672,9 @@ public class Darstellung
 
             // setz oben/links Position zum Zeichnen auf dem Canvas
             SetLeft(path, RandLinks);
-            SetTop(path, randOben);
+            SetTop(path, _randOben);
             // zeichne Shape
-            visualErgebnisse.Children.Add(path);
+            _visualErgebnisse.Children.Add(path);
         }
 
         // Reaktionspfeil in y-Richtung
@@ -704,9 +701,9 @@ public class Darstellung
 
             // setz oben/links Position zum Zeichnen auf dem Canvas
             SetLeft(path, RandLinks);
-            SetTop(path, randOben);
+            SetTop(path, _randOben);
             // zeichne Shape
-            visualErgebnisse.Children.Add(path);
+            _visualErgebnisse.Children.Add(path);
         }
     }
     private static PathGeometry Reaktionspfeil(Point punkt, double länge)
@@ -737,7 +734,7 @@ public class Darstellung
     private Point TransformVerformtenKnoten(Knoten node, double resolution, double max)
     {
         // eingabeEinheit z.B. in m, verformungsEinheit z.B. cm --> Überhöhung
-        return new Point((node.Koordinaten[0] + node.Knotenfreiheitsgrade[0] * überhöhungVerformung) * resolution,
-            (-node.Koordinaten[1] - node.Knotenfreiheitsgrade[1] * überhöhungVerformung + max) * resolution);
+        return new Point((node.Koordinaten[0] + node.Knotenfreiheitsgrade[0] * ÜberhöhungVerformung) * resolution,
+            (-node.Koordinaten[1] - node.Knotenfreiheitsgrade[1] * ÜberhöhungVerformung + max) * resolution);
     }
 }

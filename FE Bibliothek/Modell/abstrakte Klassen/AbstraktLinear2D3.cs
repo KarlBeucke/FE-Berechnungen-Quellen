@@ -5,17 +5,17 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
 {
     public abstract class AbstraktLinear2D3 : Abstrakt2D
     {
-        protected readonly double[,] xzu = new double[2, 2];   // dx = Xzu * dzu
+        protected readonly double[,] Xzu = new double[2, 2];   // dx = Xzu * dzu
         protected double[,] Sx { get; set; } = new double[3, 2];
 
         // ... berechne Geometrie ..........................................
         public void BerechneGeometrie()
         {
-            xzu[0, 0] = Knoten[0].Koordinaten[0] - Knoten[2].Koordinaten[0];
-            xzu[0, 1] = Knoten[1].Koordinaten[0] - Knoten[2].Koordinaten[0];
-            xzu[1, 0] = Knoten[0].Koordinaten[1] - Knoten[2].Koordinaten[1];
-            xzu[1, 1] = Knoten[1].Koordinaten[1] - Knoten[2].Koordinaten[1];
-            Determinant = xzu[0, 0] * xzu[1, 1] - xzu[0, 1] * xzu[1, 0];
+            Xzu[0, 0] = Knoten[0].Koordinaten[0] - Knoten[2].Koordinaten[0];
+            Xzu[0, 1] = Knoten[1].Koordinaten[0] - Knoten[2].Koordinaten[0];
+            Xzu[1, 0] = Knoten[0].Koordinaten[1] - Knoten[2].Koordinaten[1];
+            Xzu[1, 1] = Knoten[1].Koordinaten[1] - Knoten[2].Koordinaten[1];
+            Determinant = Xzu[0, 0] * Xzu[1, 1] - Xzu[0, 1] * Xzu[1, 0];
 
             if (Math.Abs(Determinant) < double.Epsilon)
                 throw new ModellAusnahme("AbstractLinear2D3: *** Fehler!!! *** Fläche = 0 in Element " + ElementId);
@@ -27,13 +27,13 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
 
         private double[,] BerechneSx()
         {
-            Sx[0, 0] = xzu[1, 1] / Determinant; Sx[0, 1] = -xzu[0, 1] / Determinant;
-            Sx[1, 0] = -xzu[1, 0] / Determinant; Sx[1, 1] = xzu[0, 0] / Determinant;
-            Sx[2, 0] = (xzu[1, 0] - xzu[1, 1]) / Determinant; Sx[2, 1] = (xzu[0, 1] - xzu[0, 0]) / Determinant;
+            Sx[0, 0] = Xzu[1, 1] / Determinant; Sx[0, 1] = -Xzu[0, 1] / Determinant;
+            Sx[1, 0] = -Xzu[1, 0] / Determinant; Sx[1, 1] = Xzu[0, 0] / Determinant;
+            Sx[2, 0] = (Xzu[1, 0] - Xzu[1, 1]) / Determinant; Sx[2, 1] = (Xzu[0, 1] - Xzu[0, 0]) / Determinant;
             return Sx;
         }
 
-        public Point BerechneSchwerpunkt(AbstraktElement element)
+        public static Point BerechneSchwerpunkt(AbstraktElement element)
         {
             var cg = new Point();
             var nodes = element.Knoten;

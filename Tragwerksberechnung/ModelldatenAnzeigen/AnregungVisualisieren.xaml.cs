@@ -34,7 +34,7 @@ public partial class AnregungVisualisieren
     {
         const string inputDirectory = "\\FE-Berechnungen-App\\input\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
         // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(tmax/dt)+1
-        werte = StartFenster.modellBerechnung.AusDatei(inputDirectory);
+        werte = StartFenster.ModellBerechnung.AusDatei(inputDirectory);
         anregungMax = werte.Max();
         anregungMin = -anregungMax;
 

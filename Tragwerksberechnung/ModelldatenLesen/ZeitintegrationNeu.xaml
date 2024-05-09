@@ -53,7 +53,7 @@
                  MouseDoubleClick="DämpfungsratenNext"/>
         <TextBox Grid.Row="2" FontSize="6" Padding="0,0,0,0"
                  BorderThickness="0,0,0,0"
-                 Text = "Doppelclick für Traversieren" Margin="0,30,0,3" Grid.Column="1" HorizontalAlignment="Center" Width="76"/>
+                 Text = "Doppelklick für Traversieren" Margin="0,30,0,3" Grid.Column="1" HorizontalAlignment="Center" Width="76"/>
         <TextBox Grid.Row="2" FontSize="6" Padding="0,0,0,0" BorderThickness="0,0,0,0"
                  Text = "aller Dämpfungsraten" Margin="8,38,0,2" Grid.Column="1" HorizontalAlignment="Left" Width="64"/>
 
@@ -86,7 +86,7 @@
         <TextBox Name="Theta" Grid.Row="4" Grid.Column="1" Margin="15,0,4,0" Height="20" VerticalAlignment="Center"/>
 
         <CheckBox x:Name="Taylor" Grid.Row="5" Grid.Column="0" Margin="10,8,6,0" VerticalAlignment="Top" 
-                  Checked="Taylor_OnChecked" Height="15">α Mehod, Parameter  (-&#8531; &#8804; α &#8804; 0)</CheckBox>
+                  Checked="Taylor_OnChecked" Height="15">α Method, Parameter  (-&#8531; &#8804; α &#8804; 0)</CheckBox>
         <Label Grid.Row="5" Grid.Column="0" Margin="31,26,6,8" FontSize="8" 
                Padding="0,0,0,0" Content="γ = (&#0189;-α) und β = &#0188;*(1-α)&#178;"/>
         <Label Grid.Row="5" Grid.Column="0" Margin="30,38,61,47" FontSize="8" Height="15"
@@ -113,7 +113,7 @@
         <RichTextBox Grid.Row="6" Grid.Column="1" Margin="0,28,0,5" BorderThickness="0,0,0,0" 
                      HorizontalAlignment="Center" Width="70" >
             <FlowDocument>
-                <Paragraph FontSize="6" FontFamily="Segoe">Doppelclick für
+                <Paragraph FontSize="6" FontFamily="Segoe">Doppelklick für
                     <LineBreak /> T
                     <Run BaselineAlignment="Subscript" FontSize="6">min</Run>
                     in Lösung
@@ -133,7 +133,7 @@
                  MouseDoubleClick="AnfangsbedingungNext"/>
         <TextBox Grid.Row="7" Grid.Column="1"  Margin="0,40,0,0" Height="13" VerticalAlignment="Top"
                  FontSize="6" Padding="0,0,0,0" HorizontalAlignment="Center" Width="78"
-                 Text = "Doppelclick für Traversieren" BorderThickness="0,0,0,0"/>
+                 Text = "Doppelklick für Traversieren" BorderThickness="0,0,0,0"/>
         <TextBox Grid.Row="7" FontSize="6" Padding="0,0,0,0" BorderThickness="0,0,0,0"
                  Text = "aller Anfangsbedingungen" Margin="0,47,0,2" Grid.Column="1" HorizontalAlignment="Center" Width="64"/>
 

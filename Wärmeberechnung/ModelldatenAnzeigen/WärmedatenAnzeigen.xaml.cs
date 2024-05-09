@@ -36,7 +36,7 @@ public partial class WärmedatenAnzeigen
     private void NeuerKnoten(object sender, MouseButtonEventArgs e)
     {
         _ = new KnotenNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
@@ -44,7 +44,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Knoten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -59,14 +59,14 @@ public partial class WärmedatenAnzeigen
         removeKey = knoten.Id;
         if (letzterKnoten != null)
         {
-            StartFenster.wärmeVisual.VisualWärmeModell.Children.Remove(letzterKnoten);
+            StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letzterKnoten);
         }
-        letzterKnoten = StartFenster.wärmeVisual.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        letzterKnoten = StartFenster.WärmeVisual.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
     //LostFocus
     private void KeinKnotenSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.wärmeVisual.VisualWärmeModell.Children.Remove(letzterKnoten);
+        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letzterKnoten);
     }
 
     private void Elemente_Loaded(object sender, RoutedEventArgs e)
@@ -80,7 +80,7 @@ public partial class WärmedatenAnzeigen
     private void NeuesElement(object sender, MouseButtonEventArgs e)
     {
         _ = new ElementNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
@@ -88,7 +88,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Elemente.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -103,14 +103,14 @@ public partial class WärmedatenAnzeigen
         removeKey = element.ElementId;
         if (letztesElement != null)
         {
-            StartFenster.wärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
+            StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
         }
-        letztesElement = StartFenster.wärmeVisual.darstellung.ElementFillZeichnen((Abstrakt2D)element,
+        letztesElement = StartFenster.WärmeVisual.darstellung.ElementFillZeichnen((Abstrakt2D)element,
             Brushes.Black, Colors.Green, .2, 2);
     }
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.wärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
+        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
     }
 
     private void Material_Loaded(object sender, RoutedEventArgs e)
@@ -131,7 +131,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Material.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -155,7 +155,7 @@ public partial class WärmedatenAnzeigen
     private void NeueRandbedingung(object sender, MouseButtonEventArgs e)
     {
         _ = new RandbdingungNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
@@ -163,7 +163,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Randbedingungen.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -187,7 +187,7 @@ public partial class WärmedatenAnzeigen
     private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
     {
         _ = new KnotenlastNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
@@ -195,7 +195,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Lasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -219,7 +219,7 @@ public partial class WärmedatenAnzeigen
     private void NeueLinienlast(object sender, MouseButtonEventArgs e)
     {
         _ = new LinienlastNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
@@ -227,7 +227,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.LinienLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -251,7 +251,7 @@ public partial class WärmedatenAnzeigen
     private void NeueElementlast(object sender, MouseButtonEventArgs e)
     {
         _ = new ElementlastNeu(modell);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
     }
     //UnloadingRow
@@ -259,7 +259,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ElementLasten.Remove(removeKey);
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -276,7 +276,7 @@ public partial class WärmedatenAnzeigen
 
     private void Model_Changed(object sender, DataGridCellEditEndingEventArgs e)
     {
-        StartFenster.berechnet = false;
+        StartFenster.Berechnet = false;
     }
 
     //private void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)

@@ -452,7 +452,7 @@ namespace FEBibliothek.Modell
                         case 0:
                             {
                                 // Datei einlesen
-                                const string inputDirectory = "\\FE-Berechnungen-App\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                                const string inputDirectory = "\\FE-Berechnungen\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
                                 const int spalte = -1;
                                 AusDatei(inputDirectory, spalte, last);
                                 break;
@@ -515,7 +515,7 @@ namespace FEBibliothek.Modell
                                 // Datei einlesen
                                 _ = MessageBox.Show("Randbedingung " + item.Key + " Daten aus Datei", "Heat Transfer Analysis");
 
-                                const string inputDirectory = "\\FE-Berechnungen-App\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                                const string inputDirectory = "\\FE-Berechnungen\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
                                 const int spalte = 1;
                                 AusDatei(inputDirectory, spalte, vordefinierteTemperatur);
                                 break;
@@ -720,7 +720,7 @@ namespace FEBibliothek.Modell
                 {
                     case 0:
                         {
-                            const string inputDirectory = "\\FE-Berechnungen-App\\input\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
+                            const string inputDirectory = "\\FE-Berechnungen\\input\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
                             const int col = -1; // ALLE Values in Datei
                                                 // Ordinatenwerte im Zeitintervall dt aus Datei lesen
                             AusDatei(inputDirectory, col, force);

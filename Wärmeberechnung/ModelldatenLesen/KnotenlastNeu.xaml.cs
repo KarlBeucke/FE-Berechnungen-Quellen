@@ -67,7 +67,7 @@ public partial class KnotenlastNeu
         }
         lastenKeys?.Close();
         Close();
-        StartFenster.wärmeVisual.Close();
+        StartFenster.WärmeVisual.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -101,7 +101,7 @@ public partial class KnotenlastNeu
         modell.Lasten.Remove(KnotenlastId.Text);
         lastenKeys?.Close();
         Close();
-        StartFenster.wärmeVisual.Close();
+        StartFenster.WärmeVisual.Close();
     }
 
 }

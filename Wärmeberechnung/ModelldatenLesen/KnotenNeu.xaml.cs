@@ -18,15 +18,15 @@ public partial class KnotenNeu
         InitializeComponent();
         modell = feModell;
         // aktiviere Ereignishandler für Canvas
-        StartFenster.wärmeVisual.VisualWärmeModell.Background = System.Windows.Media.Brushes.Transparent;
+        StartFenster.WärmeVisual.VisualWärmeModell.Background = System.Windows.Media.Brushes.Transparent;
         Show();
     }
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         // entferne Steuerungsknoten und deaktiviere Ereignishandler für Canvas
-        StartFenster.wärmeVisual.VisualWärmeModell.Children.Remove(StartFenster.wärmeVisual.Knoten);
-        StartFenster.wärmeVisual.VisualWärmeModell.Background = null;
-        StartFenster.wärmeVisual.isKnoten = false;
+        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(StartFenster.WärmeVisual.Knoten);
+        StartFenster.WärmeVisual.VisualWärmeModell.Background = null;
+        StartFenster.WärmeVisual.isKnoten = false;
         Close();
     }
 
@@ -59,10 +59,10 @@ public partial class KnotenNeu
         }
 
         // entferne Steuerungsknoten und deaktiviere Ereignishandler für Canvas
-        StartFenster.wärmeVisual.VisualWärmeModell.Children.Remove(StartFenster.wärmeVisual.Knoten);
-        StartFenster.wärmeVisual.VisualWärmeModell.Background = null;
-        StartFenster.wärmeVisual.isKnoten = false;
-        StartFenster.wärmeVisual.Close();
+        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(StartFenster.WärmeVisual.Knoten);
+        StartFenster.WärmeVisual.VisualWärmeModell.Background = null;
+        StartFenster.WärmeVisual.isKnoten = false;
+        StartFenster.WärmeVisual.Close();
         Close();
     }
 
@@ -81,6 +81,6 @@ public partial class KnotenNeu
         if (!modell.Knoten.Keys.Contains(KnotenId.Text)) return;
         modell.Knoten.Remove(KnotenId.Text);
         Close();
-        StartFenster.wärmeVisual.Close();
+        StartFenster.WärmeVisual.Close();
     }
 }

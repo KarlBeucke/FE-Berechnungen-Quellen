@@ -1,6 +1,7 @@
 ﻿using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -11,18 +12,17 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 
 public partial class StatikErgebnisseAnzeigen
 {
-    private readonly FeModell modell;
-    private Shape letztesElement;
-    private Shape letzterKnoten;
+    private readonly FeModell _modell;
+    private Shape _letztesElement, _letzterKnoten;
     public StatikErgebnisseAnzeigen(FeModell feModell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
-        modell = feModell;
+        _modell = feModell;
         InitializeComponent();
     }
     private void Knotenverformungen_Loaded(object sender, RoutedEventArgs e)
     {
-        KnotenverformungenGrid.ItemsSource = modell.Knoten;
+        KnotenverformungenGrid.ItemsSource = _modell.Knoten;
     }
     //SelectionChanged
     private void KnotenZeileSelected(object sender, SelectionChangedEventArgs e)
@@ -31,56 +31,56 @@ public partial class StatikErgebnisseAnzeigen
         var cellInfo = KnotenverformungenGrid.SelectedCells[0];
         var cell = (KeyValuePair<string, Knoten>)cellInfo.Item;
         var knoten = cell.Value;
-        if (letzterKnoten != null)
+        if (_letzterKnoten != null)
         {
-            StartFenster.statikErgebnisse.VisualTragwerkErgebnisse.Children.Remove(letzterKnoten);
+            StartFenster.StatikErgebnisse.VisualTragwerkErgebnisse.Children.Remove(_letzterKnoten);
         }
-        letzterKnoten = StartFenster.statikErgebnisse.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        _letzterKnoten = StartFenster.StatikErgebnisse.Darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
     //LostFocus
     private void KeinKnotenSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.statikErgebnisse.VisualTragwerkErgebnisse.Children.Remove(letzterKnoten);
+        StartFenster.StatikErgebnisse.VisualTragwerkErgebnisse.Children.Remove(_letzterKnoten);
     }
 
-    private void Elementendkraefte_Loaded(object sender, RoutedEventArgs e)
+    private void Elementendkräfte_Loaded(object sender, RoutedEventArgs e)
     {
         var elementKräfte = new List<Stabendkräfte>();
-        foreach (var item in modell.Elemente)
+        foreach (var item in _modell.Elemente)
         {
             if (!(item.Value is AbstraktBalken balken)) continue;
             var balkenEndKräfte = balken.BerechneStabendkräfte();
             elementKräfte.Add(new Stabendkräfte(balken.ElementId, balkenEndKräfte));
         }
 
-        ElementendkraefteGrid.ItemsSource = elementKräfte;
+        ElementendkräfteGrid.ItemsSource = elementKräfte;
     }
     // SelectionChanged
     private void ElementZeileSelected(object sender, SelectionChangedEventArgs e)
     {
-        if (ElementendkraefteGrid.SelectedCells.Count <= 0) return;
-        var cellInfo = ElementendkraefteGrid.SelectedCells[0];
+        if (ElementendkräfteGrid.SelectedCells.Count <= 0) return;
+        var cellInfo = ElementendkräfteGrid.SelectedCells[0];
         var stabendKräfte = (Stabendkräfte)cellInfo.Item;
-        if (!modell.Elemente.TryGetValue(stabendKräfte.ElementId, out var element)) return;
-        if (letztesElement != null)
+        if (!_modell.Elemente.TryGetValue(stabendKräfte.ElementId, out var element)) return;
+        if (_letztesElement != null)
         {
-            StartFenster.statikErgebnisse.VisualTragwerkErgebnisse.Children.Remove(letztesElement);
+            StartFenster.StatikErgebnisse.VisualTragwerkErgebnisse.Children.Remove(_letztesElement);
         }
-        letztesElement = StartFenster.statikErgebnisse.darstellung.ElementZeichnen(element, Brushes.Green, 5);
+        _letztesElement = StartFenster.StatikErgebnisse.Darstellung.ElementZeichnen(element, Brushes.Green, 5);
     }
     //LostFocus
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.statikErgebnisse.VisualTragwerkErgebnisse.Children.Remove(letztesElement);
+        StartFenster.StatikErgebnisse.VisualTragwerkErgebnisse.Children.Remove(_letztesElement);
     }
 
     private void Lagerreaktionen_Loaded(object sender, RoutedEventArgs e)
     {
         var knotenReaktionen = new Dictionary<string, KnotenReaktion>();
-        foreach (var item in modell.Randbedingungen)
+        foreach (var knotenId in _modell.Randbedingungen.
+                     Select(item => item.Value.KnotenId))
         {
-            var knotenId = item.Value.KnotenId;
-            if (!modell.Knoten.TryGetValue(knotenId, out var knoten)) break;
+            if (!_modell.Knoten.TryGetValue(knotenId, out var knoten)) break;
             var knotenReaktion = new KnotenReaktion(knoten.Reaktionen);
             knotenReaktionen.Add(knotenId, knotenReaktion);
         }
@@ -88,13 +88,8 @@ public partial class StatikErgebnisseAnzeigen
         if (LagerreaktionenGrid != null) LagerreaktionenGrid.ItemsSource = knotenReaktionen;
     }
 
-    internal class KnotenReaktion
+    internal class KnotenReaktion(double[] reaktionen)
     {
-        public double[] Reaktionen { get; }
-
-        public KnotenReaktion(double[] reaktionen)
-        {
-            Reaktionen = reaktionen;
-        }
+        public double[] Reaktionen { get; } = reaktionen;
     }
 }

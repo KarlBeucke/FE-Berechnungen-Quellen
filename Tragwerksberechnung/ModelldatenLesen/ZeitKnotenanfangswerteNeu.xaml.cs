@@ -5,14 +5,14 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class ZeitKnotenanfangswerteNeu
 {
-    private readonly FeModell modell;
-    private int aktuell;
+    private readonly FeModell _modell;
+    private int _aktuell;
     public ZeitKnotenanfangswerteNeu(FeModell modell)
     {
         InitializeComponent();
-        this.modell = modell;
-        aktuell = StartFenster.tragwerkVisual.zeitintegrationNeu.aktuell;
-        var anfang = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell];
+        _modell = modell;
+        _aktuell = StartFenster.TragwerkVisual.ZeitintegrationNeu.Aktuell;
+        var anfang = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[_aktuell];
         KnotenId.Text = anfang.KnotenId;
         Dof1D0.Text = anfang.Werte[0].ToString("G2");
         Dof1V0.Text = anfang.Werte[1].ToString("G2");
@@ -34,11 +34,11 @@ public partial class ZeitKnotenanfangswerteNeu
         if (KnotenId.Text.Length == 0) Close();
 
         // neue Anfangsbedingung hinzufügen
-        if (StartFenster.tragwerkVisual.zeitintegrationNeu.aktuell > modell.Zeitintegration.Anfangsbedingungen.Count)
+        if (StartFenster.TragwerkVisual.ZeitintegrationNeu.Aktuell > _modell.Zeitintegration.Anfangsbedingungen.Count)
         {
             if (KnotenId.Text == "") return;
             var knotenId = KnotenId.Text;
-            if (modell.Knoten.TryGetValue(knotenId, out var knoten))
+            if (_modell.Knoten.TryGetValue(knotenId, out var knoten))
             {
                 var nodalDof = knoten.AnzahlKnotenfreiheitsgrade;
                 var anfangsWerte = new double[2 * nodalDof];
@@ -60,13 +60,13 @@ public partial class ZeitKnotenanfangswerteNeu
                             break;
                         }
                 }
-                modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(KnotenId.Text, anfangsWerte));
+                _modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(KnotenId.Text, anfangsWerte));
             }
         }
         // vorhandene Anfangsbedingung ändern
         else
         {
-            var anfang = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell];
+            var anfang = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[_aktuell];
             anfang.KnotenId = KnotenId.Text;
             anfang.Werte[0] = double.Parse(Dof1D0.Text); anfang.Werte[1] = double.Parse(Dof1V0.Text);
             anfang.Werte[2] = double.Parse(Dof2D0.Text); anfang.Werte[3] = double.Parse(Dof2V0.Text);
@@ -78,19 +78,19 @@ public partial class ZeitKnotenanfangswerteNeu
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();
-        StartFenster.tragwerkVisual.zeitintegrationNeu.Close();
+        StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
     }
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        modell.Zeitintegration.Anfangsbedingungen.RemoveAt(aktuell + 1);
-        aktuell = 0;
-        if (modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
+        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell + 1);
+        _aktuell = 0;
+        if (_modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
         {
             Close();
-            StartFenster.tragwerkVisual.zeitintegrationNeu.Close();
+            StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
             return;
         }
-        var anfangsWerte = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell];
+        var anfangsWerte = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[_aktuell];
         KnotenId.Text = anfangsWerte.KnotenId;
         Dof1D0.Text = anfangsWerte.Werte[0].ToString("G2");
         Dof1V0.Text = anfangsWerte.Werte[1].ToString("G2");
@@ -107,6 +107,6 @@ public partial class ZeitKnotenanfangswerteNeu
             Dof3V0.Text = anfangsWerte.Werte[5].ToString("G2");
         }
         Close();
-        StartFenster.tragwerkVisual.zeitintegrationNeu.Close();
+        StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
     }
 }

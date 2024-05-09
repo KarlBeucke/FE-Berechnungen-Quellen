@@ -7,54 +7,54 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
 public class Element2D2 : AbstraktLinear2D2
 {
-    private readonly FeModell modell;
-    private AbstraktElement element;
-    private Material material;
-    private readonly double[,] elementMatrix;
-    private readonly double[] specificHeatMatrix;
+    private readonly FeModell _modell;
+    private AbstraktElement _element;
+    private Material _material;
+    private readonly double[,] _elementMatrix;
+    private readonly double[] _specificHeatMatrix;
     public Element2D2(string[] eNodes, string eMaterialId, FeModell feModell)
     {
-        if (feModell != null) modell = feModell ?? throw new ArgumentNullException(nameof(feModell));
+        if (feModell != null) _modell = feModell;
         KnotenIds = eNodes ?? throw new ArgumentNullException(nameof(eNodes));
         ElementMaterialId = eMaterialId;
         ElementFreiheitsgrade = 1;
         KnotenProElement = 2;
-        elementMatrix = new double[KnotenProElement, KnotenProElement];
-        specificHeatMatrix = new double[KnotenProElement];
+        _elementMatrix = new double[KnotenProElement, KnotenProElement];
+        _specificHeatMatrix = new double[KnotenProElement];
         Knoten = new Knoten[KnotenProElement];
     }
     public Element2D2(string id, string[] eNodes, string eMaterialId, FeModell feModell)
     {
-        modell = feModell ?? throw new ArgumentNullException(nameof(feModell));
+        _modell = feModell ?? throw new ArgumentNullException(nameof(feModell));
         ElementId = id ?? throw new ArgumentNullException(nameof(id));
         KnotenIds = eNodes ?? throw new ArgumentNullException(nameof(eNodes));
         ElementMaterialId = eMaterialId ?? throw new ArgumentNullException(nameof(eMaterialId));
         ElementFreiheitsgrade = 1;
         KnotenProElement = 2;
-        elementMatrix = new double[KnotenProElement, KnotenProElement];
-        specificHeatMatrix = new double[KnotenProElement];
+        _elementMatrix = new double[KnotenProElement, KnotenProElement];
+        _specificHeatMatrix = new double[KnotenProElement];
         Knoten = new Knoten[KnotenProElement];
     }
-    // ... compute element matrix ..................................
+    // berechne Elementmatrix
     public override double[,] BerechneElementMatrix()
     {
-        if (modell.Material.TryGetValue(ElementMaterialId, out var abstractMaterial)) { }
-        material = (Material)abstractMaterial;
-        ElementMaterial = material ?? throw new ArgumentNullException(nameof(material));
-        balkenLänge = Math.Abs(Knoten[1].Koordinaten[0] - Knoten[0].Koordinaten[0]);
-        if (material == null) return elementMatrix;
-        var factor = material.MaterialWerte[0] / balkenLänge;
-        elementMatrix[0, 0] = elementMatrix[1, 1] = factor;
-        elementMatrix[0, 1] = elementMatrix[1, 0] = -factor;
-        return elementMatrix;
+        if (_modell.Material.TryGetValue(ElementMaterialId, out var abstractMaterial)) { }
+        _material = (Material)abstractMaterial;
+        ElementMaterial = _material ?? throw new ArgumentNullException(nameof(_material));
+        BalkenLänge = Math.Abs(Knoten[1].Koordinaten[0] - Knoten[0].Koordinaten[0]);
+        if (_material == null) return _elementMatrix;
+        var factor = _material.MaterialWerte[0] / BalkenLänge;
+        _elementMatrix[0, 0] = _elementMatrix[1, 1] = factor;
+        _elementMatrix[0, 1] = _elementMatrix[1, 0] = -factor;
+        return _elementMatrix;
     }
-    // ....Compute diagonal Specific Heat Matrix.................................
+    // berechne diagonale spezifische Wärmematrix
     public override double[] BerechneDiagonalMatrix()
     {
-        balkenLänge = Math.Abs(Knoten[1].Koordinaten[0] - Knoten[0].Koordinaten[0]);
+        BalkenLänge = Math.Abs(Knoten[1].Koordinaten[0] - Knoten[0].Koordinaten[0]);
         // Me = specific heat * density * 0.5*length
-        specificHeatMatrix[0] = specificHeatMatrix[1] = material.MaterialWerte[3] * balkenLänge / 2;
-        return specificHeatMatrix;
+        _specificHeatMatrix[0] = _specificHeatMatrix[1] = _material.MaterialWerte[3] * BalkenLänge / 2;
+        return _specificHeatMatrix;
     }
     public override double[] BerechneZustandsvektor()
     {
@@ -69,11 +69,11 @@ public class Element2D2 : AbstraktLinear2D2
     }
     public override Point BerechneSchwerpunkt()
     {
-        if (!modell.Elemente.TryGetValue(ElementId, out element))
+        if (!_modell.Elemente.TryGetValue(ElementId, out _element))
         {
             throw new ModellAusnahme("Element2D2: " + ElementId + " nicht im Modell gefunden");
         }
-        element.SetzElementReferenzen(modell);
-        return Schwerpunkt(element);
+        _element.SetzElementReferenzen(_modell);
+        return Schwerpunkt(_element);
     }
 }

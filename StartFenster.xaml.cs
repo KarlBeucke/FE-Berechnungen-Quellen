@@ -14,21 +14,21 @@ namespace FE_Berechnungen;
 
 public partial class StartFenster
 {
-    private FeParser parse;
-    public static Berechnung modellBerechnung;
-    private OpenFileDialog dateiDialog;
-    private string dateiPfad;
-    private FeModell tragwerksModell;
-    public static Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren tragwerkVisual;
-    public static Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren statikErgebnisse;
-    private FeModell wärmeModell;
-    public static Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren wärmeVisual;
-    public static Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren stationäreErgebnisse;
-    private FeModell elastizitätsModell;
+    private FeParser _parse;
+    public static Berechnung ModellBerechnung;
+    private OpenFileDialog _dateiDialog;
+    private string _dateiPfad;
+    public static FeModell TragwerksModell;
+    public static Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren TragwerkVisual;
+    public static Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren StatikErgebnisse;
+    private FeModell _wärmeModell;
+    public static Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren WärmeVisual;
+    public static Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren StationäreErgebnisse;
+    private FeModell _elastizitätsModell;
 
-    private string[] dateiZeilen;
-    public static bool zeitintegrationDaten;
-    public static bool berechnet, eigenBerechnet, zeitintegrationBerechnet;
+    private string[] _dateiZeilen;
+    public static bool ZeitintegrationDaten;
+    public static bool Berechnet, EigenBerechnet, ZeitintegrationBerechnet;
 
     public StartFenster()
     {
@@ -40,80 +40,80 @@ public partial class StartFenster
     {
         Language = XmlLanguage.GetLanguage("de-DE");
         var sb = new StringBuilder();
-        dateiDialog = new OpenFileDialog
+        _dateiDialog = new OpenFileDialog
         {
             Filter = "inp files (*.inp)|*.inp|All files (*.*)|*.*",
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
         };
 
-        if (Directory.Exists(dateiDialog.InitialDirectory + "\\FE-Berechnungen-App\\input"))
+        if (Directory.Exists(_dateiDialog.InitialDirectory + "\\FE-Berechnungen\\input"))
         {
-            dateiDialog.InitialDirectory += "\\FE-Berechnungen-App\\input\\Wärmeberechnung";
-            dateiDialog.ShowDialog();
+            _dateiDialog.InitialDirectory += "\\FE-Berechnungen\\input\\Wärmeberechnung";
+            _dateiDialog.ShowDialog();
         }
         else
         {
-            _ = MessageBox.Show("Directory für Eingabedatei " + dateiDialog.InitialDirectory +
-                                " \\FE-Berechnungen-App\\input nicht gefunden", "Wärmeberechnung");
-            dateiDialog.ShowDialog();
+            _ = MessageBox.Show("Directory für Eingabedatei " + _dateiDialog.InitialDirectory +
+                                " \\FE-Berechnungen\\input nicht gefunden", "Wärmeberechnung");
+            _dateiDialog.ShowDialog();
         }
-        dateiPfad = dateiDialog.FileName;
+        _dateiPfad = _dateiDialog.FileName;
 
         try
         {
-            if (dateiPfad.Length == 0)
+            if (_dateiPfad.Length == 0)
             {
                 _ = MessageBox.Show("Eingabedatei ist leer", "Wärmeberechnung");
                 return;
             }
-            dateiZeilen = File.ReadAllLines(dateiPfad, Encoding.UTF8);
+            _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
         }
         catch (ParseAusnahme)
         {
             throw new ParseAusnahme("Abbruch: Fehler beim Lesen aus Eingabedatei ");
         }
 
-        parse = new FeParser();
-        parse.ParseModell(dateiZeilen);
-        wärmeModell = parse.FeModell;
-        parse.ParseNodes(dateiZeilen);
+        _parse = new FeParser();
+        _parse.ParseModell(_dateiZeilen);
+        _wärmeModell = _parse.FeModell;
+        _parse.ParseNodes(_dateiZeilen);
 
         var wärmeElemente = new Wärmeberechnung.ModelldatenLesen.ElementParser();
-        wärmeElemente.ParseWärmeElements(dateiZeilen, wärmeModell);
+        wärmeElemente.ParseWärmeElements(_dateiZeilen, _wärmeModell);
 
         var wärmeMaterial = new Wärmeberechnung.ModelldatenLesen.MaterialParser();
-        wärmeMaterial.ParseMaterials(dateiZeilen, wärmeModell);
+        wärmeMaterial.ParseMaterials(_dateiZeilen, _wärmeModell);
 
         var wärmeLasten = new Wärmeberechnung.ModelldatenLesen.LastParser();
-        wärmeLasten.ParseLasten(dateiZeilen, wärmeModell);
+        wärmeLasten.ParseLasten(_dateiZeilen, _wärmeModell);
 
         var wärmeRandbedingungen = new Wärmeberechnung.ModelldatenLesen.RandbedingungParser();
-        wärmeRandbedingungen.ParseRandbedingungen(dateiZeilen, wärmeModell);
+        wärmeRandbedingungen.ParseRandbedingungen(_dateiZeilen, _wärmeModell);
 
         var wärmeTransient = new Wärmeberechnung.ModelldatenLesen.TransientParser();
-        wärmeTransient.ParseZeitintegration(dateiZeilen, wärmeModell);
+        wärmeTransient.ParseZeitintegration(_dateiZeilen, _wärmeModell);
 
-        zeitintegrationDaten = wärmeTransient.zeitintegrationDaten;
-        berechnet = false;
-        zeitintegrationBerechnet = false;
+        ZeitintegrationDaten = wärmeTransient.ZeitintegrationDaten;
+        Berechnet = false;
+        ZeitintegrationBerechnet = false;
 
         sb.Append(FeParser.EingabeGefunden + "\n\nWärmemodelldaten erfolgreich eingelesen");
         _ = MessageBox.Show(sb.ToString(), "Wärmeberechnung");
         sb.Clear();
 
-        wärmeVisual = new Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren(wärmeModell);
-        wärmeVisual.Show();
+        WärmeVisual = new Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren(_wärmeModell);
+        WärmeVisual.Show();
     }
     private void WärmedatenEditieren(object sender, RoutedEventArgs e)
     {
-        if (dateiPfad == null)
+        if (_dateiPfad == null)
         {
             var wärmeDatenEdit = new Dateieingabe.ModelldatenEditieren();
             wärmeDatenEdit.Show();
         }
         else
         {
-            var wärmeDatenEdit = new Dateieingabe.ModelldatenEditieren(dateiPfad);
+            var wärmeDatenEdit = new Dateieingabe.ModelldatenEditieren(_dateiPfad);
             wärmeDatenEdit.Show();
         }
     }
@@ -123,9 +123,9 @@ public partial class StartFenster
         var wärmedatei = new Dateieingabe.NeuerDateiname();
         wärmedatei.ShowDialog();
 
-        var name = wärmedatei.dateiName;
+        var name = wärmedatei.DateiName;
 
-        if (wärmeModell == null)
+        if (_wärmeModell == null)
         {
             _ = MessageBox.Show("Modell ist noch nicht definiert", "Wärmeberechnung");
             return;
@@ -133,22 +133,22 @@ public partial class StartFenster
         var zeilen = new List<string>
         {
             "ModellName",
-            wärmeModell.ModellId,
+            _wärmeModell.ModellId,
             "\nRaumdimension"
         };
         const int numberNodalDof = 1;
-        zeilen.Add(wärmeModell.Raumdimension + "\t" + numberNodalDof + "\n");
+        zeilen.Add(_wärmeModell.Raumdimension + "\t" + numberNodalDof + "\n");
 
         // Knoten
         zeilen.Add("Knoten");
-        if (wärmeModell.Raumdimension == 2)
+        if (_wärmeModell.Raumdimension == 2)
         {
-            zeilen.AddRange(wärmeModell.Knoten.Select(knoten => knoten.Key
+            zeilen.AddRange(_wärmeModell.Knoten.Select(knoten => knoten.Key
                                                            + "\t" + knoten.Value.Koordinaten[0] + "\t" + knoten.Value.Koordinaten[1]));
         }
         else
         {
-            zeilen.AddRange(wärmeModell.Knoten.Select(knoten => knoten.Key
+            zeilen.AddRange(_wärmeModell.Knoten.Select(knoten => knoten.Key
                                                            + "\t" + knoten.Value.Koordinaten[0] + "\t" + knoten.Value.Koordinaten[1] + "\t" + knoten.Value.Koordinaten[2]));
         }
 
@@ -157,7 +157,7 @@ public partial class StartFenster
         var alleElement2D3 = new List<Element2D3>();
         var alleElement2D4 = new List<Element2D4>();
         var alleElement3D8 = new List<Element3D8>();
-        foreach (var item in wärmeModell.Elemente)
+        foreach (var item in _wärmeModell.Elemente)
         {
             switch (item.Value)
             {
@@ -204,7 +204,7 @@ public partial class StartFenster
 
         // Materialien
         zeilen.Add("\n" + "Material");
-        foreach (var item in wärmeModell.Material)
+        foreach (var item in _wärmeModell.Material)
         {
             sb.Clear();
             sb.Append(item.Value.MaterialId + "\t" + item.Value.MaterialWerte[0]);
@@ -216,7 +216,7 @@ public partial class StartFenster
         }
 
         // Lasten
-        foreach (var item in wärmeModell.Lasten)
+        foreach (var item in _wärmeModell.Lasten)
         {
             sb.Clear();
             sb.Append("\n" + "KnotenLasten");
@@ -227,7 +227,7 @@ public partial class StartFenster
             }
             zeilen.Add(sb.ToString());
         }
-        foreach (var item in wärmeModell.LinienLasten)
+        foreach (var item in _wärmeModell.LinienLasten)
         {
             sb.Clear();
             sb.Append("\n" + "LinienLasten");
@@ -238,7 +238,7 @@ public partial class StartFenster
 
         var alleElementlasten3 = new List<ElementLast3>();
         var alleElementlasten4 = new List<ElementLast4>();
-        foreach (var item in wärmeModell.ElementLasten)
+        foreach (var item in _wärmeModell.ElementLasten)
         {
             switch (item.Value)
             {
@@ -266,7 +266,7 @@ public partial class StartFenster
 
         // Randbedingungen
         zeilen.Add("\n" + "Randbedingungen");
-        foreach (var item in wärmeModell.Randbedingungen)
+        foreach (var item in _wärmeModell.Randbedingungen)
         {
             sb.Clear();
             sb.Append(item.Value.RandbedingungId + "\t" + item.Value.KnotenId + "\t" + item.Value.Vordefiniert[0]);
@@ -274,93 +274,95 @@ public partial class StartFenster
         }
 
         // Eigenlösungen
-        if (wärmeModell.Eigenzustand != null)
+        if (_wärmeModell.Eigenzustand != null)
         {
             zeilen.Add("\n" + "Eigenlösungen");
-            zeilen.Add(wärmeModell.Eigenzustand.Id + "\t" + wärmeModell.Eigenzustand.AnzahlZustände);
+            zeilen.Add(_wärmeModell.Eigenzustand.Id + "\t" + _wärmeModell.Eigenzustand.AnzahlZustände);
         }
 
         // Parameter
-        if (wärmeModell.Zeitintegration != null)
+        if (_wärmeModell.Zeitintegration != null)
         {
             zeilen.Add("\n" + "Zeitintegration");
-            zeilen.Add(wärmeModell.Zeitintegration.Id + "\t" + wärmeModell.Zeitintegration.Tmax + "\t" + wärmeModell.Zeitintegration.Dt
-                       + "\t" + wärmeModell.Zeitintegration.Parameter1);
+            zeilen.Add(_wärmeModell.Zeitintegration.Id + "\t" + _wärmeModell.Zeitintegration.Tmax + "\t" + _wärmeModell.Zeitintegration.Dt
+                       + "\t" + _wärmeModell.Zeitintegration.Parameter1);
         }
 
         // zeitabhängige Anfangsbedingungen
-        if (wärmeModell.Zeitintegration.VonStationär || wärmeModell.Zeitintegration.Anfangsbedingungen.Count != 0)
+        if (_wärmeModell.Zeitintegration.VonStationär || _wärmeModell.Zeitintegration.Anfangsbedingungen.Count != 0)
             zeilen.Add("\n" + "Anfangstemperaturen");
-        if (wärmeModell.Zeitintegration.VonStationär)
+        if (_wärmeModell.Zeitintegration.VonStationär)
         {
             zeilen.Add("stationäre Loesung");
         }
 
-        foreach (var item in wärmeModell.Zeitintegration.Anfangsbedingungen)
-        {
-            var knotenwerte = (Knotenwerte)item;
-            zeilen.Add(knotenwerte.KnotenId + "\t" + knotenwerte.Werte[0]);
-        }
+        zeilen.AddRange(from Knotenwerte knotenwerte in _wärmeModell.Zeitintegration.Anfangsbedingungen select knotenwerte.KnotenId + "\t" + knotenwerte.Werte[0]);
 
         // zeitabhängige Randbedingungen
-        if (wärmeModell.ZeitabhängigeRandbedingung.Count != 0) zeilen.Add("\n" + "Zeitabhängige Randtemperaturen");
-        foreach (var item in wärmeModell.ZeitabhängigeRandbedingung)
+        if (_wärmeModell.ZeitabhängigeRandbedingung.Count != 0) zeilen.Add("\n" + "Zeitabhängige Randtemperaturen");
+        foreach (var item in _wärmeModell.ZeitabhängigeRandbedingung)
         {
             sb.Clear();
             sb.Append(item.Value.RandbedingungId + "\t" + item.Value.KnotenId);
-            if (item.Value.VariationsTyp == 0)
+            switch (item.Value.VariationsTyp)
             {
-                sb.Append("\tdatei");
+                case 0:
+                    sb.Append("\tdatei");
+                    break;
+                case 1:
+                    sb.Append("\tkonstant" + item.Value.KonstanteTemperatur);
+                    break;
+                case 2:
+                    sb.Append("\tharmonisch\t" + item.Value.Amplitude + "\t" + item.Value.Frequenz + "\t" + item.Value.PhasenWinkel);
+                    break;
+                case 3:
+                    {
+                        sb.Append("\tlinear");
+                        var anzahlIntervalle = item.Value.Intervall.Length;
+                        for (var i = 0; i < anzahlIntervalle; i += 2)
+                        {
+                            sb.Append("\t" + item.Value.Intervall[i] + ";" + item.Value.Intervall[i + 1]);
+                        }
+
+                        break;
+                    }
             }
-            if (item.Value.VariationsTyp == 1)
-            {
-                sb.Append("\tkonstant" + item.Value.KonstanteTemperatur);
-            }
-            else if (item.Value.VariationsTyp == 2)
-            {
-                sb.Append("\tharmonisch\t" + item.Value.Amplitude + "\t" + item.Value.Frequenz + "\t" + item.Value.PhasenWinkel);
-            }
-            else if (item.Value.VariationsTyp == 3)
-            {
-                sb.Append("\tlinear");
-                var anzahlIntervalle = item.Value.Intervall.Length;
-                for (var i = 0; i < anzahlIntervalle; i += 2)
-                {
-                    sb.Append("\t" + item.Value.Intervall[i] + ";" + item.Value.Intervall[i + 1]);
-                }
-            }
+
             zeilen.Add(sb.ToString());
         }
 
         // zeitabhängige Knotentemperaturen
-        if (wärmeModell.ZeitabhängigeKnotenLasten.Count != 0) zeilen.Add("\n" + "Zeitabhängige Knotenlast");
-        foreach (var item in wärmeModell.ZeitabhängigeKnotenLasten)
+        if (_wärmeModell.ZeitabhängigeKnotenLasten.Count != 0) zeilen.Add("\n" + "Zeitabhängige Knotenlast");
+        foreach (var item in _wärmeModell.ZeitabhängigeKnotenLasten)
         {
             sb.Clear();
             sb.Append(item.Value.LastId + "\t" + item.Value.KnotenId);
-            if (item.Value.VariationsTyp == 0)
+            switch (item.Value.VariationsTyp)
             {
-                sb.Append("\tdatei");
-            }
-            else if (item.Value.VariationsTyp == 2)
-            {
-                sb.Append("\tharmonisch\t" + item.Value.Amplitude + "\t" + item.Value.Frequenz + "\t" + item.Value.PhasenWinkel);
-            }
-            else if (item.Value.VariationsTyp == 3)
-            {
-                sb.Append("\tlinear");
-                var anzahlIntervalle = item.Value.Intervall.Length;
-                for (var i = 0; i < anzahlIntervalle; i += 2)
-                {
-                    sb.Append("\t" + item.Value.Intervall[i] + ";" + item.Value.Intervall[i + 1]);
-                }
+                case 0:
+                    sb.Append("\tdatei");
+                    break;
+                case 2:
+                    sb.Append("\tharmonisch\t" + item.Value.Amplitude + "\t" + item.Value.Frequenz + "\t" + item.Value.PhasenWinkel);
+                    break;
+                case 3:
+                    {
+                        sb.Append("\tlinear");
+                        var anzahlIntervalle = item.Value.Intervall.Length;
+                        for (var i = 0; i < anzahlIntervalle; i += 2)
+                        {
+                            sb.Append("\t" + item.Value.Intervall[i] + ";" + item.Value.Intervall[i + 1]);
+                        }
+
+                        break;
+                    }
             }
             zeilen.Add(sb.ToString());
         }
 
         // zeitabhängige Elementtemperaturen
-        if (wärmeModell.ZeitabhängigeElementLasten.Count != 0) zeilen.Add("\n" + "Zeitabhängige Elementtemperaturen");
-        foreach (var item in wärmeModell.ZeitabhängigeElementLasten)
+        if (_wärmeModell.ZeitabhängigeElementLasten.Count != 0) zeilen.Add("\n" + "Zeitabhängige Elementtemperaturen");
+        foreach (var item in _wärmeModell.ZeitabhängigeElementLasten)
         {
             sb.Clear();
             sb.Append(item.Key + "\t" + item.Value.ElementId);
@@ -368,9 +370,9 @@ public partial class StartFenster
             if (item.Value.VariationsTyp == 1)
             {
                 sb.Append("\tkonstant");
-                for (var i = 0; i < item.Value.P.Length; i++)
+                foreach (var wert in item.Value.P)
                 {
-                    sb.Append("\t" + item.Value.P[i]);
+                    sb.Append("\t" + wert);
                 }
             }
 
@@ -382,14 +384,14 @@ public partial class StartFenster
 
         // alle Zeilen in Datei schreiben
         var dateiName = "\\" + name + ".inp";
-        dateiPfad = dateiDialog.InitialDirectory + dateiName;
-        File.WriteAllLines(dateiPfad, zeilen);
+        _dateiPfad = _dateiDialog.InitialDirectory + dateiName;
+        File.WriteAllLines(_dateiPfad, zeilen);
     }
     private void WärmedatenAnzeigen(object sender, RoutedEventArgs e)
     {
-        if (wärmeModell != null)
+        if (_wärmeModell != null)
         {
-            var wärme = new Wärmeberechnung.ModelldatenAnzeigen.WärmedatenAnzeigen(wärmeModell);
+            var wärme = new Wärmeberechnung.ModelldatenAnzeigen.WärmedatenAnzeigen(_wärmeModell);
             wärme.Show();
         }
         else
@@ -399,10 +401,10 @@ public partial class StartFenster
     }
     private void WärmedatenVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (wärmeModell != null)
+        if (_wärmeModell != null)
         {
-            wärmeVisual = new Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren(wärmeModell);
-            wärmeVisual.Show();
+            WärmeVisual = new Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren(_wärmeModell);
+            WärmeVisual.Show();
         }
         else
         {
@@ -411,13 +413,13 @@ public partial class StartFenster
     }
     private void WärmedatenBerechnen(object sender, EventArgs e)
     {
-        if (wärmeModell != null)
+        if (_wärmeModell != null)
         {
-            modellBerechnung = new Berechnung(wärmeModell);
-            modellBerechnung.BerechneSystemMatrix();
-            modellBerechnung.BerechneSystemVektor();
-            modellBerechnung.LöseGleichungen();
-            berechnet = true;
+            ModellBerechnung = new Berechnung(_wärmeModell);
+            ModellBerechnung.BerechneSystemMatrix();
+            ModellBerechnung.BerechneSystemVektor();
+            ModellBerechnung.LöseGleichungen();
+            Berechnet = true;
             _ = MessageBox.Show("Systemgleichungen erfolgreich gelöst", "Wärmeberechnung");
         }
         else
@@ -427,17 +429,17 @@ public partial class StartFenster
     }
     private void WärmeberechnungErgebnisseAnzeigen(object sender, EventArgs e)
     {
-        if (wärmeModell != null)
+        if (_wärmeModell != null)
         {
-            if (!berechnet)
+            if (!Berechnet)
             {
-                modellBerechnung = new Berechnung(wärmeModell);
-                modellBerechnung.BerechneSystemMatrix();
-                modellBerechnung.BerechneSystemVektor();
-                modellBerechnung.LöseGleichungen();
-                berechnet = true;
+                ModellBerechnung = new Berechnung(_wärmeModell);
+                ModellBerechnung.BerechneSystemMatrix();
+                ModellBerechnung.BerechneSystemVektor();
+                ModellBerechnung.LöseGleichungen();
+                Berechnet = true;
             }
-            var ergebnisse = new Wärmeberechnung.Ergebnisse.StationäreErgebnisseAnzeigen(wärmeModell);
+            var ergebnisse = new Wärmeberechnung.Ergebnisse.StationäreErgebnisseAnzeigen(_wärmeModell);
             ergebnisse.Show();
         }
         else
@@ -447,18 +449,18 @@ public partial class StartFenster
     }
     private void WärmeberechnungErgebnisseVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (wärmeModell != null)
+        if (_wärmeModell != null)
         {
-            if (!berechnet)
+            if (!Berechnet)
             {
-                modellBerechnung = new Berechnung(wärmeModell);
-                modellBerechnung.BerechneSystemMatrix();
-                modellBerechnung.BerechneSystemVektor();
-                modellBerechnung.LöseGleichungen();
-                berechnet = true;
+                ModellBerechnung = new Berechnung(_wärmeModell);
+                ModellBerechnung.BerechneSystemMatrix();
+                ModellBerechnung.BerechneSystemVektor();
+                ModellBerechnung.LöseGleichungen();
+                Berechnet = true;
             }
-            stationäreErgebnisse = new Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren(wärmeModell);
-            stationäreErgebnisse.Show();
+            StationäreErgebnisse = new Wärmeberechnung.Ergebnisse.StationäreErgebnisseVisualisieren(_wärmeModell);
+            StationäreErgebnisse.Show();
         }
         else
         {
@@ -467,11 +469,11 @@ public partial class StartFenster
     }
     private void InstationäreDaten(object sender, RoutedEventArgs e)
     {
-        if (wärmeModell != null)
+        if (_wärmeModell != null)
         {
-            var wärme = new Wärmeberechnung.ModelldatenAnzeigen.InstationäreDatenAnzeigen(wärmeModell);
+            var wärme = new Wärmeberechnung.ModelldatenAnzeigen.InstationäreDatenAnzeigen(_wärmeModell);
             wärme.Show();
-            zeitintegrationBerechnet = false;
+            ZeitintegrationBerechnet = false;
         }
         else
         {
@@ -480,10 +482,10 @@ public partial class StartFenster
     }
     private void WärmeAnregungVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (wärmeModell != null)
+        if (_wärmeModell != null)
         {
-            modellBerechnung ??= new Berechnung(wärmeModell);
-            var anregung = new Wärmeberechnung.ModelldatenAnzeigen.AnregungVisualisieren(wärmeModell);
+            ModellBerechnung ??= new Berechnung(_wärmeModell);
+            var anregung = new Wärmeberechnung.ModelldatenAnzeigen.AnregungVisualisieren(_wärmeModell);
             anregung.Show();
         }
         else
@@ -493,19 +495,19 @@ public partial class StartFenster
     }
     private void EigenlösungWärmeBerechnen(object sender, RoutedEventArgs e)
     {
-        if (wärmeModell != null)
+        if (_wärmeModell != null)
         {
-            modellBerechnung = new Berechnung(wärmeModell);
-            if (!berechnet)
+            ModellBerechnung = new Berechnung(_wärmeModell);
+            if (!Berechnet)
             {
-                modellBerechnung.BerechneSystemMatrix();
-                berechnet = true;
+                ModellBerechnung.BerechneSystemMatrix();
+                Berechnet = true;
             }
             // default = 2 Eigenstates, falls nicht anders spezifiziert
-            wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
-            if (wärmeModell.Eigenzustand.Eigenwerte != null) return;
-            modellBerechnung.Eigenzustände();
-            eigenBerechnet = true;
+            _wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
+            if (_wärmeModell.Eigenzustand.Eigenwerte != null) return;
+            ModellBerechnung.Eigenzustände();
+            EigenBerechnet = true;
             _ = MessageBox.Show("Eigenlösung erfolgreich ermittelt", "Wärmeberechnung");
         }
         else
@@ -515,19 +517,19 @@ public partial class StartFenster
     }
     private void EigenlösungWärmeAnzeigen(object sender, RoutedEventArgs e)
     {
-        if (wärmeModell != null)
+        if (_wärmeModell != null)
         {
-            modellBerechnung ??= new Berechnung(wärmeModell);
-            if (!berechnet)
+            ModellBerechnung ??= new Berechnung(_wärmeModell);
+            if (!Berechnet)
             {
-                modellBerechnung.BerechneSystemMatrix();
-                berechnet = true;
+                ModellBerechnung.BerechneSystemMatrix();
+                Berechnet = true;
             }
 
             // default = 2 Eigenstates, falls nicht anders spezifiziert
-            wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
-            if (wärmeModell.Eigenzustand.Eigenwerte == null) modellBerechnung.Eigenzustände();
-            var eigen = new Wärmeberechnung.Ergebnisse.EigenlösungAnzeigen(wärmeModell); //Eigenlösung.Eigenlösung(modell));
+            _wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
+            if (_wärmeModell.Eigenzustand.Eigenwerte == null) ModellBerechnung.Eigenzustände();
+            var eigen = new Wärmeberechnung.Ergebnisse.EigenlösungAnzeigen(_wärmeModell); //Eigenlösung.Eigenlösung(modell));
             eigen.Show();
         }
         else
@@ -537,19 +539,19 @@ public partial class StartFenster
     }
     private void EigenlösungWärmeVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (wärmeModell != null)
+        if (_wärmeModell != null)
         {
-            modellBerechnung ??= new Berechnung(wärmeModell);
-            if (!zeitintegrationBerechnet)
+            ModellBerechnung ??= new Berechnung(_wärmeModell);
+            if (!ZeitintegrationBerechnet)
             {
-                modellBerechnung.BerechneSystemMatrix();
+                ModellBerechnung.BerechneSystemMatrix();
                 // default = 2 Eigenzustände, falls nicht anders spezifiziert
-                wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
+                _wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
             }
             // default = 2 Eigenzustände, falls nicht anders spezifiziert
-            wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
-            if (wärmeModell.Eigenzustand.Eigenwerte == null) modellBerechnung.Eigenzustände();
-            var visual = new Wärmeberechnung.Ergebnisse.EigenlösungVisualisieren(wärmeModell);
+            _wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
+            if (_wärmeModell.Eigenzustand.Eigenwerte == null) ModellBerechnung.Eigenzustände();
+            var visual = new Wärmeberechnung.Ergebnisse.EigenlösungVisualisieren(_wärmeModell);
             visual.Show();
         }
         else
@@ -559,18 +561,18 @@ public partial class StartFenster
     }
     private void InstationäreBerechnung(object sender, RoutedEventArgs e)
     {
-        if (zeitintegrationDaten && wärmeModell != null)
+        if (ZeitintegrationDaten && _wärmeModell != null)
         {
-            if (!berechnet)
+            if (!Berechnet)
             {
-                modellBerechnung = new Berechnung(wärmeModell);
-                modellBerechnung.BerechneSystemMatrix();
-                modellBerechnung.BerechneSystemVektor();
-                modellBerechnung.LöseGleichungen();
-                berechnet = true;
+                ModellBerechnung = new Berechnung(_wärmeModell);
+                ModellBerechnung.BerechneSystemMatrix();
+                ModellBerechnung.BerechneSystemVektor();
+                ModellBerechnung.LöseGleichungen();
+                Berechnet = true;
             }
-            modellBerechnung.ZeitintegrationErsterOrdnung();
-            zeitintegrationBerechnet = true;
+            ModellBerechnung.ZeitintegrationErsterOrdnung();
+            ZeitintegrationBerechnet = true;
             _ = MessageBox.Show("Zeitintegration erfolgreich durchgeführt", "instationäre Wärmeberechnung");
         }
         else
@@ -579,21 +581,21 @@ public partial class StartFenster
             const double tmax = 0;
             const double dt = 0;
             const double alfa = 0;
-            if (wärmeModell != null)
+            if (_wärmeModell != null)
             {
-                wärmeModell.Zeitintegration = new Wärmeberechnung.Modelldaten.Zeitintegration(tmax, dt, alfa) { VonStationär = false };
-                zeitintegrationDaten = true;
-                var wärme = new Wärmeberechnung.ModelldatenAnzeigen.InstationäreDatenAnzeigen(wärmeModell);
+                _wärmeModell.Zeitintegration = new Wärmeberechnung.Modelldaten.Zeitintegration(tmax, dt, alfa) { VonStationär = false };
+                ZeitintegrationDaten = true;
+                var wärme = new Wärmeberechnung.ModelldatenAnzeigen.InstationäreDatenAnzeigen(_wärmeModell);
                 wärme.Show();
             }
-            zeitintegrationBerechnet = false;
+            ZeitintegrationBerechnet = false;
         }
     }
     private void InstationäreErgebnisseAnzeigen(object sender, RoutedEventArgs e)
     {
-        if (zeitintegrationBerechnet && wärmeModell != null)
+        if (ZeitintegrationBerechnet && _wärmeModell != null)
         {
-            var ergebnisse = new Wärmeberechnung.Ergebnisse.InstationäreErgebnisseAnzeigen(wärmeModell);
+            var ergebnisse = new Wärmeberechnung.Ergebnisse.InstationäreErgebnisseAnzeigen(_wärmeModell);
             ergebnisse.Show();
         }
         else
@@ -603,9 +605,9 @@ public partial class StartFenster
     }
     private void InstationäreModellzuständeVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (zeitintegrationBerechnet && wärmeModell != null)
+        if (ZeitintegrationBerechnet && _wärmeModell != null)
         {
-            var modellzuständeVisualisieren = new Wärmeberechnung.Ergebnisse.InstationäreModellzuständeVisualisieren(wärmeModell);
+            var modellzuständeVisualisieren = new Wärmeberechnung.Ergebnisse.InstationäreModellzuständeVisualisieren(_wärmeModell);
             modellzuständeVisualisieren.Show();
         }
         else
@@ -615,10 +617,10 @@ public partial class StartFenster
     }
     private void KnotenzeitverläufeWärmeVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (zeitintegrationBerechnet && wärmeModell != null)
+        if (ZeitintegrationBerechnet && _wärmeModell != null)
         {
             var knotenzeitverläufeVisualisieren =
-                new Wärmeberechnung.Ergebnisse.KnotenzeitverläufeVisualisieren(wärmeModell);
+                new Wärmeberechnung.Ergebnisse.KnotenzeitverläufeVisualisieren(_wärmeModell);
             knotenzeitverläufeVisualisieren.Show();
         }
         else
@@ -632,81 +634,81 @@ public partial class StartFenster
     private void TragwerksdatenEinlesen(object sender, RoutedEventArgs e)
     {
         var sb = new StringBuilder();
-        dateiDialog = new OpenFileDialog
+        _dateiDialog = new OpenFileDialog
         {
             Filter = "inp files (*.inp)|*.inp|All files (*.*)|*.*",
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
             //InitialDirectory = Directory.GetCurrentDirectory()
         };
 
-        if (Directory.Exists(dateiDialog.InitialDirectory + "\\FE-Berechnungen-App\\input"))
+        if (Directory.Exists(_dateiDialog.InitialDirectory + "\\FE-Berechnungen\\input"))
         {
-            dateiDialog.InitialDirectory += "\\FE-Berechnungen-App\\input\\Tragwerksberechnung";
-            dateiDialog.ShowDialog();
+            _dateiDialog.InitialDirectory += "\\FE-Berechnungen\\input\\Tragwerksberechnung";
+            _dateiDialog.ShowDialog();
         }
         else
         {
-            _ = MessageBox.Show("Directory für Eingabedatei " + dateiDialog.InitialDirectory +
-                                " \\FE-Berechnungen-App\\input\\Tragwerksberechnung nicht gefunden", "Tragwerksberechnung");
-            dateiDialog.ShowDialog();
+            _ = MessageBox.Show("Directory für Eingabedatei " + _dateiDialog.InitialDirectory +
+                                " \\FE-Berechnungen\\input\\Tragwerksberechnung nicht gefunden", "Tragwerksberechnung");
+            _dateiDialog.ShowDialog();
         }
-        dateiPfad = dateiDialog.FileName;
+        _dateiPfad = _dateiDialog.FileName;
 
         try
         {
-            if (dateiPfad.Length == 0)
+            if (_dateiPfad.Length == 0)
             {
                 _ = MessageBox.Show("Eingabedatei ist leer", "Tragwerksberechnung");
                 return;
             }
-            dateiZeilen = File.ReadAllLines(dateiPfad, Encoding.UTF8);
+            _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
         }
         catch (ParseAusnahme)
         {
             throw new ParseAusnahme("Abbruch: Fehler beim Lesen aus Eingabedatei ");
         }
 
-        parse = new FeParser();
-        parse.ParseModell(dateiZeilen);
-        tragwerksModell = parse.FeModell;
-        parse.ParseNodes(dateiZeilen);
-
-        var tragwerksElemente = new Tragwerksberechnung.ModelldatenLesen.ElementParser();
-        tragwerksElemente.ParseElements(dateiZeilen, tragwerksModell);
+        _parse = new FeParser();
+        _parse.ParseModell(_dateiZeilen);
+        TragwerksModell = _parse.FeModell;
+        _parse.ParseNodes(_dateiZeilen);
 
         var tragwerksMaterial = new Tragwerksberechnung.ModelldatenLesen.MaterialParser();
-        tragwerksMaterial.ParseMaterials(dateiZeilen, tragwerksModell);
+        tragwerksMaterial.ParseMaterials(_dateiZeilen, TragwerksModell);
+
+        var tragwerksElemente = new Tragwerksberechnung.ModelldatenLesen.ElementParser();
+        tragwerksElemente.ParseElements(_dateiZeilen, TragwerksModell);
 
         var tragwerksLasten = new Tragwerksberechnung.ModelldatenLesen.LastParser();
-        tragwerksLasten.ParseLasten(dateiZeilen, tragwerksModell);
+        tragwerksLasten.ParseLasten(_dateiZeilen, TragwerksModell);
 
         var tragwerksRandbedingungen = new Tragwerksberechnung.ModelldatenLesen.RandbedingungParser();
-        tragwerksRandbedingungen.ParseRandbedingungen(dateiZeilen, tragwerksModell);
+        tragwerksRandbedingungen.ParseRandbedingungen(_dateiZeilen, TragwerksModell);
 
         var tragwerksTransient = new Tragwerksberechnung.ModelldatenLesen.TransientParser();
-        tragwerksTransient.ParseZeitintegration(dateiZeilen, tragwerksModell);
+        tragwerksTransient.ParseZeitintegration(_dateiZeilen, TragwerksModell);
 
-        zeitintegrationDaten = tragwerksTransient.zeitintegrationDaten;
-        berechnet = false;
-        zeitintegrationBerechnet = false;
+        ZeitintegrationDaten = tragwerksTransient.ZeitintegrationDaten;
+        Berechnet = false;
+        ZeitintegrationBerechnet = false;
 
         sb.Append(FeParser.EingabeGefunden + "\n\nTragwerksdaten erfolgreich eingelesen");
         _ = MessageBox.Show(sb.ToString(), "Tragwerksberechnung");
         sb.Clear();
 
-        tragwerkVisual = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren(tragwerksModell);
-        tragwerkVisual.Show();
+        TragwerkVisual = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren(TragwerksModell);
+        TragwerkVisual.Show();
     }
     private void TragwerksdatenEditieren(object sender, RoutedEventArgs e)
     {
-        if (dateiPfad == null)
+        if (_dateiPfad == null)
         {
             var tragwerksdaten = new Dateieingabe.ModelldatenEditieren();
             tragwerksdaten.Show();
         }
         else
         {
-            var tragwerksdaten = new Dateieingabe.ModelldatenEditieren(dateiPfad);
+            var tragwerksdaten = new Dateieingabe.ModelldatenEditieren(_dateiPfad);
             tragwerksdaten.Show();
         }
     }
@@ -716,30 +718,30 @@ public partial class StartFenster
         var tragwerksdatei = new Dateieingabe.NeuerDateiname();
         tragwerksdatei.ShowDialog();
 
-        var name = tragwerksdatei.dateiName;
+        var name = tragwerksdatei.DateiName;
 
         var zeilen = new List<string>
         {
             "ModellName",
-            tragwerksModell.ModellId,
+            TragwerksModell.ModellId,
             "\nRaumdimension",
-            tragwerksModell.Raumdimension + "\t" + tragwerksModell.AnzahlKnotenfreiheitsgrade,
+            TragwerksModell.Raumdimension + "\t" + TragwerksModell.AnzahlKnotenfreiheitsgrade,
             // Knoten
             "\nKnoten"
         };
 
-        switch (tragwerksModell.Raumdimension)
+        switch (TragwerksModell.Raumdimension)
         {
             case 1:
-                zeilen.AddRange(tragwerksModell.Knoten.Select(knoten => knoten.Key
+                zeilen.AddRange(TragwerksModell.Knoten.Select(knoten => knoten.Key
                                                                + "\t" + knoten.Value.Koordinaten[0]));
                 break;
             case 2:
-                zeilen.AddRange(tragwerksModell.Knoten.Select(knoten => knoten.Key
+                zeilen.AddRange(TragwerksModell.Knoten.Select(knoten => knoten.Key
                                                                + "\t" + knoten.Value.Koordinaten[0] + "\t" + knoten.Value.Koordinaten[1]));
                 break;
             case 3:
-                zeilen.AddRange(tragwerksModell.Knoten.Select(knoten => knoten.Key
+                zeilen.AddRange(TragwerksModell.Knoten.Select(knoten => knoten.Key
                                                                + "\t" + knoten.Value.Koordinaten[0] + "\t" + knoten.Value.Koordinaten[1] + "\t" + knoten.Value.Koordinaten[2]));
                 break;
             default:
@@ -753,8 +755,7 @@ public partial class StartFenster
         var alleBiegebalken = new List<Biegebalken>();
         var alleBiegebalkenGelenk = new List<BiegebalkenGelenk>();
         var alleFederElemente = new List<FederElement>();
-        var alleQuerschnitte = new List<Querschnitt>();
-        foreach (var item in tragwerksModell.Elemente)
+        foreach (var item in TragwerksModell.Elemente)
         {
             switch (item.Value)
             {
@@ -773,10 +774,7 @@ public partial class StartFenster
             }
         }
 
-        foreach (var item in tragwerksModell.Querschnitt)
-        {
-            alleQuerschnitte.Add(item.Value);
-        }
+        var alleQuerschnitte = TragwerksModell.Querschnitt.Select(item => item.Value).ToList();
 
         if (alleFachwerkelemente.Count != 0)
         {
@@ -811,7 +809,7 @@ public partial class StartFenster
 
         // Materialien
         zeilen.Add("\nMaterial");
-        foreach (var item in tragwerksModell.Material)
+        foreach (var item in TragwerksModell.Material)
         {
             sb.Clear();
             sb.Append(item.Value.MaterialId + "\t" + item.Value.MaterialWerte[0]);
@@ -823,7 +821,7 @@ public partial class StartFenster
         }
 
         // Lasten
-        foreach (var item in tragwerksModell.Lasten)
+        foreach (var item in TragwerksModell.Lasten)
         {
             zeilen.Add("\nKnotenlast");
             sb.Clear();
@@ -834,7 +832,7 @@ public partial class StartFenster
             }
             zeilen.Add(sb.ToString());
         }
-        foreach (var item in tragwerksModell.PunktLasten)
+        foreach (var item in TragwerksModell.PunktLasten)
         {
             var punktlast = (PunktLast)item.Value;
             sb.Clear();
@@ -842,7 +840,7 @@ public partial class StartFenster
             zeilen.Add(punktlast.LastId + "\t" + punktlast.ElementId
                        + "\t" + punktlast.Lastwerte[0] + "\t" + punktlast.Lastwerte[1] + "\t" + punktlast.Offset);
         }
-        foreach (var item in tragwerksModell.ElementLasten)
+        foreach (var item in TragwerksModell.ElementLasten)
         {
             sb.Clear();
             zeilen.Add("\nLinienlast");
@@ -855,7 +853,7 @@ public partial class StartFenster
         // Randbedingungen
         var fest = string.Empty;
         zeilen.Add("\nLager");
-        foreach (var item in tragwerksModell.Randbedingungen)
+        foreach (var item in TragwerksModell.Randbedingungen)
         {
             if (item.Value.Typ == 1) fest = "x";
             else if (item.Value.Typ == 2) fest = "y";
@@ -869,14 +867,14 @@ public partial class StartFenster
 
         // alle Zeilen in Datei schreiben
         var dateiName = "\\" + name + ".inp";
-        dateiPfad = dateiDialog.InitialDirectory + dateiName;
-        File.WriteAllLines(dateiPfad, zeilen);
+        _dateiPfad = _dateiDialog.InitialDirectory + dateiName;
+        File.WriteAllLines(_dateiPfad, zeilen);
     }
     private void TragwerksdatenAnzeigen(object sender, RoutedEventArgs e)
     {
-        if (tragwerksModell != null)
+        if (TragwerksModell != null)
         {
-            var tragwerk = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkdatenAnzeigen(tragwerksModell);
+            var tragwerk = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkdatenAnzeigen(TragwerksModell);
             tragwerk.Show();
         }
         else
@@ -887,10 +885,10 @@ public partial class StartFenster
     }
     private void TragwerksdatenVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (tragwerksModell != null)
+        if (TragwerksModell != null)
         {
-            tragwerkVisual = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren(tragwerksModell);
-            tragwerkVisual.Show();
+            TragwerkVisual = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren(TragwerksModell);
+            TragwerkVisual.Show();
         }
         else
         {
@@ -900,13 +898,13 @@ public partial class StartFenster
     }
     private void TragwerksdatenBerechnen(object sender, RoutedEventArgs e)
     {
-        if (tragwerksModell != null)
+        if (TragwerksModell != null)
         {
-            modellBerechnung = new Berechnung(tragwerksModell);
-            modellBerechnung.BerechneSystemMatrix();
-            modellBerechnung.BerechneSystemVektor();
-            modellBerechnung.LöseGleichungen();
-            berechnet = true;
+            ModellBerechnung = new Berechnung(TragwerksModell);
+            ModellBerechnung.BerechneSystemMatrix();
+            ModellBerechnung.BerechneSystemVektor();
+            ModellBerechnung.LöseGleichungen();
+            Berechnet = true;
             _ = MessageBox.Show("Systemgleichungen erfolgreich gelöst", "statische Tragwerksberechnung");
         }
         else
@@ -917,17 +915,17 @@ public partial class StartFenster
     }
     private void StatikErgebnisseAnzeigen(object sender, RoutedEventArgs e)
     {
-        if (tragwerksModell != null)
+        if (TragwerksModell != null)
         {
-            if (!berechnet)
+            if (!Berechnet)
             {
-                modellBerechnung = new Berechnung(tragwerksModell);
-                modellBerechnung.BerechneSystemMatrix();
-                modellBerechnung.BerechneSystemVektor();
-                modellBerechnung.LöseGleichungen();
-                berechnet = true;
+                ModellBerechnung = new Berechnung(TragwerksModell);
+                ModellBerechnung.BerechneSystemMatrix();
+                ModellBerechnung.BerechneSystemVektor();
+                ModellBerechnung.LöseGleichungen();
+                Berechnet = true;
             }
-            var ergebnisse = new Tragwerksberechnung.Ergebnisse.StatikErgebnisseAnzeigen(tragwerksModell);
+            var ergebnisse = new Tragwerksberechnung.Ergebnisse.StatikErgebnisseAnzeigen(TragwerksModell);
             ergebnisse.Show();
         }
         else
@@ -937,18 +935,17 @@ public partial class StartFenster
     }
     private void StatikErgebnisseVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (tragwerksModell != null)
+        if (TragwerksModell != null)
         {
-            if (!berechnet)
-            {
-                modellBerechnung = new Berechnung(tragwerksModell);
-                modellBerechnung.BerechneSystemMatrix();
-                modellBerechnung.BerechneSystemVektor();
-                modellBerechnung.LöseGleichungen();
-                berechnet = true;
-            }
-            statikErgebnisse = new Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren(tragwerksModell);
-            statikErgebnisse.Show();
+
+            ModellBerechnung = new Berechnung(TragwerksModell);
+            ModellBerechnung.BerechneSystemMatrix();
+            ModellBerechnung.BerechneSystemVektor();
+            ModellBerechnung.LöseGleichungen();
+            Berechnet = true;
+
+            StatikErgebnisse = new Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren(TragwerksModell);
+            StatikErgebnisse.Show();
         }
         else
         {
@@ -957,19 +954,19 @@ public partial class StartFenster
     }
     private void EigenlösungTragwerkBerechnen(object sender, RoutedEventArgs e)
     {
-        if (tragwerksModell != null)
+        if (TragwerksModell != null)
         {
-            modellBerechnung ??= new Berechnung(tragwerksModell);
-            if (!berechnet)
+            ModellBerechnung ??= new Berechnung(TragwerksModell);
+            if (!Berechnet)
             {
-                modellBerechnung.BerechneSystemMatrix();
-                berechnet = true;
+                ModellBerechnung.BerechneSystemMatrix();
+                Berechnet = true;
             }
             // default = 2 Eigenzustände, falls nicht anders spezifiziert
-            tragwerksModell.Eigenzustand ??= new Eigenzustände("default", 2);
-            if (tragwerksModell.Eigenzustand.Eigenwerte != null) return;
-            modellBerechnung.Eigenzustände();
-            eigenBerechnet = true;
+            TragwerksModell.Eigenzustand ??= new Eigenzustände("default", 2);
+            if (TragwerksModell.Eigenzustand.Eigenwerte != null) return;
+            ModellBerechnung.Eigenzustände();
+            EigenBerechnet = true;
             _ = MessageBox.Show("Eigenfrequenzen erfolgreich ermittelt", "Tragwerksberechnung");
         }
         else
@@ -979,18 +976,18 @@ public partial class StartFenster
     }
     private void EigenlösungTragwerkAnzeigen(object sender, RoutedEventArgs e)
     {
-        if (tragwerksModell != null)
+        if (TragwerksModell != null)
         {
-            modellBerechnung ??= new Berechnung(tragwerksModell);
-            if (!berechnet)
+            ModellBerechnung ??= new Berechnung(TragwerksModell);
+            if (!Berechnet)
             {
-                modellBerechnung.BerechneSystemMatrix();
-                berechnet = true;
+                ModellBerechnung.BerechneSystemMatrix();
+                Berechnet = true;
             }
             // default = 2 Eigenstates, falls nicht anders spezifiziert
-            tragwerksModell.Eigenzustand ??= new Eigenzustände("default", 2);
-            if (tragwerksModell.Eigenzustand.Eigenwerte == null) modellBerechnung.Eigenzustände();
-            var eigen = new Tragwerksberechnung.Ergebnisse.EigenlösungAnzeigen(tragwerksModell);
+            TragwerksModell.Eigenzustand ??= new Eigenzustände("default", 2);
+            if (TragwerksModell.Eigenzustand.Eigenwerte == null) ModellBerechnung.Eigenzustände();
+            var eigen = new Tragwerksberechnung.Ergebnisse.EigenlösungAnzeigen(TragwerksModell);
             eigen.Show();
         }
         else
@@ -1000,19 +997,19 @@ public partial class StartFenster
     }
     private void EigenlösungTragwerkVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (tragwerksModell != null)
+        if (TragwerksModell != null)
         {
-            modellBerechnung ??= new Berechnung(tragwerksModell);
-            if (!berechnet)
+            ModellBerechnung ??= new Berechnung(TragwerksModell);
+            if (!Berechnet)
             {
-                modellBerechnung.BerechneSystemMatrix();
-                berechnet = true;
+                ModellBerechnung.BerechneSystemMatrix();
+                Berechnet = true;
             }
 
             // default = 2 Eigenstates, falls nicht anders spezifiziert
-            tragwerksModell.Eigenzustand ??= new Eigenzustände("default", 2);
-            if (tragwerksModell.Eigenzustand.Eigenwerte != null) modellBerechnung.Eigenzustände();
-            var visual = new Tragwerksberechnung.Ergebnisse.EigenlösungVisualisieren(tragwerksModell);
+            TragwerksModell.Eigenzustand ??= new Eigenzustände("default", 2);
+            if (TragwerksModell.Eigenzustand.Eigenwerte != null) ModellBerechnung.Eigenzustände();
+            var visual = new Tragwerksberechnung.Ergebnisse.EigenlösungVisualisieren(TragwerksModell);
             visual.Show();
         }
         else
@@ -1022,9 +1019,9 @@ public partial class StartFenster
     }
     private void DynamischeDaten(object sender, RoutedEventArgs e)
     {
-        if (zeitintegrationDaten && tragwerksModell != null)
+        if (ZeitintegrationDaten && TragwerksModell != null)
         {
-            var tragwerk = new Tragwerksberechnung.ModelldatenAnzeigen.DynamikDatenAnzeigen(tragwerksModell);
+            var tragwerk = new Tragwerksberechnung.ModelldatenAnzeigen.DynamikDatenAnzeigen(TragwerksModell);
             tragwerk.Show();
         }
         else
@@ -1034,10 +1031,10 @@ public partial class StartFenster
     }
     private void AnregungVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (zeitintegrationDaten && tragwerksModell != null)
+        if (ZeitintegrationDaten && TragwerksModell != null)
         {
-            modellBerechnung ??= new Berechnung(tragwerksModell);
-            var anregung = new Tragwerksberechnung.ModelldatenAnzeigen.AnregungVisualisieren(tragwerksModell);
+            ModellBerechnung ??= new Berechnung(TragwerksModell);
+            var anregung = new Tragwerksberechnung.ModelldatenAnzeigen.AnregungVisualisieren(TragwerksModell);
             anregung.Show();
         }
         else
@@ -1047,18 +1044,18 @@ public partial class StartFenster
     }
     private void DynamischeBerechnung(object sender, RoutedEventArgs e)
     {
-        if (zeitintegrationDaten && tragwerksModell != null)
+        if (ZeitintegrationDaten && TragwerksModell != null)
         {
-            if (!berechnet)
+            if (!Berechnet)
             {
-                modellBerechnung ??= new Berechnung(tragwerksModell);
-                modellBerechnung.BerechneSystemMatrix();
-                modellBerechnung.BerechneSystemVektor();
-                modellBerechnung.LöseGleichungen();
-                berechnet = true;
+                ModellBerechnung ??= new Berechnung(TragwerksModell);
+                ModellBerechnung.BerechneSystemMatrix();
+                ModellBerechnung.BerechneSystemVektor();
+                ModellBerechnung.LöseGleichungen();
+                Berechnet = true;
             }
-            modellBerechnung.ZeitintegrationZweiterOrdnung();
-            zeitintegrationBerechnet = true;
+            ModellBerechnung.ZeitintegrationZweiterOrdnung();
+            ZeitintegrationBerechnet = true;
         }
         else
         {
@@ -1067,9 +1064,9 @@ public partial class StartFenster
     }
     private void DynamischeErgebnisseAnzeigen(object sender, RoutedEventArgs e)
     {
-        if (zeitintegrationBerechnet && tragwerksModell != null)
+        if (ZeitintegrationBerechnet && TragwerksModell != null)
         {
-            _ = new Tragwerksberechnung.Ergebnisse.DynamischeErgebnisseAnzeigen(tragwerksModell);
+            _ = new Tragwerksberechnung.Ergebnisse.DynamischeErgebnisseAnzeigen(TragwerksModell);
         }
         else
         {
@@ -1078,9 +1075,9 @@ public partial class StartFenster
     }
     private void DynamischeModellzuständeVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (zeitintegrationBerechnet && tragwerksModell != null)
+        if (ZeitintegrationBerechnet && TragwerksModell != null)
         {
-            var dynamikErgebnisse = new Tragwerksberechnung.Ergebnisse.DynamischeModellzuständeVisualisieren(tragwerksModell);
+            var dynamikErgebnisse = new Tragwerksberechnung.Ergebnisse.DynamischeModellzuständeVisualisieren(TragwerksModell);
             dynamikErgebnisse.Show();
         }
         else
@@ -1090,9 +1087,9 @@ public partial class StartFenster
     }
     private void KnotenzeitverläufeTragwerkVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (zeitintegrationBerechnet && tragwerksModell != null)
+        if (ZeitintegrationBerechnet && TragwerksModell != null)
         {
-            var knotenzeitverläufe = new Tragwerksberechnung.Ergebnisse.KnotenzeitverläufeVisualisieren(tragwerksModell);
+            var knotenzeitverläufe = new Tragwerksberechnung.Ergebnisse.KnotenzeitverläufeVisualisieren(TragwerksModell);
             knotenzeitverläufe.Show();
         }
         else
@@ -1106,48 +1103,48 @@ public partial class StartFenster
     private void ElastizitätsdatenEinlesen(object sender, RoutedEventArgs e)
     {
         var sb = new StringBuilder();
-        dateiDialog = new OpenFileDialog
+        _dateiDialog = new OpenFileDialog
         {
             Filter = "inp files (*.inp)|*.inp|All files (*.*)|*.*",
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
         };
 
-        if (Directory.Exists(dateiDialog.InitialDirectory + "\\FE-Berechnungen-App\\input"))
+        if (Directory.Exists(_dateiDialog.InitialDirectory + "\\FE-Berechnungen\\input"))
         {
-            dateiDialog.InitialDirectory += "\\FE-Berechnungen-App\\input\\Elastizitätsberechnung";
-            dateiDialog.ShowDialog();
+            _dateiDialog.InitialDirectory += "\\FE-Berechnungen\\input\\Elastizitätsberechnung";
+            _dateiDialog.ShowDialog();
         }
         else
         {
-            _ = MessageBox.Show("Directory für Eingabedatei " + dateiDialog.InitialDirectory +
-                                " \\FE-Berechnungen-App\\input\\Elastizitätsberechnung nicht gefunden", "Elastizitätsberechnung");
-            dateiDialog.ShowDialog();
+            _ = MessageBox.Show("Directory für Eingabedatei " + _dateiDialog.InitialDirectory +
+                                " \\FE-Berechnungen\\input\\Elastizitätsberechnung nicht gefunden", "Elastizitätsberechnung");
+            _dateiDialog.ShowDialog();
         }
-        dateiPfad = dateiDialog.FileName;
+        _dateiPfad = _dateiDialog.FileName;
 
         try
         {
-            if (dateiPfad.Length == 0)
+            if (_dateiPfad.Length == 0)
             {
                 _ = MessageBox.Show("Eingabedatei ist leer", "Elastizitätsberechnung");
                 return;
             }
-            dateiZeilen = File.ReadAllLines(dateiPfad, Encoding.UTF8);
+            _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
         }
         catch (ParseAusnahme)
         {
             throw new ParseAusnahme("Abbruch: Fehler beim Lesen aus Eingabedatei ");
         }
 
-        parse = new FeParser();
-        parse.ParseModell(dateiZeilen);
-        elastizitätsModell = parse.FeModell;
-        parse.ParseNodes(dateiZeilen);
+        _parse = new FeParser();
+        _parse.ParseModell(_dateiZeilen);
+        _elastizitätsModell = _parse.FeModell;
+        _parse.ParseNodes(_dateiZeilen);
 
         var parseElastizität = new Elastizitätsberechnung.ModelldatenLesen.ElastizitätsParser();
-        parseElastizität.ParseElastizität(dateiZeilen, elastizitätsModell);
+        parseElastizität.ParseElastizität(_dateiZeilen, _elastizitätsModell);
 
-        berechnet = false;
+        Berechnet = false;
 
         sb.Clear();
         sb.Append(FeParser.EingabeGefunden + "\n\nModelldaten für Elastizitätsberechnung erfolgreich eingelesen");
@@ -1156,25 +1153,25 @@ public partial class StartFenster
     }
     private void ElastizitätsdatenEditieren(object sender, RoutedEventArgs e)
     {
-        if (dateiPfad == null)
+        if (_dateiPfad == null)
         {
             var elastizitätsdaten = new Dateieingabe.ModelldatenEditieren();
             elastizitätsdaten.Show();
         }
         else
         {
-            var elastizitätsdaten = new Dateieingabe.ModelldatenEditieren(dateiPfad);
+            var elastizitätsdaten = new Dateieingabe.ModelldatenEditieren(_dateiPfad);
             elastizitätsdaten.Show();
         }
     }
     private void ElastizitätsdatenAnzeigen(object sender, RoutedEventArgs e)
     {
-        if (elastizitätsModell == null)
+        if (_elastizitätsModell == null)
         {
             _ = MessageBox.Show("Modelldaten sind noch nicht spezifiziert", "Elastizitätsberechnung");
             return;
         }
-        var tragwerk = new Elastizitätsberechnung.ModelldatenAnzeigen.ElastizitätsdatenAnzeigen(elastizitätsModell);
+        var tragwerk = new Elastizitätsberechnung.ModelldatenAnzeigen.ElastizitätsdatenAnzeigen(_elastizitätsModell);
         tragwerk.Show();
     }
     private void ElastizitätsdatenSichern(object sender, RoutedEventArgs e)
@@ -1182,35 +1179,34 @@ public partial class StartFenster
         var elastizitätsdatei = new Dateieingabe.NeuerDateiname();
         elastizitätsdatei.ShowDialog();
 
-        var name = elastizitätsdatei.dateiName;
+        var name = elastizitätsdatei.DateiName;
 
         var zeilen = new List<string>
         {
             "ModellName",
-            elastizitätsModell.ModellId,
+            _elastizitätsModell.ModellId,
             "\nRaumdimension"
         };
-        int knotenfreiheitsgrade = 3;
-        zeilen.Add(elastizitätsModell.Raumdimension + "\t" + knotenfreiheitsgrade);
+        const int knotenfreiheitsgrade = 3;
+        zeilen.Add(_elastizitätsModell.Raumdimension + "\t" + knotenfreiheitsgrade);
 
         // Knoten
         zeilen.Add("\nKnoten");
-        if (elastizitätsModell.Raumdimension == 2)
+        if (_elastizitätsModell.Raumdimension == 2)
         {
-            zeilen.AddRange(elastizitätsModell.Knoten.Select(knoten => knoten.Key
+            zeilen.AddRange(_elastizitätsModell.Knoten.Select(knoten => knoten.Key
                                                                        + "\t" + knoten.Value.Koordinaten[0] + "\t" + knoten.Value.Koordinaten[1]));
         }
         else
         {
-            zeilen.AddRange(elastizitätsModell.Knoten.Select(knoten => knoten.Key
+            zeilen.AddRange(_elastizitätsModell.Knoten.Select(knoten => knoten.Key
                                                                        + "\t" + knoten.Value.Koordinaten[0] + "\t" + knoten.Value.Koordinaten[1] + "\t" + knoten.Value.Koordinaten[2]));
         }
 
         // Elemente
         var alleElemente2D3 = new List<Elastizitätsberechnung.Modelldaten.Element2D3>();
         var alleElemente3D8 = new List<Elastizitätsberechnung.Modelldaten.Element3D8>();
-        var alleQuerschnitte = new List<Querschnitt>();
-        foreach (var item in elastizitätsModell.Elemente)
+        foreach (var item in _elastizitätsModell.Elemente)
         {
             switch (item.Value)
             {
@@ -1222,10 +1218,8 @@ public partial class StartFenster
                     break;
             }
         }
-        foreach (var item in elastizitätsModell.Querschnitt)
-        {
-            alleQuerschnitte.Add(item.Value);
-        }
+
+        var alleQuerschnitte = _elastizitätsModell.Querschnitt.Select(item => item.Value).ToList();
 
         if (alleElemente2D3.Count != 0)
         {
@@ -1252,7 +1246,7 @@ public partial class StartFenster
         // Materialien
         zeilen.Add("\n" + "Material");
         var sb = new StringBuilder();
-        foreach (var item in elastizitätsModell.Material)
+        foreach (var item in _elastizitätsModell.Material)
         {
             sb.Clear();
             sb.Append(item.Value.MaterialId + "\t" + item.Value.MaterialWerte[0]);
@@ -1264,8 +1258,8 @@ public partial class StartFenster
         }
 
         // Lasten
-        if (elastizitätsModell.Lasten.Count > 0) zeilen.Add("\nKnotenlasten");
-        foreach (var item in elastizitätsModell.Lasten)
+        if (_elastizitätsModell.Lasten.Count > 0) zeilen.Add("\nKnotenlasten");
+        foreach (var item in _elastizitätsModell.Lasten)
         {
             sb.Clear();
             sb.Append(item.Value.LastId + "\t" + item.Value.KnotenId + "\t" + item.Value.Lastwerte[0]);
@@ -1276,37 +1270,56 @@ public partial class StartFenster
             zeilen.Add(sb.ToString());
         }
 
-        if (elastizitätsModell.LinienLasten.Count > 0) zeilen.Add("\nLinienlasten");
-        foreach (var item in elastizitätsModell.LinienLasten)
-        {
-            zeilen.Add(item.Value.LastId + "\t" + item.Value.StartKnotenId
-                       + "\t" + item.Value.Lastwerte[0] + "\t" + item.Value.Lastwerte[1]
-                       + "\t" + item.Value.EndKnotenId
-                       + "\t" + item.Value.Lastwerte[2] + "\t" + item.Value.Lastwerte[3]);
-        }
+        if (_elastizitätsModell.LinienLasten.Count > 0) zeilen.Add("\nLinienlasten");
+        zeilen.AddRange(_elastizitätsModell.LinienLasten.Select(item
+            => item.Value.LastId + "\t" + item.Value.StartKnotenId + "\t" + item.Value.Lastwerte[0] + "\t" + item.Value.Lastwerte[1]
+               + "\t" + item.Value.EndKnotenId + "\t" + item.Value.Lastwerte[2] + "\t" + item.Value.Lastwerte[3]));
 
         // Randbedingungen
         var fest = string.Empty;
         zeilen.Add("\nRandbedingungen");
-        foreach (var item in elastizitätsModell.Randbedingungen)
+        foreach (var item in _elastizitätsModell.Randbedingungen)
         {
             sb.Clear();
-            if (elastizitätsModell.Raumdimension == 2)
+            switch (_elastizitätsModell.Raumdimension)
             {
-                if (item.Value.Typ == 1) fest = "x";
-                else if (item.Value.Typ == 2) fest = "y";
-                else if (item.Value.Typ == 3) fest = "xy";
-                else if (item.Value.Typ == 7) fest = "xyr";
-            }
-            else if (elastizitätsModell.Raumdimension == 3)
-            {
-                if (item.Value.Typ == 1) fest = "x";
-                else if (item.Value.Typ == 2) fest = "y";
-                else if (item.Value.Typ == 3) fest = "xy";
-                else if (item.Value.Typ == 4) fest = "z";
-                else if (item.Value.Typ == 5) fest = "xz";
-                else if (item.Value.Typ == 6) fest = "yz";
-                else if (item.Value.Typ == 7) fest = "xyz";
+                case 2 when item.Value.Typ == 1:
+                    fest = "x";
+                    break;
+                case 2 when item.Value.Typ == 2:
+                    fest = "y";
+                    break;
+                case 2 when item.Value.Typ == 3:
+                    fest = "xy";
+                    break;
+                case 2:
+                    {
+                        if (item.Value.Typ == 7) fest = "xyr";
+                        break;
+                    }
+                case 3 when item.Value.Typ == 1:
+                    fest = "x";
+                    break;
+                case 3 when item.Value.Typ == 2:
+                    fest = "y";
+                    break;
+                case 3 when item.Value.Typ == 3:
+                    fest = "xy";
+                    break;
+                case 3 when item.Value.Typ == 4:
+                    fest = "z";
+                    break;
+                case 3 when item.Value.Typ == 5:
+                    fest = "xz";
+                    break;
+                case 3 when item.Value.Typ == 6:
+                    fest = "yz";
+                    break;
+                case 3:
+                    {
+                        if (item.Value.Typ == 7) fest = "xyz";
+                        break;
+                    }
             }
 
             sb.Append(item.Key + "\t" + item.Value.KnotenId + "\t" + fest);
@@ -1319,27 +1332,27 @@ public partial class StartFenster
 
         // alle Zeilen in Datei schreiben
         var dateiName = "\\" + name + ".inp";
-        dateiPfad = dateiDialog.InitialDirectory + dateiName;
-        File.WriteAllLines(dateiPfad, zeilen);
+        _dateiPfad = _dateiDialog.InitialDirectory + dateiName;
+        File.WriteAllLines(_dateiPfad, zeilen);
     }
     private void ElastizitätsdatenVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (elastizitätsModell == null)
+        if (_elastizitätsModell == null)
         {
             _ = MessageBox.Show("Modelldaten sind noch nicht spezifiziert", "Elastizitätsberechnung");
             return;
         }
-        switch (elastizitätsModell.Raumdimension)
+        switch (_elastizitätsModell.Raumdimension)
         {
             case 2:
                 {
-                    var tragwerk = new Elastizitätsberechnung.ModelldatenAnzeigen.ElastizitätsmodellVisualisieren(elastizitätsModell);
+                    var tragwerk = new Elastizitätsberechnung.ModelldatenAnzeigen.ElastizitätsmodellVisualisieren(_elastizitätsModell);
                     tragwerk.Show();
                     break;
                 }
             case 3:
                 {
-                    var tragwerk = new Elastizitätsberechnung.ModelldatenAnzeigen.Elastizitätsmodell3DVisualisieren(elastizitätsModell);
+                    var tragwerk = new Elastizitätsberechnung.ModelldatenAnzeigen.Elastizitätsmodell3DVisualisieren(_elastizitätsModell);
                     tragwerk.Show();
                     break;
                 }
@@ -1348,18 +1361,18 @@ public partial class StartFenster
 
     private void ElastizitätsdatenBerechnen(object sender, RoutedEventArgs e)
     {
-        if (elastizitätsModell == null)
+        if (_elastizitätsModell == null)
         {
             _ = MessageBox.Show("Modelldaten für Elastizitätsberechnung sind noch nicht spezifiziert", "Elastizitätsberechnung");
             return;
         }
         try
         {
-            modellBerechnung = new Berechnung(elastizitätsModell);
-            modellBerechnung.BerechneSystemMatrix();
-            modellBerechnung.BerechneSystemVektor();
-            modellBerechnung.LöseGleichungen();
-            berechnet = true;
+            ModellBerechnung = new Berechnung(_elastizitätsModell);
+            ModellBerechnung.BerechneSystemMatrix();
+            ModellBerechnung.BerechneSystemVektor();
+            ModellBerechnung.LöseGleichungen();
+            Berechnet = true;
 
             _ = MessageBox.Show("Systemgleichungen erfolgreich gelöst", "Elastizitätsberechnung");
         }
@@ -1371,49 +1384,56 @@ public partial class StartFenster
     }
     private void ElastizitätsberechnungErgebnisse(object sender, RoutedEventArgs e)
     {
-        if (!berechnet)
+        if (!Berechnet)
         {
-            if (elastizitätsModell == null)
+            if (_elastizitätsModell == null)
             {
                 _ = MessageBox.Show("Modelldaten für Elastizitätsberechnung sind noch nicht spezifiziert", "Elastizitätsberechnung");
                 return;
             }
-            modellBerechnung = new Berechnung(elastizitätsModell);
-            modellBerechnung.BerechneSystemMatrix();
-            modellBerechnung.BerechneSystemVektor();
-            modellBerechnung.LöseGleichungen();
-            berechnet = true;
+            ModellBerechnung = new Berechnung(_elastizitätsModell);
+            ModellBerechnung.BerechneSystemMatrix();
+            ModellBerechnung.BerechneSystemVektor();
+            ModellBerechnung.LöseGleichungen();
+            Berechnet = true;
         }
-        var ergebnisse = new Elastizitätsberechnung.Ergebnisse.StatikErgebnisseAnzeigen(elastizitätsModell);
+        var ergebnisse = new Elastizitätsberechnung.Ergebnisse.StatikErgebnisseAnzeigen(_elastizitätsModell);
         ergebnisse.Show();
     }
     private void ElastizitätsErgebnisseVisualisieren(object sender, RoutedEventArgs e)
     {
         var sb = new StringBuilder();
-        if (!berechnet)
+        if (!Berechnet)
         {
-            if (elastizitätsModell == null)
+            if (_elastizitätsModell == null)
             {
                 _ = MessageBox.Show("Modelldaten für Elastizitätsberechnung sind noch nicht spezifiziert", "Elastizitätsberechnung");
                 return;
             }
-            modellBerechnung = new Berechnung(elastizitätsModell);
-            modellBerechnung.BerechneSystemMatrix();
-            modellBerechnung.BerechneSystemVektor();
-            modellBerechnung.LöseGleichungen();
-            berechnet = true;
+            ModellBerechnung = new Berechnung(_elastizitätsModell);
+            ModellBerechnung.BerechneSystemMatrix();
+            ModellBerechnung.BerechneSystemVektor();
+            ModellBerechnung.LöseGleichungen();
+            Berechnet = true;
         }
 
-        if (elastizitätsModell.Raumdimension == 2)
+        switch (_elastizitätsModell.Raumdimension)
         {
-            var tragwerk = new Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren(elastizitätsModell);
-            tragwerk.Show();
+            case 2:
+                {
+                    var tragwerk = new Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren(_elastizitätsModell);
+                    tragwerk.Show();
+                    break;
+                }
+            case 3:
+                {
+                    var tragwerk = new Elastizitätsberechnung.Ergebnisse.StatikErgebnisse3DVisualisieren(_elastizitätsModell);
+                    tragwerk.Show();
+                    break;
+                }
+            default:
+                _ = MessageBox.Show(sb.ToString(), "falsche Raumdimension, muss 2 oder 3 sein");
+                break;
         }
-        else if (elastizitätsModell.Raumdimension == 3)
-        {
-            var tragwerk = new Elastizitätsberechnung.Ergebnisse.StatikErgebnisse3DVisualisieren(elastizitätsModell);
-            tragwerk.Show();
-        }
-        else _ = MessageBox.Show(sb.ToString(), "falsche Raumdimension, muss 2 oder 3 sein");
     }
 }
