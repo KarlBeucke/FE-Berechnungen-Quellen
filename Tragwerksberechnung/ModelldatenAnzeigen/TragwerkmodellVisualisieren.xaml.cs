@@ -29,7 +29,7 @@ public partial class TragwerkmodellVisualisieren
     private KnotenNeu _neuerKnoten;
     private Point _mittelpunkt;
     private bool _isDragging;
-    private bool _isElement, _isKnotenlast, _isLinienlast, _isPunktlast, _isLager;
+    private bool _isKnoten, _isElement, _isKnotenlast, _isLinienlast, _isPunktlast, _isLager;
     private ElementNeu _elementNeu;
     private KnotenlastNeu _knotenlastNeu;
     private LinienlastNeu _linienlastNeu;
@@ -210,6 +210,7 @@ public partial class TragwerkmodellVisualisieren
     {
         Knoten.ReleaseMouseCapture();
         _isDragging = false;
+        _isKnoten = false;
     }
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -236,11 +237,9 @@ public partial class TragwerkmodellVisualisieren
         }
 
         // click auf Shape Darstellungen
-        foreach (var item in _hitList)
+        foreach (var item in _hitList.TakeWhile(item => !_isKnoten && !_isElement && !_isKnotenlast).
+                     Where(item => item.Name != null))
         {
-            if (_isElement || _isKnotenlast) break;
-            if (item.Name == null) continue;
-
             // Elemente
             if (_modell.Elemente.TryGetValue(item.Name, out var element))
                 ElementNeu(element);
@@ -263,7 +262,10 @@ public partial class TragwerkmodellVisualisieren
         {
             // Textdarstellung ist ein Knoten
             if (_modell.Knoten.TryGetValue(item.Text, out var knoten))
+            {
+                _isKnoten = true;
                 KnotenNeu(knoten);
+            }
 
             // Textdarstellung ist ein Element
             if (_modell.Elemente.TryGetValue(item.Text, out var element))

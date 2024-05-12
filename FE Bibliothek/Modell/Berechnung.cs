@@ -329,7 +329,7 @@ namespace FEBibliothek.Modell
             // diagonale spezifische Wärme- bzw. Massenmatrix
             if (!setzDimension) BestimmeDimension();
 
-            // traversier Elemente zur Ermittlung der Koeffizienten der Diagonalmatrix
+            // traversiere Elemente zur Ermittlung der Koeffizienten der Diagonalmatrix
             foreach (var item in modell.Elemente)
             {
                 var abstraktesElement = item.Value;
@@ -496,7 +496,7 @@ namespace FEBibliothek.Modell
                     temperatur[k] = systemGleichungen.Vektor;
             }
         }
-        // zeitanhängige vordefinierte Randbedingungen
+        // zeitabhängige vordefinierte Randbedingungen
         private void BerechneRandbedingungenErsterOrdnung(double dt, double[][] temperatur)
         {
             var nZeitschritte = temperatur.Length;
@@ -712,7 +712,7 @@ namespace FEBibliothek.Modell
         // zeitabhängige Knoteneinwirkungen
         private void BerechneAnregungsfunktionZweiterOrdnung(double dt, IReadOnlyList<double[]> anregung)
         {
-            // finde zweitabhängige Knoteneinwirkungen
+            // finde zeitabhängige Knoteneinwirkungen
             foreach (var item in modell.ZeitabhängigeKnotenLasten)
             {
                 var force = new double[anregung.Count];

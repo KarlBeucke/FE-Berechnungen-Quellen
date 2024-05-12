@@ -1512,9 +1512,10 @@ public class Darstellung
                     // Querkraftlinie auf der rechten Seite, nur falls Nulldurchgang < Elementlänge
                     if (l - lq0 < double.Epsilon) return;
                     var anzahlq1 = anzahl - (int)(lq0 / inkrement);
-                    var polyLine1 = new Point[anzahlq1 + 1];
-                    Array.ConstrainedCopy(polyLinePointArray, anzahlq0 + 1, polyLine1, 0, anzahlq1);
-                    polyLine1[anzahlq1] = endPoint;
+                    var polyLine1 = new Point[anzahlq1 + 2];
+                    polyLine1[0] = polyLine0[anzahlq0];
+                    Array.ConstrainedCopy(polyLinePointArray, anzahlq0+1, polyLine1, 1, anzahlq1);
+                    polyLine1[anzahlq1+1] = endPoint;
                     qSegment = new PolyLineSegment { Points = new PointCollection(polyLine1) };
 
                     pathGeometry = new PathGeometry();
