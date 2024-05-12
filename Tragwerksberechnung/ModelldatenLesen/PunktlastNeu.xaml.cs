@@ -9,21 +9,21 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class PunktlastNeu
 {
-    private readonly FeModell modell;
-    private readonly TragwerkLastenKeys punktlastKeys;
+    private readonly FeModell _modell;
+    private readonly TragwerkLastenKeys _punktlastKeys;
     public PunktlastNeu(FeModell modell)
     {
         InitializeComponent();
-        this.modell = modell;
-        punktlastKeys = new TragwerkLastenKeys(modell);
-        punktlastKeys.Show();
+        this._modell = modell;
+        _punktlastKeys = new TragwerkLastenKeys(modell);
+        _punktlastKeys.Show();
         Show();
     }
 
     public PunktlastNeu(FeModell modell, string last, string element, double px, double py, double offset)
     {
         InitializeComponent();
-        this.modell = modell;
+        this._modell = modell;
         LastId.Text = last;
         ElementId.Text = element;
         Px.Text = px.ToString("0.00");
@@ -42,9 +42,9 @@ public partial class PunktlastNeu
         }
 
         // vorhandene Linienlast
-        if (modell.PunktLasten.Keys.Contains(LastId.Text))
+        if (_modell.PunktLasten.Keys.Contains(LastId.Text))
         {
-            modell.PunktLasten.TryGetValue(punktlastId, out var last);
+            _modell.PunktLasten.TryGetValue(punktlastId, out var last);
             Debug.Assert(last != null, nameof(last) + " != null");
 
             var punktlast = (PunktLast)last;
@@ -66,21 +66,21 @@ public partial class PunktlastNeu
             {
                 LastId = punktlastId
             };
-            modell.PunktLasten.Add(punktlastId, punktLast);
+            _modell.PunktLasten.Add(punktlastId, punktLast);
         }
-        punktlastKeys?.Close();
+        _punktlastKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        punktlastKeys?.Close();
+        _punktlastKeys?.Close();
         Close();
     }
     private void PunktlastIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!modell.PunktLasten.ContainsKey(LastId.Text))
+        if (!_modell.PunktLasten.ContainsKey(LastId.Text))
         {
             ElementId.Text = "";
             Px.Text = "";
@@ -90,7 +90,7 @@ public partial class PunktlastNeu
         }
 
         // vorhandene Punktlastdefinition
-        modell.PunktLasten.TryGetValue(LastId.Text, out var last);
+        _modell.PunktLasten.TryGetValue(LastId.Text, out var last);
         Debug.Assert(last != null, nameof(last) + " != null");
 
         var punktlast = (PunktLast)last;
@@ -103,11 +103,11 @@ public partial class PunktlastNeu
     }
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!modell.PunktLasten.Keys.Contains(LastId.Text)) return;
-        modell.PunktLasten.Remove(LastId.Text);
-        punktlastKeys?.Close();
+        if (!_modell.PunktLasten.Keys.Contains(LastId.Text)) return;
+        _modell.PunktLasten.Remove(LastId.Text);
+        _punktlastKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
-        punktlastKeys?.Close();
+        _punktlastKeys?.Close();
     }
 }
