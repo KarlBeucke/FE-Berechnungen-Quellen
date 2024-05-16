@@ -1,4 +1,5 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FEBibliothek.Modell;
 using System.Diagnostics;
 using System.Globalization;
@@ -71,6 +72,9 @@ public partial class PunktlastNeu
         _punktlastKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
+
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual.Show();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -109,5 +113,8 @@ public partial class PunktlastNeu
         Close();
         StartFenster.TragwerkVisual.Close();
         _punktlastKeys?.Close();
+
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual.Show();
     }
 }

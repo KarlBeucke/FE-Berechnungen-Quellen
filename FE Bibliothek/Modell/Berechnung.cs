@@ -12,128 +12,128 @@ namespace FEBibliothek.Modell
 {
     public class Berechnung
     {
-        private FeModell modell;
-        private Knoten knoten;
-        private AbstraktElement element;
-        private Gleichungen systemGleichungen;
-        private ProfillöserStatus profilLöser;
-        private int dimension;
-        private bool zerlegt, setzDimension, profil, diagonalMatrix;
+        private FeModell _modell;
+        private Knoten _knoten;
+        private AbstraktElement _element;
+        private Gleichungen _systemGleichungen;
+        private ProfillöserStatus _profilLöser;
+        private int _dimension;
+        private bool _zerlegt, _setzDimension, _profil, _diagonalMatrix;
 
         public Berechnung(FeModell m)
         {
-            modell = m;
-            if (modell == null)
+            _modell = m;
+            if (_modell == null)
             {
                 throw new BerechnungAusnahme("Modelleingabedaten noch nicht eingelesen");
             }
             // setz System Indizes
             var k = 0;
-            foreach (var item in modell.Knoten)
+            foreach (var item in _modell.Knoten)
             {
-                knoten = item.Value;
-                k = knoten.SetzSystemIndizes(k);
+                _knoten = item.Value;
+                k = _knoten.SetzSystemIndizes(k);
             }
             SetzReferenzen(m);
         }
         // Objekt Referenzen werden erst auf Basis der eindeutigen Identifikatoren ermittelt, d.h. unmittelbar vor Objekt Instantiierung
-        // wenn eine Berechnung gestartet wird, müssen folglich ALLE Objektreferenzen auf Basis der eindeutigen Identifikatoren ermittelt werden
+        // wenn, eine Berechnung gestartet wird, müssen folglich ALLE Objektreferenzen auf Basis der eindeutigen Identifikatoren ermittelt werden
         private void SetzReferenzen(FeModell m)
         {
-            modell = m;
+            _modell = m;
 
             // Referenzen für Querschnittsverweise von 2D Elementen setzen
             foreach (var abstractElement in
-                        from KeyValuePair<string, AbstraktElement> item in modell.Elemente
+                        from KeyValuePair<string, AbstraktElement> item in _modell.Elemente
                         where item.Value != null
                         where item.Value is Abstrakt2D
                         let element = item.Value
                         select element)
             {
                 var element2D = (Abstrakt2D)abstractElement;
-                element2D.SetzQuerschnittReferenzen(modell);
+                element2D.SetzQuerschnittReferenzen(_modell);
             }
             // setzen aller notwendigen Elementreferenzen und der Systemindizes aller Elemente 
-            foreach (var abstractElement in modell.Elemente.Select(item => item.Value))
+            foreach (var abstractElement in _modell.Elemente.Select(item => item.Value))
             {
-                abstractElement.SetzElementReferenzen(modell);
+                abstractElement.SetzElementReferenzen(_modell);
                 abstractElement.SetzElementSystemIndizes();
             }
 
-            foreach (var randbedingung in modell.Randbedingungen.Select(item => item.Value))
+            foreach (var randbedingung in _modell.Randbedingungen.Select(item => item.Value))
             {
-                randbedingung.SetzRandbedingungenReferenzen(modell);
+                randbedingung.SetzRandbedingungenReferenzen(_modell);
             }
-            foreach (var elementLast in modell.ElementLasten.Select(item => item.Value))
+            foreach (var elementLast in _modell.ElementLasten.Select(item => item.Value))
             {
-                elementLast.SetzElementlastReferenzen(modell);
+                elementLast.SetzElementlastReferenzen(_modell);
             }
-            foreach (var zeitabhängigeKnotenlast in modell.ZeitabhängigeKnotenLasten.Select(item => item.Value))
+            foreach (var zeitabhängigeKnotenlast in _modell.ZeitabhängigeKnotenLasten.Select(item => item.Value))
             {
-                zeitabhängigeKnotenlast.SetzReferenzen(modell);
+                zeitabhängigeKnotenlast.SetzReferenzen(_modell);
             }
-            foreach (var zeitabhängigeElementLast in modell.ZeitabhängigeElementLasten.Select(item => item.Value))
+            foreach (var zeitabhängigeElementLast in _modell.ZeitabhängigeElementLasten.Select(item => item.Value))
             {
-                zeitabhängigeElementLast.SetzElementlastReferenzen(modell);
+                zeitabhängigeElementLast.SetzElementlastReferenzen(_modell);
             }
-            foreach (var zeitabhängigeRandbedingung in modell.ZeitabhängigeRandbedingung.Select(item => item.Value))
+            foreach (var zeitabhängigeRandbedingung in _modell.ZeitabhängigeRandbedingung.Select(item => item.Value))
             {
-                zeitabhängigeRandbedingung.SetzRandbedingungenReferenzen(modell);
+                zeitabhängigeRandbedingung.SetzRandbedingungenReferenzen(_modell);
             }
         }
         // bestimme Dimension der Systemmatrix *************************************************************************************
         private void BestimmeDimension()
         {
-            dimension = 0;
-            foreach (var item in modell.Knoten)
+            _dimension = 0;
+            foreach (var item in _modell.Knoten)
             {
-                dimension += item.Value.AnzahlKnotenfreiheitsgrade;
+                _dimension += item.Value.AnzahlKnotenfreiheitsgrade;
             }
-            systemGleichungen = new Gleichungen(dimension);
-            setzDimension = true;
+            _systemGleichungen = new Gleichungen(_dimension);
+            _setzDimension = true;
         }
         // berechne und löse die Matrix in Profilformat mit StatusVektor *****************************************************
         private void BestimmeProfil()
         {
-            foreach (var item in modell.Elemente)
+            foreach (var item in _modell.Elemente)
             {
-                element = item.Value;
-                systemGleichungen.SetzProfil(element.SystemIndizesElement);
+                _element = item.Value;
+                _systemGleichungen.SetzProfil(_element.SystemIndizesElement);
             }
-            systemGleichungen.AllokiereMatrix();
-            profil = true;
+            _systemGleichungen.AllokiereMatrix();
+            _profil = true;
         }
         public void BerechneSystemMatrix()
         {
-            if (!setzDimension) BestimmeDimension();
-            if (!profil) BestimmeProfil();
+            if (!_setzDimension) BestimmeDimension();
+            if (!_profil) BestimmeProfil();
             // traversiere Elemente zur Bestimmung der Matrixkoeffizienten
-            foreach (var item in modell.Elemente)
+            foreach (var item in _modell.Elemente)
             {
-                element = item.Value;
-                var elementMatrix = element.BerechneElementMatrix();
-                systemGleichungen.AddierMatrix(element.SystemIndizesElement, elementMatrix);
+                _element = item.Value;
+                var elementMatrix = _element.BerechneElementMatrix();
+                _systemGleichungen.AddierMatrix(_element.SystemIndizesElement, elementMatrix);
             }
             SetzStatusVektor();
         }
         private void SetzStatusVektor()
         {
             // für alle festen Randbedingungen
-            foreach (var item in modell.Randbedingungen) StatusKnoten(item.Value);
+            foreach (var item in _modell.Randbedingungen) StatusKnoten(item.Value);
         }
         private void StatusKnoten(AbstraktRandbedingung randbedingung)
         {
             var knotenId = randbedingung.KnotenId;
 
-            if (modell.Knoten.TryGetValue(knotenId, out knoten))
+            if (_modell.Knoten.TryGetValue(knotenId, out _knoten))
             {
-                systemGleichungen.SetzProfil(knoten.SystemIndizes);
+                _systemGleichungen.SetzProfil(_knoten.SystemIndizes);
                 var vordefiniert = randbedingung.Vordefiniert;
                 var festgehalten = randbedingung.Festgehalten;
                 for (var i = 0; i < festgehalten.Length; i++)
                 {
                     if (festgehalten[i])
-                        systemGleichungen.SetzStatus(true, knoten.SystemIndizes[i], vordefiniert[i]);
+                        _systemGleichungen.SetzStatus(true, _knoten.SystemIndizes[i], vordefiniert[i]);
                 }
             }
             else
@@ -143,14 +143,14 @@ namespace FEBibliothek.Modell
         }
         private void NeuberechnungSystemMatrix()
         {
-            // traversiere die Element zur Bestimmung der Matrixkoeffizienten
-            systemGleichungen.InitialisiereMatrix();
-            foreach (var item in modell.Elemente)
+            // traversiere Element zur Bestimmung der Matrixkoeffizienten
+            _systemGleichungen.InitialisiereMatrix();
+            foreach (var item in _modell.Elemente)
             {
-                element = item.Value;
-                var indizes = element.SystemIndizesElement;
-                var elementMatrix = element.BerechneElementMatrix();
-                systemGleichungen.AddierMatrix(indizes, elementMatrix);
+                _element = item.Value;
+                var indizes = _element.SystemIndizesElement;
+                var elementMatrix = _element.BerechneElementMatrix();
+                _systemGleichungen.AddierMatrix(indizes, elementMatrix);
             }
         }
         public void BerechneSystemVektor()
@@ -159,38 +159,38 @@ namespace FEBibliothek.Modell
             double[] lastVektor;
 
             // Knotenlasten
-            foreach (var item in modell.Lasten)
+            foreach (var item in _modell.Lasten)
             {
                 var knotenLast = item.Value;
                 var knotenId = item.Value.KnotenId;
-                if (modell.Knoten.TryGetValue(knotenId, out var lastKnoten))
+                if (_modell.Knoten.TryGetValue(knotenId, out var lastKnoten))
                 {
                     indizes = lastKnoten.SystemIndizes;
                     lastVektor = knotenLast.BerechneLastVektor();
-                    systemGleichungen.AddVektor(indizes, lastVektor);
+                    _systemGleichungen.AddVektor(indizes, lastVektor);
                 }
                 else
                 {
                     throw new BerechnungAusnahme("Lastknoten " + knotenId + " ist nicht im Modell enthalten.");
                 }
             }
-            // Linienenlasten
-            foreach (var item in modell.LinienLasten)
+            // Linienlasten
+            foreach (var item in _modell.LinienLasten)
             {
                 var linienLast = item.Value;
                 var startKnotenId = item.Value.StartKnotenId;
-                if (modell.Knoten.TryGetValue(startKnotenId, out knoten))
+                if (_modell.Knoten.TryGetValue(startKnotenId, out _knoten))
                 {
-                    linienLast.StartKnoten = knoten;
+                    linienLast.StartKnoten = _knoten;
                 }
                 else
                 {
                     throw new BerechnungAusnahme("Linienlastknoten " + startKnotenId + " ist nicht im Modell enthalten.");
                 }
                 var endKnotenId = item.Value.EndKnotenId;
-                if (modell.Knoten.TryGetValue(endKnotenId, out knoten))
+                if (_modell.Knoten.TryGetValue(endKnotenId, out _knoten))
                 {
-                    linienLast.EndKnoten = knoten;
+                    linienLast.EndKnoten = _knoten;
                 }
                 else
                 {
@@ -204,34 +204,34 @@ namespace FEBibliothek.Modell
                 for (var i = 0; i < end; i++)
                     indizes[start + i] = linienLast.EndKnoten.SystemIndizes[i];
                 lastVektor = linienLast.BerechneLastVektor();
-                systemGleichungen.AddVektor(indizes, lastVektor);
+                _systemGleichungen.AddVektor(indizes, lastVektor);
             }
             //Elementlasten
-            foreach (var item in modell.ElementLasten)
+            foreach (var item in _modell.ElementLasten)
             {
                 var elementLast = item.Value;
                 var elementId = item.Value.ElementId;
-                if (modell.Elemente.TryGetValue(elementId, out element))
+                if (_modell.Elemente.TryGetValue(elementId, out _element))
                 {
-                    indizes = element.SystemIndizesElement;
+                    indizes = _element.SystemIndizesElement;
                     lastVektor = elementLast.BerechneLastVektor();
-                    systemGleichungen.AddVektor(indizes, lastVektor);
+                    _systemGleichungen.AddVektor(indizes, lastVektor);
                 }
                 else
                 {
                     throw new BerechnungAusnahme("Element " + elementId + " für Elementlast ist nicht im Modell enthalten.");
                 }
             }
-            foreach (var item in modell.PunktLasten)
+            foreach (var item in _modell.PunktLasten)
             {
                 var punktLast = item.Value;
                 var elementId = item.Value.ElementId;
-                if (modell.Elemente.TryGetValue(elementId, out element))
+                if (_modell.Elemente.TryGetValue(elementId, out _element))
                 {
-                    punktLast.Element = element;
-                    indizes = element.SystemIndizesElement;
+                    punktLast.Element = _element;
+                    indizes = _element.SystemIndizesElement;
                     lastVektor = punktLast.BerechneLastVektor();
-                    systemGleichungen.AddVektor(indizes, lastVektor);
+                    _systemGleichungen.AddVektor(indizes, lastVektor);
                 }
                 else
                 {
@@ -241,48 +241,48 @@ namespace FEBibliothek.Modell
         }
         public void LöseGleichungen()
         {
-            if (!zerlegt)
+            if (!_zerlegt)
             {
-                profilLöser = new ProfillöserStatus(
-                    systemGleichungen.Matrix, systemGleichungen.Vektor,
-                    systemGleichungen.Primal, systemGleichungen.Dual,
-                    systemGleichungen.Status, systemGleichungen.Profil);
-                profilLöser.Dreieckszerlegung();
-                zerlegt = true;
+                _profilLöser = new ProfillöserStatus(
+                    _systemGleichungen.Matrix, _systemGleichungen.Vektor,
+                    _systemGleichungen.Primal, _systemGleichungen.Dual,
+                    _systemGleichungen.Status, _systemGleichungen.Profil);
+                _profilLöser.Dreieckszerlegung();
+                _zerlegt = true;
             }
-            profilLöser.Lösung();
+            _profilLöser.Lösung();
             // ... speichere System Unbekannte (primale Werte)
-            foreach (var item in modell.Knoten)
+            foreach (var item in _modell.Knoten)
             {
-                knoten = item.Value;
-                var index = knoten.SystemIndizes;
-                knoten.Knotenfreiheitsgrade = new double[knoten.AnzahlKnotenfreiheitsgrade];
-                for (var i = 0; i < knoten.Knotenfreiheitsgrade.Length; i++)
-                    knoten.Knotenfreiheitsgrade[i] = systemGleichungen.Primal[index[i]];
+                _knoten = item.Value;
+                var index = _knoten.SystemIndizes;
+                _knoten.Knotenfreiheitsgrade = new double[_knoten.AnzahlKnotenfreiheitsgrade];
+                for (var i = 0; i < _knoten.Knotenfreiheitsgrade.Length; i++)
+                    _knoten.Knotenfreiheitsgrade[i] = _systemGleichungen.Primal[index[i]];
             }
             // ... speichere duale Werte
-            var reaktionen = systemGleichungen.Dual;
-            foreach (var randbedingung in modell.Randbedingungen.Select(item => item.Value))
+            var reaktionen = _systemGleichungen.Dual;
+            foreach (var randbedingung in _modell.Randbedingungen.Select(item => item.Value))
             {
-                knoten = randbedingung.Knoten;
-                var index = knoten.SystemIndizes;
-                var reaktion = new double[knoten.AnzahlKnotenfreiheitsgrade];
+                _knoten = randbedingung.Knoten;
+                var index = _knoten.SystemIndizes;
+                var reaktion = new double[_knoten.AnzahlKnotenfreiheitsgrade];
                 for (var i = 0; i < reaktion.Length; i++)
                     reaktion[i] = reaktionen[index[i]];
-                knoten.Reaktionen = reaktion;
+                _knoten.Reaktionen = reaktion;
             }
         }
 
         // Eigenlösungen ***********************************************************************************************************
         public void Eigenzustände()
         {
-            var anzahlZustände = modell.Eigenzustand.AnzahlZustände;
-            var aMatrix = systemGleichungen.Matrix;
-            if (!diagonalMatrix) BerechneDiagonalMatrix();
-            var bDiag = systemGleichungen.DiagonalMatrix;
+            var anzahlZustände = _modell.Eigenzustand.AnzahlZustände;
+            var aMatrix = _systemGleichungen.Matrix;
+            if (!_diagonalMatrix) BerechneDiagonalMatrix();
+            var bDiag = _systemGleichungen.DiagonalMatrix;
 
             // allgemeine B-Matrix wird erweitert auf die gleiche Struktur wie A
-            var bMatrix = new double[dimension][];
+            var bMatrix = new double[_dimension][];
             int zeile;
             for (zeile = 0; zeile < aMatrix.Length; zeile++)
             {
@@ -293,22 +293,22 @@ namespace FEBibliothek.Modell
                 bMatrix[zeile][spalte] = bDiag[zeile];
             }
 
-            if (!modell.ZeitIntegration)
+            if (!_modell.ZeitIntegration)
             {
                 SetzZeitabhängigenStatusVektor();
             }
 
-            if (!zerlegt)
+            if (!_zerlegt)
             {
-                profilLöser = new ProfillöserStatus(
-                    systemGleichungen.Matrix,
-                    systemGleichungen.Status, systemGleichungen.Profil);
-                profilLöser.Dreieckszerlegung();
-                zerlegt = true;
+                _profilLöser = new ProfillöserStatus(
+                    _systemGleichungen.Matrix,
+                    _systemGleichungen.Status, _systemGleichungen.Profil);
+                _profilLöser.Dreieckszerlegung();
+                _zerlegt = true;
             }
 
-            var eigenLöser = new Eigenlöser(systemGleichungen.Matrix, bMatrix,
-                systemGleichungen.Profil, systemGleichungen.Status,
+            var eigenLöser = new Eigenlöser(_systemGleichungen.Matrix, bMatrix,
+                _systemGleichungen.Profil, _systemGleichungen.Status,
                 anzahlZustände);
             eigenLöser.LöseEigenzustände();
 
@@ -320,57 +320,57 @@ namespace FEBibliothek.Modell
                 eigenwerte[i] = eigenLöser.HolEigenwert(i);
                 eigenvektoren[i] = eigenLöser.HolEigenvektor(i);
             }
-            modell.Eigenzustand.Eigenwerte = eigenwerte;
-            modell.Eigenzustand.Eigenvektoren = eigenvektoren;
-            modell.Eigen = true;
+            _modell.Eigenzustand.Eigenwerte = eigenwerte;
+            _modell.Eigenzustand.Eigenvektoren = eigenvektoren;
+            _modell.Eigen = true;
         }
         private void BerechneDiagonalMatrix()
         {
             // diagonale spezifische Wärme- bzw. Massenmatrix
-            if (!setzDimension) BestimmeDimension();
+            if (!_setzDimension) BestimmeDimension();
 
             // traversiere Elemente zur Ermittlung der Koeffizienten der Diagonalmatrix
-            foreach (var item in modell.Elemente)
+            foreach (var item in _modell.Elemente)
             {
                 var abstraktesElement = item.Value;
                 var index = abstraktesElement.SystemIndizesElement;
                 var elementMatrix = abstraktesElement.BerechneDiagonalMatrix();
-                systemGleichungen.AddDiagonalMatrix(index, elementMatrix);
+                _systemGleichungen.AddDiagonalMatrix(index, elementMatrix);
             }
 
             // festgehaltene Freiheitsgrade liefern keine Beiträge zu Massenkräften
-            foreach (var randbedingung in modell.Randbedingungen)
+            foreach (var randbedingung in _modell.Randbedingungen)
             {
                 var systemIndizes = randbedingung.Value.Knoten.SystemIndizes;
                 for (var i = 0; i < randbedingung.Value.Festgehalten.Length; i++)
                 {
-                    if (randbedingung.Value.Festgehalten[i]) systemGleichungen.DiagonalMatrix[systemIndizes[i]] = 0;
+                    if (randbedingung.Value.Festgehalten[i]) _systemGleichungen.DiagonalMatrix[systemIndizes[i]] = 0;
                 }
             }
-            diagonalMatrix = true;
+            _diagonalMatrix = true;
         }
 
         // Zeitintegration 1er Ordnung ***********************************************************************************************
         public void ZeitintegrationErsterOrdnung()
         {
             // ... berechne spezifische Wärme Matrix ..............................
-            if (!diagonalMatrix) BerechneDiagonalMatrix();
-            _ = systemGleichungen.DiagonalMatrix;
+            if (!_diagonalMatrix) BerechneDiagonalMatrix();
+            _ = _systemGleichungen.DiagonalMatrix;
 
 
-            var dt = modell.Zeitintegration.Dt;
+            var dt = _modell.Zeitintegration.Dt;
             if (dt == 0)
             {
                 throw new BerechnungAusnahme("Abbruch: Zeitschrittintervall nicht definiert.");
             }
-            var tmax = modell.Zeitintegration.Tmax;
-            var alfa = modell.Zeitintegration.Parameter1;
+            var tmax = _modell.Zeitintegration.Tmax;
+            var alfa = _modell.Zeitintegration.Parameter1;
             var nZeitschritte = (int)(tmax / dt) + 1;
             var anregungsFunktion = new double[nZeitschritte][];
             for (var k = 0; k < nZeitschritte; k++)
-                anregungsFunktion[k] = new double[dimension];
+                anregungsFunktion[k] = new double[_dimension];
             var temperatur = new double[nZeitschritte][];
-            for (var i = 0; i < nZeitschritte; i++) temperatur[i] = new double[dimension];
+            for (var i = 0; i < nZeitschritte; i++) temperatur[i] = new double[_dimension];
 
             SetzAnfangsbedingungenErsterOrdnung(temperatur);
             SetzZeitabhängigenStatusVektor();
@@ -380,44 +380,44 @@ namespace FEBibliothek.Modell
             BerechneRandbedingungenErsterOrdnung(dt, temperatur);
 
             // ... Systemmatrix muss neu berechnet werden, falls Dreieckszerlegung gespeichert
-            if (zerlegt) { NeuberechnungSystemMatrix(); zerlegt = false; }
+            if (_zerlegt) { NeuberechnungSystemMatrix(); _zerlegt = false; }
 
             var zeitintegration = new Zeitintegration1OrdnungStatus(
-                systemGleichungen, anregungsFunktion, dt, alfa, temperatur);
+                _systemGleichungen, anregungsFunktion, dt, alfa, temperatur);
             zeitintegration.Ausführung();
 
             // speichere Knotenzeitverläufe
-            foreach (var item in modell.Knoten)
+            foreach (var item in _modell.Knoten)
             {
-                knoten = item.Value;
+                _knoten = item.Value;
                 var index = item.Value.SystemIndizes[0];
-                knoten.KnotenVariable = new double[1][];
-                knoten.KnotenVariable[0] = new double[nZeitschritte];
-                knoten.KnotenAbleitungen = new double[1][];
-                knoten.KnotenAbleitungen[0] = new double[nZeitschritte];
+                _knoten.KnotenVariable = new double[1][];
+                _knoten.KnotenVariable[0] = new double[nZeitschritte];
+                _knoten.KnotenAbleitungen = new double[1][];
+                _knoten.KnotenAbleitungen[0] = new double[nZeitschritte];
 
                 // temperatur[nZeitschritte][index], KnotenVariable[index][nZeitschritte]
                 for (var k = 0; k < nZeitschritte; k++)
                 {
-                    knoten.KnotenVariable[0][k] = temperatur[k][index];
-                    knoten.KnotenAbleitungen[0][k] = zeitintegration.TemperaturGradient[k][index];
+                    _knoten.KnotenVariable[0][k] = temperatur[k][index];
+                    _knoten.KnotenAbleitungen[0][k] = zeitintegration.TemperaturGradient[k][index];
                 }
             }
-            modell.ZeitIntegration = true;
+            _modell.ZeitIntegration = true;
         }
         private void SetzAnfangsbedingungenErsterOrdnung(IList<double[]> temperatur)
         {
             // setz stationäre Lösung als Anfangsbedingungen
-            if (modell.Zeitintegration.VonStationär) { temperatur[0] = systemGleichungen.Primal; }
-            foreach (Knotenwerte anf in modell.Zeitintegration.Anfangsbedingungen)
+            if (_modell.Zeitintegration.VonStationär) { temperatur[0] = _systemGleichungen.Primal; }
+            foreach (Knotenwerte anf in _modell.Zeitintegration.Anfangsbedingungen)
             {
                 if (anf.KnotenId == "alle")
                 {
-                    for (var i = 0; i < dimension; i++) temperatur[0][i] = anf.Werte[0];
+                    for (var i = 0; i < _dimension; i++) temperatur[0][i] = anf.Werte[0];
                 }
                 else
                 {
-                    if (modell.Knoten.TryGetValue(anf.KnotenId, out var anfKnoten))
+                    if (_modell.Knoten.TryGetValue(anf.KnotenId, out var anfKnoten))
                     {
                         temperatur[0][anfKnoten.SystemIndizes[0]] = anf.Werte[0];
                     }
@@ -427,9 +427,9 @@ namespace FEBibliothek.Modell
         private void SetzZeitabhängigenStatusVektor()
         {
             // für alle zeitabhängigen Randbedingungen
-            if (modell == null) return;
+            if (_modell == null) return;
             foreach (var randbedingung in
-                modell.ZeitabhängigeRandbedingung.Select(item => item.Value))
+                _modell.ZeitabhängigeRandbedingung.Select(item => item.Value))
             {
                 StatusKnoten(randbedingung);
             }
@@ -441,18 +441,18 @@ namespace FEBibliothek.Modell
             var nZeitschritte = last.Length;
 
             // finde zeitabhängige Knotenlasten
-            foreach (var item in modell.ZeitabhängigeKnotenLasten)
+            foreach (var item in _modell.ZeitabhängigeKnotenLasten)
             {
-                if (modell.Knoten.TryGetValue(item.Value.KnotenId, out knoten))
+                if (_modell.Knoten.TryGetValue(item.Value.KnotenId, out _knoten))
                 {
-                    var lastIndex = knoten.SystemIndizes;
+                    var lastIndex = _knoten.SystemIndizes;
 
                     switch (item.Value.VariationsTyp)
                     {
                         case 0:
                             {
                                 // Datei einlesen
-                                const string inputDirectory = "\\FE-Berechnungen\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                                const string inputDirectory = @"\FE-Berechnungen\input\Wärmeberechnung\instationär\Anregungsdateien";
                                 const int spalte = -1;
                                 AusDatei(inputDirectory, spalte, last);
                                 break;
@@ -484,16 +484,16 @@ namespace FEBibliothek.Modell
             }
 
             // finde zeitabhängige Elementlasten
-            foreach (var zeitabhängigeElementLast in modell.ZeitabhängigeElementLasten.Select(item => item.Value))
+            foreach (var zeitabhängigeElementLast in _modell.ZeitabhängigeElementLasten.Select(item => item.Value))
             {
-                if (modell.Elemente.TryGetValue(zeitabhängigeElementLast.ElementId, out var abstraktElement))
+                if (_modell.Elemente.TryGetValue(zeitabhängigeElementLast.ElementId, out var abstraktElement))
                 {
                     var index = abstraktElement.SystemIndizesElement;
                     var lastVektor = zeitabhängigeElementLast.BerechneLastVektor();
-                    systemGleichungen.AddVektor(index, lastVektor);
+                    _systemGleichungen.AddVektor(index, lastVektor);
                 }
                 for (var k = 0; k < nZeitschritte; k++)
-                    temperatur[k] = systemGleichungen.Vektor;
+                    temperatur[k] = _systemGleichungen.Vektor;
             }
         }
         // zeitabhängige vordefinierte Randbedingungen
@@ -502,11 +502,11 @@ namespace FEBibliothek.Modell
             var nZeitschritte = temperatur.Length;
             var vordefinierteTemperatur = new double[nZeitschritte];
 
-            foreach (var item in modell.ZeitabhängigeRandbedingung)
+            foreach (var item in _modell.ZeitabhängigeRandbedingung)
             {
-                if (modell.Knoten.TryGetValue(item.Value.KnotenId, out knoten))
+                if (_modell.Knoten.TryGetValue(item.Value.KnotenId, out _knoten))
                 {
-                    var lastIndex = knoten.SystemIndizes;
+                    var lastIndex = _knoten.SystemIndizes;
 
                     switch (item.Value.VariationsTyp)
                     {
@@ -515,7 +515,7 @@ namespace FEBibliothek.Modell
                                 // Datei einlesen
                                 _ = MessageBox.Show("Randbedingung " + item.Key + " Daten aus Datei", "Heat Transfer Analysis");
 
-                                const string inputDirectory = "\\FE-Berechnungen\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                                const string inputDirectory = @"\FE-Berechnungen\input\Wärmeberechnung\instationär\Anregungsdateien";
                                 const int spalte = 1;
                                 AusDatei(inputDirectory, spalte, vordefinierteTemperatur);
                                 break;
@@ -560,20 +560,20 @@ namespace FEBibliothek.Modell
         // 2nd order time integration ***********************************************************************************************
         public void ZeitintegrationZweiterOrdnung()
         {
-            var dt = modell.Zeitintegration.Dt;
+            var dt = _modell.Zeitintegration.Dt;
             if (dt == 0)
             {
                 throw new BerechnungAusnahme("Zeitschrittintervall nicht definiert");
             }
-            var tmax = modell.Zeitintegration.Tmax;
+            var tmax = _modell.Zeitintegration.Tmax;
             var nZeitschritte = (int)(tmax / dt) + 1;
-            var methode = modell.Zeitintegration.Methode;
-            var parameter1 = modell.Zeitintegration.Parameter1;
-            var parameter2 = modell.Zeitintegration.Parameter2;
+            var methode = _modell.Zeitintegration.Methode;
+            var parameter1 = _modell.Zeitintegration.Parameter1;
+            var parameter2 = _modell.Zeitintegration.Parameter2;
             var anregung = new double[nZeitschritte + 1][];
-            for (var i = 0; i < (nZeitschritte + 1); i++) anregung[i] = new double[dimension];
+            for (var i = 0; i < (nZeitschritte + 1); i++) anregung[i] = new double[_dimension];
             // ... berechne diagonale Massenmatrix ..............................
-            if (!diagonalMatrix) BerechneDiagonalMatrix();
+            if (!_diagonalMatrix) BerechneDiagonalMatrix();
 
             // ... berechne diagonale Dämpfungsmatrix ..............................
             var dämpfungsmatrix = BerechneDämpfungsMatrix();
@@ -582,103 +582,103 @@ namespace FEBibliothek.Modell
             BerechneAnregungsfunktionZweiterOrdnung(dt, anregung);
 
             var verformung = new double[nZeitschritte][];
-            for (var k = 0; k < nZeitschritte; k++) verformung[k] = new double[dimension];
+            for (var k = 0; k < nZeitschritte; k++) verformung[k] = new double[_dimension];
             var geschwindigkeit = new double[2][];
-            for (var k = 0; k < 2; k++) geschwindigkeit[k] = new double[dimension];
+            for (var k = 0; k < 2; k++) geschwindigkeit[k] = new double[_dimension];
 
             SetzRandbedingungenZweiterOrdnung(verformung, geschwindigkeit);
             SetzDynamischenStatusVektor();
 
-            if (zerlegt)
+            if (_zerlegt)
             {
                 NeuberechnungSystemMatrix();
-                zerlegt = false;
+                _zerlegt = false;
             }
 
-            var zeitintegration = new Zeitintegration2OrdnungStatus(systemGleichungen, dämpfungsmatrix,
+            var zeitintegration = new Zeitintegration2OrdnungStatus(_systemGleichungen, dämpfungsmatrix,
                 dt, methode, parameter1, parameter2,
                 verformung, geschwindigkeit, anregung);
             zeitintegration.Ausführen();
 
             // speichere Knotenzeitverläufe
-            foreach (var item2 in modell.Knoten)
+            foreach (var item2 in _modell.Knoten)
             {
-                knoten = item2.Value;
-                var index = knoten.SystemIndizes;
-                var anzahlKnotenfreiheitsgrade = knoten.AnzahlKnotenfreiheitsgrade;
+                _knoten = item2.Value;
+                var index = _knoten.SystemIndizes;
+                var anzahlKnotenfreiheitsgrade = _knoten.AnzahlKnotenfreiheitsgrade;
 
-                knoten.KnotenVariable = new double[anzahlKnotenfreiheitsgrade][];
-                for (var i = 0; i < anzahlKnotenfreiheitsgrade; i++) knoten.KnotenVariable[i] = new double[nZeitschritte];
-                knoten.KnotenAbleitungen = new double[anzahlKnotenfreiheitsgrade][];
-                for (var i = 0; i < anzahlKnotenfreiheitsgrade; i++) knoten.KnotenAbleitungen[i] = new double[nZeitschritte];
+                _knoten.KnotenVariable = new double[anzahlKnotenfreiheitsgrade][];
+                for (var i = 0; i < anzahlKnotenfreiheitsgrade; i++) _knoten.KnotenVariable[i] = new double[nZeitschritte];
+                _knoten.KnotenAbleitungen = new double[anzahlKnotenfreiheitsgrade][];
+                for (var i = 0; i < anzahlKnotenfreiheitsgrade; i++) _knoten.KnotenAbleitungen[i] = new double[nZeitschritte];
 
                 // verformung[nZeitschritte][index], geschwindigkeit[2][index], KnotenVariable[index][nZeitschritte]
-                for (var i = 0; i < knoten.AnzahlKnotenfreiheitsgrade; i++)
+                for (var i = 0; i < _knoten.AnzahlKnotenfreiheitsgrade; i++)
                 {
-                    if (systemGleichungen.Status[index[i]]) continue;
+                    if (_systemGleichungen.Status[index[i]]) continue;
                     for (var k = 0; k < nZeitschritte; k++)
                     {
-                        knoten.KnotenVariable[i][k] = zeitintegration.verformung[k][index[i]];
-                        knoten.KnotenAbleitungen[i][k] = zeitintegration.beschleunigung[k][index[i]];
+                        _knoten.KnotenVariable[i][k] = zeitintegration.verformung[k][index[i]];
+                        _knoten.KnotenAbleitungen[i][k] = zeitintegration.beschleunigung[k][index[i]];
                     }
                 }
             }
-            modell.ZeitIntegration = true;
-            _ = MessageBox.Show("Zeitverlaufberechnung 2. Ordnung erfolgreich durchgeführt", "Zeitintegration2Ordnung");
+            _modell.ZeitIntegration = true;
+            _ = MessageBox.Show("Zeitverlaufsberechnung 2. Ordnung erfolgreich durchgeführt", "Zeitintegration2Ordnung");
         }
         private double[] BerechneDämpfungsMatrix()
         {
-            // ... falls "Dämpfung" modale Dämpfungsmaße beinhaltet,
-            // ... kann die Dämpfungsmatrix ermittelt werden über die Summe aller berücksichtigten
-            // ... Eigenzustände (s. Clough & Penzien S. 198, 13-37
-            // ... M*(SUM(((2*(xi)n*(omega)n )/(M)n))*phi(n)*(phi)nT)*M
-            // ... wobei M die Massenmatrix ist, (xi)n das modale Dämpfungsmaß,
-            // ... omega(n) eigenfrequenz, (M)n modale Massen und phi die Eigenvektoren
-            var dämpfungsMatrix = new double[dimension];
-            if (modell.Eigenzustand.DämpfungsRaten.Count == 0)
+            // falls "Dämpfung" modale Dämpfungsmaße beinhaltet,
+            // kann die Dämpfungsmatrix ermittelt werden über die Summe aller berücksichtigten
+            // Eigenzustände (s. Clough & Penzien S. 198, 13-37
+            // M*(SUM(((2*(xi)n*(omega)n )/(M)n))*phi(n)*(phi)nT)*M
+            // wobei M die Massenmatrix ist, (xi)n das modale Dämpfungsmaß,
+            // omega(n) eigenfrequenz, (M)n modale Massen und phi die Eigenvektoren
+            var dämpfungsMatrix = new double[_dimension];
+            if (_modell.Eigenzustand.DämpfungsRaten.Count == 0)
             {
                 _ = MessageBox.Show("ungedämpftes System", "BerechneDämpfungsMatrix");
                 return dämpfungsMatrix;
             }
             // Eigenberechnung wird für Ermittlung der modalen Dämpfungsmaße benötigt
-            if (modell.Eigen == false)
+            if (_modell.Eigen == false)
             {
                 Eigenzustände();
-                modell.Eigen = true;
+                _modell.Eigen = true;
             }
             // modale Dämpfungsmaße werden aus eingelesenen DämpfungsRaten ermittelt
-            var modaleDämpfung = new double[modell.Eigenzustand.AnzahlZustände];
-            for (var i = 0; i < modell.Eigenzustand.DämpfungsRaten.Count; i++)
+            var modaleDämpfung = new double[_modell.Eigenzustand.AnzahlZustände];
+            for (var i = 0; i < _modell.Eigenzustand.DämpfungsRaten.Count; i++)
             {
-                modaleDämpfung[i] = ((ModaleWerte)modell.Eigenzustand.DämpfungsRaten[i]).Dämpfung;
+                modaleDämpfung[i] = ((ModaleWerte)_modell.Eigenzustand.DämpfungsRaten[i]).Dämpfung;
             }
             // ist nur ein Dämpfungsmaß gegeben, werden ALLE Eigenzustände damit belegt
-            for (var i = modell.Eigenzustand.DämpfungsRaten.Count; i < modell.Eigenzustand.AnzahlZustände; i++)
+            for (var i = _modell.Eigenzustand.DämpfungsRaten.Count; i < _modell.Eigenzustand.AnzahlZustände; i++)
             {
                 modaleDämpfung[i] = modaleDämpfung[0];
             }
 
             double faktor = 0;
-            for (var n = 0; n < modell.Eigenzustand.AnzahlZustände; n++)
+            for (var n = 0; n < _modell.Eigenzustand.AnzahlZustände; n++)
             {
                 double phinPhinT = 0;
                 double mn = 0;
-                for (var i = 0; i < systemGleichungen.DiagonalMatrix.Length; i++)
+                for (var i = 0; i < _systemGleichungen.DiagonalMatrix.Length; i++)
                 {
-                    phinPhinT += modell.Eigenzustand.Eigenvektoren[n][i] * modell.Eigenzustand.Eigenvektoren[n][i];
+                    phinPhinT += _modell.Eigenzustand.Eigenvektoren[n][i] * _modell.Eigenzustand.Eigenvektoren[n][i];
                 }
 
-                for (var i = 0; i < systemGleichungen.DiagonalMatrix.Length; i++)
+                for (var i = 0; i < _systemGleichungen.DiagonalMatrix.Length; i++)
                 {
-                    mn += modell.Eigenzustand.Eigenvektoren[n][i] * systemGleichungen.DiagonalMatrix[i] * modell.Eigenzustand.Eigenvektoren[n][i];
+                    mn += _modell.Eigenzustand.Eigenvektoren[n][i] * _systemGleichungen.DiagonalMatrix[i] * _modell.Eigenzustand.Eigenvektoren[n][i];
                 }
 
-                faktor += 2 * modaleDämpfung[n] * Math.Sqrt(modell.Eigenzustand.Eigenwerte[n]) / 2 / Math.PI * phinPhinT / mn;
+                faktor += 2 * modaleDämpfung[n] * Math.Sqrt(_modell.Eigenzustand.Eigenwerte[n]) / 2 / Math.PI * phinPhinT / mn;
             }
             // diagonale Dämpfungsmatrix wird aus m*faktor*m ermittelt
-            for (var i = 0; i < systemGleichungen.DiagonalMatrix.Length; i++)
+            for (var i = 0; i < _systemGleichungen.DiagonalMatrix.Length; i++)
             {
-                dämpfungsMatrix[i] = systemGleichungen.DiagonalMatrix[i] * faktor * systemGleichungen.DiagonalMatrix[i];
+                dämpfungsMatrix[i] = _systemGleichungen.DiagonalMatrix[i] * faktor * _systemGleichungen.DiagonalMatrix[i];
             }
             return dämpfungsMatrix;
         }
@@ -686,9 +686,9 @@ namespace FEBibliothek.Modell
         private void SetzRandbedingungenZweiterOrdnung(IReadOnlyList<double[]> displ, IReadOnlyList<double[]> veloc)
         {
             // finde vordefinierte Anfangsbedingungen
-            foreach (Knotenwerte anf in modell.Zeitintegration.Anfangsbedingungen)
+            foreach (Knotenwerte anf in _modell.Zeitintegration.Anfangsbedingungen)
             {
-                if (!modell.Knoten.TryGetValue(anf.KnotenId, out var anfKnoten)) continue;
+                if (!_modell.Knoten.TryGetValue(anf.KnotenId, out var anfKnoten)) continue;
                 for (var i = 0; i < anf.Werte.Length / 2; i += 2)
                 {
                     foreach (var knotenIndex in anfKnoten.SystemIndizes)
@@ -703,7 +703,7 @@ namespace FEBibliothek.Modell
         {
             // für alle zeitabhängigen Randbedingungen
             foreach (var randbedingung in
-                modell.ZeitabhängigeRandbedingung.Select(item => item.Value))
+                _modell.ZeitabhängigeRandbedingung.Select(item => item.Value))
             {
                 StatusKnoten(randbedingung);
             }
@@ -713,14 +713,14 @@ namespace FEBibliothek.Modell
         private void BerechneAnregungsfunktionZweiterOrdnung(double dt, IReadOnlyList<double[]> anregung)
         {
             // finde zeitabhängige Knoteneinwirkungen
-            foreach (var item in modell.ZeitabhängigeKnotenLasten)
+            foreach (var item in _modell.ZeitabhängigeKnotenLasten)
             {
                 var force = new double[anregung.Count];
                 switch (item.Value.VariationsTyp)
                 {
                     case 0:
                         {
-                            const string inputDirectory = "\\FE-Berechnungen\\input\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
+                            const string inputDirectory = @"\FE-Berechnungen\input\Tragwerksberechnung\Dynamik\Anregungsdateien";
                             const int col = -1; // ALLE Values in Datei
                                                 // Ordinatenwerte im Zeitintervall dt aus Datei lesen
                             AusDatei(inputDirectory, col, force);
@@ -748,10 +748,10 @@ namespace FEBibliothek.Modell
                 {
                     var knotenFreiheitsgrad = item.Value.KnotenFreiheitsgrad;
 
-                    var masse = systemGleichungen.DiagonalMatrix;
-                    foreach (var index in modell.Knoten.Select(item2 =>
+                    var masse = _systemGleichungen.DiagonalMatrix;
+                    foreach (var index in _modell.Knoten.Select(item2 =>
                                  item2.Value.SystemIndizes).Where(index =>
-                                 !systemGleichungen.Status[index[knotenFreiheitsgrad]]))
+                                 !_systemGleichungen.Status[index[knotenFreiheitsgrad]]))
                     {
                         for (var k = 0; k < anregung.Count; k++)
                             anregung[k][index[knotenFreiheitsgrad]] = -masse[index[knotenFreiheitsgrad]] * force[k];
@@ -760,13 +760,13 @@ namespace FEBibliothek.Modell
 
                 else
                 {
-                    if (!modell.Knoten.TryGetValue(item.Value.KnotenId, out knoten)) continue;
-                    var index = knoten.SystemIndizes;
-                    var knotenFreitsgrad = item.Value.KnotenFreiheitsgrad;
+                    if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out _knoten)) continue;
+                    var index = _knoten.SystemIndizes;
+                    var knotenFreiheitsgrad = item.Value.KnotenFreiheitsgrad;
 
                     for (var k = 0; k < anregung.Count; k++)
                         for (var j = 0; j < anregung[0].Length; j++)
-                            anregung[k][index[knotenFreitsgrad]] = force[k];
+                            anregung[k][index[knotenFreiheitsgrad]] = force[k];
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FEBibliothek.Modell;
 using System.Diagnostics;
 using System.Globalization;
@@ -85,6 +86,9 @@ public partial class LagerNeu
         lagerKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
+
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual.Show();
     }
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {

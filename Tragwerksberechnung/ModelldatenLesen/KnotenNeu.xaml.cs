@@ -71,10 +71,11 @@ public partial class KnotenNeu
         StartFenster.TragwerkVisual.VisualTragwerkModel.Children.Remove(StartFenster.TragwerkVisual.Knoten);
         StartFenster.TragwerkVisual.VisualTragwerkModel.Background = null;
         StartFenster.TragwerkVisual.Close();
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
-        StartFenster.TragwerkVisual.Show();
         Close();
         knotenKeys.Close();
+
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual.Show();
     }
 
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)

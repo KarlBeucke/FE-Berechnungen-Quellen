@@ -5,20 +5,21 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class LinienlastNeu
 {
-    private readonly FeModell modell;
-    private AbstraktElementLast vorhandeneLinienlast;
-    private readonly TragwerkLastenKeys linienlastKeys;
+    private readonly FeModell _modell;
+    private AbstraktElementLast _vorhandeneLinienlast;
+    private readonly TragwerkLastenKeys _linienlastKeys;
     public LinienlastNeu(FeModell modell)
     {
         InitializeComponent();
-        this.modell = modell;
-        linienlastKeys = new TragwerkLastenKeys(modell);
-        linienlastKeys.Show();
+        _modell = modell;
+        _linienlastKeys = new TragwerkLastenKeys(modell);
+        _linienlastKeys.Show();
         Show();
     }
 
@@ -26,7 +27,7 @@ public partial class LinienlastNeu
         double pxa, double pya, double pxb, double pyb, bool inElement)
     {
         InitializeComponent();
-        this.modell = modell;
+        this._modell = modell;
         LastId.Text = last;
         ElementId.Text = element;
         Pxa.Text = pxa.ToString("0.00");
@@ -47,17 +48,17 @@ public partial class LinienlastNeu
         }
 
         // vorhandene Linienlast
-        if (modell.ElementLasten.Keys.Contains(LastId.Text))
+        if (_modell.ElementLasten.Keys.Contains(LastId.Text))
         {
-            modell.ElementLasten.TryGetValue(linienlastId, out vorhandeneLinienlast);
-            Debug.Assert(vorhandeneLinienlast != null, nameof(vorhandeneLinienlast) + " != null");
+            _modell.ElementLasten.TryGetValue(linienlastId, out _vorhandeneLinienlast);
+            Debug.Assert(_vorhandeneLinienlast != null, nameof(_vorhandeneLinienlast) + " != null");
 
-            if (ElementId.Text.Length > 0) vorhandeneLinienlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Pxa.Text.Length > 0) vorhandeneLinienlast.Lastwerte[0] = double.Parse(Pxa.Text);
-            if (Pya.Text.Length > 0) vorhandeneLinienlast.Lastwerte[1] = double.Parse(Pya.Text);
-            if (Pxb.Text.Length > 0) vorhandeneLinienlast.Lastwerte[2] = double.Parse(Pxb.Text);
-            if (Pyb.Text.Length > 0) vorhandeneLinienlast.Lastwerte[3] = double.Parse(Pyb.Text);
-            vorhandeneLinienlast.InElementKoordinatenSystem = InElement.IsChecked != null && (bool)InElement.IsChecked;
+            if (ElementId.Text.Length > 0) _vorhandeneLinienlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
+            if (Pxa.Text.Length > 0) _vorhandeneLinienlast.Lastwerte[0] = double.Parse(Pxa.Text);
+            if (Pya.Text.Length > 0) _vorhandeneLinienlast.Lastwerte[1] = double.Parse(Pya.Text);
+            if (Pxb.Text.Length > 0) _vorhandeneLinienlast.Lastwerte[2] = double.Parse(Pxb.Text);
+            if (Pyb.Text.Length > 0) _vorhandeneLinienlast.Lastwerte[3] = double.Parse(Pyb.Text);
+            _vorhandeneLinienlast.InElementKoordinatenSystem = InElement.IsChecked != null && (bool)InElement.IsChecked;
         }
         // neue Linienlast
         else
@@ -75,21 +76,23 @@ public partial class LinienlastNeu
             {
                 LastId = linienlastId
             };
-            modell.ElementLasten.Add(linienlastId, linienlast);
+            _modell.ElementLasten.Add(linienlastId, linienlast);
         }
-        linienlastKeys?.Close();
-        Close();
         StartFenster.TragwerkVisual.Close();
+        _linienlastKeys?.Close();
+        Close();
+        StartFenster.TragwerkVisual = new ModelldatenAnzeigen.TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual.Show();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        linienlastKeys?.Close();
+        _linienlastKeys?.Close();
         Close();
     }
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!modell.ElementLasten.ContainsKey(LastId.Text))
+        if (!_modell.ElementLasten.ContainsKey(LastId.Text))
         {
             ElementId.Text = "";
             Pxa.Text = "";
@@ -101,24 +104,27 @@ public partial class LinienlastNeu
         }
 
         // vorhandene Linienlastdefinition
-        modell.ElementLasten.TryGetValue(LastId.Text, out vorhandeneLinienlast);
-        Debug.Assert(vorhandeneLinienlast != null, nameof(vorhandeneLinienlast) + " != null"); LastId.Text = "";
+        _modell.ElementLasten.TryGetValue(LastId.Text, out _vorhandeneLinienlast);
+        Debug.Assert(_vorhandeneLinienlast != null, nameof(_vorhandeneLinienlast) + " != null"); LastId.Text = "";
 
-        LastId.Text = vorhandeneLinienlast.LastId;
+        LastId.Text = _vorhandeneLinienlast.LastId;
 
-        ElementId.Text = vorhandeneLinienlast.ElementId;
-        Pxa.Text = vorhandeneLinienlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
-        Pya.Text = vorhandeneLinienlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
-        Pxb.Text = vorhandeneLinienlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
-        Pyb.Text = vorhandeneLinienlast.Lastwerte[3].ToString("G3", CultureInfo.CurrentCulture);
-        vorhandeneLinienlast.InElementKoordinatenSystem = InElement.IsChecked != null && (bool)InElement.IsChecked;
+        ElementId.Text = _vorhandeneLinienlast.ElementId;
+        Pxa.Text = _vorhandeneLinienlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
+        Pya.Text = _vorhandeneLinienlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
+        Pxb.Text = _vorhandeneLinienlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
+        Pyb.Text = _vorhandeneLinienlast.Lastwerte[3].ToString("G3", CultureInfo.CurrentCulture);
+        _vorhandeneLinienlast.InElementKoordinatenSystem = InElement.IsChecked != null && (bool)InElement.IsChecked;
     }
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!modell.ElementLasten.Keys.Contains(LastId.Text)) return;
-        modell.ElementLasten.Remove(LastId.Text);
-        linienlastKeys?.Close();
+        if (!_modell.ElementLasten.Keys.Contains(LastId.Text)) return;
+        _modell.ElementLasten.Remove(LastId.Text);
+        _linienlastKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
+
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual.Show();
     }
 }

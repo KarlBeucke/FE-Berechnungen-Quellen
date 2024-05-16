@@ -21,7 +21,6 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
         {
             var delx = Knoten[1].Koordinaten[0] - Knoten[0].Koordinaten[0];
             var dely = Knoten[1].Koordinaten[1] - Knoten[0].Koordinaten[1];
-            //var angle = Math.Atan2(dely, delx);
             BalkenLänge = Math.Sqrt(delx * delx + dely * dely);
             Sin = dely / BalkenLänge;
             Cos = delx / BalkenLänge;

@@ -1791,7 +1791,7 @@ public class Darstellung
                 MomentenMaxTexte.Add(MaxMomentText);
             }
 
-            // zeichne Momentenlinie unter Gleich- und/oder Dreieckslast
+            // zeichne Momentenlinie unter Gleich- oder Dreieckslast
             else if (elementHatLinienLast)
             {
                 var qa = linienLast.Lastwerte[1];
@@ -1810,7 +1810,7 @@ public class Darstellung
                         var x = i * inkrement;
                         // M(x) = Ma - Qa*x + qa*x*x/2 + (qb-qa)/l/6 *x*x*x
                         var m = element.ElementZustand[2] - element.ElementZustand[1] * x
-                                + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x;
+                                + qa/2 * x*x + (qb-qa)/l/6 * x*x*x;
                         polyLinePointArray[i] = new Point((element.Knoten[0].Koordinaten[0] + x) * Auflösung,
                             m / skalierungMoment * MaxMomentScreen);
                     }
@@ -1824,7 +1824,7 @@ public class Darstellung
                         var x = i * inkrement;
                         // M(x) = Mb - Qb*x + qb/2 *x*x + (qa-qb)/l/6 *x*x*x
                         var m = element.ElementZustand[5] + element.ElementZustand[4] * x
-                                + qb / 2 * x * x + (qa - qb) / l / 6 * x * x * x;
+                                + qb/2 * x*x + (qa-qb)/l/6 * x*x*x;
                         polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - x) * Auflösung,
                             m / skalierungMoment * MaxMomentScreen);
                     }
@@ -1834,10 +1834,7 @@ public class Darstellung
                 if (!elementHatPunktLast)
                 {
                     polyLinePointArray[anzahl + 1] = endPunkt;
-                    var mSegment = new PolyLineSegment
-                    {
-                        Points = new PointCollection(polyLinePointArray)
-                    };
+                    var mSegment = new PolyLineSegment { Points = new PointCollection(polyLinePointArray) };
                     pathFigure.Segments.Add(mSegment);
 
                     var indexMax = MomentenMaxWert(polyLinePointArray);
@@ -1868,20 +1865,12 @@ public class Darstellung
                     // qa ≤ qb   Gleichlast oder Dreieckslast linear steigend
                     if (Math.Abs(qb) >= Math.Abs(qa))
                     {
-                        // M(x) = Ma-Qa*x+qa/2*x*x+(qb-qa)/l/6*x*x*x =0
-                        //mmax = element.ElementZustand[2] - element.ElementZustand[1] * abstandPunktlast
-                        //       + qa/2 * abstandPunktlast*abstandPunktlast
-                        //       + (qb-qa)/l/6 * abstandPunktlast*abstandPunktlast*abstandPunktlast;
-
-                        //maxPunkt = startPunkt + vec * abstandPunktlast * Auflösung
-                        //                      + vec2 * mmax/skalierungMoment*MaxMomentScreen;
-
                         var anzahlPunktlast = (int)(abstandPunktlast / inkrement);
                         for (var i = 0; i <= anzahlPunktlast; i++)
                         {
                             var x = i * inkrement;
                             m = element.ElementZustand[2] - element.ElementZustand[1] * x
-                                + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x;
+                                + qa/2 * x*x + (qb-qa)/l/6 * x*x*x;
                             var mPoint = new Point((element.Knoten[0].Koordinaten[0] + x) * Auflösung,
                                 m / skalierungMoment * MaxMomentScreen);
                             polyLinePointArray[i] = mPoint;
@@ -1890,7 +1879,7 @@ public class Darstellung
                         {
                             var x = i * inkrement;
                             m = element.ElementZustand[2] - element.ElementZustand[1] * x
-                                + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x
+                                + qa/2 * x*x + (qb-qa)/l/6 * x*x*x
                                 + punktLast.Lastwerte[1] * (x - abstandPunktlast);
                             var mPoint = new Point((element.Knoten[0].Koordinaten[0] + x) * Auflösung,
                                 m / skalierungMoment * MaxMomentScreen);
@@ -1898,10 +1887,7 @@ public class Darstellung
                         }
 
                         polyLinePointArray[anzahl + 1] = endPunkt;
-                        var mSegment = new PolyLineSegment
-                        {
-                            Points = new PointCollection(polyLinePointArray)
-                        };
+                        var mSegment = new PolyLineSegment { Points = new PointCollection(polyLinePointArray) };
                         pathFigure.Segments.Add(mSegment);
 
                         var indexMax = MomentenMaxWert(polyLinePointArray);
@@ -1927,23 +1913,16 @@ public class Darstellung
                     // qa > qb, Dreieckslast linear fallend, lokale x-Koordinate von rechts
                     else
                     {
-                        // M(y) = Mb+Qb*y+qb/2*y*y+(qa-qb)/l/6*y*y*y
-                        //mmax = element.ElementZustand[5] + element.ElementZustand[4] * abstandPunktlast
-                        //       + qb/2 * abstandPunktlast*abstandPunktlast
-                        //       + (qa-qb)/l/6 * abstandPunktlast*abstandPunktlast*abstandPunktlast;
-                        //maxPunkt = endPunkt - vec * abstandPunktlast * Auflösung
-                        //                    + vec2 * mmax/skalierungMoment*MaxMomentScreen;
-
                         var anzahlPunktlast = (int)((l - abstandPunktlast) / inkrement);
                         polyLinePointArray = new Point[anzahl + 2];
                         for (var i = 0; i <= anzahlPunktlast; i++)
                         {
                             // lokale x-Koordinate vom Balkenende 0 <= y <= (l-abstandPunktlast)
-                            var x = i * inkrement;
+                            var y = i * inkrement;
                             // M(y) = Mb - Qb*y + qb/2 *y*y + (qa-qb)/l/6 *y*y*y
-                            m = element.ElementZustand[5] + element.ElementZustand[4] * x
-                                                          + qb / 2 * x * x + (qa - qb) / l / 6 * x * x * x;
-                            polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - x) * Auflösung,
+                            m = element.ElementZustand[5] + element.ElementZustand[4] * y
+                                                          + qb/2 * y*y + (qa-qb)/l/6 * y*y*y;
+                            polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - y) * Auflösung,
                               m / skalierungMoment * MaxMomentScreen);
                         }
                         for (var i = anzahlPunktlast + 1; i <= anzahl; i++)
@@ -1952,17 +1931,14 @@ public class Darstellung
                             var x = i * inkrement;
                             // M(x) = Mb - Qb*x + qb/2 *x*x + (qa-qb)/l/6 *y*y*y
                             m = element.ElementZustand[5] + element.ElementZustand[4] * x
-                                                          + qb / 2 * x * x + (qa - qb) / l / 6 * x * x * x
+                                                          + qb/2 * x*x + (qa-qb)/l/6 * x*x*x
                                                           + punktLast.Lastwerte[1] * (x - abstandPunktlast);
                             polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - x) * Auflösung,
                                m / skalierungMoment * MaxMomentScreen);
                         }
 
                         polyLinePointArray[anzahl + 1] = endPunkt;
-                        var mSegment = new PolyLineSegment
-                        {
-                            Points = new PointCollection(polyLinePointArray)
-                        };
+                        var mSegment = new PolyLineSegment { Points = new PointCollection(polyLinePointArray) };
                         pathFigure.Segments.Add(mSegment);
 
                         var indexMax = MomentenMaxWert(polyLinePointArray);

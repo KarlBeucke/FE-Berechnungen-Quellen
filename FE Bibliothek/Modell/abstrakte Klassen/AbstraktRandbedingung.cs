@@ -13,10 +13,7 @@
         {
             if (KnotenId != null)
             {
-                if (modell.Knoten.TryGetValue(KnotenId, out Knoten node))
-                {
-                    Knoten = node;
-                }
+                if (modell.Knoten.TryGetValue(KnotenId, out Knoten node)) { Knoten = node; }
 
                 if (node == null)
                 {

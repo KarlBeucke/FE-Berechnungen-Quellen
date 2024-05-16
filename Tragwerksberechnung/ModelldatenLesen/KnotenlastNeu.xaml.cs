@@ -78,6 +78,8 @@ public partial class KnotenlastNeu
         lastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
+        StartFenster.TragwerkVisual = new ModelldatenAnzeigen.TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual.Show();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)

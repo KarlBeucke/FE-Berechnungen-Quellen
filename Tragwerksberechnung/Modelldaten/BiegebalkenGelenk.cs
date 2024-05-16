@@ -1,4 +1,5 @@
-﻿using FEBibliothek.Modell;
+﻿using System;
+using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using FEBibliothek.Werkzeuge;
 using System.Windows;
@@ -95,29 +96,37 @@ public class BiegebalkenGelenk : AbstraktBalken
         return lokaleSteifigkeitsmatrix;
     }
 
-    //private double[] BerechneLastVektor(AbstraktElementLast ael, bool inElementCoordinateSystem)
-    //{
-    //    var superLoadVector = BerechneLastVektor(ael, inElementCoordinateSystem);
-    //    Array.Copy(superLoadVector, 0, p, 0, 6); //length 6, calculates the kcc, kcl ... matrices for this element
+    public double[] BiegebalkenGelenkLastVektor(AbstraktElementLast ael, bool inElementCoordinateSystem)
+    {
+        var p = new double[6];
+        var pc = new double[5];
+        var pl = new double[1];
+        var kcl = new double[5,1];
+        var kclxinvkll = new double[5,1];
+        var invkll = new double[1,1];
+        var kclxinvkllxpl = new double[5, 1];
+        var lastVektor = new double[5];
+        var superLastVektor = BerechneLastVektor(ael, inElementCoordinateSystem);
+        //Array.Copy(superLoadVector, 0, p, 0, 6); //length 6, calculates the kcc, kcl ... matrices for this element
+        Array.Copy(superLastVektor,p,6);
+        if (inElementCoordinateSystem) BerechneElementMatrix();
 
-    //    if (inElementCoordinateSystem) BerechneElementMatrix();
+        if (Typ == Erster)
+        {
+            pc[0] = p[0]; pc[1] = p[1]; pc[2] = p[3]; pc[3] = p[4]; pc[4] = p[5]; pl[0] = p[2];
+        }
+        else if (Typ == Zweiter)
+        {
+            pc[0] = p[0]; pc[1] = p[1]; pc[2] = p[2]; pc[3] = p[3]; pc[4] = p[4]; pl[0] = p[5];
+        }
 
-    //    if (Typ == Erster)
-    //    {
-    //        pc[0] = p[0]; pc[1] = p[1]; pc[2] = p[3]; pc[3] = p[4]; pc[4] = p[5]; pl[0] = p[2];
-    //    }
-    //    else if (Typ == Zweiter)
-    //    {
-    //        pc[0] = p[0]; pc[1] = p[1]; pc[2] = p[2]; pc[3] = p[3]; pc[4] = p[4]; pl[0] = p[5];
-    //    }
-
-    //    for (var k = 0; k < 5; k++) kclxinvkll[k] = kcl[k] * invkll;
-    //    for (var i = 0; i < 5; i++)
-    //        for (var j = 0; j < 5; j++) kclxinvkllxpl[i] += kclxinvkll[i] * pl[j];
-    //    for (var k = 0; k < 5; k++) kclxinvkllxpl[k] = kclxinvkllxpl[k] * -1;
-    //    for (var k = 0; k < 5; k++) loadVector[k] = pc[k] + kclxinvkllxpl[k];
-    //    return loadVector;
-    //}
+        for (var k = 0; k < 5; k++) kclxinvkll[k,0] = kcl[k,0] * invkll[0,0];
+        for (var i = 0; i < 5; i++)
+            for (var j = 0; j < 1; j++) kclxinvkllxpl[i,0] += kclxinvkll[i,0] * pl[j];
+        for (var k = 0; k < 5; k++) kclxinvkllxpl[k,0] = kclxinvkllxpl[k,0] * -1;
+        for (var k = 0; k < 5; k++) lastVektor[k] = pc[k] + kclxinvkllxpl[k,0];
+        return lastVektor;
+    }
 
     private double[,] TransformMatrix(double[,] matrix)
     {

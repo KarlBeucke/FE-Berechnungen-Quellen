@@ -8,11 +8,11 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class ZeitKnotenlastNeu
 {
-    private readonly FeModell modell;
+    private readonly FeModell _modell;
     public ZeitKnotenlastNeu(FeModell modell)
     {
         InitializeComponent();
-        this.modell = modell;
+        this._modell = modell;
         LoadId.Text = string.Empty;
         KnotenId.Text = string.Empty;
         KnotenDof.Text = string.Empty;
@@ -41,7 +41,7 @@ public partial class ZeitKnotenlastNeu
             zeitabhängigeKnotenlast.Datei = true;
             zeitabhängigeKnotenlast.VariationsTyp = 0;
             var last = (AbstraktZeitabhängigeKnotenlast)zeitabhängigeKnotenlast;
-            modell.ZeitabhängigeKnotenLasten.Add(loadId, last);
+            _modell.ZeitabhängigeKnotenLasten.Add(loadId, last);
 
         }
         else if ((Amplitude.Text.Length & Frequenz.Text.Length & Winkel.Text.Length) != 0)
@@ -76,7 +76,7 @@ public partial class ZeitKnotenlastNeu
             zeitabhängigeKnotenlast.Intervall = interval;
             if (Bodenanregung.IsChecked == true) zeitabhängigeKnotenlast.Bodenanregung = true;
         }
-        modell.ZeitabhängigeKnotenLasten.Add(loadId, zeitabhängigeKnotenlast);
+        _modell.ZeitabhängigeKnotenLasten.Add(loadId, zeitabhängigeKnotenlast);
         Close();
     }
 

@@ -8,14 +8,14 @@ namespace FEBibliothek.Werkzeuge
 {
     public static class FeGeometrie
     {
-        public static List<Knoten> innenKnoten = new List<Knoten>();
+        private static List<Knoten> _innenKnoten = new List<Knoten>();
 
         public static List<Knoten> ConvexHull(List<Knoten> knoten, bool eng, double formFaktor)
         // ***** The convex hull or convex envelope or convex closure of a shape is the smallest convex set that contains it. 
         // ***** For a bounded subset of the plane, the convex hull may be visualized as the shape enclosed by a rubber band stretched around the subset. 
         //
-        // The current impementation assumes the first element to be in the upper left corner with a 
-        // sucessive sequence of Nodes in clockwise direction.
+        // The current implementation assumes the first element to be in the upper left corner with a 
+        // successive sequence of Nodes in clockwise direction.
         // Input: A list containing node definitions of a Finite Element Model, 
         //        the FormFactor for neighbouring elements, i.e. the maximum length to find neighbours, e.g. 1.2
         //        _eng = true  > Koordinatensystem links-unten, y nach oben,  Ingenieurkoordinaten
@@ -38,13 +38,13 @@ namespace FEBibliothek.Werkzeuge
             var basisVektor = new Vector(1, 0);
             basisVektor = RotateVector(basisVektor, startWinkel);
 
-            innenKnoten = knoten.ToList();
-            innenKnoten.Remove(knoten[0]);
+            _innenKnoten = knoten.ToList();
+            _innenKnoten.Remove(knoten[0]);
             foreach (var unused in knoten)
             {
                 Point end;
                 Vector vec;
-                foreach (var rest in innenKnoten)
+                foreach (var rest in _innenKnoten)
                 {
                     end = new Point(rest.Koordinaten[0], rest.Koordinaten[1]);
                     vec = (Vector)end - (Vector)start;
@@ -54,9 +54,9 @@ namespace FEBibliothek.Werkzeuge
                         next = end; found = rest;
                         break;
                     }
-                    innenKnoten.Remove(found);
+                    _innenKnoten.Remove(found);
                 }
-                foreach (var rest in innenKnoten)
+                foreach (var rest in _innenKnoten)
                 {
                     end = new Point(rest.Koordinaten[0], rest.Koordinaten[1]);
                     vec = (Vector)end - (Vector)start;
@@ -67,7 +67,7 @@ namespace FEBibliothek.Werkzeuge
                         next = end; found = rest; startWinkel = winkel;
                     }
                 }
-                innenKnoten.Remove(found);
+                _innenKnoten.Remove(found);
                 hullKnotenList.Add(found);
                 basisVektor = RotateVector((Vector)next - (Vector)start, factor * 100);
                 start = next;

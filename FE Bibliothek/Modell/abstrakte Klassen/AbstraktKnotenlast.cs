@@ -10,7 +10,7 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
         public void SetzReferenzen(FeModell modell)
         {
             if (KnotenId == "boden") return;
-            if (modell.Knoten.TryGetValue(KnotenId, out Knoten node)) { }
+            if (modell.Knoten.TryGetValue(KnotenId, out var node)) { }
 
             if (node != null) return;
             var message = "Knoten mit ID=" + KnotenId + " ist nicht im Modell enthalten";

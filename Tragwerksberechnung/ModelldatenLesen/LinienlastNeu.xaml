@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Neue Linienlast" Height="300" Width="400">
+        Title="Neue Linienlast" Height="300" Width="410">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
@@ -50,8 +50,8 @@
 
         <Button Grid.Row="6" Grid.Column="0" Width="50"  Height="26" Margin="5,0,0,4.6" 
                 Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" >löschen</Button>
-        <Button IsDefault="True" Grid.Row="6" Grid.Column="3" Width="35"  Margin="96,9,-30.2,1.2" 
-                Click="BtnDialogOk_Click" HorizontalAlignment="Left">_Ok</Button>
+        <Button IsDefault="True" Grid.Row="6" Grid.Column="3"  Margin="96,9,-32,1" 
+                Click="BtnDialogOk_Click">_Ok</Button>
         <Button Grid.Row="6" Grid.Column="3" Margin="10,9.8,10.8,0.4" 
                 Click="BtnDialogCancel_Click">_Abbrechen</Button>
     </Grid>

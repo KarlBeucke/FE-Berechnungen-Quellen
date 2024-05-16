@@ -97,9 +97,9 @@ public partial class ElementNeu
         }
         Close();
         StartFenster.TragwerkVisual.Close();
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
-        StartFenster.TragwerkVisual.Show();
         _elementKeys?.Close();
+        StartFenster.TragwerkVisual = new ModelldatenAnzeigen.TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual.Show();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
