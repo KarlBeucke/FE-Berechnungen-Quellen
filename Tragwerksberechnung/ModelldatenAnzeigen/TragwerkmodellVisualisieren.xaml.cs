@@ -30,6 +30,7 @@ public partial class TragwerkmodellVisualisieren
     private Point _mittelpunkt;
     private bool _isDragging;
     private bool _isKnoten, _isElement, _isKnotenlast, _isLinienlast, _isPunktlast, _isLager;
+    private KnotenNeu _knotenNeu;
     private ElementNeu _elementNeu;
     private KnotenlastNeu _knotenlastNeu;
     private LinienlastNeu _linienlastNeu;
@@ -121,10 +122,18 @@ public partial class TragwerkmodellVisualisieren
         }
     }
 
-    private void OnBtnKnotenNeu_Click(object sender, RoutedEventArgs e)
+    private void MenuBalkenKnotenNeu(object sender, RoutedEventArgs e)
     {
         _neuerKnoten = new KnotenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
         StartFenster.Berechnet = false;
+    }
+    private void MenuBalkenKnotenGruppeNeu(object sender, RoutedEventArgs e)
+    {
+        _ = new KnotenGruppeNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+    }
+    private void MenuBalkenKnotenNetzNeu(object sender, RoutedEventArgs e)
+    {
+        _ = new KnotenNetzNeu(_modell) { Topmost = true, Owner = (Window)Parent };
     }
 
     private void MenuBalkenElementNeu(object sender, RoutedEventArgs e)
@@ -337,8 +346,8 @@ public partial class TragwerkmodellVisualisieren
             Y = { Text = knoten.Koordinaten[1].ToString("N2", CultureInfo.CurrentCulture) }
         };
 
-        _mittelpunkt = new Point(knoten.Koordinaten[0] * Darstellung.Auflösung + Darstellung.PlazierungH,
-            (-knoten.Koordinaten[1] + Darstellung.MaxY) * Darstellung.Auflösung + Darstellung.PlazierungV);
+        _mittelpunkt = new Point(knoten.Koordinaten[0] * Darstellung.Auflösung + Darstellung.PlatzierungH,
+            (-knoten.Koordinaten[1] + Darstellung.MaxY) * Darstellung.Auflösung + Darstellung.PlatzierungV);
         Canvas.SetLeft(Knoten, _mittelpunkt.X - Knoten.Width / 2);
         Canvas.SetTop(Knoten, _mittelpunkt.Y - Knoten.Height / 2);
         VisualTragwerkModel.Children.Add(Knoten);

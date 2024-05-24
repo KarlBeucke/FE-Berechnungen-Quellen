@@ -50,6 +50,7 @@ namespace FEBibliothek.Werkzeuge
             return nvec;
         }
 
+        // vector = 0
         public static void Clear(double[] vector)
         {
             for (var i = 0; i < vector.Length; i++)
@@ -57,7 +58,7 @@ namespace FEBibliothek.Werkzeuge
                 vector[i] = 0;
             }
         }
-
+        // matrix[] = 0
         public static void Clear(IEnumerable<double[]> matrix)
         {
             foreach (var rowRef in matrix)
@@ -65,7 +66,7 @@ namespace FEBibliothek.Werkzeuge
                 for (var j = 0; j < rowRef.Length; j++) rowRef[j] = 0;
             }
         }
-
+        // matrix[,] = 0
         public static void Clear(double[,] matrix)
         {
             var zeilen = matrix.GetLength(0);
@@ -111,7 +112,7 @@ namespace FEBibliothek.Werkzeuge
                 for (var j = 0; j < matrix[i].Length; j++)
                     result[i] += matrix[i][j] * vector[j];
         }
-
+        // result = matrix[,] * vector
         public static void Mult(double[] result, double[,] matrix, double[] vector)
         {
             if (matrix.GetLength(1) != vector.Length)
@@ -122,7 +123,7 @@ namespace FEBibliothek.Werkzeuge
                     result[i] += matrix[i, j] * vector[j];
         }
 
-        // result = matrix * vector (generate and return new result vector)
+        // result = matrix[][] * vector (generate and return new result vector)
         public static double[] Mult(double[][] matrix, double[] vector)
         {
             if (matrix[0].Length != vector.Length)
@@ -134,7 +135,7 @@ namespace FEBibliothek.Werkzeuge
                     result[i] += matrix[i][j] * vector[j];
             return result;
         }
-
+        // result = matrix[,] * vector
         public static double[] Mult(double[,] matrix, double[] vector)
         {
             if (matrix.GetLength(1) != vector.Length)
@@ -147,7 +148,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = scalar * matrix * vector (erzeug neuen Ergebnisvektor und gib diesen zurück)   
+        // result = scalar * matrix[][] * vector (erzeuge neuen Ergebnisvektor und gib diesen zurück)   
         public static double[] Mult(double scalar, double[][] matrix, double[] vector)
         {
             if (vector.Length != (matrix[0].Length))
@@ -164,7 +165,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = scalar * vector(transposed) * vector (erzeug neuen Ergebnisvektor und gib diesen zurück)   
+        // result[][] = scalar * vector(transposed) * vector (erzeuge neue Ergebnismatrix und gib diese zurück)   
         public static double[][] MultTransposed(double scalar, double[] vector)
         {
             var result = new double[vector.Length][];
@@ -176,7 +177,7 @@ namespace FEBibliothek.Werkzeuge
 
             return result;
         }
-
+        // result[,] = scalar * vector(transposed) * vector (erzeuge neue Ergebnismatrix und gib diese zurück)   
         public static double[,] MultTransposedRect(double scalar, double[] vector)
         {
             var result = new double[vector.Length, vector.Length];
@@ -188,7 +189,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = matrix(transposed) * vector (erzeug neuen Ergebnisvektor und gib diesen zurück)   
+        // result = matrix[][](transposed) * vector (erzeuge neuen Ergebnisvektor und gib diesen zurück)   
         public static double[] MultTransposed(double[][] matrix, double[] vector)
         {
             if (vector.Length != (matrix.Length))
@@ -196,7 +197,7 @@ namespace FEBibliothek.Werkzeuge
                 ("MultTransposed: ungültige Matrix- und  Vektordimensionen \n\t[" + matrix[0].Length + "]x[" +
                  vector.Length + "]");
             var result = new double[matrix[0].Length];
-            for (int row = 0; row < matrix[0].Length; row++)
+            for (var row = 0; row < matrix[0].Length; row++)
             {
                 result[row] = 0;
                 for (var col = 0; col < vector.Length; col++) result[row] += matrix[col][row] * vector[col];
@@ -204,7 +205,7 @@ namespace FEBibliothek.Werkzeuge
 
             return result;
         }
-
+        // result = matrix[,](transposed) * vector (erzeuge neuen Ergebnisvektor und gib diesen zurück)   
         public static double[] MultTransposed(double[,] matrix, double[] vector)
         {
             if (vector.Length != (matrix.GetLength(1)))
@@ -221,7 +222,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = scalar * matrix(transposed) * vector (erzeug neuen Ergebnisvektor und gib diesen zurück)   
+        // result = scalar * matrix[][](transposed) * vector (erzeuge neuen Ergebnisvektor und gib diesen zurück)   
         public static double[] MultTransposed(double scalar, double[][] matrix, double[] vector)
         {
             if (vector.Length != (matrix.Length))
@@ -237,7 +238,7 @@ namespace FEBibliothek.Werkzeuge
 
             return result;
         }
-
+        // result = scalar * matrix[,](transposed) * vector (erzeuge neuen Ergebnisvektor und gib diesen zurück)   
         public static double[] MultTransposed(double scalar, double[,] matrix, double[] vector)
         {
             if (vector.Length != (matrix.GetLength(0)))
@@ -254,7 +255,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = matrix * vector (mit matrix in profil format, erzeug neuen Ergebnisvektor und gib diesen zurück)
+        // result = matrix[][] * vector (mit matrix in profil format, erzeuge neuen Ergebnisvektor und gib diesen zurück)
         public static double[] Mult(double[][] matrix, double[] vector, int[] profile)
         {
             var dimension = matrix.Length;
@@ -273,7 +274,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = matrix * vector (mit vorhandenem Ergebnisvektor und Matrix in ProfilFormat und Status Vektor)
+        // result = matrix[][] * vector (mit vorhandenem Ergebnisvektor und Matrix in ProfilFormat und Status Vektor)
         public static void Mult(double[] result, double[][] matrix, double[] vector, bool[] status, int[] profile)
         {
             var dimension = matrix.Length;
@@ -290,7 +291,7 @@ namespace FEBibliothek.Werkzeuge
             }
         }
 
-        // result = result + matrix * vector (mit vorhandenem Ergebnisvektor und Matrix in ProfilFormat und Status Vektor)
+        // result = result + matrix[][] * vector (mit vorhandenem Ergebnisvektor und Matrix in ProfilFormat und Status Vektor)
         public static void MultAdd(double[] result, double[][] matrix, double[] vector, bool[] status, int[] profile)
         {
             var dimension = matrix.Length;
@@ -307,7 +308,7 @@ namespace FEBibliothek.Werkzeuge
             }
         }
 
-        // result = matrix * vector (mit Matrix in ProfilFormat und Status Vektor)
+        // result = matrix[][] * vector (mit Matrix in Profilformat und Statusvektor)
         public static double[] Mult(double[][] matrix, double[] vector, bool[] status, int[] profile)
         {
             var dimension = matrix.Length;
@@ -327,7 +328,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = matrix * vector (mit Matrix in ProfilFormat und Status Vektor)
+        // result = matrix[][] * vector (mit Matrix in ProfilFormat und Status Vektor)
         // UpperUpper    	| UU	  ul |   | U |		nur UU*U
         //					|			 | * |	 |
         //					| lu	  ll |   | l |
@@ -357,7 +358,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = matrix * vector (mit Matrix in ProfilFormat und Status Vektor)
+        // result = matrix[][] * vector (mit Matrix in ProfilFormat und Status Vektor)
         // UpperLower		| uu	  UL |   | u |		nur UL*L
         //					|			 | * |	 |
         //					| lu	  ll |   | L |
@@ -387,7 +388,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = result - matrix * vector (mit vorhandenem Ergebnisvektor und Matrix in ProfilFormat und Status Vektor)
+        // result = result - matrix[][] * vector (mit vorhandenem Ergebnisvektor und Matrix in ProfilFormat und Status Vektor)
         public static void MultSub(double[] result, double[][] matrix, double[] vector, bool[] status, int[] profile)
         {
             var dimension = matrix.Length;
@@ -404,7 +405,7 @@ namespace FEBibliothek.Werkzeuge
             }
         }
 
-        // result = mat1 + mat2
+        // result = mat1[][] + mat2[][]
         public static double[][] Add(double[][] mat1, double[][] mat2)
         {
             if ((mat1.Length != mat2.Length) || (mat1[0].Length != (mat2[0].Length)))
@@ -418,14 +419,14 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = mat1 - mat2
+        // result[][] = mat1[][] - mat2[][]
         public static void Subtract(double[][] result, double[][] mat1, double[][] mat2)
         {
             for (var i = 0; i < mat1.Length; i++)
                 for (var j = 0; j < mat2.Length; j++)
                     result[i][j] = mat1[i][j] - mat2[i][j];
         }
-
+        // result[,] = mat1[,] - mat2[,]
         public static void Subtract(double[,] result, double[,] mat1, double[,] mat2)
         {
             for (var i = 0; i < mat1.GetLength(0); i++)
@@ -433,7 +434,7 @@ namespace FEBibliothek.Werkzeuge
                     result[i, j] = mat1[i, j] - mat2[i, j];
         }
 
-        // result = mat1 * mat2
+        // result[][] = mat1[][] * mat2[][]
         public static void Mult(double[][] result, double[][] mat1, double[][] mat2)
         {
             if ((mat1[0].Length != mat2.Length))
@@ -451,7 +452,7 @@ namespace FEBibliothek.Werkzeuge
                 }
             }
         }
-
+        // result[,] = mat1[,] * mat2[,]
         public static void Mult(double[,] result, double[,] mat1, double[,] mat2)
         {
             if ((mat1.GetLength(1) != mat2.Length))
@@ -470,7 +471,7 @@ namespace FEBibliothek.Werkzeuge
             }
         }
 
-        // result = mat1 * mat2
+        // result[][] = mat1[][] * mat2[][]
         public static double[][] Mult(double[][] mat1, double[][] mat2)
         {
             if ((mat1[0].Length != mat2.Length))
@@ -490,7 +491,7 @@ namespace FEBibliothek.Werkzeuge
 
             return result;
         }
-
+        // result[,] = mat1[,] * mat2[,]
         public static double[,] Mult(double[,] mat1, double[,] mat2)
         {
             if (mat1.GetLength(1) != mat2.GetLength(0))
@@ -512,7 +513,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = scalar * mat1 * mat2
+        // result[][] = scalar * mat1[][] * mat2[][]
         public static double[][] Mult(double factor, double[][] mat1, double[][] mat2)
         {
             if ((mat1[0].Length != mat2.Length))
@@ -533,7 +534,7 @@ namespace FEBibliothek.Werkzeuge
 
             return result;
         }
-
+        // result[,] = scalar * mat1[,] * mat2[,]
         public static double[,] Mult(double factor, double[,] mat1, double[,] mat2)
         {
             if ((mat1.GetLength(1) != mat2.Length))
@@ -555,7 +556,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = scalar * mat1 * mat2(transposed)
+        // result[][] = scalar * mat1[][] * mat2[][](transposed)
         public static double[][] MultMatrixTransposed(double scalar, double[][] mat1, double[][] mat2)
         {
             if (mat1[0].Length != mat2[0].Length)
@@ -578,7 +579,7 @@ namespace FEBibliothek.Werkzeuge
 
             return result;
         }
-
+        // result[][] = scalar * mat1[,] * mat2[,](transposed)
         public static double[][] MultMatrixTransposed(double scalar, double[,] mat1, double[,] mat2)
         {
             if (mat1.GetLength(1) != mat2.GetLength(1))
@@ -601,7 +602,7 @@ namespace FEBibliothek.Werkzeuge
 
             return result;
         }
-
+        // result[,] = scalar * mat1[,] * mat2[,]
         public static double[,] RectMultMatrixTransposed(double scalar, double[,] mat1, double[,] mat2)
         {
             if (mat1.GetLength(1) != mat2.GetLength(1))
@@ -624,7 +625,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = result + scalar * mat1 * mat2(transposed)
+        // result[][] + scalar * mat1[][] * mat2[][](transposed)
         public static void MultAddMatrixTransposed(double[][] result, double scalar, double[][] mat1, double[][] mat2)
         {
             if (mat1[0].Length != mat2[0].Length)
@@ -643,7 +644,7 @@ namespace FEBibliothek.Werkzeuge
             }
         }
 
-        // result = result + scalar * mat1 * mat2(transposed)
+        // result[][] + scalar * mat1[,] * mat2[,](transposed)
         public static void MultAddMatrixTransposed(double[][] result, double scalar, double[,] mat1, double[,] mat2)
         {
             if (mat1.GetLength(1) != mat2.GetLength(0))
@@ -662,7 +663,7 @@ namespace FEBibliothek.Werkzeuge
             }
         }
 
-        // result = result + scalar * mat1 * mat2(transposed)
+        // result[,] + scalar * mat1[,] * mat2[,](transposed)
         public static void MultAddMatrixTransposed(double[,] result, double scalar, double[,] mat1, double[,] mat2)
         {
             if (mat1.GetLength(1) != mat2.GetLength(1))
@@ -681,7 +682,7 @@ namespace FEBibliothek.Werkzeuge
             }
         }
 
-        // result = result + mat1 * mat2
+        // result[][] + mat1[][] * mat2[][]
         public static void MultAddMatrix(double[][] result, double[][] mat1, double[][] mat2)
         {
             if ((mat1[0].Length != mat2.Length) || (mat1.Length != result.Length) ||
@@ -700,7 +701,7 @@ namespace FEBibliothek.Werkzeuge
                 }
             }
         }
-
+        // result[,] + mat1[][] * mat2[][]
         public static void MultAddMatrix(double[,] result, double[][] mat1, double[][] mat2)
         {
             if ((mat1[0].Length != mat2.Length) || (mat1.Length != result.Length) ||
@@ -719,7 +720,7 @@ namespace FEBibliothek.Werkzeuge
                 }
             }
         }
-
+        // result[,] + mat1[,] * mat2[,]
         public static void MultAddMatrix(double[,] result, double[,] mat1, double[,] mat2)
         {
             if ((mat1.GetLength(1) != mat2.GetLength(0)) || (mat1.GetLength(0) != result.GetLength(0)) ||
@@ -743,7 +744,7 @@ namespace FEBibliothek.Werkzeuge
             }
         }
 
-        // result = scalar * mat1(transposed) * mat2
+        // result[,] = scalar * mat1[,](transposed) * mat2[,]
         public static double[,] MultTransposedMatrix(double[,] mat1, double[,] mat2)
         {
             if (mat1.GetLength(1) != mat2.GetLength(0))
@@ -765,7 +766,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // result = scalar * mat1(transposed) * mat2
+        // result[,] = scalar * mat1[,](transposed) * mat2[,]
         public static double[,] MultTransposedMatrix(double scalar, double[,] mat1, double[,] mat2)
         {
             if (mat1.GetLength(0) != mat2.GetLength(0))
@@ -787,7 +788,7 @@ namespace FEBibliothek.Werkzeuge
             return result;
         }
 
-        // extract submatrix
+        // extrahiere Submatrix matrix[][], submatrix[][], indizes[]
         public static void ExtractSubMatrix(double[][] matrix, double[][] subMatrix, int[] indices)
         {
             if (indices.Length != subMatrix.Length || indices.Length != subMatrix[0].Length)
@@ -804,10 +805,10 @@ namespace FEBibliothek.Werkzeuge
             }
             catch (AlgebraischeAusnahme)
             {
-                throw new AlgebraischeAusnahme("ExtractSubMatrix: index value outside range of matrix");
+                throw new AlgebraischeAusnahme("ExtractSubMatrix: Indexwert außerhalb der Matrixdimension");
             }
         }
-
+        // extrahiere Submatrix matrix[,], submatrix[,], indizes[]
         public static void ExtractSubMatrix(double[,] matrix, double[,] subMatrix, int[] indices)
         {
             if (indices.Length != subMatrix.GetLength(0) || indices.Length != subMatrix.GetLength(1))
@@ -827,7 +828,7 @@ namespace FEBibliothek.Werkzeuge
                 throw new AlgebraischeAusnahme("ExtractSubMatrix: index value outside range of matrix");
             }
         }
-
+        // extrahiere Submatrix matrix[][], submatrix[][], Zeilenindizes[], Spaltenindizes[]
         public static void ExtractSubMatrix(double[][] matrix, double[][] subMatrix, int[] rows, int[] cols)
         {
             if (rows.Length != subMatrix.Length || cols.Length != subMatrix[0].Length)
@@ -843,7 +844,7 @@ namespace FEBibliothek.Werkzeuge
                 throw new AlgebraischeAusnahme("ExtractSubMatrix: index value outside range of matrix");
             }
         }
-
+        // extrahiere Submatrix matrix[,], submatrix[,], Zeilenindizes[], Spaltenindizes[]
         public static void ExtractSubMatrix(double[,] matrix, double[,] subMatrix, int[] rows, int[] cols)
         {
             if (rows.Length != subMatrix.GetLength(0) || cols.Length != subMatrix.GetLength(1))
@@ -859,7 +860,7 @@ namespace FEBibliothek.Werkzeuge
                 throw new AlgebraischeAusnahme("ExtractSubMatrix: Indexwert außerhalb der Matrixwerte");
             }
         }
-
+        // extrahiere SubVector matrix[,], subVector[], Zeilenindizes[], Spaltenindizes[]
         public static void ExtractSubMatrix(double[,] matrix, double[] subVector, int[] rows, int[] cols)
         {
             if (rows.Length == 1)

@@ -6,103 +6,103 @@ namespace FEBibliothek.Zeitlöser
 {
     public class Zeitintegration1OrdnungStatus
     {
-        private readonly int dimension;
-        private readonly double dt, alfa;
-        private readonly double[] c;
-        public double[] That { get; private set; }
-        private readonly double[][] k;
-        public double[][] ForcingFunction { get; }
-        private readonly int[] profile;
-        private readonly bool[] status;
+        private readonly int _dimension;
+        private readonly double _dt, _alfa;
+        private readonly double[] _c;
+        private double[] That { get; set; }
+        private readonly double[][] _k;
+        private double[][] ForcingFunction { get; }
+        private readonly int[] _profile;
+        private readonly bool[] _status;
 
-        public double[][] Temperature { get; set; }
+        private double[][] Temperature { get; set; }
         public double[][] TemperaturGradient { get; set; }
 
         public Zeitintegration1OrdnungStatus(Gleichungen systemEquations, double[][] excitation,
                                                 double dt, double alfa, double[][] initial)
         {
-            c = systemEquations.DiagonalMatrix;
-            k = systemEquations.Matrix;
+            _c = systemEquations.DiagonalMatrix;
+            _k = systemEquations.Matrix;
             ForcingFunction = excitation;
-            profile = systemEquations.Profil;
-            status = systemEquations.Status;
-            this.dt = dt;
-            this.alfa = alfa;
+            _profile = systemEquations.Profil;
+            _status = systemEquations.Status;
+            this._dt = dt;
+            this._alfa = alfa;
             Temperature = initial;
-            dimension = k.Length;
+            _dimension = _k.Length;
         }
 
         public Zeitintegration1OrdnungStatus(double[] c, double[][] k, double[][] excitation,
                                                 int[] profile, bool[] status,
                                                 double dt, double alfa, double[][] initial)
         {
-            this.c = c;
-            this.k = k;
+            this._c = c;
+            this._k = k;
             ForcingFunction = excitation;
-            this.profile = profile;
-            this.status = status;
-            this.dt = dt;
-            this.alfa = alfa;
+            this._profile = profile;
+            this._status = status;
+            this._dt = dt;
+            this._alfa = alfa;
             Temperature = initial;
-            dimension = this.k.Length;
+            _dimension = this._k.Length;
         }
 
         public void Ausführung()
         {
-            var alfaDt = alfa * dt;
-            var dtAlfa = dt * (1 - alfa);
-            var primal = new double[dimension];
+            var alfaDt = _alfa * _dt;
+            var dtAlfa = _dt * (1 - _alfa);
+            var primal = new double[_dimension];
 
             var timeSteps = Temperature.Length;
-            That = new double[dimension];
+            That = new double[_dimension];
             TemperaturGradient = new double[timeSteps][];
-            for (var i = 0; i < timeSteps; i++) { TemperaturGradient[i] = new double[dimension]; }
+            for (var i = 0; i < timeSteps; i++) { TemperaturGradient[i] = new double[_dimension]; }
 
-            // calculate initial temperature gradients
-            var rhs = MatrizenAlgebra.Mult(k, Temperature[0], profile);
-            for (var i = 0; i < dimension; i++)
-                TemperaturGradient[0][i] = (ForcingFunction[0][i] - rhs[i]) / c[i];
+            // berechne Anfangstemperaturgradienten
+            var rhs = MatrizenAlgebra.Mult(_k, Temperature[0], _profile);
+            for (var i = 0; i < _dimension; i++)
+                TemperaturGradient[0][i] = (ForcingFunction[0][i] - rhs[i]) / _c[i];
 
-            // evaluate constant coefficient matrix
-            var cm = new double[dimension][];
-            for (var row = 0; row < dimension; row++)
+            // berechne konstante Koeffizientenmatrix
+            var cm = new double[_dimension][];
+            for (var row = 0; row < _dimension; row++)
             {
-                cm[row] = new double[row + 1 - profile[row]];
-                for (var col = 0; col <= (row - profile[row]); col++)
-                    cm[row][col] = alfaDt * k[row][col];
-                cm[row][row - profile[row]] += c[row];
+                cm[row] = new double[row + 1 - _profile[row]];
+                for (var col = 0; col <= (row - _profile[row]); col++)
+                    cm[row][col] = alfaDt * _k[row][col];
+                cm[row][row - _profile[row]] += _c[row];
             }
 
             var profileSolverStatus =
-                            new ProfillöserStatus(cm, rhs, primal, status, profile);
+                            new ProfillöserStatus(cm, rhs, primal, _status, _profile);
             profileSolverStatus.Dreieckszerlegung();
 
             for (var counter = 1; counter < timeSteps; counter++)
             {
-                // calculate temperature gradients at restrained nodes 
-                for (var i = 0; i < dimension; i++)
-                    if (status[i])
-                        TemperaturGradient[counter][i] = (Temperature[counter][i] - Temperature[counter - 1][i]) / dt;
+                // berechne Temperaturgradienten an festgehaltenen Knoten 
+                for (var i = 0; i < _dimension; i++)
+                    if (_status[i])
+                        TemperaturGradient[counter][i] = (Temperature[counter][i] - Temperature[counter - 1][i]) / _dt;
 
-                // calculate T(hat) for next step
-                for (var i = 0; i < dimension; i++)
-                    if (status[i]) That[i] = Temperature[counter][i];
+                // berechne T(hat) für nächsten Zeitschritt
+                for (var i = 0; i < _dimension; i++)
+                    if (_status[i]) That[i] = Temperature[counter][i];
                     else That[i] = Temperature[counter - 1][i] + dtAlfa * TemperaturGradient[counter - 1][i];
 
-                // modification of RHS
-                rhs = MatrizenAlgebra.Mult(k, That, status, profile);
-                var rhSfr = MatrizenAlgebra.MultUl(cm, TemperaturGradient[counter], status, profile);
-                for (var i = 0; i < dimension; i++)
+                // Modifikation der Rechten-Seite
+                rhs = MatrizenAlgebra.Mult(_k, That, _status, _profile);
+                var rhSfr = MatrizenAlgebra.MultUl(cm, TemperaturGradient[counter], _status, _profile);
+                for (var i = 0; i < _dimension; i++)
                     rhs[i] = ForcingFunction[counter][i] - rhSfr[i] - rhs[i];
 
-                // backsubstitution
+                // Rückwärtseinsetzung
                 profileSolverStatus.SetzRechteSeite(rhs);
                 profileSolverStatus.LösePrimal();
 
-                // temperatures and gradients at next time step for unrestrained nodes
-                for (var i = 0; i < dimension; i++)
+                // Temperaturen und Gradienten am nächsten Zeitschritt für freie Knoten
+                for (var i = 0; i < _dimension; i++)
                 {
-                    if (status[i]) continue;
+                    if (_status[i]) continue;
                     TemperaturGradient[counter][i] = primal[i];
                     Temperature[counter][i] = That[i] + alfaDt * primal[i];
                 }

@@ -187,8 +187,14 @@
       <DependentUpon>TragwerkmodellVisualisieren.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\ElementParser.cs" />
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenGruppeNeu.xaml.cs">
+      <DependentUpon>KnotenGruppeNeu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenKeys.xaml.cs">
       <DependentUpon>KnotenKeys.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzNeu.xaml.cs">
+      <DependentUpon>KnotenNetzNeu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\LagerKeys.xaml.cs">
       <DependentUpon>LagerKeys.xaml</DependentUpon>
@@ -489,7 +495,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenGruppeNeu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenKeys.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzNeu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

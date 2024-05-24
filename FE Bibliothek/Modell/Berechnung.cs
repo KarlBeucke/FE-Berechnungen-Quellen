@@ -618,8 +618,8 @@ namespace FEBibliothek.Modell
                     if (_systemGleichungen.Status[index[i]]) continue;
                     for (var k = 0; k < nZeitschritte; k++)
                     {
-                        _knoten.KnotenVariable[i][k] = zeitintegration.verformung[k][index[i]];
-                        _knoten.KnotenAbleitungen[i][k] = zeitintegration.beschleunigung[k][index[i]];
+                        _knoten.KnotenVariable[i][k] = zeitintegration.Verformung[k][index[i]];
+                        _knoten.KnotenAbleitungen[i][k] = zeitintegration.Beschleunigung[k][index[i]];
                     }
                 }
             }

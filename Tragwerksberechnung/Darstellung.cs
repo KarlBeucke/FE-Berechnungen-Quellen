@@ -22,7 +22,7 @@ public class Darstellung
     private double _auflösungH, _auflösungV, _lastAuflösung;
     public double MaxY;
     private double _minX, _maxX, _minY;
-    public double PlazierungV, PlazierungH;
+    public double PlatzierungV, PlatzierungH;
     private double _screenH, _screenV;
     public int ÜberhöhungVerformung = 1;
     public int ÜberhöhungRotation = 1;
@@ -32,7 +32,7 @@ public class Darstellung
     private const int MaxMomentScreen = 50;
     private readonly Canvas _visual;
     public TextBlock MaxMomentText;
-    private Point _plazierungText;
+    private Point _platzierungText;
 
     public List<object> ElementIDs { get; }
     public List<object> KnotenIDs { get; }
@@ -86,12 +86,12 @@ public class Darstellung
         if (delta < 1)
         {
             _auflösungH = _screenH - 2 * RandLinks;
-            PlazierungH = (int)(0.5 * _screenH);
+            PlatzierungH = (int)(0.5 * _screenH);
         }
         else
         {
             _auflösungH = (_screenH - 2 * RandLinks) / delta;
-            PlazierungH = RandLinks;
+            PlatzierungH = RandLinks;
         }
 
         // horizontales Modell
@@ -99,12 +99,12 @@ public class Darstellung
         if (delta < 1)
         {
             Auflösung = _screenV - 2 * RandOben;
-            PlazierungV = (int)(0.5 * _screenV);
+            PlatzierungV = (int)(0.5 * _screenV);
         }
         else
         {
             Auflösung = (_screenV - 2 * RandOben) / delta;
-            PlazierungV = RandOben;
+            PlatzierungV = RandOben;
         }
         if (_auflösungH < Auflösung) Auflösung = _auflösungH;
 
@@ -112,6 +112,12 @@ public class Darstellung
 
     public void UnverformteGeometrie()
     {
+        // Knoten werden als kleine schwarze Punkte gezeigt
+        foreach (var item in _modell.Knoten)
+        {
+            KnotenZeigen(item.Value, Black, 1);
+        }
+
         // Elementumrisse werden als Shape (PathGeometry) mit Namen hinzugefügt
         // pathGeometry enthält EIN spezifisches Element
         // alle Elemente werden der GeometryGroup tragwerk hinzugefügt
@@ -140,8 +146,8 @@ public class Darstellung
             StrokeThickness = 1,
             Data = tragwerk
         };
-        SetLeft(tragwerkPath, PlazierungH);
-        SetTop(tragwerkPath, PlazierungV);
+        SetLeft(tragwerkPath, PlatzierungH);
+        SetTop(tragwerkPath, PlatzierungV);
         _visual.Children.Add(tragwerkPath);
     }
 
@@ -151,15 +157,16 @@ public class Darstellung
 
         var knotenZeigen = new GeometryGroup();
         knotenZeigen.Children.Add(
-            new EllipseGeometry(new Point(punkt.X, punkt.Y), 20, 20));
+            new EllipseGeometry(new Point(punkt.X, punkt.Y), 2, 2));
         Shape knotenPath = new Path()
         {
             Stroke = farbe,
+            Fill = farbe,
             StrokeThickness = wichte,
             Data = knotenZeigen
         };
-        SetLeft(knotenPath, PlazierungH);
-        SetTop(knotenPath, PlazierungV);
+        SetLeft(knotenPath, PlatzierungH);
+        SetTop(knotenPath, PlatzierungV);
         _visual.Children.Add(knotenPath);
         return knotenPath;
     }
@@ -184,8 +191,8 @@ public class Darstellung
             StrokeThickness = wichte,
             Data = pathGeometry
         };
-        SetLeft(elementPath, PlazierungH);
-        SetTop(elementPath, PlazierungV);
+        SetLeft(elementPath, PlatzierungH);
+        SetTop(elementPath, PlatzierungV);
         _visual.Children.Add(elementPath);
         return elementPath;
     }
@@ -315,8 +322,8 @@ public class Darstellung
                 Data = pathGeometry
             };
 
-            SetLeft(path, PlazierungH);
-            SetTop(path, PlazierungV);
+            SetLeft(path, PlatzierungH);
+            SetTop(path, PlatzierungV);
             _visual.Children.Add(path);
             Verformungen.Add(path);
         }
@@ -558,8 +565,8 @@ public class Darstellung
                 Text = item.Key,
                 Foreground = Blue
             };
-            SetTop(id, (-cg.Y + MaxY) * Auflösung + PlazierungV);
-            SetLeft(id, cg.X * Auflösung + PlazierungH);
+            SetTop(id, (-cg.Y + MaxY) * Auflösung + PlatzierungV);
+            SetLeft(id, cg.X * Auflösung + PlatzierungH);
             _visual.Children.Add(id);
             ElementIDs.Add(id);
         }
@@ -574,8 +581,8 @@ public class Darstellung
                 Text = item.Key,
                 Foreground = Black
             };
-            SetTop(id, (-item.Value.Koordinaten[1] + MaxY) * Auflösung + PlazierungV);
-            SetLeft(id, item.Value.Koordinaten[0] * Auflösung + PlazierungH);
+            SetTop(id, (-item.Value.Koordinaten[1] + MaxY) * Auflösung + PlatzierungV);
+            SetLeft(id, item.Value.Koordinaten[0] * Auflösung + PlatzierungH);
             _visual.Children.Add(id);
             KnotenIDs.Add(id);
         }
@@ -622,8 +629,8 @@ public class Darstellung
             };
             LastVektoren.Add(path);
 
-            SetLeft(path, PlazierungH);
-            SetTop(path, PlazierungV);
+            SetLeft(path, PlatzierungH);
+            SetTop(path, PlatzierungV);
             _visual.Children.Add(path);
         }
         foreach (var item in _modell.PunktLasten)
@@ -638,8 +645,8 @@ public class Darstellung
             };
             LastVektoren.Add(path);
 
-            SetLeft(path, PlazierungH);
-            SetTop(path, PlazierungV);
+            SetLeft(path, PlatzierungH);
+            SetTop(path, PlatzierungV);
             _visual.Children.Add(path);
         }
         foreach (var item in _modell.ElementLasten)
@@ -660,8 +667,8 @@ public class Darstellung
             };
             LastVektoren.Add(path);
 
-            SetLeft(path, PlazierungH);
-            SetTop(path, PlazierungV);
+            SetLeft(path, PlatzierungH);
+            SetTop(path, PlatzierungV);
             _visual.Children.Add(path);
         }
     }
@@ -848,10 +855,10 @@ public class Darstellung
                 Foreground = Red
             };
             if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out var lastKnoten)) continue;
-            _plazierungText = TransformKnoten(lastKnoten, Auflösung, MaxY);
+            _platzierungText = TransformKnoten(lastKnoten, Auflösung, MaxY);
             const int knotenOffset = 20;
-            SetTop(id, _plazierungText.Y + PlazierungV - knotenOffset);
-            SetLeft(id, _plazierungText.X + PlazierungH);
+            SetTop(id, _platzierungText.Y + PlatzierungV - knotenOffset);
+            SetLeft(id, _platzierungText.X + PlatzierungH);
             _visual.Children.Add(id);
             LastIDs.Add(id);
         }
@@ -868,9 +875,9 @@ public class Darstellung
             };
             var plazierung = ((Vector)TransformKnoten(item.Value.Element.Knoten[0], Auflösung, MaxY)
                               + (Vector)TransformKnoten(item.Value.Element.Knoten[1], Auflösung, MaxY)) / 2;
-            _plazierungText = (Point)plazierung;
-            SetTop(id, _plazierungText.Y + PlazierungV + elementOffset);
-            SetLeft(id, _plazierungText.X + PlazierungH);
+            _platzierungText = (Point)plazierung;
+            SetTop(id, _platzierungText.Y + PlatzierungV + elementOffset);
+            SetLeft(id, _platzierungText.X + PlatzierungH);
             _visual.Children.Add(id);
             LastIDs.Add(id);
         }
@@ -886,10 +893,10 @@ public class Darstellung
 
             var startPoint = TransformKnoten(last.Element.Knoten[0], Auflösung, MaxY);
             var endPoint = TransformKnoten(last.Element.Knoten[1], Auflösung, MaxY);
-            _plazierungText = startPoint + (endPoint - startPoint) * last.Offset;
+            _platzierungText = startPoint + (endPoint - startPoint) * last.Offset;
             const int knotenOffset = 15;
-            SetTop(id, _plazierungText.Y + PlazierungV + knotenOffset);
-            SetLeft(id, _plazierungText.X + PlazierungH);
+            SetTop(id, _platzierungText.Y + PlatzierungV + knotenOffset);
+            SetLeft(id, _platzierungText.X + PlatzierungH);
             _visual.Children.Add(id);
             LastIDs.Add(id);
         }
@@ -959,8 +966,8 @@ public class Darstellung
             LagerDarstellung.Add(path);
 
             // setz oben/links Position zum Zeichnen auf dem Canvas
-            SetLeft(path, PlazierungH);
-            SetTop(path, PlazierungV);
+            SetLeft(path, PlatzierungH);
+            SetTop(path, PlatzierungV);
             // zeichne Shape
             _visual.Children.Add(path);
         }
@@ -1066,10 +1073,10 @@ public class Darstellung
                 Foreground = Green
             };
             item.Value.SetzRandbedingungenReferenzen(_modell);
-            _plazierungText = TransformKnoten(item.Value.Knoten, Auflösung, MaxY);
+            _platzierungText = TransformKnoten(item.Value.Knoten, Auflösung, MaxY);
             const int supportSymbol = 25;
-            SetTop(id, _plazierungText.Y + PlazierungV + supportSymbol);
-            SetLeft(id, _plazierungText.X + PlazierungH);
+            SetTop(id, _platzierungText.Y + PlatzierungV + supportSymbol);
+            SetLeft(id, _platzierungText.X + PlatzierungH);
             _visual.Children.Add(id);
             LagerIDs.Add(id);
         }
@@ -1186,8 +1193,8 @@ public class Darstellung
                 StrokeThickness = 1,
                 Data = pathGeometry
             };
-            SetLeft(path, PlazierungH);
-            SetTop(path, PlazierungV);
+            SetLeft(path, PlatzierungH);
+            SetTop(path, PlatzierungV);
             _visual.Children.Add(path);
             NormalkraftListe.Add(path);
         }
@@ -1266,8 +1273,8 @@ public class Darstellung
                     StrokeThickness = 1,
                     Data = pathGeometry
                 };
-                SetLeft(path, PlazierungH);
-                SetTop(path, PlazierungV);
+                SetLeft(path, PlatzierungH);
+                SetTop(path, PlatzierungV);
                 _visual.Children.Add(path);
                 NormalkraftListe.Add(path);
             }
@@ -1318,8 +1325,8 @@ public class Darstellung
                 StrokeThickness = 1,
                 Data = pathGeometry
             };
-            SetLeft(path, PlazierungH);
-            SetTop(path, PlazierungV);
+            SetLeft(path, PlatzierungH);
+            SetTop(path, PlatzierungV);
             _visual.Children.Add(path);
             QuerkraftListe.Add(path);
         }
@@ -1380,8 +1387,8 @@ public class Darstellung
                     StrokeThickness = 1,
                     Data = pathGeometry
                 };
-                SetLeft(path, PlazierungH);
-                SetTop(path, PlazierungV);
+                SetLeft(path, PlatzierungH);
+                SetTop(path, PlatzierungV);
                 _visual.Children.Add(path);
                 QuerkraftListe.Add(path);
 
@@ -1411,8 +1418,8 @@ public class Darstellung
                     StrokeThickness = 1,
                     Data = pathGeometry
                 };
-                SetLeft(path, PlazierungH);
-                SetTop(path, PlazierungV);
+                SetLeft(path, PlatzierungH);
+                SetTop(path, PlatzierungV);
                 _visual.Children.Add(path);
                 QuerkraftListe.Add(path);
             }
@@ -1504,8 +1511,8 @@ public class Darstellung
                         StrokeThickness = 1,
                         Data = pathGeometry
                     };
-                    SetLeft(path, PlazierungH);
-                    SetTop(path, PlazierungV);
+                    SetLeft(path, PlatzierungH);
+                    SetTop(path, PlatzierungV);
                     _visual.Children.Add(path);
                     QuerkraftListe.Add(path);
 
@@ -1533,8 +1540,8 @@ public class Darstellung
                         StrokeThickness = 1,
                         Data = pathGeometry
                     };
-                    SetLeft(path, PlazierungH);
-                    SetTop(path, PlazierungV);
+                    SetLeft(path, PlatzierungH);
+                    SetTop(path, PlatzierungV);
                     _visual.Children.Add(path);
                     QuerkraftListe.Add(path);
                 }
@@ -1616,8 +1623,8 @@ public class Darstellung
                         StrokeThickness = 1,
                         Data = pathGeometry
                     };
-                    SetLeft(path, PlazierungH);
-                    SetTop(path, PlazierungV);
+                    SetLeft(path, PlatzierungH);
+                    SetTop(path, PlatzierungV);
                     _visual.Children.Add(path);
                     QuerkraftListe.Add(path);
 
@@ -1643,8 +1650,8 @@ public class Darstellung
                         StrokeThickness = 1,
                         Data = pathGeometry
                     };
-                    SetLeft(path, PlazierungH);
-                    SetTop(path, PlazierungV);
+                    SetLeft(path, PlatzierungH);
+                    SetTop(path, PlatzierungV);
                     _visual.Children.Add(path);
                     QuerkraftListe.Add(path);
                 }
@@ -1724,8 +1731,8 @@ public class Darstellung
                 StrokeThickness = 1,
                 Data = pathGeometry
             };
-            SetLeft(path, PlazierungH);
-            SetTop(path, PlazierungV);
+            SetLeft(path, PlatzierungH);
+            SetTop(path, PlatzierungV);
             _visual.Children.Add(path);
             MomenteListe.Add(path);
         }
@@ -1785,8 +1792,8 @@ public class Darstellung
                     Text = mmax.ToString("F2"),
                     Foreground = Blue
                 };
-                SetTop(MaxMomentText, maxPunkt.Y + PlazierungV);
-                SetLeft(MaxMomentText, maxPunkt.X + PlazierungH);
+                SetTop(MaxMomentText, maxPunkt.Y + PlatzierungV);
+                SetLeft(MaxMomentText, maxPunkt.X + PlatzierungH);
                 _visual.Children.Add(MaxMomentText);
                 MomentenMaxTexte.Add(MaxMomentText);
             }
@@ -1848,8 +1855,8 @@ public class Darstellung
                             Text = "Mmax = " + (polyLinePointArray[indexMax].Y * skalierungMoment / MaxMomentScreen).ToString("F2"),
                             Foreground = Blue
                         };
-                        SetTop(MaxMomentText, maxPunkt.Y + PlazierungV);
-                        SetLeft(MaxMomentText, maxPunkt.X + PlazierungH);
+                        SetTop(MaxMomentText, maxPunkt.Y + PlatzierungV);
+                        SetLeft(MaxMomentText, maxPunkt.X + PlatzierungH);
 
                         _visual.Children.Add(MaxMomentText);
                         MomentenMaxTexte.Add(MaxMomentText);
@@ -1904,8 +1911,8 @@ public class Darstellung
                             Text = "Mmax = " + mmax.ToString("F2"),
                             Foreground = Blue
                         };
-                        SetTop(MaxMomentText, maxPunkt.Y + PlazierungV);
-                        SetLeft(MaxMomentText, maxPunkt.X + PlazierungH);
+                        SetTop(MaxMomentText, maxPunkt.Y + PlatzierungV);
+                        SetLeft(MaxMomentText, maxPunkt.X + PlatzierungH);
                         _visual.Children.Add(MaxMomentText);
                         MomentenMaxTexte.Add(MaxMomentText);
                     }
@@ -1955,8 +1962,8 @@ public class Darstellung
                             Text = "Mmax = " + mmax.ToString("F2"),
                             Foreground = Blue
                         };
-                        SetTop(MaxMomentText, maxPunkt.Y + PlazierungV);
-                        SetLeft(MaxMomentText, maxPunkt.X + PlazierungH);
+                        SetTop(MaxMomentText, maxPunkt.Y + PlatzierungV);
+                        SetLeft(MaxMomentText, maxPunkt.X + PlatzierungH);
                         _visual.Children.Add(MaxMomentText);
                         MomentenMaxTexte.Add(MaxMomentText);
                     }
@@ -1973,8 +1980,8 @@ public class Darstellung
                 StrokeThickness = 1,
                 Data = pathGeometry
             };
-            SetLeft(path, PlazierungH);
-            SetTop(path, PlazierungV);
+            SetLeft(path, PlatzierungH);
+            SetTop(path, PlatzierungV);
             _visual.Children.Add(path);
             MomenteListe.Add(path);
         }
@@ -2011,7 +2018,7 @@ public class Darstellung
 
         // setz oben/links Position zum Zeichnen auf dem Canvas
         SetLeft(zeitverlauf, RandLinks);
-        SetTop(zeitverlauf, mY * _auflösungV + PlazierungV);
+        SetTop(zeitverlauf, mY * _auflösungV + PlatzierungV);
         // zeichne Shape
         _visual.Children.Add(zeitverlauf);
     }
@@ -2027,9 +2034,9 @@ public class Darstellung
         {
             Stroke = Black,
             X1 = 0,
-            Y1 = max * _auflösungV + PlazierungV,
-            X2 = (tmax - tmin) * _auflösungH + PlazierungH,
-            Y2 = max * _auflösungV + PlazierungV,
+            Y1 = max * _auflösungV + PlatzierungV,
+            X2 = (tmax - tmin) * _auflösungH + PlatzierungH,
+            Y2 = max * _auflösungV + PlatzierungV,
             StrokeThickness = 2
         };
         _ = _visual.Children.Add(xAchse);
@@ -2037,9 +2044,9 @@ public class Darstellung
         {
             Stroke = Black,
             X1 = RandLinks,
-            Y1 = max * _auflösungV - min * _auflösungV + 2 * PlazierungV,
+            Y1 = max * _auflösungV - min * _auflösungV + 2 * PlatzierungV,
             X2 = RandLinks,
-            Y2 = PlazierungV,
+            Y2 = PlatzierungV,
             StrokeThickness = 2
         };
         _visual.Children.Add(yAchse);
@@ -2064,16 +2071,16 @@ public class Darstellung
     public double[] TransformBildPunkt(Point point)
     {
         var koordinaten = new double[2];
-        koordinaten[0] = (point.X - PlazierungH) / Auflösung;
-        koordinaten[1] = (-point.Y + PlazierungV) / Auflösung + MaxY;
+        koordinaten[0] = (point.X - PlatzierungH) / Auflösung;
+        koordinaten[1] = (-point.Y + PlatzierungV) / Auflösung + MaxY;
         return koordinaten;
     }
     //public Point TransformKnotenBildPunkt(double[] koordinaten)
     //{
     //    var bildPunkt = new Point
     //    {
-    //        X = koordinaten[0] * Auflösung + PlazierungH,
-    //        Y = (-koordinaten[1] + MaxY) * Auflösung + PlazierungV
+    //        X = koordinaten[0] * Auflösung + PlatzierungH,
+    //        Y = (-koordinaten[1] + MaxY) * Auflösung + PlatzierungV
     //    };
     //    return bildPunkt;
     //}

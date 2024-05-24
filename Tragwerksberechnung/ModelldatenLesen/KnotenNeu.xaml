@@ -4,41 +4,59 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Knoten definieren oder editieren" Height="200" Width="360">
-    <Grid Height="163" VerticalAlignment="Top" Margin="0,0,0,-2.2">
+        Title="Knoten definieren oder editieren" Height="420" Width="400">
+    <Grid Height="403" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="128"/>
-            <ColumnDefinition Width="70"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="40"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
-            <RowDefinition Height="35" />
+            <RowDefinition Height="230" />
+            <RowDefinition Height="770" />
         </Grid.RowDefinitions>
-        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="4" Margin="0,0,-0.2,37.4" Grid.RowSpan="2">
-            Neue Knotenwerte eingeben, vorhandene editieren
-        </Label>
-        <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knoten ID:</Label>
-        <TextBox Name="KnotenId" Grid.Row="1" Grid.Column="1" Margin="10,10,0,7" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" LostFocus="KnotenIdLostFocus"/>
-        <Label Grid.Row="1" Grid.Column="1" Margin="50,5,2,0" Grid.ColumnSpan="2">Anzahl Freiheitsgrade:</Label>
-        <TextBox Name="AnzahlDof" Grid.Row="1" Grid.Column="3" Margin="11.6,8,0,8" Height="20" 
+        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="5" Margin="0,0,0,37" Grid.RowSpan="2">
+            Neue Knotenwerte eingeben, vorhandene editieren</Label>
+
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knoten ID</Label>
+        <TextBox Name="KnotenId" Grid.Row="1" Grid.Column="1" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" LostFocus="KnotenIdLostFocus"/>
+        <Label Grid.Row="1" Grid.Column="2" Margin="0,5,75,0" Grid.ColumnSpan="3">Anzahl Freiheitsgrade</Label>
+        <TextBox Name="AnzahlDof" Grid.Row="1" Grid.Column="4" Margin="5,0,0,0" Height="20" 
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="33"/>
-        <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">x Koordinate</Label>
-        <TextBox Name="X" Grid.Row="2" Grid.Column="1" Margin="10,9,0,7" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
-        <Label Grid.Row="2" Grid.Column="2" Margin="3.6,5,0.2,35" Grid.RowSpan="2">y Koordinate</Label>
-        <TextBox Name="Y" Grid.Row="2" Grid.Column="3" Margin="10,10,0,10" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="33"/>
-        <Label Grid.Row="3" Grid.Column="0" Margin="0,5,0,5">z Koordinate</Label>
-        <TextBox Name="Z" Grid.Row="3" Grid.Column="1" Margin="10,10,0,0" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
-        <Button IsDefault="True" Grid.Row="3" Grid.Column="3" Width="35"  Margin="23.4,0,0,-10.8" 
-                Click="BtnDialogOk_Click" HorizontalAlignment="Left" Height="26" VerticalAlignment="Bottom">_Ok</Button>
-        <Button Grid.Row="3" Grid.Column="2" Height="26" Margin="83.4,0,51,-10.8" 
-                Click="BtnDialogCancel_Click" VerticalAlignment="Bottom" Grid.ColumnSpan="2">_Abbrechen</Button>
+
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,10">x Koordinate</Label>
+        <TextBox Name="X" Grid.Row="2" Grid.Column="1" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="32"/>
+        <Label Grid.Row="2" Grid.Column="2" Margin="4,5,0,10">y Koordinate</Label>
+        <TextBox Name="Y" Grid.Row="2" Grid.Column="3" Height="20" 
+                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="34"/>
+        <Label Grid.Row="2" Grid.Column="4" Margin="0,5,0,5">z Koordinate</Label>
+        <TextBox Name="Z" Grid.Row="2" Grid.Column="5" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="32"/>
+
+        <DataGrid  Name="KnotenGrid" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="6" Margin="0,0,-39,0"
+                   AlternatingRowBackground="Aqua" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header=" Knoten Id"  Binding="{Binding Id}"/>
+                <DataGridTextColumn Header=" Anzahl DoF"  Binding="{Binding AnzahlKnotenfreiheitsgrade}"/>
+                <DataGridTextColumn Header=" x-Koordinate" Binding="{Binding Koordinaten[0]}" />
+                <DataGridTextColumn Header=" y-Koordinate" Binding="{Binding Koordinaten[1]}" />
+                <DataGridTextColumn Header=" z-Koordinate" Binding="{Binding Koordinaten[2]}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="8,14,5,730" Width="100"
+                Click="BtnTabelleneintrag">_Eintrag Tabelle</Button>
+        <Button IsDefault="True" Grid.Row="4" Grid.Column="5"  Margin="0,14,2,731" 
+                Click="BtnDialogOk_Click">_Ok</Button>
+        <Button Grid.Row="4" Grid.Column="4" Margin="8,14,5,730"
+                Click="BtnDialogCancel_Click">_Abbrechen</Button>
     </Grid>
 </Window>

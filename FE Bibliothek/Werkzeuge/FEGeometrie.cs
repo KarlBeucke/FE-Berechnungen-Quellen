@@ -78,7 +78,8 @@ namespace FEBibliothek.Werkzeuge
             }
             return hullKnotenList;
         }
-        public static Vector RotateVector(Vector vec, double angle)  // clockwise in degree
+
+        private static Vector RotateVector(Vector vec, double angle)  // clockwise in degree
         {
             var winkel = angle * Math.PI / 180;
             var rotated = new Vector(vec.X * Math.Cos(winkel) - vec.Y * Math.Sin(winkel),
