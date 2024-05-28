@@ -3,18 +3,17 @@ using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
-    public partial class KnotenNetzNeu : Window
+    public partial class KnotenNetzVariabel : Window
     {
         private readonly FeModell _modell;
-        public KnotenNetzNeu()
+        public KnotenNetzVariabel()
         {
             InitializeComponent();
         }
-        public KnotenNetzNeu(FeModell feModell)
+        public KnotenNetzVariabel(FeModell feModell)
         {
             InitializeComponent();
             _modell = feModell;
-            Show();
         }
     }
 }

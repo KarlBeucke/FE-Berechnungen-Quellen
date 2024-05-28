@@ -131,9 +131,14 @@ public partial class TragwerkmodellVisualisieren
     {
         _ = new KnotenGruppeNeu(_modell) { Topmost = true, Owner = (Window)Parent };
     }
-    private void MenuBalkenKnotenNetzNeu(object sender, RoutedEventArgs e)
+    private void MenuBalkenKnotenNetzÄquidistant(object sender, RoutedEventArgs e)
     {
-        _ = new KnotenNetzNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _ = new KnotenNetzÄquidistant(_modell) { Topmost = true, Owner = (Window)Parent };
+    }
+
+    private void MenuBalkenKnotenNetzVariabel(object sender, RoutedEventArgs e)
+    {
+        _ = new KnotenNetzVariabel(_modell) { Topmost = true, Owner = (Window)Parent };
     }
 
     private void MenuBalkenElementNeu(object sender, RoutedEventArgs e)

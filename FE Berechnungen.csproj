@@ -193,8 +193,11 @@
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenKeys.xaml.cs">
       <DependentUpon>KnotenKeys.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzNeu.xaml.cs">
-      <DependentUpon>KnotenNetzNeu.xaml</DependentUpon>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzVariabel.xaml.cs">
+      <DependentUpon>KnotenNetzVariabel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzÄquidistant.xaml.cs">
+      <DependentUpon>KnotenNetzÄquidistant.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tragwerksberechnung\ModelldatenLesen\LagerKeys.xaml.cs">
       <DependentUpon>LagerKeys.xaml</DependentUpon>
@@ -503,7 +506,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzNeu.xaml">
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzVariabel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzÄquidistant.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
