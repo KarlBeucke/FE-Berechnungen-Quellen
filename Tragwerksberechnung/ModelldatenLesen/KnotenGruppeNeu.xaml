@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen"
         mc:Ignorable="d"
         Title="Knotengruppe definieren oder editieren" Height="420" Width="400">
     <Grid Height="403" VerticalAlignment="Top">
@@ -23,7 +22,7 @@
             <RowDefinition Height="770" />
         </Grid.RowDefinitions>
         <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="6" Margin="0,0,-40,37" Grid.RowSpan="2">
-            Am Anfang Präfix eingeben, Knoten Ids werden generiert</Label>
+            Präfix für alle Ids eingeben, Knoten Ids werden generiert</Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knoten Präfix</Label>
         <TextBox Name="Präfix" Grid.Row="1" Grid.Column="1" Height="20" 
@@ -53,8 +52,8 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="8,14,5,730" Width="100"
-                Click="BtnTabelleneintrag">_Eintrag Tabelle</Button>
+        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="12,14,40,730"
+                Click="BtnTabelleneintrag">_Knotengruppe generieren</Button>
         <Button Grid.Row="4" Grid.Column="5"  Margin="0,14,2,731" 
                 Click="BtnDialogOk_Click">_Ok</Button>
         <Button Grid.Row="4" Grid.Column="4" Margin="8,14,5,730"

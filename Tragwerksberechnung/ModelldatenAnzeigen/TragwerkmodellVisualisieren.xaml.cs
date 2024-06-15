@@ -30,7 +30,6 @@ public partial class TragwerkmodellVisualisieren
     private Point _mittelpunkt;
     private bool _isDragging;
     private bool _isKnoten, _isElement, _isKnotenlast, _isLinienlast, _isPunktlast, _isLager;
-    private KnotenNeu _knotenNeu;
     private ElementNeu _elementNeu;
     private KnotenlastNeu _knotenlastNeu;
     private LinienlastNeu _linienlastNeu;

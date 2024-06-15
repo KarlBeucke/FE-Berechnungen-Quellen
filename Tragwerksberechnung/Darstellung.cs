@@ -24,12 +24,9 @@ public class Darstellung
     private double _minX, _maxX, _minY;
     public double PlatzierungV, PlatzierungH;
     private double _screenH, _screenV;
-    public int ÜberhöhungVerformung = 1;
-    public int ÜberhöhungRotation = 1;
+    public int ÜberhöhungVerformung = 1, ÜberhöhungRotation = 1;
     private const int RandOben = 60, RandLinks = 60;
-    private const int MaxNormalkraftScreen = 30;
-    private const int MaxQuerkraftScreen = 40;
-    private const int MaxMomentScreen = 50;
+    private const int MaxNormalkraftScreen = 30, MaxQuerkraftScreen = 40, MaxMomentScreen = 50;
     private readonly Canvas _visual;
     public TextBlock MaxMomentText;
     private Point _platzierungText;
@@ -731,7 +728,7 @@ public class Darstellung
         var punktlast = (PunktLast)last;
         var pathGeometry = new PathGeometry();
         var pathFigure = new PathFigure();
-        const int lastPfeilGroesse = 10;
+        const int lastPfeilGrösse = 10;
 
         punktlast.SetzElementlastReferenzen(_modell);
         if (_modell.Elemente.TryGetValue(punktlast.ElementId, out var element)) { }
@@ -751,14 +748,14 @@ public class Darstellung
         lastPunkt.Y = startPunkt.Y + lastPunkt.Y;
 
         endPunkt = new Point(lastPunkt.X - punktlast.Lastwerte[0] * _lastAuflösung,
-            -lastPunkt.Y + punktlast.Lastwerte[1] * _lastAuflösung);
+            lastPunkt.Y + punktlast.Lastwerte[1] * _lastAuflösung);
         pathFigure.StartPoint = endPunkt;
 
         pathFigure.Segments.Add(new LineSegment(lastPunkt, true));
 
         vector = lastPunkt - endPunkt;
         vector.Normalize();
-        vector *= lastPfeilGroesse;
+        vector *= lastPfeilGrösse;
         vector = RotateVectorScreen(vector, 30);
         endPunkt = new Point(lastPunkt.X - vector.X, lastPunkt.Y - vector.Y);
         pathFigure.Segments.Add(new LineSegment(endPunkt, true));
@@ -912,15 +909,48 @@ public class Darstellung
             if (_modell.Knoten.TryGetValue(lager.KnotenId, out var lagerKnoten)) { }
             var drehPunkt = TransformKnoten(lagerKnoten, Auflösung, MaxY);
             double drehWinkel = 0;
-            bool links = false, unten = false, rechts = false, balken = false;
+            bool links = false, unten = true, rechts = false, balken = false;
 
             if (lagerKnoten != null)
             {
-                if (Math.Abs(lagerKnoten.Koordinaten[0] - _minX) < double.Epsilon) links = true;
-                else if (Math.Abs(lagerKnoten.Koordinaten[0] - _maxX) < double.Epsilon) rechts = true;
-                if (Math.Abs(lagerKnoten.Koordinaten[1] - _minY) < double.Epsilon) unten = true;
+                // check, ob das Modell ein horizontaler Balken oder Durchlaufträger ist
+                if (Math.Abs(MaxY - _minY) < double.Epsilon)
+                {
+                    balken = true;
+                    // Einspannung links
+                    if (Math.Abs(lagerKnoten.Koordinaten[0] - _minX) < double.Epsilon
+                        && lager.Typ >4) {links = true; unten = false; }
+                    // Einspannung rechts
+                    else if (Math.Abs(lagerKnoten.Koordinaten[0] - _maxX) < double.Epsilon
+                        && lager.Typ >4) {rechts = true; unten = false; }
+                }
+                else
+                {
+                    // horizontale Festhaltungen oberer Koordinaten
+                    if (Math.Abs(lagerKnoten.Koordinaten[0] - _minX) < double.Epsilon
+                        && Math.Abs(lagerKnoten.Koordinaten[1] - _minY) > double.Epsilon) {links = true; unten = false;
+                    }
+                    else if (Math.Abs(lagerKnoten.Koordinaten[0] - _maxX) < double.Epsilon
+                        && Math.Abs(lagerKnoten.Koordinaten[1] - _minY) > double.Epsilon) {rechts = true; unten = false;
+                    }
+                }
 
-                if (Math.Abs(MaxY - _minY) < double.Epsilon) balken = true;
+                //foreach (var element in _modell.Elemente)
+                //{
+                //    if (lager.KnotenId != element.Value.KnotenIds[0] &&
+                //        lager.KnotenId != element.Value.KnotenIds[1]) continue;
+
+                //    var p1 = TransformKnoten(element.Value.Knoten[0], Auflösung, MaxY);
+                //    var p2 = TransformKnoten(element.Value.Knoten[1], Auflösung, MaxY);
+                //    var winkel = Vector.AngleBetween(p2-p1, new Vector(1, 0));
+                //    if (winkel == 0)
+                //    {
+                //        if (lager.Typ > 4) links = true;
+                //        else unten = true;
+                //    }
+                //    if (winkel is > 10 and < 170) unten = true;
+                //    if (winkel is > 100 and < 260) unten = true;
+                //}
             }
 
             switch (lager.Typ)
