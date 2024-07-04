@@ -12,7 +12,6 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 public partial class ElementNeu
 {
     private readonly FeModell _modell;
-    private readonly ElementKeys _elementKeys;
 
     public ElementNeu(FeModell modell)
     {
@@ -24,8 +23,6 @@ public partial class ElementNeu
         EndknotenId.Text = string.Empty;
         MaterialId.Text = string.Empty;
         QuerschnittId.Text = string.Empty;
-        _elementKeys = new ElementKeys(modell) { Owner = this };
-        _elementKeys.Show();
     }
 
     private void FachwerkChecked(object sender, RoutedEventArgs e)
@@ -71,13 +68,53 @@ public partial class ElementNeu
             element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
         else if (BalkenCheck.IsChecked != null && (bool)BalkenCheck.IsChecked)
         {
-            if ((Gelenk1.IsChecked != null && !(bool)Gelenk1.IsChecked) &&
-                (Gelenk2.IsChecked != null && !(bool)Gelenk2.IsChecked))
-                element = new Biegebalken(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
-            if (Gelenk1.IsChecked != null && (bool)Gelenk1.IsChecked)
-                element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 1);
+            if(Gelenk1.IsChecked != null && (bool)Gelenk1.IsChecked &&
+               Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked)
+            {
+                element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
+            }
+            // falls Biegebalken angewählt ist und der Biegebalken an Knoten mit <3 Freiheitsgraden angeschlossen ist,
+            // wird Biegebalken automatisch als BiegebalkenGelenk bzw. Fachwerk eingefügt
+            else if (Gelenk1.IsChecked != null && !(bool)Gelenk1.IsChecked &&
+                     Gelenk2.IsChecked != null && !(bool)Gelenk2.IsChecked)
+            {
+                _modell.Knoten.TryGetValue(knotenIds[0], out var startKnoten);
+                _modell.Knoten.TryGetValue(knotenIds[1], out var endKnoten);
+                if(startKnoten == null) {_ = MessageBox.Show("Startknoten ist nicht definiert", "neues Element"); return;}
+                if(endKnoten == null) {_ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element"); return;}
+                element = startKnoten.AnzahlKnotenfreiheitsgrade switch
+                {
+                    3 when endKnoten.AnzahlKnotenfreiheitsgrade == 3 => new Biegebalken(knotenIds, MaterialId.Text,
+                        QuerschnittId.Text, _modell),
+                    < 3 when endKnoten.AnzahlKnotenfreiheitsgrade == 3 => new BiegebalkenGelenk(knotenIds, MaterialId.Text, 
+                        QuerschnittId.Text, _modell, 1),
+                    3 when endKnoten.AnzahlKnotenfreiheitsgrade < 3 => new BiegebalkenGelenk(knotenIds, MaterialId.Text,
+                        QuerschnittId.Text, _modell, 2),
+                    < 3 when endKnoten.AnzahlKnotenfreiheitsgrade < 3 => new Fachwerk(knotenIds, MaterialId.Text,
+                        QuerschnittId.Text, _modell),
+                    _ => null
+                };
+            }
+            else if (Gelenk1.IsChecked != null && (bool)Gelenk1.IsChecked)
+            {
+                _modell.Knoten.TryGetValue(knotenIds[1], out var endKnoten);
+                if(endKnoten == null) {_ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element"); return;}
+
+                if (endKnoten.AnzahlKnotenfreiheitsgrade == 3)
+                    element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 1);
+                else
+                    element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
+            }
             else if (Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked)
-                element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 2);
+            {
+                _modell.Knoten.TryGetValue(knotenIds[0], out var startKnoten);
+                if(startKnoten == null) {_ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element"); return;}
+
+                if (startKnoten.AnzahlKnotenfreiheitsgrade == 3)
+                    element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 2);
+                else
+                    element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
+            }
         }
         else if (FederCheck.IsChecked != null && (bool)FederCheck.IsChecked)
             element = new FederElement(knotenIds, MaterialId.Text, _modell);
@@ -95,16 +132,17 @@ public partial class ElementNeu
             if (Trägheitsmoment.Text != string.Empty) element.I = double.Parse(Trägheitsmoment.Text);
             _modell.Elemente.Add(ElementId.Text, element);
         }
-        Close();
         StartFenster.TragwerkVisual.Close();
-        _elementKeys?.Close();
-        StartFenster.TragwerkVisual = new ModelldatenAnzeigen.TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual.ElementKeys?.Close();
+        Close();
+
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        _elementKeys?.Close();
+        StartFenster.TragwerkVisual.ElementKeys?.Close();
         Close();
     }
 
@@ -114,9 +152,10 @@ public partial class ElementNeu
         _modell.Elemente.Remove(ElementId.Text);
         Close();
         StartFenster.TragwerkVisual.Close();
+        StartFenster.TragwerkVisual.ElementKeys?.Close();
+
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
-        _elementKeys?.Close();
     }
 
     private void ElementIdLostFocus(object sender, RoutedEventArgs e)

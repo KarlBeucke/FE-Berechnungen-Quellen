@@ -124,10 +124,10 @@
                     <Popup x:Name="MyPopup" Placement="MousePoint">
                         <TextBlock x:Name="MyPopupText" Background="LightBlue" Foreground="Blue" Padding="10"/>
                     </Popup>
-                    <Ellipse Name="Knoten"  Fill="Red" Width="10" Height="10"
-                             MouseDown="Knoten_MouseDown" 
-                             MouseMove="Knoten_MouseMove" 
-                             MouseUp="Knoten_MouseUp"/>
+                    <Ellipse Name="Pilot"  Fill="Red" Width="10" Height="10"
+                             MouseDown="Pilot_MouseDown" 
+                             MouseMove="Pilot_MouseMove" 
+                             MouseUp="Pilot_MouseUp"/>
                 </Canvas>
             </Grid>
         </StackPanel>

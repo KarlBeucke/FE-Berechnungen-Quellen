@@ -53,6 +53,8 @@
         </DataGrid>
 
         <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="8,14,5,730" Width="100"
+                Click="BtnLöschen_Click">_löschen</Button>
+        <Button Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Margin="7,14,13,730" Width="100"
                 Click="BtnTabelleneintrag">_Eintrag Tabelle</Button>
         <Button IsDefault="True" Grid.Row="4" Grid.Column="5"  Margin="0,14,2,731" 
                 Click="BtnDialogOk_Click">_Ok</Button>

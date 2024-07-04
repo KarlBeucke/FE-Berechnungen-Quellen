@@ -10,26 +10,24 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class LagerNeu
 {
-    private readonly FeModell modell;
-    private readonly LagerKeys lagerKeys;
+    private readonly FeModell _modell;
     public LagerNeu(FeModell modell)
     {
         InitializeComponent();
-        this.modell = modell;
+        this._modell = modell;
         Show();
         LagerId.Text = string.Empty;
         KnotenId.Text = string.Empty;
+        Yfest.IsChecked = true;
         VorX.Text = "0,00";
         VorY.Text = "0,00";
         VorRot.Text = "0,00";
-        lagerKeys = new LagerKeys(modell) { Owner = this };
-        lagerKeys.Show();
     }
 
     public LagerNeu(FeModell modell, double vordefX, double vordefY, double vordefRot)
     {
         InitializeComponent();
-        this.modell = modell;
+        this._modell = modell;
         VorX.Text = vordefX.ToString("0.00");
         VorY.Text = vordefY.ToString("0.00");
         VorRot.Text = vordefRot.ToString("0.00");
@@ -46,9 +44,9 @@ public partial class LagerNeu
         }
 
         // vorhandenes Lager
-        if (modell.Randbedingungen.Keys.Contains(lagerId))
+        if (_modell.Randbedingungen.Keys.Contains(lagerId))
         {
-            modell.Randbedingungen.TryGetValue(lagerId, out var lager);
+            _modell.Randbedingungen.TryGetValue(lagerId, out var lager);
             Debug.Assert(lager != null, nameof(lager) + " != null");
 
             if (KnotenId.Text.Length > 0) lager.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
@@ -79,11 +77,10 @@ public partial class LagerNeu
             if (Xfest.IsChecked != null && (bool)Xfest.IsChecked) typ = Lager.XFixed;
             if (Yfest.IsChecked != null && (bool)Yfest.IsChecked) typ += Lager.YFixed;
             if (Rfest.IsChecked != null && (bool)Rfest.IsChecked) typ += Lager.RFixed;
-            var lager = new Lager(KnotenId.Text, typ, vordefiniert, modell) { RandbedingungId = lagerId };
-            modell.Randbedingungen.Add(lagerId, lager);
+            var lager = new Lager(KnotenId.Text, typ, vordefiniert, _modell) { RandbedingungId = lagerId };
+            _modell.Randbedingungen.Add(lagerId, lager);
         }
 
-        lagerKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
 
@@ -92,13 +89,13 @@ public partial class LagerNeu
     }
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        lagerKeys?.Close();
+        StartFenster.TragwerkVisual.LagerKeys?.Close();
         Close();
     }
 
     private void LagerIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!modell.Randbedingungen.ContainsKey(LagerId.Text))
+        if (!_modell.Randbedingungen.ContainsKey(LagerId.Text))
         {
             KnotenId.Text = "";
             Xfest.IsChecked = false; Yfest.IsChecked = false; Rfest.IsChecked = false;
@@ -106,7 +103,7 @@ public partial class LagerNeu
         }
 
         // vorhandene Lagerdefinition
-        modell.Randbedingungen.TryGetValue(LagerId.Text, out var lager);
+        _modell.Randbedingungen.TryGetValue(LagerId.Text, out var lager);
         Debug.Assert(lager != null, nameof(lager) + " != null");
 
         LagerId.Text = lager.RandbedingungId;
@@ -121,11 +118,20 @@ public partial class LagerNeu
     }
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!modell.Randbedingungen.Keys.Contains(LagerId.Text)) return;
-        modell.Randbedingungen.Remove(LagerId.Text);
-        lagerKeys?.Close();
+        if (!_modell.Randbedingungen.Keys.Contains(LagerId.Text)) return;
+        _modell.Randbedingungen.Remove(LagerId.Text);
         Close();
         StartFenster.TragwerkVisual.Close();
-        lagerKeys?.Close();
+
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual.Show();
+    }
+
+    private void KnotenPositionNeu(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
+        Debug.Assert(knoten != null, nameof(knoten) + " != null");
+        StartFenster.TragwerkVisual.KnotenNeu(knoten);
+        Close();
     }
 }

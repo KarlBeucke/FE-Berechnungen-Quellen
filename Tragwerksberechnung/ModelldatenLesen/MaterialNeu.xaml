@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Neues Material" Height="350" Width="280">
+        Title="Neues Material" Height="360" Width="300">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="110"/>
@@ -21,8 +21,8 @@
             <RowDefinition Height="50" />
             <RowDefinition Height="35" />
         </Grid.RowDefinitions>
-        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="4" Margin="0,0,0,1">
-            Eingabewerte für ein neues Material
+        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="4" Margin="0,0,-29,1">
+            Eingabewerte für neues oder vorhandenes Material
         </Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Material ID:</Label>
@@ -31,7 +31,7 @@
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">E Modul</Label>
         <TextBox Name="EModul" Grid.Row="2" Grid.Column="1" Margin="2,9.6,0,11.2" Height="30" 
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="45"/>
-        <Label Grid.Row="3" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">Poisson Zahl</Label>
+        <Label Grid.Row="3" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">Querdehnung</Label>
         <TextBox Name="Poisson" Grid.Row="3" Grid.Column="1" Margin="2,7.8,0,8.2" Height="30" 
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="45"/>
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">Masse</Label>

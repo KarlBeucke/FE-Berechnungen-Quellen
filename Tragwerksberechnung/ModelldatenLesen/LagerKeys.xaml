@@ -9,8 +9,8 @@
         <ListView Margin="10" Name="LagerKey">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding RandbedingungId}" />
-                    <GridViewColumn Header="Knoten" Width="50" DisplayMemberBinding="{Binding KnotenId}" />
+                    <GridViewColumn Header="ID" Width="60" DisplayMemberBinding="{Binding RandbedingungId}" />
+                    <GridViewColumn Header="Knoten" Width="60" DisplayMemberBinding="{Binding KnotenId}" />
                     <GridViewColumn Header="xFest" Width="50" DisplayMemberBinding="{Binding Festgehalten[0]}" />
                     <GridViewColumn Header="yFest" Width="50" DisplayMemberBinding="{Binding Festgehalten[1]}" />
                     <GridViewColumn Header="rFest" Width="50" DisplayMemberBinding="{Binding Festgehalten[2]}" />

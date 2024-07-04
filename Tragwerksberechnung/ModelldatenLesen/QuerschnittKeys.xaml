@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen"
         mc:Ignorable="d"
-        Title="vorhandene Querschnittdefinitionen" Height="200" Width="300">
+        Title="vorhandene Querschnittdefinitionen" Height="230" Width="300">
     <Grid>
         <ListView Margin="10" Name="QuerschnittKey">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding QuerschnittId}" />
-                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding QuerschnittsWerte[0], StringFormat=G3}"/>
-                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding QuerschnittsWerte[1], StringFormat=G3}"/>
+                    <GridViewColumn Header="Fläche" Width="80" DisplayMemberBinding="{Binding QuerschnittsWerte[0], StringFormat=G3}"/>
+                    <GridViewColumn Header="Trägheitsmoment Ixx" Width="120" DisplayMemberBinding="{Binding QuerschnittsWerte[1], StringFormat=G3}"/>
                 </GridView>
             </ListView.View>
         </ListView>

@@ -8,15 +8,12 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class QuerschnittNeu
 {
-    private readonly FeModell modell;
-    private Querschnitt querschnitt, vorhandenerQuerschnitt;
-    private readonly QuerschnittKeys querschnittKeys;
+    private readonly FeModell _modell;
+    private Querschnitt _querschnitt, _vorhandenerQuerschnitt;
     public QuerschnittNeu(FeModell modell)
     {
         InitializeComponent();
-        this.modell = modell;
-        querschnittKeys = new QuerschnittKeys(modell);
-        querschnittKeys.Show();
+        this._modell = modell;
         Show();
     }
 
@@ -30,20 +27,20 @@ public partial class QuerschnittNeu
         }
 
         // vorhandener Querschnitt
-        if (modell.Querschnitt.Keys.Contains(QuerschnittId.Text))
+        if (_modell.Querschnitt.Keys.Contains(QuerschnittId.Text))
         {
-            modell.Querschnitt.TryGetValue(querschnittId, out vorhandenerQuerschnitt);
-            Debug.Assert(vorhandenerQuerschnitt != null, nameof(vorhandenerQuerschnitt) + " != null");
+            _modell.Querschnitt.TryGetValue(querschnittId, out _vorhandenerQuerschnitt);
+            Debug.Assert(_vorhandenerQuerschnitt != null, nameof(_vorhandenerQuerschnitt) + " != null");
 
             if (Fläche.Text == string.Empty)
             {
                 _ = MessageBox.Show("mindestens Fläche muss definiert sein", "neuer Querschnitt");
                 return;
             }
-            vorhandenerQuerschnitt.QuerschnittsWerte[0] = double.Parse(Fläche.Text);
+            _vorhandenerQuerschnitt.QuerschnittsWerte[0] = double.Parse(Fläche.Text);
 
             if (Ixx.Text == string.Empty) { }
-            else vorhandenerQuerschnitt.QuerschnittsWerte[1] = double.Parse(Ixx.Text);
+            else _vorhandenerQuerschnitt.QuerschnittsWerte[1] = double.Parse(Ixx.Text);
         }
         // neuer Querschnitt
         else
@@ -53,26 +50,26 @@ public partial class QuerschnittNeu
                 double ixx = 0;
                 var fläche = double.Parse(Fläche.Text);
                 if (Ixx.Text != string.Empty) ixx = double.Parse(Ixx.Text);
-                querschnitt = new Querschnitt(fläche, ixx)
+                _querschnitt = new Querschnitt(fläche, ixx)
                 {
                     QuerschnittId = querschnittId
                 };
-                modell.Querschnitt.Add(querschnittId, querschnitt);
+                _modell.Querschnitt.Add(querschnittId, _querschnitt);
             }
         }
-        querschnittKeys?.Close();
         Close();
+        StartFenster.TragwerkVisual.QuerschnittKeys?.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        querschnittKeys?.Close();
+        StartFenster.TragwerkVisual.QuerschnittKeys?.Close();
         Close();
     }
 
     private void QuerschnittIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!modell.Querschnitt.ContainsKey(QuerschnittId.Text))
+        if (!_modell.Querschnitt.ContainsKey(QuerschnittId.Text))
         {
             Fläche.Text = "";
             Ixx.Text = "";
@@ -80,18 +77,28 @@ public partial class QuerschnittNeu
         }
 
         // vorhandene Querschnittdefinition
-        modell.Querschnitt.TryGetValue(QuerschnittId.Text, out vorhandenerQuerschnitt);
-        Debug.Assert(vorhandenerQuerschnitt != null, nameof(vorhandenerQuerschnitt) + " != null"); QuerschnittId.Text = "";
+        _modell.Querschnitt.TryGetValue(QuerschnittId.Text, out _vorhandenerQuerschnitt);
+        Debug.Assert(_vorhandenerQuerschnitt != null, nameof(_vorhandenerQuerschnitt) + " != null"); QuerschnittId.Text = "";
 
-        QuerschnittId.Text = vorhandenerQuerschnitt.QuerschnittId;
+        QuerschnittId.Text = _vorhandenerQuerschnitt.QuerschnittId;
 
-        Fläche.Text = vorhandenerQuerschnitt.QuerschnittsWerte[0].ToString("G3", CultureInfo.CurrentCulture);
-        if (Ixx.Text == "") Ixx.Text = vorhandenerQuerschnitt.QuerschnittsWerte[1].ToString("G3", CultureInfo.CurrentCulture);
+        Fläche.Text = _vorhandenerQuerschnitt.QuerschnittsWerte[0].ToString("G3", CultureInfo.CurrentCulture);
+        if (Ixx.Text == "") Ixx.Text = _vorhandenerQuerschnitt.QuerschnittsWerte[1].ToString("G3", CultureInfo.CurrentCulture);
     }
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (vorhandenerQuerschnitt != null) modell.Querschnitt.Remove(vorhandenerQuerschnitt.QuerschnittId);
-        querschnittKeys.Close();
+        if (!_modell.Querschnitt.Keys.Contains(QuerschnittId.Text)) return;
+        if (QuerschnittReferenziert()) { return; }
+
+        if (_vorhandenerQuerschnitt != null) _modell.Querschnitt.Remove(_vorhandenerQuerschnitt.QuerschnittId);
+        StartFenster.TragwerkVisual.QuerschnittKeys?.Close();
         Close();
+    }
+    private bool QuerschnittReferenziert()
+    {
+        var id = QuerschnittId.Text;
+        if (_modell.Elemente.All(element => element.Value.ElementQuerschnittId != id)) return false;
+        _ = MessageBox.Show("Querschnitt referenziert durch ein Element, kann nicht gelöscht werden", "neuer Querschnitt");
+        return true;
     }
 }

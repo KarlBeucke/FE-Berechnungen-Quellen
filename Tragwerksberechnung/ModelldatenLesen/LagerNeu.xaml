@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Neues Lager" Height="350" Width="370">
+        Title="Neues Lager festlegen, vorhandenes editieren" Height="350" Width="370">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -21,15 +21,17 @@
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="4" Margin="0,0,0,37.4" Grid.RowSpan="2">
-            Eingabewerte für ein neues Lager
+            Eingabewerte eingeben oder editieren
         </Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Lager ID:</Label>
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,20,0,38" FontSize="8" Grid.RowSpan="2">(generiert aus "Lager" und Knoten ID)</Label>
         <TextBox Name="LagerId" Grid.Row="1" Grid.Column="1" Margin="13,13,-12,0" Height="20" 
                  VerticalAlignment="Top" LostFocus="LagerIdLostFocus"/>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Knoten ID:</Label>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,20,0,38" FontSize="8" Grid.RowSpan="2">(click vorhandene Knoten ID)</Label>
         <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="12.2,13.2,0,6.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" MouseDoubleClick="KnotenPositionNeu"/>
         <Label Grid.Row="3" Grid.Column="0"
                VerticalAlignment="Center" HorizontalAlignment="Left">Festhaltungen in x, y und r</Label>
         <CheckBox Name="Xfest" Grid.Row="3" Grid.Column="1" Margin="20,15,45,5" Width="35">x</CheckBox>
