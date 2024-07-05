@@ -7,7 +7,7 @@ namespace FEBibliothek.Modell
     public class BerechnungAusnahme : Exception
     {
         public BerechnungAusnahme(string message)
-            : base(string.Format("Berechnung: Fehler in der Berechnung " + message)) { }
+            : base(string.Format("Fehler in der Berechnung:" + message)) { }
 
         public BerechnungAusnahme() { }
 

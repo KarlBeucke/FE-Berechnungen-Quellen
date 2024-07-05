@@ -79,7 +79,7 @@ public class Element2D4 : AbstraktLinear2D4
     // ....Compute diagonal Specific Heat Matrix.................................
     public override double[] BerechneDiagonalMatrix()
     {
-        throw new ModellAusnahme("*** specifische Wärmematrix noch nicht implementiert in Heat2D4");
+        throw new ModellAusnahme("\n*** specifische Wärmematrix noch nicht implementiert in Heat2D4");
     }
     // ....Compute the heat state at the (z0,z1) of the element......
     public override double[] BerechneZustandsvektor()

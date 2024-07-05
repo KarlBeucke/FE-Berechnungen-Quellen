@@ -57,7 +57,7 @@ public class Element3D8 : AbstraktLinear3D8
     // ....Compute mass Matrix.................................
     public override double[] BerechneDiagonalMatrix()
     {
-        throw new ModellAusnahme("*** Massenmatrix noch nicht implementiert in Element3D8");
+        throw new ModellAusnahme("\n*** Massenmatrix noch nicht implementiert in Element3D8");
     }
 
     // compute strain-displacement transformation matrix eps = B * u
@@ -124,7 +124,7 @@ public class Element3D8 : AbstraktLinear3D8
     {
         if (!modell.Elemente.TryGetValue(ElementId, out element))
         {
-            throw new ModellAusnahme("Element3D8: " + ElementId + " nicht im Modell gefunden");
+            throw new ModellAusnahme("\nElement3D8: " + ElementId + " nicht im Modell gefunden");
         }
         element.SetzElementReferenzen(modell);
         return BerechneSchwerpunkt3D(element);

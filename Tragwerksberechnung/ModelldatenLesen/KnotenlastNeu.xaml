@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Neue Knotenlast" Height="300" Width="300">
+        Title="Neue Knotenlast" Height="300" Width="310">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150"/>
@@ -19,14 +19,16 @@
             <RowDefinition Height="35" />
             <RowDefinition Height="35" />
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Grid.ColumnSpan="2" Margin="0,5,-36,0">
-            Eingabewerte für eine neue Knotenlast
+        <Label Grid.Row="0" Grid.ColumnSpan="2" Margin="0,5,-60,0">
+            Eingabewerte für eine neue oder vorhandeneKnotenlast
         </Label>
 
-        <Label Grid.Row="1" Grid.Column="0" Margin="0,4.8,0.2,0.4">Last ID:</Label>
+        <Label Grid.Column="0" Margin="0,0,0,5" Grid.Row="1">Last ID:</Label>
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,15,0,34" FontSize="8" Grid.RowSpan="2">(generiert aus "K_L_" und Knoten ID)</Label>
         <TextBox Name="LastId" Grid.Row="1" Grid.Column="1" Margin="10,10,-10,0" Height="20" 
                  VerticalAlignment="Top" LostFocus="LastIdLostFocus"/>
-        <Label Grid.Row="2" Grid.Column="0" Margin="0,4.6,0.2,34.8" Grid.RowSpan="2">Knoten ID:</Label>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,0,0,5">Knoten ID:</Label>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,14,0,1" FontSize="8">(click vorhandene Knoten ID)</Label>
         <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="10,9.6,10,5.6" Height="20" 
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5.4,0,0">Lastwert in x-Richtung:</Label>

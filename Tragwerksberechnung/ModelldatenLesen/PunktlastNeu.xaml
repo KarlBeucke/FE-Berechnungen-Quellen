@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Neue Punktlast" Height="290" Width="320">
+        Title="Neue Punktlast" Height="290" Width="300">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="110"/>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="160"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
@@ -19,13 +19,13 @@
             <RowDefinition Height="35" />
             <RowDefinition Height="35" />
         </Grid.RowDefinitions>
-        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,5,11,0">
-            Eingabewerte für eine neue Punktlast
-        </Label>
-        <Label Grid.Row="1" Grid.Column="0" Margin="0,4.8,0.2,0.4">Last ID:</Label>
+        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,5,0,0">Eingabewerte für eine neue oder vorhandene Punktlast</Label>
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,1,0,4">Last ID:</Label>
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,15,0,34" FontSize="8" Grid.RowSpan="2">(generiert aus "P_L_" und Element ID)</Label>
         <TextBox Name="LastId" Grid.Row="1" Grid.Column="1" Margin="10,10,0,0" Height="20" 
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" LostFocus="PunktlastIdLostFocus"/>
-        <Label Grid.Row="2" Grid.Column="0" Margin="0,4.6,0.2,34.8" Grid.RowSpan="2">Element ID:</Label>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,3,0,2">Element ID:</Label>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,17,0,34" FontSize="8" Grid.RowSpan="2">(click vorhandene Element ID)</Label>
         <TextBox Name="ElementId" Grid.Row="2" Grid.Column="1" Margin="10,9.6,10,5.6" Height="20" 
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5.4,0.2,35" Grid.RowSpan="2">Lastwert in x</Label>
@@ -40,9 +40,9 @@
 
         <Button Grid.Row="6" Grid.Column="0" Width="50"  Height="26" Margin="5,0,0,4.6" 
                 Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" >löschen</Button>
-        <Button IsDefault="True" Grid.Row="6" Grid.Column="1" Width="35"  Margin="143.6,6.8,0,3.4" 
-                Click="BtnDialogOk_Click" HorizontalAlignment="Left">_Ok</Button>
-        <Button Grid.Row="6" Grid.Column="1" Width="80" Margin="55.6,5.8,64.4,4.4" 
+        <Button IsDefault="True" Grid.Row="6" Grid.Column="1"  Width="30" Margin="89,6,0,4" HorizontalAlignment="Left"
+                Click="BtnDialogOk_Click">_Ok</Button>
+        <Button Grid.Row="6" Grid.Column="1" Width="80" Margin="0,6,0,4" HorizontalAlignment="Left"
                 Click="BtnDialogCancel_Click">_Abbrechen</Button>
     </Grid>
 </Window>

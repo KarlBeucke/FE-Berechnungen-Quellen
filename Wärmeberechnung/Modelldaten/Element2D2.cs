@@ -71,7 +71,7 @@ public class Element2D2 : AbstraktLinear2D2
     {
         if (!_modell.Elemente.TryGetValue(ElementId, out _element))
         {
-            throw new ModellAusnahme("Element2D2: " + ElementId + " nicht im Modell gefunden");
+            throw new ModellAusnahme("\nElement2D2: " + ElementId + " nicht im Modell gefunden");
         }
         _element.SetzElementReferenzen(_modell);
         return Schwerpunkt(_element);

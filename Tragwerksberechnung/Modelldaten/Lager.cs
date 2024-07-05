@@ -15,7 +15,7 @@ public class Lager : AbstraktRandbedingung
         if (modell.Knoten.TryGetValue(knotenId, out _)) { }
         else
         {
-            throw new ModellAusnahme("Lagerknoten " + knotenId + " nicht definiert");
+            throw new ModellAusnahme("\nLagerknoten " + knotenId + " nicht definiert");
         }
         Vordefiniert = new double[pre.Count];
         Festgehalten = new bool[pre.Count];

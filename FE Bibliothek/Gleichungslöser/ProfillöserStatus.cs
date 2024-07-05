@@ -115,7 +115,7 @@ namespace FEBibliothek.Gleichungslöser
                     if (status[m]) continue;
                     sum -= matrix[row][m - profil[row]] * matrix[row][m - profil[row]];
                 }
-                if (sum < double.Epsilon) throw new BerechnungAusnahme("Gleichungslöser: Element <= 0 in Dreieckszerlegung von Zeile " + row);
+                if (sum < double.Epsilon) throw new BerechnungAusnahme("\nGleichungslöser: Element <= 0 in Dreieckszerlegung von Zeile " + row);
                 matrix[row][row - profil[row]] = Math.Sqrt(sum);
             }
         }

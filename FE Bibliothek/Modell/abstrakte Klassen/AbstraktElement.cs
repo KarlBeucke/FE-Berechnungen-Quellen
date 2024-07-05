@@ -37,15 +37,13 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
                 if (modell.Knoten.TryGetValue(KnotenIds[i], out var node)) { Knoten[i] = node; }
 
                 if (node != null) continue;
-                var message = "Element mit ID = " + KnotenIds[i] + " ist nicht im Modell enthalten";
-                _ = MessageBox.Show(message, "AbstraktElement");
+                throw new ModellAusnahme("\nElement mit ID = " + KnotenIds[i] + " ist nicht im Modell enthalten");
             }
             if (modell.Material.TryGetValue(ElementMaterialId, out var material)) { ElementMaterial = material; }
 
             if (material != null) return;
             {
-                var message = "Material mit ID=" + ElementMaterialId + " ist nicht im Modell enthalten";
-                _ = MessageBox.Show(message, "AbstraktElement");
+                throw new ModellAusnahme("\nMaterial mit ID=" + ElementMaterialId + " ist nicht im Modell enthalten");
             }
         }
     }

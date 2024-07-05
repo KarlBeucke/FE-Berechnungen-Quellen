@@ -59,7 +59,7 @@ namespace FEBibliothek.Zeitlöser
             if (_methode == 1) { alfa = 0; theta = 1; beta = _parameter1; gamma = _parameter2; }
             else if (_methode == 2) { beta = 1.0 / 6; gamma = 0.5; alfa = 0; theta = _parameter1; }
             else if (_methode == 3) { theta = 1; alfa = _parameter1; gamma = 0.5 - alfa; beta = 0.25 * (1 - alfa) * (1 - alfa); }
-            else throw new BerechnungAusnahme("Zeitintegration2OrdnungStatus: ungültiger Identifikator für Methode eingegeben");
+            else throw new BerechnungAusnahme("\nZeitintegration2OrdnungStatus: ungültiger Identifikator für Methode eingegeben");
 
             var gammaDt = gamma * _dt;
             var betaDt2 = beta * _dt * _dt;

@@ -17,12 +17,12 @@
 
                 if (node == null)
                 {
-                    throw new ModellAusnahme("Knoten mit ID = " + KnotenId + " ist nicht im Modell enthalten");
+                    throw new ModellAusnahme("\nKnoten mit ID = " + KnotenId + " ist nicht im Modell enthalten");
                 }
             }
             else
             {
-                throw new ModellAusnahme("Knotenidentifikator für Randbedingung " + RandbedingungId +
+                throw new ModellAusnahme("\nKnotenidentifikator für Randbedingung " + RandbedingungId +
                                          " ist nicht definiert");
             }
         }

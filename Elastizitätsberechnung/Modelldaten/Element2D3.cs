@@ -40,7 +40,7 @@ public class Element2D3 : AbstraktLinear2D3
 
     public override double[] BerechneDiagonalMatrix()
     {
-        throw new ModellAusnahme("*** Mass Matrix noch nicht implementiert in Elastizität2D3");
+        throw new ModellAusnahme("*** Mass Matrix noch nicht implementiert in Elastizität2D3:");
     }
 
     private void BerechneSpannungsDehnungsTransformation()
@@ -83,7 +83,7 @@ public class Element2D3 : AbstraktLinear2D3
     {
         if (!Modell.Elemente.TryGetValue(ElementId, out _element))
         {
-            throw new ModellAusnahme("Element2D3: " + ElementId + " nicht im Modell gefunden");
+            throw new ModellAusnahme("\nElement2D3: " + ElementId + " nicht im Modell gefunden");
         }
         _element.SetzElementReferenzen(Modell);
         return BerechneSchwerpunkt(_element);

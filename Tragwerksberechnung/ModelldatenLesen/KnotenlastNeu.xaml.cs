@@ -1,4 +1,5 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using System.Diagnostics;
@@ -113,5 +114,8 @@ public partial class KnotenlastNeu
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
+
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual.Show();
     }
 }

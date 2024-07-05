@@ -49,7 +49,7 @@ public class Fachwerk : AbstraktBalken
     {
         if (ElementMaterial.MaterialWerte.Length < 3 && M == 0)
         {
-            throw new ModellAusnahme("Fachwerk " + ElementId + ", spezifische Masse noch nicht definiert");
+            throw new ModellAusnahme("\nFachwerk " + ElementId + ", spezifische Masse noch nicht definiert");
         }
         // Me = specific mass * area * 0.5*length
         if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) return null;
@@ -64,7 +64,7 @@ public class Fachwerk : AbstraktBalken
     public static double[] ComputeLoadVector(AbstraktElementLast ael, bool inElementCoordinateSystem)
     {
         if (ael == null) throw new ArgumentNullException(nameof(ael));
-        throw new ModellAusnahme("Fachwerkelement kann keine interne Last aufnehmen! Benutze Biegebalken mit Gelenk");
+        throw new ModellAusnahme("\nFachwerkelement kann keine interne Last aufnehmen! Benutze Biegebalken mit Gelenk");
     }
 
     // berechne Stabendkräfte eines Biegeelementes
@@ -103,7 +103,7 @@ public class Fachwerk : AbstraktBalken
     {
         if (!_modell.Elemente.TryGetValue(ElementId, out _element))
         {
-            throw new ModellAusnahme("Fachwerk: " + ElementId + " nicht im Modell gefunden");
+            throw new ModellAusnahme("\nFachwerk: " + ElementId + " nicht im Modell gefunden");
         }
         return Schwerpunkt(_element);
     }

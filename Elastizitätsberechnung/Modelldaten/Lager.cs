@@ -36,7 +36,7 @@ public class Lager : AbstraktRandbedingung
         }
         else
         {
-            throw new ModellAusnahme("Lagerknoten nicht definiert");
+            throw new ModellAusnahme("\nLagerknoten nicht definiert");
         }
         Typ = supportTyp;
         Vordefiniert = new double[ndof];

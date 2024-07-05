@@ -11,13 +11,10 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 public partial class PunktlastNeu
 {
     private readonly FeModell _modell;
-    private readonly TragwerkLastenKeys _punktlastKeys;
     public PunktlastNeu(FeModell modell)
     {
         InitializeComponent();
         this._modell = modell;
-        _punktlastKeys = new TragwerkLastenKeys(modell);
-        _punktlastKeys.Show();
         Show();
     }
 
@@ -69,7 +66,7 @@ public partial class PunktlastNeu
             };
             _modell.PunktLasten.Add(punktlastId, punktLast);
         }
-        _punktlastKeys?.Close();
+        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
 
@@ -79,7 +76,7 @@ public partial class PunktlastNeu
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        _punktlastKeys?.Close();
+        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
     }
     private void PunktlastIdLostFocus(object sender, RoutedEventArgs e)
@@ -109,10 +106,9 @@ public partial class PunktlastNeu
     {
         if (!_modell.PunktLasten.Keys.Contains(LastId.Text)) return;
         _modell.PunktLasten.Remove(LastId.Text);
-        _punktlastKeys?.Close();
+        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
-        _punktlastKeys?.Close();
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();

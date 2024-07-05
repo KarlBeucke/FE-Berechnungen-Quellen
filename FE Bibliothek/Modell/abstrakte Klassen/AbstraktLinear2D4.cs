@@ -29,9 +29,9 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
             Determinant = _xz[0, 0] * _xz[1, 1] - _xz[0, 1] * _xz[1, 0];
 
             if (Math.Abs(Determinant) < double.Epsilon)
-                throw new BerechnungAusnahme("Fläche = 0 in Element " + ElementId);
+                throw new BerechnungAusnahme("\nFläche = 0 in Element " + ElementId);
             if (Determinant < 0)
-                throw new BerechnungAusnahme("negative Fläche in Element " + ElementId);
+                throw new BerechnungAusnahme("\nnegative Fläche in Element " + ElementId);
         }
 
         protected double[,] BerechneSx(double z0, double z1)

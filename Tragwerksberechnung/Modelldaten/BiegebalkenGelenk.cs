@@ -66,7 +66,7 @@ public class BiegebalkenGelenk : AbstraktBalken
                 _l = _lhigh;
                 break;
             default:
-                throw new ModellAusnahme("BiegebalkenGelenk: Gelenktyp wurde nicht erkannt!");
+                throw new ModellAusnahme("\nBiegebalkenGelenk: Gelenktyp wurde nicht erkannt!");
         }
     }
 
@@ -234,7 +234,7 @@ public class BiegebalkenGelenk : AbstraktBalken
             return reduced;
         }
 
-        if (Typ != Zweiter) throw new ModellAusnahme("BiegebalkenGelenk GetSystemIndices: ungültiger Gelenktyp");
+        if (Typ != Zweiter) throw new ModellAusnahme("\nBiegebalkenGelenk GetSystemIndices: ungültiger Gelenktyp");
         {
             var reduziert = new int[5];
             indizes = Knoten[0].SystemIndizes;
@@ -289,7 +289,7 @@ public class BiegebalkenGelenk : AbstraktBalken
     {
         if (ElementMaterial.MaterialWerte.Length < 3 && M == 0)
         {
-            throw new ModellAusnahme("BiegebalkenGelenk " + ElementId + ", spezifische Masse noch nicht definiert");
+            throw new ModellAusnahme("\nBiegebalkenGelenk " + ElementId + ", spezifische Masse noch nicht definiert");
         }
         // Me = spezifische masse * fläche * 0.5*balkenlänge
         if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) return null;
@@ -324,7 +324,7 @@ public class BiegebalkenGelenk : AbstraktBalken
                     break;
                 }
             default:
-                throw new ModellAusnahme("BiegebalkenGelenk SetSystemIndices: Gelenktyp wurde nicht erkannt!");
+                throw new ModellAusnahme("\nBiegebalkenGelenk SetSystemIndices: Gelenktyp wurde nicht erkannt!");
         }
     }
     public override double[] BerechneZustandsvektor()
@@ -358,7 +358,7 @@ public class BiegebalkenGelenk : AbstraktBalken
     {
         if (!_modell.Elemente.TryGetValue(ElementId, out _element))
         {
-            throw new ModellAusnahme("BiegebalkenGelenk: " + ElementId + " nicht im Modell gefunden");
+            throw new ModellAusnahme("\nBiegebalkenGelenk: " + ElementId + " nicht im Modell gefunden");
         }
         return Schwerpunkt(_element);
     }

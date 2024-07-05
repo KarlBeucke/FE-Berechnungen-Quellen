@@ -6,7 +6,7 @@ namespace FEBibliothek.Modell
     public class ModellAusnahme : Exception
     {
         public ModellAusnahme(string message)
-            : base(string.Format("Fehler in Modelldaten " + message)) { }
+            : base(string.Format("Fehler in Modelldaten:" + message)) { }
 
         public ModellAusnahme() { }
 

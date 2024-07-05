@@ -1,4 +1,5 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using System;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
@@ -51,17 +52,25 @@ public partial class TragwerkmodellVisualisieren
         Show();
         VisualTragwerkModel.Background = Brushes.Transparent;
         _modell = feModell;
-        Darstellung = new Darstellung(feModell, VisualTragwerkModel);
-        Darstellung.UnverformteGeometrie();
 
-        // mit Knoten und Element Ids
-        Darstellung.KnotenTexte();
-        Darstellung.ElementTexte();
-        // mit Lasten und Auflagerdarstellungen und Ids
-        Darstellung.LastenZeichnen();
-        Darstellung.LastTexte();
-        Darstellung.LagerZeichnen();
-        Darstellung.LagerTexte();
+        try
+        {
+            Darstellung = new Darstellung(feModell, VisualTragwerkModel);
+            Darstellung.UnverformteGeometrie();
+
+            // mit Knoten und Element Ids
+            Darstellung.KnotenTexte();
+            Darstellung.ElementTexte();
+            // mit Lasten und Auflagerdarstellungen und Ids
+            Darstellung.LastenZeichnen();
+            Darstellung.LastTexte();
+            Darstellung.LagerZeichnen();
+            Darstellung.LagerTexte();
+        }
+        catch (ModellAusnahme e)
+        {
+            _ = MessageBox.Show(e.Message);
+        }
     }
 
     private void OnBtnKnotenIDs_Click(object sender, RoutedEventArgs e)
@@ -183,12 +192,16 @@ public partial class TragwerkmodellVisualisieren
     {
         _isLinienlast = true;
         _linienlastNeu = new LinienlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        TragwerkLastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        TragwerkLastenKeys.Show();
         StartFenster.Berechnet = false;
     }
     private void MenuPunktlastNeu(object sender, RoutedEventArgs e)
     {
         _isPunktlast = true;
         _punktlastNeu = new PunktlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        TragwerkLastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        TragwerkLastenKeys.Show();
         StartFenster.Berechnet = false;
     }
 
@@ -286,7 +299,7 @@ public partial class TragwerkmodellVisualisieren
             else if (_modell.PunktLasten.TryGetValue(item.Name, out var punktlast))
                 PunktlastNeu(punktlast);
             else if (_modell.ElementLasten.TryGetValue(item.Name, out var elementlast))
-                LinienlastNeu(elementlast);
+                if(_linienlastNeu == null) LinienlastNeu(elementlast);
 
             // Lager
             else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
@@ -314,7 +327,7 @@ public partial class TragwerkmodellVisualisieren
             // Textdarstellung ist eine Elementlast (Linienlast)
             else if (_modell.ElementLasten.TryGetValue(item.Text, out var linienlast))
             {
-                LinienlastNeu(linienlast);
+                if(_linienlastNeu == null) LinienlastNeu(linienlast);
             }
 
             // Textdarstellung ist eine Punktlast
@@ -349,7 +362,7 @@ public partial class TragwerkmodellVisualisieren
         if (_isKnotenlast)
         {
             _knotenlastNeu.KnotenId.Text = knoten.Id;
-            _knotenlastNeu.LastId.Text = "Kl_" + knoten.Id;
+            _knotenlastNeu.LastId.Text = "KL_" + knoten.Id;
             _knotenlastNeu.Show();
             return;
         }

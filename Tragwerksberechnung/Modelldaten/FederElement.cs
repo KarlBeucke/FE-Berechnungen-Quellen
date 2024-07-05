@@ -34,7 +34,7 @@ public class FederElement : Abstrakt2D
     // .... berechne diagonale Federmatrix .................................
     public override double[] BerechneDiagonalMatrix()
     {
-        throw new ModellAusnahme("*** Massenmatrix nicht relevant für Federlager");
+        throw new ModellAusnahme("\n*** Massenmatrix nicht relevant für Federlager");
     }
 
     // ... berechne Reaktionskräfte im Federelement ........................
@@ -69,7 +69,7 @@ public class FederElement : Abstrakt2D
 
         if (!modell.Knoten.TryGetValue(KnotenIds[0], out node))
         {
-            throw new ModellAusnahme("FederElement: " + ElementId + " nicht im Modell gefunden");
+            throw new ModellAusnahme("\nFederElement: " + ElementId + " nicht im Modell gefunden");
         }
 
         cg.X = node.Koordinaten[0];

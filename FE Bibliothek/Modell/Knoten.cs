@@ -27,7 +27,7 @@ namespace FEBibliothek.Modell
                 }
                 else
                 {
-                    throw new ModellAusnahme("Knoten " + Id + ": Anzahl Koordinaten nicht gleich Raumdimension");
+                    throw new ModellAusnahme("\nKnoten " + Id + ": Anzahl Koordinaten nicht gleich Raumdimension");
                 }
             }
         }

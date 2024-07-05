@@ -13,13 +13,10 @@ public partial class LinienlastNeu
 {
     private readonly FeModell _modell;
     private AbstraktElementLast _vorhandeneLinienlast;
-    private readonly TragwerkLastenKeys _linienlastKeys;
     public LinienlastNeu(FeModell modell)
     {
         InitializeComponent();
         _modell = modell;
-        _linienlastKeys = new TragwerkLastenKeys(modell);
-        _linienlastKeys.Show();
         Show();
     }
 
@@ -79,7 +76,7 @@ public partial class LinienlastNeu
             _modell.ElementLasten.Add(linienlastId, linienlast);
         }
         StartFenster.TragwerkVisual.Close();
-        _linienlastKeys?.Close();
+        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual = new ModelldatenAnzeigen.TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
@@ -87,7 +84,7 @@ public partial class LinienlastNeu
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        _linienlastKeys?.Close();
+        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
     }
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
@@ -120,9 +117,9 @@ public partial class LinienlastNeu
     {
         if (!_modell.ElementLasten.Keys.Contains(LastId.Text)) return;
         _modell.ElementLasten.Remove(LastId.Text);
-        _linienlastKeys?.Close();
-        Close();
+        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         StartFenster.TragwerkVisual.Close();
+        Close();
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();

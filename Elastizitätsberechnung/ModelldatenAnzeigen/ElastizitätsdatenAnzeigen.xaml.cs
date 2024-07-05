@@ -102,7 +102,7 @@ public partial class ElastizitätsdatenAnzeigen
                         break;
                     }
                 default:
-                    throw new ModellAusnahme("Lagerbedingung für Lager " + supportName + " falsch definiert");
+                    throw new ModellAusnahme("\nLagerbedingung für Lager " + supportName + " falsch definiert");
             }
 
             var lager = new Lagerbedingung(item.Key, nodeId, vordefiniert);

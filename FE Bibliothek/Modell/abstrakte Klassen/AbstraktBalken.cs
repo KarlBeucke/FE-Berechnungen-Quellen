@@ -88,7 +88,7 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
                         break;
                     }
                 default:
-                    throw new ModellAusnahme("Last " + ael + " wird in diesem Elementtyp nicht unterstützt ");
+                    throw new ModellAusnahme("\nLast " + ael + " wird in diesem Elementtyp nicht unterstützt ");
             }
 
             if (inElementCoordinateSystem) return lastVektor;

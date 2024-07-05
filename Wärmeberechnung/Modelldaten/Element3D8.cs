@@ -95,7 +95,7 @@ public class Element3D8 : AbstraktLinear3D8
     // ....Compute diagonal Specific Heat Matrix.................................
     public override double[] BerechneDiagonalMatrix()
     {
-        throw new ModellAusnahme("*** specific heat matrix not implemented yet in Heat3D8");
+        throw new ModellAusnahme("\n*** specific heat matrix not implemented yet in Heat3D8");
     }
 
     // --- Behaviour of the Element ----------------------------------
@@ -133,7 +133,7 @@ public class Element3D8 : AbstraktLinear3D8
     {
         if (!Modell.Elemente.TryGetValue(ElementId, out element))
         {
-            throw new ModellAusnahme("Element3D8: " + ElementId + " nicht im Modell gefunden");
+            throw new ModellAusnahme("\nElement3D8: " + ElementId + " nicht im Modell gefunden");
         }
         element.SetzElementReferenzen(Modell);
         return BerechneSchwerpunkt3D(element);

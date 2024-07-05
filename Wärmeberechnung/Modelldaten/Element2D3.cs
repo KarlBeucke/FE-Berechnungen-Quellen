@@ -88,7 +88,7 @@ public class Element2D3 : AbstraktLinear2D3
         }
         else
         {
-            throw new ModellAusnahme("Element2D3: " + ElementId + " nicht im Modell gefunden");
+            throw new ModellAusnahme("\nElement2D3: " + ElementId + " nicht im Modell gefunden");
         }
         return elementWärmeStatus;
     }
@@ -107,7 +107,7 @@ public class Element2D3 : AbstraktLinear2D3
     {
         if (!Modell.Elemente.TryGetValue(ElementId, out _element))
         {
-            throw new ModellAusnahme("Element2D3: " + ElementId + " nicht im Modell gefunden");
+            throw new ModellAusnahme("\nElement2D3: " + ElementId + " nicht im Modell gefunden");
         }
         _element.SetzElementReferenzen(Modell);
         return BerechneSchwerpunkt(_element);

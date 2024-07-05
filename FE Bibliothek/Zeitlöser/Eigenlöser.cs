@@ -93,7 +93,7 @@ namespace FEBibliothek.Zeitlöser
                     // test, ob Anzahl Iterationen ist größer als Smax
                     if (_s > SMax)
                     {
-                        throw new BerechnungAusnahme("Eigenlöser: zu viele Iterationen " + _s);
+                        throw new BerechnungAusnahme("\nEigenlöser: zu viele Iterationen " + _s);
                     }
 
                     // B-Orthogonalisierung von w(s-1) in Bezug auf alle kleineren 

@@ -25,7 +25,7 @@ namespace FEBibliothek.Modell
             _modell = m;
             if (_modell == null)
             {
-                throw new BerechnungAusnahme("Modelleingabedaten noch nicht eingelesen");
+                throw new BerechnungAusnahme("\nModelleingabedaten noch nicht eingelesen");
             }
             // setz System Indizes
             var k = 0;
@@ -138,7 +138,7 @@ namespace FEBibliothek.Modell
             }
             else
             {
-                throw new BerechnungAusnahme("Endknoten " + knotenId + " ist nicht im Modell enthalten.");
+                throw new BerechnungAusnahme("\nEndknoten " + knotenId + " ist nicht im Modell enthalten.");
             }
         }
         private void NeuberechnungSystemMatrix()
@@ -171,7 +171,7 @@ namespace FEBibliothek.Modell
                 }
                 else
                 {
-                    throw new BerechnungAusnahme("Lastknoten " + knotenId + " ist nicht im Modell enthalten.");
+                    throw new BerechnungAusnahme("\nLastknoten " + knotenId + " ist nicht im Modell enthalten.");
                 }
             }
             // Linienlasten
@@ -185,7 +185,7 @@ namespace FEBibliothek.Modell
                 }
                 else
                 {
-                    throw new BerechnungAusnahme("Linienlastknoten " + startKnotenId + " ist nicht im Modell enthalten.");
+                    throw new BerechnungAusnahme("\nLinienlastknoten " + startKnotenId + " ist nicht im Modell enthalten.");
                 }
                 var endKnotenId = item.Value.EndKnotenId;
                 if (_modell.Knoten.TryGetValue(endKnotenId, out _knoten))
@@ -194,7 +194,7 @@ namespace FEBibliothek.Modell
                 }
                 else
                 {
-                    throw new BerechnungAusnahme("Linienlastknoten " + endKnotenId + " ist nicht im Modell enthalten.");
+                    throw new BerechnungAusnahme("\nLinienlastknoten " + endKnotenId + " ist nicht im Modell enthalten.");
                 }
                 var start = linienLast.StartKnoten.SystemIndizes.Length;
                 var end = linienLast.EndKnoten.SystemIndizes.Length;
@@ -219,7 +219,7 @@ namespace FEBibliothek.Modell
                 }
                 else
                 {
-                    throw new BerechnungAusnahme("Element " + elementId + " für Elementlast ist nicht im Modell enthalten.");
+                    throw new BerechnungAusnahme("\nElement " + elementId + " für Elementlast ist nicht im Modell enthalten.");
                 }
             }
             foreach (var item in _modell.PunktLasten)
@@ -235,7 +235,7 @@ namespace FEBibliothek.Modell
                 }
                 else
                 {
-                    throw new BerechnungAusnahme("Element " + elementId + " für Linienlasten ist nicht im Modell enthalten.");
+                    throw new BerechnungAusnahme("\nElement " + elementId + " für Linienlasten ist nicht im Modell enthalten.");
                 }
             }
         }
@@ -361,7 +361,7 @@ namespace FEBibliothek.Modell
             var dt = _modell.Zeitintegration.Dt;
             if (dt == 0)
             {
-                throw new BerechnungAusnahme("Abbruch: Zeitschrittintervall nicht definiert.");
+                throw new BerechnungAusnahme("\nZeitschrittintervall nicht definiert.");
             }
             var tmax = _modell.Zeitintegration.Tmax;
             var alfa = _modell.Zeitintegration.Parameter1;
@@ -479,7 +479,7 @@ namespace FEBibliothek.Modell
                 }
                 else
                 {
-                    throw new BerechnungAusnahme("Knoten " + item.Value.KnotenId + " für zeitabhängige Knotenlast ist nicht im Modell enthalten.");
+                    throw new BerechnungAusnahme("\nKnoten " + item.Value.KnotenId + " für zeitabhängige Knotenlast ist nicht im Modell enthalten.");
                 }
             }
 
@@ -552,7 +552,7 @@ namespace FEBibliothek.Modell
                 }
                 else
                 {
-                    throw new BerechnungAusnahme("Knoten " + item.Value.KnotenId + " für zeitabhängige Randbedingung ist nicht im Modell enthalten.");
+                    throw new BerechnungAusnahme("\nKnoten " + item.Value.KnotenId + " für zeitabhängige Randbedingung ist nicht im Modell enthalten.");
                 }
             }
         }
@@ -563,7 +563,7 @@ namespace FEBibliothek.Modell
             var dt = _modell.Zeitintegration.Dt;
             if (dt == 0)
             {
-                throw new BerechnungAusnahme("Zeitschrittintervall nicht definiert");
+                throw new BerechnungAusnahme("\nZeitschrittintervall nicht definiert");
             }
             var tmax = _modell.Zeitintegration.Tmax;
             var nZeitschritte = (int)(tmax / dt) + 1;

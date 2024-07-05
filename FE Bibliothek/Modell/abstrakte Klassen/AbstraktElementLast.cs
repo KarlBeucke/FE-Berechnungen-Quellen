@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace FEBibliothek.Modell.abstrakte_Klassen
+﻿namespace FEBibliothek.Modell.abstrakte_Klassen
 {
     public abstract class AbstraktElementLast : AbstraktLast
     {
@@ -10,13 +8,17 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
         public bool InElementKoordinatenSystem { get; set; } = true;
         public double Offset { get; set; }
 
+        // Ausnahmebehandlung: class "ModellAusnahme" definiert als Ableitung von class Exception mit Message (Fehler in Modelldaten:),
+        // falls eine Lastreferenz fehlt, wird ModellAusnahme mit entsprechender Message (Lastreferenz fehlt) ausgeworfen
+        // class "TragwerkmodelVisualisieren" prüft in try-Block, ob "ModellAusnahme" ausgeworfen wurde
+        // im folgenden "catch-Block" werden die beiden Messages in einer MessageBox ausgegeben
+        
         public void SetzElementlastReferenzen(FeModell modell)
         {
             if (modell.Elemente.TryGetValue(ElementId, out _element)) { Element = _element; }
 
             if (_element != null) return;
-            var message = "Element mit ID=" + ElementId + " ist nicht im Modell enthalten";
-            _ = MessageBox.Show(message, "AbstraktElementLast");
+            throw new ModellAusnahme("\nLastreferenz: Element mit ID=" + ElementId + " ist nicht im Modell enthalten");
         }
         public bool IstInElementKoordinatenSystem() { return InElementKoordinatenSystem; }
     }

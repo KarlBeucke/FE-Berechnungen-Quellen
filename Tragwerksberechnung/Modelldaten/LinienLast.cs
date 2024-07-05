@@ -37,12 +37,12 @@ public class LinienLast : AbstraktLinienlast
     // useful for GAUSS integration
     public double GetXIntensity(double z)
     {
-        if (z < 0 || z > 1) throw new ModellAusnahme("LinienLast auf element:" + ElementId + "ausserhalb Koordinaten 0 <= z <= 1");
+        if (z < 0 || z > 1) throw new ModellAusnahme("\nLinienLast auf element:" + ElementId + "ausserhalb Koordinaten 0 <= z <= 1");
         return Lastwerte[0] * (1 - z) + Lastwerte[2] * z;
     }
     public double GetYIntensity(double z)
     {
-        if (z < 0 || z > 1) throw new ModellAusnahme("LinienLast auf element:" + ElementId + "ausserhalb Koordinaten 0 <= z <= 1");
+        if (z < 0 || z > 1) throw new ModellAusnahme("\nLinienLast auf element:" + ElementId + "ausserhalb Koordinaten 0 <= z <= 1");
         return Lastwerte[1] * (1 - z) + Lastwerte[3] * z;
     }
 }

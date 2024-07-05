@@ -18,9 +18,9 @@ namespace FEBibliothek.Modell.abstrakte_Klassen
             Determinant = Xzu[0, 0] * Xzu[1, 1] - Xzu[0, 1] * Xzu[1, 0];
 
             if (Math.Abs(Determinant) < double.Epsilon)
-                throw new ModellAusnahme("AbstractLinear2D3: *** Fehler!!! *** Fläche = 0 in Element " + ElementId);
+                throw new ModellAusnahme("\nAbstractLinear2D3: *** Fehler!!! *** Fläche = 0 in Element " + ElementId);
             if (Determinant < 0)
-                throw new ModellAusnahme("negative Fläche in Element " + ElementId);
+                throw new ModellAusnahme("\nnegative Fläche in Element " + ElementId);
 
             Sx = BerechneSx();
         }

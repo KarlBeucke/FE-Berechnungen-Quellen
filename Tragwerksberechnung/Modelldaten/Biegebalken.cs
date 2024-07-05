@@ -73,7 +73,7 @@ public class Biegebalken : AbstraktBalken
     {
         if (ElementMaterial.MaterialWerte.Length < 3 && M == 0)
         {
-            throw new ModellAusnahme("Biegebalken " + ElementId + ", spezifische Masse noch nicht definiert");
+            throw new ModellAusnahme("\nBiegebalken " + ElementId + ", spezifische Masse noch nicht definiert");
         }
 
         if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) return null;
@@ -320,7 +320,7 @@ public class Biegebalken : AbstraktBalken
     {
         if (!_modell.Elemente.TryGetValue(ElementId, out _element))
         {
-            throw new ModellAusnahme("Biegebalken: " + ElementId + " nicht im Modell gefunden");
+            throw new ModellAusnahme("\nBiegebalken: " + ElementId + " nicht im Modell gefunden");
         }
         return Schwerpunkt(_element);
     }
