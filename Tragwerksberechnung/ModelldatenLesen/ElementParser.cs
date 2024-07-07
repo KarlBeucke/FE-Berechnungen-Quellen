@@ -57,7 +57,7 @@ public class ElementParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Fachwerk, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nFachwerk, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -94,7 +94,7 @@ public class ElementParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Biegebalken, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nBiegebalken, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -127,7 +127,7 @@ public class ElementParser
                             {
                                 1 => 1,
                                 2 => 2,
-                                _ => throw new ParseAusnahme((i + 2) + ": BiegebalkenGelenk, falscher Gelenktyp")
+                                _ => throw new ParseAusnahme((i + 2) + ":\nBiegebalkenGelenk, falscher Gelenktyp")
                             };
                             _element = new BiegebalkenGelenk(_nodeIds, materialId, querschnittId, _modell, type)
                             {
@@ -138,7 +138,7 @@ public class ElementParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": BiegebalkenGelenk, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nBiegebalkenGelenk, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -172,7 +172,7 @@ public class ElementParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme(i + 2 + ": Federelement, falsche Anzahl Parameter");
+                        throw new ParseAusnahme(i + 2 + ":\nFederelement, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -209,7 +209,7 @@ public class ElementParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Querschnitt, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nQuerschnitt, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;

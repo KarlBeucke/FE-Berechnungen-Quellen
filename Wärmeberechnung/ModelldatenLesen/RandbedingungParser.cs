@@ -36,7 +36,7 @@ public class RandbedingungParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Randbedingungen, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nRandbedingungen, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;

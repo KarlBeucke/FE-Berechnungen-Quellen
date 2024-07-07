@@ -51,7 +51,7 @@ public class LastParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": KnotenLasten, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nKnotenLasten, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -85,7 +85,7 @@ public class LastParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": LinienLasten, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nLinienLasten, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -119,7 +119,7 @@ public class LastParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": ElementLast3, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nElementLast3, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -154,7 +154,7 @@ public class LastParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": ElementLast4, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nElementLast4, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;

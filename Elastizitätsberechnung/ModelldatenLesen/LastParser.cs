@@ -46,7 +46,7 @@ public class LastParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 1) + ": Knotenlasten erfordert 4 oder 5 Eingabeparameter");
+                        throw new ParseAusnahme((i + 1) + ":\nKnotenlasten erfordert 4 oder 5 Eingabeparameter");
                 }
 
                 knotenLast.LastId = loadId;
@@ -81,7 +81,7 @@ public class LastParser
                 }
                 else
                 {
-                    throw new ParseAusnahme((i + 1) + ": Linienlasten erfordert 7 Eingabeparameter");
+                    throw new ParseAusnahme((i + 1) + ":\nLinienlasten erfordert 7 Eingabeparameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;

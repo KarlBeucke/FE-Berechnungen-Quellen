@@ -59,50 +59,50 @@ public partial class StartFenster
         }
         _dateiPfad = _dateiDialog.FileName;
 
+        if (_dateiPfad.Length == 0)
+        {
+            _ = MessageBox.Show("Eingabedatei ist leer", "Wärmeberechnung");
+            return;
+        }
+        _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
+
         try
         {
-            if (_dateiPfad.Length == 0)
-            {
-                _ = MessageBox.Show("Eingabedatei ist leer", "Wärmeberechnung");
-                return;
-            }
-            _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
+            _parse = new FeParser();
+            _parse.ParseModell(_dateiZeilen);
+            _wärmeModell = _parse.FeModell;
+            _parse.ParseNodes(_dateiZeilen);
+
+            var wärmeElemente = new Wärmeberechnung.ModelldatenLesen.ElementParser();
+            wärmeElemente.ParseWärmeElements(_dateiZeilen, _wärmeModell);
+
+            var wärmeMaterial = new Wärmeberechnung.ModelldatenLesen.MaterialParser();
+            wärmeMaterial.ParseMaterials(_dateiZeilen, _wärmeModell);
+
+            var wärmeLasten = new Wärmeberechnung.ModelldatenLesen.LastParser();
+            wärmeLasten.ParseLasten(_dateiZeilen, _wärmeModell);
+
+            var wärmeRandbedingungen = new Wärmeberechnung.ModelldatenLesen.RandbedingungParser();
+            wärmeRandbedingungen.ParseRandbedingungen(_dateiZeilen, _wärmeModell);
+
+            var wärmeTransient = new Wärmeberechnung.ModelldatenLesen.TransientParser();
+            wärmeTransient.ParseZeitintegration(_dateiZeilen, _wärmeModell);
+
+            ZeitintegrationDaten = wärmeTransient.ZeitintegrationDaten;
+            Berechnet = false;
+            ZeitintegrationBerechnet = false;
+
+            sb.Append(FeParser.EingabeGefunden + "\n\nWärmemodelldaten erfolgreich eingelesen");
+            _ = MessageBox.Show(sb.ToString(), "Wärmeberechnung");
+            sb.Clear();
+
+            WärmeVisual = new Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren(_wärmeModell);
+            WärmeVisual.Show();
         }
-        catch (ParseAusnahme)
+        catch (ParseAusnahme e2)
         {
-            throw new ParseAusnahme("Abbruch: Fehler beim Lesen aus Eingabedatei ");
+            _ = MessageBox.Show(e2.Message);
         }
-
-        _parse = new FeParser();
-        _parse.ParseModell(_dateiZeilen);
-        _wärmeModell = _parse.FeModell;
-        _parse.ParseNodes(_dateiZeilen);
-
-        var wärmeElemente = new Wärmeberechnung.ModelldatenLesen.ElementParser();
-        wärmeElemente.ParseWärmeElements(_dateiZeilen, _wärmeModell);
-
-        var wärmeMaterial = new Wärmeberechnung.ModelldatenLesen.MaterialParser();
-        wärmeMaterial.ParseMaterials(_dateiZeilen, _wärmeModell);
-
-        var wärmeLasten = new Wärmeberechnung.ModelldatenLesen.LastParser();
-        wärmeLasten.ParseLasten(_dateiZeilen, _wärmeModell);
-
-        var wärmeRandbedingungen = new Wärmeberechnung.ModelldatenLesen.RandbedingungParser();
-        wärmeRandbedingungen.ParseRandbedingungen(_dateiZeilen, _wärmeModell);
-
-        var wärmeTransient = new Wärmeberechnung.ModelldatenLesen.TransientParser();
-        wärmeTransient.ParseZeitintegration(_dateiZeilen, _wärmeModell);
-
-        ZeitintegrationDaten = wärmeTransient.ZeitintegrationDaten;
-        Berechnet = false;
-        ZeitintegrationBerechnet = false;
-
-        sb.Append(FeParser.EingabeGefunden + "\n\nWärmemodelldaten erfolgreich eingelesen");
-        _ = MessageBox.Show(sb.ToString(), "Wärmeberechnung");
-        sb.Clear();
-
-        WärmeVisual = new Wärmeberechnung.ModelldatenAnzeigen.WärmemodellVisualisieren(_wärmeModell);
-        WärmeVisual.Show();
     }
     private void WärmedatenEditieren(object sender, RoutedEventArgs e)
     {
@@ -675,50 +675,50 @@ public partial class StartFenster
         }
         _dateiPfad = _dateiDialog.FileName;
 
+        if (_dateiPfad.Length == 0)
+        {
+            _ = MessageBox.Show("Eingabedatei ist leer", "Tragwerksberechnung");
+            return;
+        }
+        _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
+
         try
         {
-            if (_dateiPfad.Length == 0)
-            {
-                _ = MessageBox.Show("Eingabedatei ist leer", "Tragwerksberechnung");
-                return;
-            }
-            _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
+            _parse = new FeParser();
+            _parse.ParseModell(_dateiZeilen);
+            TragwerksModell = _parse.FeModell;
+            _parse.ParseNodes(_dateiZeilen);
+
+            var tragwerksMaterial = new Tragwerksberechnung.ModelldatenLesen.MaterialParser();
+            tragwerksMaterial.ParseMaterials(_dateiZeilen, TragwerksModell);
+
+            var tragwerksElemente = new Tragwerksberechnung.ModelldatenLesen.ElementParser();
+            tragwerksElemente.ParseElements(_dateiZeilen, TragwerksModell);
+
+            var tragwerksLasten = new Tragwerksberechnung.ModelldatenLesen.LastParser();
+            tragwerksLasten.ParseLasten(_dateiZeilen, TragwerksModell);
+
+            var tragwerksRandbedingungen = new Tragwerksberechnung.ModelldatenLesen.RandbedingungParser();
+            tragwerksRandbedingungen.ParseRandbedingungen(_dateiZeilen, TragwerksModell);
+
+            var tragwerksTransient = new Tragwerksberechnung.ModelldatenLesen.TransientParser();
+            tragwerksTransient.ParseZeitintegration(_dateiZeilen, TragwerksModell);
+
+            ZeitintegrationDaten = tragwerksTransient.ZeitintegrationDaten;
+            Berechnet = false;
+            ZeitintegrationBerechnet = false;
+
+            sb.Append(FeParser.EingabeGefunden + "\n\nTragwerksdaten erfolgreich eingelesen");
+            _ = MessageBox.Show(sb.ToString(), "Tragwerksberechnung");
+            sb.Clear();
+
+            TragwerkVisual = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren(TragwerksModell);
+            TragwerkVisual.Show();
         }
-        catch (ParseAusnahme)
+        catch (ParseAusnahme e2)
         {
-            throw new ParseAusnahme("Abbruch: Fehler beim Lesen aus Eingabedatei ");
+            _ = MessageBox.Show(e2.Message);
         }
-
-        _parse = new FeParser();
-        _parse.ParseModell(_dateiZeilen);
-        TragwerksModell = _parse.FeModell;
-        _parse.ParseNodes(_dateiZeilen);
-
-        var tragwerksMaterial = new Tragwerksberechnung.ModelldatenLesen.MaterialParser();
-        tragwerksMaterial.ParseMaterials(_dateiZeilen, TragwerksModell);
-
-        var tragwerksElemente = new Tragwerksberechnung.ModelldatenLesen.ElementParser();
-        tragwerksElemente.ParseElements(_dateiZeilen, TragwerksModell);
-
-        var tragwerksLasten = new Tragwerksberechnung.ModelldatenLesen.LastParser();
-        tragwerksLasten.ParseLasten(_dateiZeilen, TragwerksModell);
-
-        var tragwerksRandbedingungen = new Tragwerksberechnung.ModelldatenLesen.RandbedingungParser();
-        tragwerksRandbedingungen.ParseRandbedingungen(_dateiZeilen, TragwerksModell);
-
-        var tragwerksTransient = new Tragwerksberechnung.ModelldatenLesen.TransientParser();
-        tragwerksTransient.ParseZeitintegration(_dateiZeilen, TragwerksModell);
-
-        ZeitintegrationDaten = tragwerksTransient.ZeitintegrationDaten;
-        Berechnet = false;
-        ZeitintegrationBerechnet = false;
-
-        sb.Append(FeParser.EingabeGefunden + "\n\nTragwerksdaten erfolgreich eingelesen");
-        _ = MessageBox.Show(sb.ToString(), "Tragwerksberechnung");
-        sb.Clear();
-
-        TragwerkVisual = new Tragwerksberechnung.ModelldatenAnzeigen.TragwerkmodellVisualisieren(TragwerksModell);
-        TragwerkVisual.Show();
     }
     private void TragwerksdatenEditieren(object sender, RoutedEventArgs e)
     {
@@ -1200,34 +1200,34 @@ public partial class StartFenster
         }
         _dateiPfad = _dateiDialog.FileName;
 
+        if (_dateiPfad.Length == 0)
+        {
+            _ = MessageBox.Show("Eingabedatei ist leer", "Elastizitätsberechnung");
+            return;
+        }
+        _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
+
         try
         {
-            if (_dateiPfad.Length == 0)
-            {
-                _ = MessageBox.Show("Eingabedatei ist leer", "Elastizitätsberechnung");
-                return;
-            }
-            _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
+            _parse = new FeParser();
+            _parse.ParseModell(_dateiZeilen);
+            _elastizitätsModell = _parse.FeModell;
+            _parse.ParseNodes(_dateiZeilen);
+
+            var parseElastizität = new Elastizitätsberechnung.ModelldatenLesen.ElastizitätsParser();
+            parseElastizität.ParseElastizität(_dateiZeilen, _elastizitätsModell);
+
+            Berechnet = false;
+
+            sb.Clear();
+            sb.Append(FeParser.EingabeGefunden + "\n\nModelldaten für Elastizitätsberechnung erfolgreich eingelesen");
+            _ = MessageBox.Show(sb.ToString(), "Elastizitätsberechnung");
+            sb.Clear();
         }
-        catch (ParseAusnahme)
+        catch (ParseAusnahme e2)
         {
-            throw new ParseAusnahme("Abbruch: Fehler beim Lesen aus Eingabedatei ");
+            _ = MessageBox.Show(e2.Message);
         }
-
-        _parse = new FeParser();
-        _parse.ParseModell(_dateiZeilen);
-        _elastizitätsModell = _parse.FeModell;
-        _parse.ParseNodes(_dateiZeilen);
-
-        var parseElastizität = new Elastizitätsberechnung.ModelldatenLesen.ElastizitätsParser();
-        parseElastizität.ParseElastizität(_dateiZeilen, _elastizitätsModell);
-
-        Berechnet = false;
-
-        sb.Clear();
-        sb.Append(FeParser.EingabeGefunden + "\n\nModelldaten für Elastizitätsberechnung erfolgreich eingelesen");
-        _ = MessageBox.Show(sb.ToString(), "Elastizitätsberechnung");
-        sb.Clear();
     }
     private void ElastizitätsdatenEditieren(object sender, RoutedEventArgs e)
     {

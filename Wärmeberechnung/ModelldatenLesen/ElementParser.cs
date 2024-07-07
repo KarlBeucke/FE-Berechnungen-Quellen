@@ -92,7 +92,7 @@ public class ElementParser : FeParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Elemente2D3Knoten, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nElemente2D3Knoten, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -129,7 +129,7 @@ public class ElementParser : FeParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Elemente2D4Knoten, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nElemente2D4Knoten, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -166,7 +166,7 @@ public class ElementParser : FeParser
                             break;
                         }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Elemente3D8Knoten, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nElemente3D8Knoten, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;

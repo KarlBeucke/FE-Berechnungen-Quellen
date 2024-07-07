@@ -66,7 +66,7 @@ public class RandbedingungenParser : FeParser
                 }
                 else
                 {
-                    throw new ParseAusnahme(i + 1 + ": Randbedingungen erfordert 5 oder 6 Eingabeparameter");
+                    throw new ParseAusnahme((i + 1) + ":\nRandbedingungen erfordert 5 oder 6 Eingabeparameter");
                 }
             } while (lines[i + 1].Length != 0);
 
@@ -107,7 +107,7 @@ public class RandbedingungenParser : FeParser
                             conditions += Lager.ZFixed;
                             break;
                         default:
-                            throw new ParseAusnahme("Lagerbedingung für x, y und/oder z muss definiert werden");
+                            throw new ParseAusnahme("\nLagerbedingung für x, y und/oder z muss definiert werden");
                     }
                 }
                 var j = 0;
@@ -124,7 +124,7 @@ public class RandbedingungenParser : FeParser
                         var id2 = k.ToString().PadLeft(2, '0');
                         var supportName = supportInitial + face + id1 + id2;
                         if (modell.Randbedingungen.TryGetValue(supportName, out _))
-                            throw new ParseAusnahme($"Randbedingung \"{supportName}\" bereits vorhanden.");
+                            throw new ParseAusnahme($"\nRandbedingung \"{supportName}\" bereits vorhanden.");
                         string nodeName;
                         const string faceNode = "00";
                         switch (face.Substring(0, 1))
@@ -140,7 +140,7 @@ public class RandbedingungenParser : FeParser
                                 break;
                             default:
                                 throw new ParseAusnahme(
-                                    $"falsche FlächenId = {face.Substring(0, 1)}, muss sein:\n X, Y or Z");
+                                    $"\nfalsche FlächenId = {face.Substring(0, 1)}, muss sein:\n X, Y or Z");
                         }
                         lager = new Lager(nodeName, face, conditions, prescribed, modell);
                         modell.Randbedingungen.Add(supportName, lager);
@@ -161,7 +161,7 @@ public class RandbedingungenParser : FeParser
             var poisson = MaterialParser.Poisson;
             if (LastParser.NodeLoad == null)
             {
-                throw new ParseAusnahme("Knotenlast für Boussinesq Randbedingung nicht definiert");
+                throw new ParseAusnahme("\nKnotenlast für Boussinesq Randbedingung nicht definiert");
             }
             var p = 4.0 * LastParser.NodeLoad[2];
             char[] delimiters = { '\t' };
@@ -205,7 +205,7 @@ public class RandbedingungenParser : FeParser
                             conditions += Lager.ZFixed;
                             break;
                         default:
-                            throw new ParseAusnahme("5. Parameter muss x und/der y und/oder z sein");
+                            throw new ParseAusnahme("\n5. Parameter muss x und/der y und/oder z sein");
                     }
                 }
                 for (var m = 0; m < nNodes; m++)
@@ -216,7 +216,7 @@ public class RandbedingungenParser : FeParser
                         var id2 = k.ToString().PadLeft(2, '0');
                         var supportName = supportInitial + face + id1 + id2;
                         if (modell.Randbedingungen.TryGetValue(supportName, out _))
-                            throw new ParseAusnahme($"Randbedingung \"{supportName}\" bereits vorhanden.");
+                            throw new ParseAusnahme($"\nRandbedingung \"{supportName}\" bereits vorhanden.");
                         string nodeName;
                         var faceNode = $"0{(offset.Length - 1)}";
                         switch (face.Substring(0, 1))
@@ -232,7 +232,7 @@ public class RandbedingungenParser : FeParser
                                 break;
                             default:
                                 throw new ParseAusnahme(
-                                    $"falsche Flächen Id = {face.Substring(0, 1)}, muss sein:\n X, Y or Z");
+                                    $"\nfalsche Flächen Id = {face.Substring(0, 1)}, muss sein:\n X, Y or Z");
                         }
                         for (var count = 0; count < type.Length; count++)
                         {
@@ -268,7 +268,7 @@ public class RandbedingungenParser : FeParser
                                     prescribed[2] = (((z * z) / (a * a)) + 2 * (1 - poisson)) * factor;
                                     break;
                                 default:
-                                    throw new ParseAusnahme("falsche Anzahl Parameter in RandbedingungBoussinesq, muss sein:\n"
+                                    throw new ParseAusnahme("\nfalsche Anzahl Parameter in RandbedingungBoussinesq, muss sein:\n"
                                                             + "4 für lagerInitial, flaeche, knotenInitial, Art\n");
                             }
                         }

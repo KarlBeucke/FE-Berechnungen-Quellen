@@ -5,16 +5,16 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public class RandbedingungParser
 {
-    private FeModell modell;
-    private readonly char[] delimiters = { '\t' };
-    private string[] substrings;
-    private string lagerId;
-    private string knotenId;
-    private Lager lager;
+    private FeModell _modell;
+    private readonly char[] _delimiters = ['\t'];
+    private string[] _substrings;
+    private string _lagerId;
+    private string _knotenId;
+    private Lager _lager;
 
     public void ParseRandbedingungen(string[] lines, FeModell feModell)
     {
-        modell = feModell;
+        _modell = feModell;
 
         for (var i = 0; i < lines.Length; i++)
         {
@@ -22,13 +22,13 @@ public class RandbedingungParser
             FeParser.EingabeGefunden += "\nLager";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                if (substrings.Length < 7)
+                _substrings = lines[i + 1].Split(_delimiters);
+                if (_substrings.Length < 7)
                 {
-                    lagerId = substrings[0];
-                    knotenId = substrings[1];
+                    _lagerId = _substrings[0];
+                    _knotenId = _substrings[1];
                     var lagerTyp = 0;
-                    var typ = substrings[2];
+                    var typ = _substrings[2];
                     for (var k = 0; k < typ.Length; k++)
                     {
                         var subTyp = typ.Substring(k, 1);
@@ -46,16 +46,16 @@ public class RandbedingungParser
                         }
                     }
                     var vordefiniert = new double[3];
-                    if (substrings.Length > 3) vordefiniert[0] = double.Parse(substrings[3]);
-                    if (substrings.Length > 4) vordefiniert[1] = double.Parse(substrings[4]);
-                    if (substrings.Length > 5) vordefiniert[2] = double.Parse(substrings[5]);
-                    lager = new Lager(knotenId, lagerTyp, vordefiniert, modell) { RandbedingungId = lagerId };
-                    modell.Randbedingungen.Add(lagerId, lager);
+                    if (_substrings.Length > 3) vordefiniert[0] = double.Parse(_substrings[3]);
+                    if (_substrings.Length > 4) vordefiniert[1] = double.Parse(_substrings[4]);
+                    if (_substrings.Length > 5) vordefiniert[2] = double.Parse(_substrings[5]);
+                    _lager = new Lager(_knotenId, lagerTyp, vordefiniert, _modell) { RandbedingungId = _lagerId };
+                    _modell.Randbedingungen.Add(_lagerId, _lager);
                     i++;
                 }
                 else
                 {
-                    throw new ParseAusnahme((i + 2) + ": Lager" + lagerId);
+                    throw new ParseAusnahme((i + 2) + ":\nLager" + _lagerId);
                 }
             } while (lines[i + 1].Length != 0);
             break;

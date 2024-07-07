@@ -94,7 +94,7 @@ public class TransientParser
                 ZeitabhängigeRandbedingung zeitabhängigeRandbedingung = null;
                 if (teilStrings.Length < 3)
                 {
-                    throw new ParseAusnahme((i + 2) + ": Zeitabhängige Randbedingungen, falsche Anzahl Parameter");
+                    throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Randbedingungen, falsche Anzahl Parameter");
                 }
                 switch (teilStrings[2])
                 {
@@ -110,7 +110,7 @@ public class TransientParser
                         {
                             if (teilStrings.Length != 4)
                             {
-                                throw new ParseAusnahme((i + 2) + ": Zeitabhängige Randbedingungen konstant, falsche Anzahl Parameter");
+                                throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Randbedingungen konstant, falsche Anzahl Parameter");
                             }
                             var konstanteTemperatur = double.Parse(teilStrings[3]);
                             zeitabhängigeRandbedingung =
@@ -122,7 +122,7 @@ public class TransientParser
                         {
                             if (teilStrings.Length != 6)
                             {
-                                throw new ParseAusnahme((i + 2) + ": Zeitabhängige Randbedingungen harmonisch, falsche Anzahl Parameter");
+                                throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Randbedingungen harmonisch, falsche Anzahl Parameter");
                             }
                             var amplitude = double.Parse(teilStrings[3]);
                             var frequenz = double.Parse(teilStrings[4]);
@@ -136,7 +136,7 @@ public class TransientParser
                         {
                             if (teilStrings.Length < 5)
                             {
-                                throw new ParseAusnahme((i + 2) + ": Zeitabhängige Randbedingungen linear, falsche Anzahl Parameter");
+                                throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Randbedingungen linear, falsche Anzahl Parameter");
                             }
                             var k = 0;
                             char[] paarDelimiter = { ';' };
@@ -174,7 +174,7 @@ public class TransientParser
                 var teilStrings = lines[i + 1].Split(delimiters);
                 if (teilStrings.Length < 3)
                 {
-                    throw new ParseAusnahme((i + 2) + ": Zeitabhängige Knotenlast, falsche Anzahl Parameter");
+                    throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Knotenlast, falsche Anzahl Parameter");
                 }
                 var lastId = teilStrings[0];
                 var knotenId = teilStrings[1];
@@ -193,7 +193,7 @@ public class TransientParser
                         {
                             if (teilStrings.Length != 6)
                             {
-                                throw new ParseAusnahme((i + 2) + ": Zeitabhängige Knotenlast harmonisch, falsche Anzahl Parameter");
+                                throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Knotenlast harmonisch, falsche Anzahl Parameter");
                             }
                             var amplitude = double.Parse(teilStrings[3]);
                             var frequenz = double.Parse(teilStrings[4]);
@@ -207,7 +207,7 @@ public class TransientParser
                         {
                             if (teilStrings.Length < 5)
                             {
-                                throw new ParseAusnahme((i + 2) + ": Zeitabhängige Knotenlast linear, falsche Anzahl Parameter");
+                                throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Knotenlast linear, falsche Anzahl Parameter");
                             }
                             var k = 0;
                             char[] paarDelimiter = { ';' };

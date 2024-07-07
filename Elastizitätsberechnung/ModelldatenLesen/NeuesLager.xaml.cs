@@ -31,7 +31,7 @@ public partial class NeuesLager
         {
             var lagerId = LagerId.Text;
             var knotenId = KnotenId.Text;
-            int conditions = 0;
+            var conditions = 0;
             if (XFest.IsChecked != null && (bool)XFest.IsChecked) conditions += 1;
             if (YFest.IsChecked != null && (bool)YFest.IsChecked) conditions += 2;
             if (ZFest.IsChecked != null && (bool)ZFest.IsChecked) conditions += 4;
@@ -64,7 +64,7 @@ public partial class NeuesLager
                     var id2 = k.ToString().PadLeft(2, '0');
                     var supportName = supportInitial + face + id1 + id2;
                     if (modell.Randbedingungen.TryGetValue(supportName, out _))
-                        throw new ParseAusnahme($"Randbedingung \"{supportName}\" bereits vorhanden.");
+                        throw new ParseAusnahme($"\nRandbedingung \"{supportName}\" bereits vorhanden.");
                     string nodeName;
                     const string faceNode = "00";
                     switch (face.Substring(0, 1))
@@ -80,7 +80,7 @@ public partial class NeuesLager
                             break;
                         default:
                             throw new ParseAusnahme(
-                                $"falsche FlächenId = {face.Substring(0, 1)}, muss sein:\n X, Y or Z");
+                                $"\nfalsche FlächenId = {face.Substring(0, 1)}, muss sein:\n X, Y or Z");
                     }
 
                     var lager = new Lager(nodeName, face, conditions, prescribed, modell);

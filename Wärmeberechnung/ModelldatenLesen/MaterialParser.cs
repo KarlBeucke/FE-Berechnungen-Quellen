@@ -55,7 +55,7 @@ public class MaterialParser
                         material = new Material(materialId, leitfähigkeit, dichteLeitfähigkeit);
                         break;
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Material, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nMaterial, falsche Anzahl Parameter");
                 }
                 modell.Material.Add(materialId, material);
                 i++;

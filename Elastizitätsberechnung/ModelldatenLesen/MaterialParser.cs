@@ -41,7 +41,7 @@ public class MaterialParser
                         material = new Material(eModul, Poisson, GModul);
                         break;
                     default:
-                        throw new ParseAusnahme((i + 1) + ": Material erfordert 3 oder 4 Eingabeparameter");
+                        throw new ParseAusnahme((i + 1) + ":\nMaterial erfordert 3 oder 4 Eingabeparameter");
                 }
 
                 material.MaterialId = materialId;

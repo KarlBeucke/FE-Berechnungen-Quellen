@@ -140,8 +140,12 @@ public partial class MaterialNeu
     private bool MaterialReferenziert()
     {
         var id = MaterialId.Text;
-        if (_modell.Elemente.All(element => element.Value.ElementMaterialId != id)) return false;
-        _ = MessageBox.Show("Material referenziert durch ein Element, kann nicht gelöscht werden", "neues Material");
-        return true;
+        foreach (var element in _modell.Elemente.Where(element => element.Value.ElementMaterialId  == id))
+        {
+            _ = MessageBox.Show("Material referenziert durch Element " + element.Value.ElementId + ", kann nicht gelöscht werden", "neues Material");
+            return true;
+        }
+        //if (_modell.Elemente.All(element => element.Value.ElementMaterialId != id)) return false;
+        return false;
     }
 }

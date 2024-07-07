@@ -53,7 +53,7 @@ public class ElementParser
                 }
                 else
                 {
-                    throw new ParseAusnahme((i + 1) + ": Element2D3 erfordert 6 Eingabeparameter");
+                    throw new ParseAusnahme((i + 1) + ":\nElement2D3 erfordert 6 Eingabeparameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -87,7 +87,7 @@ public class ElementParser
                 }
                 else
                 {
-                    throw new ParseAusnahme((i + 1) + ": Element3D8 erfordert 10 Eingabeparameter");
+                    throw new ParseAusnahme((i + 1) + ":\nElement3D8 erfordert 10 Eingabeparameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -108,13 +108,13 @@ public class ElementParser
                 substrings = lines[i + 1].Split(delimiters);
                 if (substrings.Length != 4)
                 {
-                    throw new ParseAusnahme("falsche Anzahl Parameter für Elementeingabe:\n"
-                                            + "muss gleich 4 sein für elementName, Knotennetzname,"
-                                            + "Anzahl der Intervalle und Elementmaterial");
+                    throw new ParseAusnahme((i + 1) + ":\nfalsche Anzahl Parameter für Elementeingabe:\n"
+                                                    + "muss gleich 4 sein für elementName, Knotennetzname,"
+                                                    + "Anzahl der Intervalle und Elementmaterial");
                 }
                 var initial = substrings[0];
                 var eNodeName = substrings[1];
-                int nIntervals = Int16.Parse(substrings[2]);
+                int nIntervals = short.Parse(substrings[2]);
                 var eMaterial = substrings[3];
 
 
@@ -133,7 +133,7 @@ public class ElementParser
                             var eNode = new String[nodesPerElement];
                             var elementName = initial + idX + idY + idZ;
                             if (modell.Elemente.TryGetValue(elementName, out element))
-                                throw new ParseAusnahme($"Element \"{elementName}\" bereits vorhanden.");
+                                throw new ParseAusnahme($"\nElement \"{elementName}\" bereits vorhanden.");
                             eNode[0] = eNodeName + idX + idY + idZ;
                             eNode[1] = eNodeName + idXp + idY + idZ;
                             eNode[2] = eNodeName + idXp + idYp + idZ;

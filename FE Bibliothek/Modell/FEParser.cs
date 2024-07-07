@@ -1,4 +1,6 @@
-﻿namespace FEBibliothek.Modell
+﻿using System.CodeDom;
+
+namespace FEBibliothek.Modell
 {
     public class FeParser
     {
@@ -86,7 +88,8 @@
                                 FeModell.Knoten.Add(_knotenId, knoten);
                                 break;
                             default:
-                                throw new ParseAusnahme((i + 2) + ": Knoten " + _knotenId + " falsche Anzahl Parameter");
+                                _knotenId = _substrings[0];
+                                throw new ParseAusnahme((i + 2) + ":\nKnoten " + _knotenId + " falsche Anzahl Parameter");
                         }
                         i++;
                     }
@@ -102,7 +105,7 @@
                         _substrings = zeilen[i].Split(_delimiters);
                         if (_substrings.Length == 1) _knotenPrefix = _substrings[0];
                         else
-                            throw new ParseAusnahme(i + 2 + ": Knotengruppe falscher Prefix");
+                            throw new ParseAusnahme(i + 2 + ":\nKnotengruppe falscher Prefix");
                         _zähler = 0;
                         while (zeilen[i + 1].Length > 1)
                         {
@@ -226,7 +229,7 @@
                                 i++;
                                 break;
                             default:
-                                throw new ParseAusnahme(i + 3 + ": Äquidistantes Knotennetz");
+                                throw new ParseAusnahme(i + 3 + ":\nÄquidistantes Knotennetz");
                         }
                     }
                 }
@@ -312,7 +315,7 @@
                                 }
                                 break;
                             default:
-                                throw new ParseAusnahme(i + 1 + ": Variables Knotennetz");
+                                throw new ParseAusnahme(i + 1 + ":\nVariables Knotennetz");
                         }
 
                         i += 2;

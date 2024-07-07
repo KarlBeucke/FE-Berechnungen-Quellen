@@ -30,7 +30,7 @@ internal class TransientParser
             }
             else
             {
-                throw new ParseAusnahme((i + 2) + ": Eigenlösungen, falsche Anzahl Parameter");
+                throw new ParseAusnahme((i + 2) + ":\nEigenlösungen, falsche Anzahl Parameter");
             }
         }
 
@@ -62,7 +62,7 @@ internal class TransientParser
                         new Zeitintegration(tmax, dt, method, parameter1, parameter2);
                     break;
                 default:
-                    throw new ParseAusnahme((i + 2) + ": Zeitintegration, falsche Anzahl Parameter");
+                    throw new ParseAusnahme((i + 2) + ":\nZeitintegration, falsche Anzahl Parameter");
             }
             ZeitintegrationDaten = true;
         }
@@ -108,7 +108,7 @@ internal class TransientParser
                         nodalDof = 3;
                         break;
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Anfangsbedingungen, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nAnfangsbedingungen, falsche Anzahl Parameter");
                 }
                 var anfangsWerte = new double[2 * nodalDof];
                 for (var k = 0; k < 2 * nodalDof; k++)
@@ -133,7 +133,7 @@ internal class TransientParser
             {
                 substrings = lines[i].Split(delimiters);
                 if (substrings.Length != 3)
-                    throw new ParseAusnahme((i + 2) + ": Zeitabhängige Knotenlast, falsche Anzahl Parameter");
+                    throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Knotenlast, falsche Anzahl Parameter");
 
                 var knotenLastId = substrings[0];
                 var knotenId = substrings[1];

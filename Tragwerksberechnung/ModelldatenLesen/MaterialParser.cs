@@ -5,19 +5,19 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 internal class MaterialParser
 {
-    private FeModell modell;
-    private readonly char[] delimiters = { '\t' };
-    private string[] substrings;
-    private string materialId;
-    private Material material;
-    private double eModul;
-    private double poisson;
-    private double masse;
-    private double kx, ky, kphi;
+    private FeModell _modell;
+    private readonly char[] _delimiters = { '\t' };
+    private string[] _substrings;
+    private string _materialId;
+    private Material _material;
+    private double _eModul;
+    private double _poisson;
+    private double _masse;
+    private double _kx, _ky, _kphi;
 
     public void ParseMaterials(string[] lines, FeModell feModell)
     {
-        modell = feModell;
+        _modell = feModell;
 
         for (var i = 0; i < lines.Length; i++)
         {
@@ -25,50 +25,50 @@ internal class MaterialParser
             FeParser.EingabeGefunden += "\nMaterial";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                if (substrings.Length > 1 && substrings.Length < 6)
+                _substrings = lines[i + 1].Split(_delimiters);
+                if (_substrings.Length is > 1 and < 6)
                 {
-                    materialId = substrings[0];
-                    switch (substrings.Length)
+                    _materialId = _substrings[0];
+                    switch (_substrings.Length)
                     {
                         case 2:
-                            eModul = double.Parse(substrings[1]);
-                            material = new Material(eModul)
+                            _eModul = double.Parse(_substrings[1]);
+                            _material = new Material(_eModul)
                             {
-                                MaterialId = materialId
+                                MaterialId = _materialId
                             };
-                            modell.Material.Add(materialId, material);
+                            _modell.Material.Add(_materialId, _material);
                             break;
                         case 3:
-                            eModul = double.Parse(substrings[1]);
-                            poisson = double.Parse(substrings[2]);
-                            material = new Material(eModul, poisson)
+                            _eModul = double.Parse(_substrings[1]);
+                            _poisson = double.Parse(_substrings[2]);
+                            _material = new Material(_eModul, _poisson)
                             {
-                                MaterialId = materialId
+                                MaterialId = _materialId
                             };
-                            modell.Material.Add(materialId, material);
+                            _modell.Material.Add(_materialId, _material);
                             break;
                         case 4:
-                            eModul = double.Parse(substrings[1]);
-                            poisson = double.Parse(substrings[2]);
-                            masse = double.Parse(substrings[3]);
-                            material = new Material(eModul, poisson, masse)
+                            _eModul = double.Parse(_substrings[1]);
+                            _poisson = double.Parse(_substrings[2]);
+                            _masse = double.Parse(_substrings[3]);
+                            _material = new Material(_eModul, _poisson, _masse)
                             {
-                                MaterialId = materialId
+                                MaterialId = _materialId
                             };
-                            modell.Material.Add(materialId, material);
+                            _modell.Material.Add(_materialId, _material);
                             break;
                         case 5:
                             {
-                                var feder = substrings[1];
-                                kx = double.Parse(substrings[2]);
-                                ky = double.Parse(substrings[3]);
-                                kphi = double.Parse(substrings[4]);
-                                material = new Material(true, kx, ky, kphi)
+                                var feder = _substrings[1];
+                                _kx = double.Parse(_substrings[2]);
+                                _ky = double.Parse(_substrings[3]);
+                                _kphi = double.Parse(_substrings[4]);
+                                _material = new Material(true, _kx, _ky, _kphi)
                                 {
-                                    MaterialId = materialId
+                                    MaterialId = _materialId
                                 };
-                                modell.Material.Add(materialId, material);
+                                _modell.Material.Add(_materialId, _material);
                                 break;
                             }
                     }
@@ -76,7 +76,7 @@ internal class MaterialParser
                 }
                 else
                 {
-                    throw new ParseAusnahme((i + 2) + ": Material " + materialId);
+                    throw new ParseAusnahme((i + 2) + ":\nMaterial " + _materialId);
                 }
             } while (lines[i + 1].Length != 0);
             break;

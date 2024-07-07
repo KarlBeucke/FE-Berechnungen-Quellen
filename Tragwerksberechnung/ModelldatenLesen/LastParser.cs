@@ -62,7 +62,7 @@ internal class LastParser
                         break;
                     default:
                         {
-                            throw new ParseAusnahme((i + 2) + ": Fachwerk, falsche Anzahl Parameter");
+                            throw new ParseAusnahme((i + 2) + ":\nFachwerk, falsche Anzahl Parameter");
                         }
                 }
                 modell.Lasten.Add(loadId, knotenLast);
@@ -100,7 +100,7 @@ internal class LastParser
                         i++;
                         break;
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Punktlast");
+                        throw new ParseAusnahme((i + 2) + ":\nPunktlast");
                 }
             } while (lines[i + 1].Length != 0);
             break;
@@ -149,7 +149,7 @@ internal class LastParser
                         i++;
                         break;
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Linienlast, falsche Anzahl Parameter");
+                        throw new ParseAusnahme((i + 2) + ":\nLinienlast, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
             break;
