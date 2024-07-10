@@ -10,9 +10,12 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding MaterialId}" />
-                    <GridViewColumn Header="E-Modul" Width="80" DisplayMemberBinding="{Binding MaterialWerte[0], StringFormat=G3}"/>
-                    <GridViewColumn Header="Querdehnung" Width="80" DisplayMemberBinding="{Binding MaterialWerte[1], StringFormat=G3}"/>
-                    <GridViewColumn Header="spez. Masse" Width="80" DisplayMemberBinding="{Binding MaterialWerte[2], StringFormat=G3}"/>
+                    <GridViewColumn Header="E-Modul" Width="80"
+                                    DisplayMemberBinding="{Binding MaterialWerte[0], StringFormat=G3}" />
+                    <GridViewColumn Header="Querdehnung" Width="80"
+                                    DisplayMemberBinding="{Binding MaterialWerte[1], StringFormat=G3}" />
+                    <GridViewColumn Header="spez. Masse" Width="80"
+                                    DisplayMemberBinding="{Binding MaterialWerte[2], StringFormat=G3}" />
                 </GridView>
             </ListView.View>
         </ListView>

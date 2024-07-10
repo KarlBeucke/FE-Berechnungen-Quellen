@@ -7,8 +7,8 @@
         Title="NeuesLager" Height="330" Width="440">
     <Grid ShowGridLines="True" Margin="1,0,-1.4,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="165"/>
-            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="165" />
+            <ColumnDefinition Width="280" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -24,49 +24,63 @@
         </Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5.4,262,40.2" Grid.ColumnSpan="2" Grid.RowSpan="2">Lager ID:</Label>
-        <TextBox Name="LagerId" Grid.Row="1" Grid.Column="0" Margin="0,9.8,9.8,7.4" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32"/>
+        <TextBox Name="LagerId" Grid.Row="1" Grid.Column="0" Margin="0,9.8,9.8,7.4" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" />
 
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5.6,262,40" Grid.ColumnSpan="2" Grid.RowSpan="2">Knoten ID:</Label>
-        <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="0" Margin="0,9.8,9.8,7.2" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32"/>
+        <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="0" Margin="0,9.8,9.8,7.2" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" />
 
         <Label Grid.Row="3" Grid.Column="0" Margin="0,4.8,3.8,59.8" Grid.RowSpan="2">Flächen ID Initial:</Label>
-        <TextBox Name="FlächenId" Grid.Row="3" Grid.Column="0" Margin="0,9.8,9.8,0" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32"/>
+        <TextBox Name="FlächenId" Grid.Row="3" Grid.Column="0" Margin="0,9.8,9.8,0" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" />
         <Label Grid.Row="3" Grid.Column="1" Margin="4.2,4.8,138.8,59.8" Grid.RowSpan="2">Knoten ID Initial:</Label>
-        <TextBox Name="InitialKnotenId" Grid.Row="3" Grid.Column="1" Margin="0,9.8,147.8,9" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32"/>
+        <TextBox Name="InitialKnotenId" Grid.Row="3" Grid.Column="1" Margin="0,9.8,147.8,9" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" />
         <Label Grid.Row="3" Grid.Column="1" Margin="138.2,0,51.8,7" Height="29" VerticalAlignment="Bottom">Anzahl Knoten:</Label>
-        <TextBox Name="AnzahlKnoten" Grid.Row="3" Grid.Column="1" Margin="0,9.8,22.8,0" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32"/>
+        <TextBox Name="AnzahlKnoten" Grid.Row="3" Grid.Column="1" Margin="0,9.8,22.8,0" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" />
 
         <Label Grid.Row="3" Grid.Column="0" Margin="0,38.8,0,0"
-               VerticalAlignment="Top" HorizontalAlignment="Left" Grid.RowSpan="2" Height="26" Width="85">Festhaltungen</Label>
+               VerticalAlignment="Top" HorizontalAlignment="Left" Grid.RowSpan="2" Height="26" Width="85">
+            Festhaltungen
+        </Label>
         <Label Grid.Row="4" Grid.Column="0" Margin="-3,15,0,0"
-               VerticalAlignment="Top" HorizontalAlignment="Left" Height="26" Width="168" Grid.ColumnSpan="2">"x" und/oder "y" und/oder "z"</Label>
+               VerticalAlignment="Top" HorizontalAlignment="Left" Height="26" Width="168" Grid.ColumnSpan="2">
+            "x" und/oder "y" und/oder "z"
+        </Label>
         <CheckBox Name="XFest" Grid.Row="4" Grid.Column="1" Margin="10.2,3,15.8,1.8">Festhaltung X</CheckBox>
         <CheckBox Name="YFest" Grid.Row="4" Grid.Column="1" Margin="10.2,21,14.8,18.8">Festhaltung Y</CheckBox>
         <CheckBox Name="ZFest" Grid.Row="4" Grid.Column="1" Margin="10.2,42,15.8,2.8">Festhaltung Z</CheckBox>
 
         <Label Grid.Row="5" Grid.Column="0" Margin="0,19.2,11.8,4.4">vordefinierte Verschiebungen:</Label>
         <Label Grid.Row="5" Grid.Column="1" Margin="29.2,0.2,0,0" Width="20"
-               VerticalAlignment="Top" HorizontalAlignment="Left" Height="25">X</Label>
-        <TextBox Name="VorX" Grid.Row="5" Grid.Column="1" Margin="14.2,27.2,0,0" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
+               VerticalAlignment="Top" HorizontalAlignment="Left" Height="25">
+            X
+        </Label>
+        <TextBox Name="VorX" Grid.Row="5" Grid.Column="1" Margin="14.2,27.2,0,0" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="50" />
         <Label Grid.Row="5" Grid.Column="1" Margin="114.2,0.2,0,0" Width="20"
-               VerticalAlignment="Top" HorizontalAlignment="Left" Height="25">Y</Label>
-        <TextBox Name="VorY" Grid.Row="5" Grid.Column="1" Margin="99.2,27.2,0,0" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
+               VerticalAlignment="Top" HorizontalAlignment="Left" Height="25">
+            Y
+        </Label>
+        <TextBox Name="VorY" Grid.Row="5" Grid.Column="1" Margin="99.2,27.2,0,0" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="50" />
         <Label Grid.Row="5" Grid.Column="1" Margin="200.2,0.2,0,0" Width="20"
-               VerticalAlignment="Top" HorizontalAlignment="Left" Height="25">Z</Label>
-        <TextBox Name="VorZ" Grid.Row="5" Grid.Column="1" Margin="185.2,27.2,0,0" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
+               VerticalAlignment="Top" HorizontalAlignment="Left" Height="25">
+            Z
+        </Label>
+        <TextBox Name="VorZ" Grid.Row="5" Grid.Column="1" Margin="185.2,27.2,0,0" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="50" />
 
 
-        <Button IsDefault="True" Grid.Row="6" Grid.Column="1" Width="35"  Height="26" Margin="220,0,0,8" 
-                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">_Ok</Button>
-        <Button Grid.Row="6" Grid.Column="1" Width="71" Height="26" Margin="140,0,0,8" 
-                Click="BtnDialogCancel_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">_Abbrechen</Button>
+        <Button IsDefault="True" Grid.Row="6" Grid.Column="1" Width="35" Height="26" Margin="220,0,0,8"
+                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            _Ok
+        </Button>
+        <Button Grid.Row="6" Grid.Column="1" Width="71" Height="26" Margin="140,0,0,8"
+                Click="BtnDialogCancel_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

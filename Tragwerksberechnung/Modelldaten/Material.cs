@@ -11,17 +11,20 @@ public class Material : AbstraktMaterial
         MaterialWerte[1] = poisson;
         MaterialWerte[2] = mass;
     }
+
     public Material(double emodulus, double poisson)
     {
         MaterialWerte = new double[3];
         MaterialWerte[0] = emodulus;
         MaterialWerte[1] = poisson;
     }
+
     public Material(double emodulus)
     {
         MaterialWerte = new double[3];
         MaterialWerte[0] = emodulus;
     }
+
     public Material(bool feder, double fkx, double fky, double fkphi)
     {
         Feder = feder;

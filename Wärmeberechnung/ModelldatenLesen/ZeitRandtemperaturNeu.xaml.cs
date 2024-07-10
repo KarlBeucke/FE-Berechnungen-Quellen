@@ -1,18 +1,19 @@
-﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Windows;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class ZeitRandtemperaturNeu
 {
     private readonly FeModell modell;
-    private AbstraktZeitabhängigeRandbedingung vorhandeneRandbedingung;
     private readonly RandbedingungenKeys randbedingungenKeys;
+    private AbstraktZeitabhängigeRandbedingung vorhandeneRandbedingung;
+
     public ZeitRandtemperaturNeu(FeModell modell)
     {
         this.modell = modell;
@@ -39,7 +40,10 @@ public partial class ZeitRandtemperaturNeu
 
             if (KnotenId.Text.Length > 0)
                 vorhandeneRandbedingung.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Datei.IsChecked == true) vorhandeneRandbedingung.VariationsTyp = 0;
+            if (Datei.IsChecked == true)
+            {
+                vorhandeneRandbedingung.VariationsTyp = 0;
+            }
             else if (Konstant.Text.Length > 0)
             {
                 vorhandeneRandbedingung.VariationsTyp = 1;
@@ -67,13 +71,14 @@ public partial class ZeitRandtemperaturNeu
                     intervall[i + 1] = double.Parse(wertePaar[1]);
                     k++;
                 }
+
                 vorhandeneRandbedingung.Intervall = intervall;
             }
         }
         // neue Randbedingung
         else
         {
-            string knotenId = "";
+            var knotenId = "";
             ZeitabhängigeRandbedingung randbedingung = null;
             if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
             if (Datei.IsChecked == true)
@@ -89,7 +94,6 @@ public partial class ZeitRandtemperaturNeu
                 {
                     Typ = 1
                 };
-
             }
             else if (Amplitude.Text.Length > 0 && Frequenz.Text.Length > 0 && Winkel.Text.Length > 0)
             {
@@ -115,13 +119,16 @@ public partial class ZeitRandtemperaturNeu
                     intervall[i + 1] = double.Parse(wertePaar[1]);
                     k++;
                 }
+
                 randbedingung = new ZeitabhängigeRandbedingung(knotenId, intervall)
                 {
                     Typ = 3
                 };
             }
+
             modell.ZeitabhängigeRandbedingung.Add(randbedingungId, randbedingung);
         }
+
         randbedingungenKeys?.Close();
         Close();
         StartFenster.WärmeVisual.Close();
@@ -178,20 +185,21 @@ public partial class ZeitRandtemperaturNeu
                 Winkel.Text = vorhandeneRandbedingung.PhasenWinkel.ToString("G2");
                 break;
             case 3:
+            {
+                var intervall = vorhandeneRandbedingung.Intervall;
+                var sb = new StringBuilder();
+                sb.Append(intervall[0].ToString("G2") + ";");
+                sb.Append(intervall[1].ToString("G2"));
+                for (var i = 2; i < intervall.Length; i += 2)
                 {
-                    var intervall = vorhandeneRandbedingung.Intervall;
-                    var sb = new StringBuilder();
-                    sb.Append(intervall[0].ToString("G2") + ";");
-                    sb.Append(intervall[1].ToString("G2"));
-                    for (var i = 2; i < intervall.Length; i += 2)
-                    {
-                        sb.Append("\t");
-                        sb.Append(intervall[i].ToString("G2") + ";");
-                        sb.Append(intervall[i + 1].ToString("G2"));
-                    }
-                    Linear.Text = sb.ToString();
-                    break;
+                    sb.Append("\t");
+                    sb.Append(intervall[i].ToString("G2") + ";");
+                    sb.Append(intervall[i + 1].ToString("G2"));
                 }
+
+                Linear.Text = sb.ToString();
+                break;
+            }
         }
     }
 }

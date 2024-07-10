@@ -1,16 +1,17 @@
-﻿using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 
 public partial class EigenlösungAnzeigen
 {
     private readonly FeModell modell;
+
     public EigenlösungAnzeigen(FeModell modell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
@@ -27,6 +28,7 @@ public partial class EigenlösungAnzeigen
             var sb = new StringBuilder(strFormat);
             eigenfrequenzen.Add(k, sb.ToString());
         }
+
         EigenfrequenzenGrid = sender as DataGrid;
         if (EigenfrequenzenGrid != null) EigenfrequenzenGrid.ItemsSource = eigenfrequenzen;
     }
@@ -43,8 +45,10 @@ public partial class EigenlösungAnzeigen
                 strFormat = $"{modell.Eigenzustand.Eigenvektoren[k][j],15:N5}";
                 sb.Append(strFormat);
             }
+
             eigenvektoren.Add(j, sb.ToString());
         }
+
         EigenvektorenGrid = sender as DataGrid;
         if (EigenvektorenGrid != null) EigenvektorenGrid.ItemsSource = eigenvektoren;
     }

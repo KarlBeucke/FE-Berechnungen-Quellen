@@ -1,10 +1,10 @@
-﻿using FEBibliothek.Modell;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
@@ -46,10 +46,12 @@ public partial class AnregungVisualisieren
         darstellung.Koordinatensystem(tmin, tmax, anregungMax, anregungMin);
         darstellung.ZeitverlaufZeichnen(dt, tmin, tmax, anregungMax, anregung);
     }
+
     private void AnregungText(double dauer, int nSteps)
     {
         var anregungsWerte = dauer.ToString("N2") + " [s] Anregung  mit "
-                      + nSteps + " Anregungswerten im Zeitschritt dt = " + dt.ToString("N3");
+                                                  + nSteps + " Anregungswerten im Zeitschritt dt = " +
+                                                  dt.ToString("N3");
         var anregungTextBlock = new TextBlock
         {
             FontSize = 12,

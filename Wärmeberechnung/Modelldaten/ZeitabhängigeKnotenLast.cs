@@ -10,12 +10,14 @@ public class ZeitabhängigeKnotenLast : AbstraktZeitabhängigeKnotenlast
         Datei = datei;
         VariationsTyp = 0;
     }
+
     public ZeitabhängigeKnotenLast(string knotenId, double konstanteTemperatur)
     {
         KnotenId = knotenId;
         KonstanteTemperatur = konstanteTemperatur;
         VariationsTyp = 1;
     }
+
     public ZeitabhängigeKnotenLast(string knotenId,
         double amplitude, double frequenz, double phasenWinkel)
     {
@@ -25,6 +27,7 @@ public class ZeitabhängigeKnotenLast : AbstraktZeitabhängigeKnotenlast
         PhasenWinkel = phasenWinkel;
         VariationsTyp = 2;
     }
+
     public ZeitabhängigeKnotenLast(string knotenId, double[] intervall)
     {
         KnotenId = knotenId;

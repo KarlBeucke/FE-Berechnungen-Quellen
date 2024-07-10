@@ -5,11 +5,11 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 public class MaterialParser
 {
+    private double eModul;
+    private Material material;
+    private string materialId;
     private FeModell modell;
     private string[] substrings;
-    private string materialId;
-    private Material material;
-    private double eModul;
 
     public static double GModul { get; set; }
     public static double Poisson { get; set; }
@@ -41,13 +41,14 @@ public class MaterialParser
                         material = new Material(eModul, Poisson, GModul);
                         break;
                     default:
-                        throw new ParseAusnahme((i + 1) + ":\nMaterial erfordert 3 oder 4 Eingabeparameter");
+                        throw new ParseAusnahme(i + 1 + ":\nMaterial erfordert 3 oder 4 Eingabeparameter");
                 }
 
                 material.MaterialId = materialId;
                 modell.Material.Add(materialId, material);
                 i++;
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }

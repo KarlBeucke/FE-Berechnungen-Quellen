@@ -17,21 +17,33 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
-                <Button Name="BtnKnoten" Grid.Row="0" Grid.Column="0" Margin="50,20,0,17" IsDefault="False" MaxWidth="200" HorizontalAlignment="Left" 
-                        Width="120" Click="BtnKnotenIDs_Click" >Knoten IDs</Button>
-                <Button Name="BtnElemente" Grid.Row="0" Grid.Column="1" Margin="50,20,0,17" IsDefault="False" MaxWidth="200" HorizontalAlignment="Left" 
-                        Width="120" Click="BtnElementIDs_Click" >Element IDs</Button>
-                <Button Name="BtnLasten" Grid.Row="0" Grid.Column="2" Margin="50,20,0,17" IsDefault="False" MaxWidth="200" HorizontalAlignment="Left" 
-                        Width="120" Click="BtnLasten_Click" >Lasten</Button>
-                <Button Name="BtnLager" Grid.Row="0" Grid.Column="3" Margin="50,20,0,17" IsDefault="False" MaxWidth="200" HorizontalAlignment="Left" 
-                        Width="120" Click="BtnFesthaltungen_Click" >Festhaltungen</Button>
+                <Button Name="BtnKnoten" Grid.Row="0" Grid.Column="0" Margin="50,20,0,17" IsDefault="False"
+                        MaxWidth="200" HorizontalAlignment="Left"
+                        Width="120" Click="BtnKnotenIDs_Click">
+                    Knoten IDs
+                </Button>
+                <Button Name="BtnElemente" Grid.Row="0" Grid.Column="1" Margin="50,20,0,17" IsDefault="False"
+                        MaxWidth="200" HorizontalAlignment="Left"
+                        Width="120" Click="BtnElementIDs_Click">
+                    Element IDs
+                </Button>
+                <Button Name="BtnLasten" Grid.Row="0" Grid.Column="2" Margin="50,20,0,17" IsDefault="False"
+                        MaxWidth="200" HorizontalAlignment="Left"
+                        Width="120" Click="BtnLasten_Click">
+                    Lasten
+                </Button>
+                <Button Name="BtnLager" Grid.Row="0" Grid.Column="3" Margin="50,20,0,17" IsDefault="False"
+                        MaxWidth="200" HorizontalAlignment="Left"
+                        Width="120" Click="BtnFesthaltungen_Click">
+                    Festhaltungen
+                </Button>
             </Grid>
-            <Canvas x:Name="VisualErgebnisse" Height="593" Width="1195" ScrollViewer.CanContentScroll="True" 
+            <Canvas x:Name="VisualErgebnisse" Height="593" Width="1195" ScrollViewer.CanContentScroll="True"
                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
                     MouseLeftButtonDown="OnMouseLeftButtonDown"
                     MouseRightButtonDown="OnMouseRightButtonDown">
                 <Popup x:Name="MyPopup" Placement="MousePoint">
-                    <TextBlock x:Name="MyPopupText" Background="LightBlue" Foreground="Blue" Padding="10"/>
+                    <TextBlock x:Name="MyPopupText" Background="LightBlue" Foreground="Blue" Padding="10" />
                 </Popup>
             </Canvas>
         </StackPanel>

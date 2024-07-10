@@ -1,30 +1,33 @@
-﻿using FEBibliothek.Modell.abstrakte_Klassen;
-using System;
+﻿using System;
 using System.Runtime.Serialization;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 
 public class LinienLast : AbstraktLinienlast
 {
-    private int startNDOF, endNDOF;           // number of degrees of freedom for start and end node
-    public int StartNDOF { get { return startNDOF; } set { startNDOF = value; } }
-    public int EndNDOF { get { return endNDOF; } set { endNDOF = value; } }
-
     // ... Constructors ........................................................
     public LinienLast(string startKnotenId, double p1X, double p1Y, string endKnotenId, double p2X, double p2Y)
     {
         StartKnotenId = startKnotenId;
         EndKnotenId = endKnotenId;
-        Lastwerte = new double[4];                           // 2 nodes, 2 dimensions
-        Lastwerte[0] = p1X; Lastwerte[1] = p2X; Lastwerte[2] = p1Y; Lastwerte[3] = p2Y;
+        Lastwerte = new double[4]; // 2 nodes, 2 dimensions
+        Lastwerte[0] = p1X;
+        Lastwerte[1] = p2X;
+        Lastwerte[2] = p1Y;
+        Lastwerte[3] = p2Y;
     }
+
+    public int StartNDOF { get; set; }
+
+    public int EndNDOF { get; set; }
 
     public override double[] BerechneLastVektor()
     {
-        double[] load = new double[4];
+        var load = new double[4];
         double c1, c2, l;
-        double[] nStart = StartKnoten.Koordinaten;
-        double[] nEnd = EndKnoten.Koordinaten;
+        var nStart = StartKnoten.Koordinaten;
+        var nEnd = EndKnoten.Koordinaten;
         c1 = nEnd[0] - nStart[0];
         c2 = nEnd[1] - nStart[1];
         l = Math.Sqrt(c1 * c1 + c2 * c2) / 6.0;
@@ -38,9 +41,20 @@ public class LinienLast : AbstraktLinienlast
     [Serializable]
     private class RuntimeException : Exception
     {
-        public RuntimeException() { }
-        public RuntimeException(string message) : base(message) { }
-        public RuntimeException(string message, Exception innerException) : base(message, innerException) { }
-        protected RuntimeException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        public RuntimeException()
+        {
+        }
+
+        public RuntimeException(string message) : base(message)
+        {
+        }
+
+        public RuntimeException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected RuntimeException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
     }
 }

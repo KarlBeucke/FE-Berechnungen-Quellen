@@ -7,8 +7,8 @@
         Title="Knotenlast" Height="220" Width="360">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -22,22 +22,30 @@
         </Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knotenlast ID:</Label>
-        <TextBox Name="KnotenlastId" Grid.Row="1" Grid.Column="1" Margin="10,13.2,0,6.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" LostFocus="KnotenlastIdLostFocus"/>
+        <TextBox Name="KnotenlastId" Grid.Row="1" Grid.Column="1" Margin="10,13.2,0,6.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" LostFocus="KnotenlastIdLostFocus" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Knoten ID:</Label>
-        <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="12.2,13.2,0,6.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
+        <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="12.2,13.2,0,6.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" />
 
         <Label Grid.Row="3" Grid.Column="0" Margin="0,0,0,0" Width="180"
-               HorizontalAlignment="Left" VerticalAlignment="Center">eingeprägte Knotentemperatur:</Label>
-        <TextBox Name="Temperatur" Grid.Row="3" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
+               HorizontalAlignment="Left" VerticalAlignment="Center">
+            eingeprägte Knotentemperatur:
+        </Label>
+        <TextBox Name="Temperatur" Grid.Row="3" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" />
 
-        <Button Grid.Row="4" Grid.Column="0" Width="50"  Height="26" Margin="5,0,0,0" 
-                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Center" >löschen</Button>
-        <Button IsDefault="True" Grid.Row="4" Grid.Column="1"  Height="26" Margin="101,-1,-40,0" 
-                Click="BtnDialogOk_Click" VerticalAlignment="Center">_Ok</Button>
-        <Button Grid.Row="4" Grid.Column="1" Width="71" Height="26" Margin="21.2,0,0,7.8" 
-                Click="BtnDialogCancel_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">_Abbrechen</Button>
+        <Button Grid.Row="4" Grid.Column="0" Width="50" Height="26" Margin="5,0,0,0"
+                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Center">
+            löschen
+        </Button>
+        <Button IsDefault="True" Grid.Row="4" Grid.Column="1" Height="26" Margin="101,-1,-40,0"
+                Click="BtnDialogOk_Click" VerticalAlignment="Center">
+            _Ok
+        </Button>
+        <Button Grid.Row="4" Grid.Column="1" Width="71" Height="26" Margin="21.2,0,0,7.8"
+                Click="BtnDialogCancel_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

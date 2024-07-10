@@ -1,16 +1,17 @@
-﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+﻿using System.Diagnostics;
+using System.Windows;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Diagnostics;
-using System.Windows;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class ZeitElementtemperaturNeu
 {
+    private readonly WärmelastenKeys lastenKeys;
     private readonly FeModell modell;
     private AbstraktZeitabhängigeElementLast vorhandeneLast;
-    private readonly WärmelastenKeys lastenKeys;
+
     public ZeitElementtemperaturNeu(FeModell modell)
     {
         this.modell = modell;
@@ -35,7 +36,7 @@ public partial class ZeitElementtemperaturNeu
             modell.ZeitabhängigeElementLasten.TryGetValue(elementlastId, out vorhandeneLast);
             Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null");
 
-            if (ElementId.Text.Length > 0) { vorhandeneLast.ElementId = ElementId.Text; }
+            if (ElementId.Text.Length > 0) vorhandeneLast.ElementId = ElementId.Text;
             if (P0.Text.Length > 0) vorhandeneLast.P[0] = double.Parse(P0.Text);
             if (P1.Text.Length > 0) vorhandeneLast.P[1] = double.Parse(P1.Text);
             if (P2.Text.Length > 0) vorhandeneLast.P[2] = double.Parse(P2.Text);
@@ -57,6 +58,7 @@ public partial class ZeitElementtemperaturNeu
             };
             modell.ZeitabhängigeElementLasten.Add(elementlastId, zeitabhängigeElementlast);
         }
+
         lastenKeys?.Close();
         Close();
         StartFenster.WärmeVisual.Close();

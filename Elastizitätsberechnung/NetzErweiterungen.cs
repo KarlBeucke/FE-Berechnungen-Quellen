@@ -29,6 +29,7 @@ public static class NetzErweiterungen
             AddTriangleSegment(mesh, wireframe, alreadyDrawn, index2, index3, thickness);
             AddTriangleSegment(mesh, wireframe, alreadyDrawn, index3, index1, thickness);
         }
+
         return wireframe;
     }
 
@@ -40,10 +41,11 @@ public static class NetzErweiterungen
         // eine eindeutige ID für eine Kante mit 2 Punkten
         if (index1 > index2)
         {
-            int temp = index1;
+            var temp = index1;
             index1 = index2;
             index2 = temp;
         }
+
         var segmentId = index1 * mesh.Positions.Count + index2;
 
         // ignorier die Kante, falls sie schon einem anderen Dreieck hinzugefügt wurde
@@ -97,6 +99,7 @@ public static class NetzErweiterungen
     {
         AddSegment(mesh, point1, point2, thickness, false);
     }
+
     public static void AddSegment(MeshGeometry3D mesh,
         Point3D point1, Point3D point2, Vector3D up, double thickness)
     {

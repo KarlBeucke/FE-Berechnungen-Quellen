@@ -1,16 +1,18 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Input;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class LagerNeu
 {
     private readonly FeModell _modell;
+
     public LagerNeu(FeModell modell)
     {
         InitializeComponent();
@@ -84,6 +86,7 @@ public partial class LagerNeu
                 _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Knotenlast");
                 return;
             }
+
             var typ = 0;
             if (Xfest.IsChecked != null && (bool)Xfest.IsChecked) typ = Lager.XFixed;
             if (Yfest.IsChecked != null && (bool)Yfest.IsChecked) typ += Lager.YFixed;
@@ -98,6 +101,7 @@ public partial class LagerNeu
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
     }
+
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         StartFenster.TragwerkVisual.LagerKeys?.Close();
@@ -112,7 +116,9 @@ public partial class LagerNeu
 
         LagerId.Text = vorhandenesLager.RandbedingungId;
         KnotenId.Text = vorhandenesLager.KnotenId;
-        Xfest.IsChecked = false; Yfest.IsChecked = false; Rfest.IsChecked = false;
+        Xfest.IsChecked = false;
+        Yfest.IsChecked = false;
+        Rfest.IsChecked = false;
         if (vorhandenesLager.Festgehalten[0]) Xfest.IsChecked = true;
         if (vorhandenesLager.Festgehalten[1]) Yfest.IsChecked = true;
         if (vorhandenesLager.Festgehalten[2]) Rfest.IsChecked = true;
@@ -120,6 +126,7 @@ public partial class LagerNeu
         VorY.Text = vorhandenesLager.Vordefiniert[1].ToString("N2", CultureInfo.CurrentCulture);
         VorRot.Text = vorhandenesLager.Vordefiniert[2].ToString("N2", CultureInfo.CurrentCulture);
     }
+
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
     {
         _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
@@ -130,6 +137,7 @@ public partial class LagerNeu
             KnotenId.Text = "";
             return;
         }
+
         if (LagerId.Text == "") LagerId.Text = "L_" + KnotenId.Text;
     }
 
@@ -144,7 +152,7 @@ public partial class LagerNeu
         StartFenster.TragwerkVisual.Show();
     }
 
-    private void KnotenPositionNeu(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void KnotenPositionNeu(object sender, MouseButtonEventArgs e)
     {
         _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
         Debug.Assert(knoten != null, nameof(knoten) + " != null");

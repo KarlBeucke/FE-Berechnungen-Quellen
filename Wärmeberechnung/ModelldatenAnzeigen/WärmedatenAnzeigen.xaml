@@ -7,35 +7,38 @@
         Title="WärmedatenAnzeigen" Height="588" Width="814">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150*"/>
-            <ColumnDefinition Width="300*"/>
-            <ColumnDefinition Width="150*"/>
-            <ColumnDefinition Width="200*"/>
+            <ColumnDefinition Width="150*" />
+            <ColumnDefinition Width="300*" />
+            <ColumnDefinition Width="150*" />
+            <ColumnDefinition Width="200*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="150*"/>
-            <RowDefinition Height="150*"/>
-            <RowDefinition Height="150*"/>
+            <RowDefinition Height="150*" />
+            <RowDefinition Height="150*" />
+            <RowDefinition Height="150*" />
         </Grid.RowDefinitions>
-        <Label x:Name="Knotendefinitionen" Content="Knotendefinitionen" HorizontalAlignment="Left" VerticalAlignment="Top"
-               Margin="5,0,0,0" Width="140" Grid.Row="0" Grid.Column="0"/>
+        <Label x:Name="Knotendefinitionen" Content="Knotendefinitionen" HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Margin="5,0,0,0" Width="140" Grid.Row="0" Grid.Column="0" />
         <DataGrid
             Name="KnotenGrid" Width="140"
             Margin="7,37,2,10" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
-            AlternatingRowBackground="Aqua" Loaded="Knoten_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed" 
+            AlternatingRowBackground="Aqua" Loaded="Knoten_Loaded" AutoGenerateColumns="False"
+            CellEditEnding="Model_Changed"
             MouseDoubleClick="NeuerKnoten" UnloadingRow="KnotenZeileLoeschen" SelectionChanged="KnotenZeileSelected"
             LostFocus="KeinKnotenSelected"
             d:DataContext="{d:DesignData }">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Knoten" Binding="{Binding Id}"/>
-                <DataGridTextColumn Header="X" Binding="{Binding Koordinaten[0]}"/>
-                <DataGridTextColumn Header="Y" Binding="{Binding Koordinaten[1]}"/>
-                <DataGridTextColumn Header="Z" Binding="{Binding Koordinaten[2]}"/>
+                <DataGridTextColumn Header="Knoten" Binding="{Binding Id}" />
+                <DataGridTextColumn Header="X" Binding="{Binding Koordinaten[0]}" />
+                <DataGridTextColumn Header="Y" Binding="{Binding Koordinaten[1]}" />
+                <DataGridTextColumn Header="Z" Binding="{Binding Koordinaten[2]}" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <Label x:Name="Elementdefinitionen" Content="Elementdefinitionen" HorizontalAlignment="Left" VerticalAlignment="Top"
-               Margin="5,0,0,0" Width="250" Grid.Row="0" Grid.Column="1"/>
+        <Label x:Name="Elementdefinitionen" Content="Elementdefinitionen" HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Margin="5,0,0,0" Width="250" Grid.Row="0" Grid.Column="1" />
         <DataGrid
             Name="ElementGrid"
             Margin="4,38,5,9" Width="290" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
@@ -46,96 +49,101 @@
             LostFocus="KeinElementSelected" CellEditEnding="Model_Changed"
             d:DataContext="{d:DesignData}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Element"  Binding="{Binding ElementId}"/>
-                <DataGridTextColumn Header="k1" Binding="{Binding KnotenIds[0]}"/>
-                <DataGridTextColumn Header="k2" Binding="{Binding KnotenIds[1]}"/>
-                <DataGridTextColumn Header="k3" Binding="{Binding KnotenIds[2]}"/>
-                <DataGridTextColumn Header="k4" Binding="{Binding KnotenIds[3]}"/>
-                <DataGridTextColumn Header="k5" Binding="{Binding KnotenIds[4]}"/>
-                <DataGridTextColumn Header="k6" Binding="{Binding KnotenIds[5]}"/>
-                <DataGridTextColumn Header="k7" Binding="{Binding KnotenIds[6]}"/>
-                <DataGridTextColumn Header="k8" Binding="{Binding KnotenIds[7]}"/>
-                <DataGridTextColumn Header="Material" Binding="{Binding ElementMaterialId}"/>
+                <DataGridTextColumn Header="Element" Binding="{Binding ElementId}" />
+                <DataGridTextColumn Header="k1" Binding="{Binding KnotenIds[0]}" />
+                <DataGridTextColumn Header="k2" Binding="{Binding KnotenIds[1]}" />
+                <DataGridTextColumn Header="k3" Binding="{Binding KnotenIds[2]}" />
+                <DataGridTextColumn Header="k4" Binding="{Binding KnotenIds[3]}" />
+                <DataGridTextColumn Header="k5" Binding="{Binding KnotenIds[4]}" />
+                <DataGridTextColumn Header="k6" Binding="{Binding KnotenIds[5]}" />
+                <DataGridTextColumn Header="k7" Binding="{Binding KnotenIds[6]}" />
+                <DataGridTextColumn Header="k8" Binding="{Binding KnotenIds[7]}" />
+                <DataGridTextColumn Header="Material" Binding="{Binding ElementMaterialId}" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <Label x:Name="Materialdefinitionen" Content="Materialdefinitionen" HorizontalAlignment="Left" VerticalAlignment="Top"
-               Margin="5,0,0,0" Width="140" Grid.Row="0" Grid.Column="2"/>
+        <Label x:Name="Materialdefinitionen" Content="Materialdefinitionen" HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Margin="5,0,0,0" Width="140" Grid.Row="0" Grid.Column="2" />
         <DataGrid
             Name="MaterialGrid"
             Margin="1,37,2,187" Grid.Column="2" Grid.Row="0"
             AlternatingRowBackground="Aqua"
-            Loaded="Material_Loaded" AutoGenerateColumns="False"  CellEditEnding="Model_Changed"
-            MouseDoubleClick="NeuesMaterial" UnloadingRow="MaterialZeileLoeschen" SelectionChanged="MaterialZeileSelected"
+            Loaded="Material_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
+            MouseDoubleClick="NeuesMaterial" UnloadingRow="MaterialZeileLoeschen"
+            SelectionChanged="MaterialZeileSelected"
             d:DataContext="{d:DesignData }" Grid.RowSpan="2">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding MaterialId}"/>
-                <DataGridTextColumn Header="cx" Binding="{Binding MaterialWerte[0]}"/>
-                <DataGridTextColumn Header="cy" Binding="{Binding MaterialWerte[1]}"/>
-                <DataGridTextColumn Header="cz" Binding="{Binding MaterialWerte[2]}"/>
-                <DataGridTextColumn Header="rhoC" Binding="{Binding MaterialWerte[3]}"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding MaterialId}" />
+                <DataGridTextColumn Header="cx" Binding="{Binding MaterialWerte[0]}" />
+                <DataGridTextColumn Header="cy" Binding="{Binding MaterialWerte[1]}" />
+                <DataGridTextColumn Header="cz" Binding="{Binding MaterialWerte[2]}" />
+                <DataGridTextColumn Header="rhoC" Binding="{Binding MaterialWerte[3]}" />
             </DataGrid.Columns>
         </DataGrid>
 
         <Label x:Name="Randbedingungen" Content="Randbedingungen" HorizontalAlignment="Left" VerticalAlignment="Top"
-               Margin="5,0,0,0" Width="140" Grid.Row="1" Grid.Column="2"/>
+               Margin="5,0,0,0" Width="140" Grid.Row="1" Grid.Column="2" />
         <DataGrid
             Name="RandbedingungGrid"
             Margin="2,24,2,9" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2"
             AlternatingRowBackground="Aqua" Loaded="Randbedingung_Loaded" AutoGenerateColumns="False"
-            CellEditEnding="Model_Changed" MouseDoubleClick="NeueRandbedingung" 
+            CellEditEnding="Model_Changed" MouseDoubleClick="NeueRandbedingung"
             UnloadingRow="RandbedingungZeileLoeschen" SelectionChanged="RandbedingungZeileSelected">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding RandbedingungId}"/>
-                <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
-                <DataGridTextColumn Header="Temperatur" Binding="{Binding Vordefiniert[0]}"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding RandbedingungId}" />
+                <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
+                <DataGridTextColumn Header="Temperatur" Binding="{Binding Vordefiniert[0]}" />
             </DataGrid.Columns>
         </DataGrid>
 
         <Label Content="Einwirkungen" HorizontalAlignment="Left" VerticalAlignment="Top"
-               Margin="5,0,0,0" Width="180" Grid.Row="0" Grid.Column="3"/>
+               Margin="5,0,0,0" Width="180" Grid.Row="0" Grid.Column="3" />
         <Label Content="Knotentemperaturen" HorizontalAlignment="Left" VerticalAlignment="Top"
-               Margin="5,15,0,0" Width="180" Grid.Row="0" Grid.Column="3"/>
+               Margin="5,15,0,0" Width="180" Grid.Row="0" Grid.Column="3" />
         <DataGrid
             Name="KnotenEinwirkungenGrid"
             Margin="2,37,5,187" Grid.Column="3" Grid.Row="0"
             AlternatingRowBackground="Aqua" Loaded="KnotenEinwirkungen_Loaded" AutoGenerateColumns="False"
-            CellEditEnding="Model_Changed" MouseDoubleClick="NeueKnotenlast" 
+            CellEditEnding="Model_Changed" MouseDoubleClick="NeueKnotenlast"
             UnloadingRow="KnotenlastZeileLoeschen" SelectionChanged="KnotenlastZeileSelected" Grid.RowSpan="2">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding LastId}"/>
-                <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
-                <DataGridTextColumn Header="Temperatur" Binding="{Binding Lastwert[0]}"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
+                <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
+                <DataGridTextColumn Header="Temperatur" Binding="{Binding Lastwert[0]}" />
             </DataGrid.Columns>
         </DataGrid>
 
         <Label Content="Linientemperaturen" HorizontalAlignment="Left" VerticalAlignment="Top"
-               Margin="5,0,0,0" Width="180" Grid.Row="1" Grid.Column="3"/>
+               Margin="5,0,0,0" Width="180" Grid.Row="1" Grid.Column="3" />
         <DataGrid
             Name="LinienEinwirkungenGrid"
             Margin="6,25,3,6" Width="194" Grid.Column="3"
             AlternatingRowBackground="Aqua" Loaded="LinienEinwirkungen_Loaded" AutoGenerateColumns="False"
-            MouseDoubleClick="NeueLinienlast" UnloadingRow="LinienlastZeileLoeschen" SelectionChanged="LinienlastZeileSelected" Grid.Row="1" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+            MouseDoubleClick="NeueLinienlast" UnloadingRow="LinienlastZeileLoeschen"
+            SelectionChanged="LinienlastZeileSelected" Grid.Row="1" VerticalContentAlignment="Stretch"
+            HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding LastId}"/>
-                <DataGridTextColumn Header="startknoten" Binding="{Binding StartKnotenId}"/>
-                <DataGridTextColumn Header="Ts" Binding="{Binding Lastwerte[0]}"/>
-                <DataGridTextColumn Header="endknoten" Binding="{Binding EndKnotenId}"/>
-                <DataGridTextColumn Header="Te" Binding="{Binding Lastwerte[1]}"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
+                <DataGridTextColumn Header="startknoten" Binding="{Binding StartKnotenId}" />
+                <DataGridTextColumn Header="Ts" Binding="{Binding Lastwerte[0]}" />
+                <DataGridTextColumn Header="endknoten" Binding="{Binding EndKnotenId}" />
+                <DataGridTextColumn Header="Te" Binding="{Binding Lastwerte[1]}" />
             </DataGrid.Columns>
         </DataGrid>
 
         <Label Content="Elementtemperaturen" HorizontalAlignment="Left" VerticalAlignment="Top"
-               Margin="5,0,0,0" Width="180" Grid.Row="2" Grid.Column="3"/>
+               Margin="5,0,0,0" Width="180" Grid.Row="2" Grid.Column="3" />
         <DataGrid
             Name="ElementEinwirkungenGrid"
             Margin="4,25,5,9" Grid.Column="3" Grid.Row="2"
             AlternatingRowBackground="Aqua"
             Loaded="ElementEinwirkungen_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
-            MouseDoubleClick="NeueElementlast" UnloadingRow="ElementlastZeileLoeschen" SelectionChanged="ElementlastlastZeileSelected">
+            MouseDoubleClick="NeueElementlast" UnloadingRow="ElementlastZeileLoeschen"
+            SelectionChanged="ElementlastlastZeileSelected">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id"  Binding="{Binding LastId}"/>
-                <DataGridTextColumn Header="Element"  Binding="{Binding ElementId}"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
+                <DataGridTextColumn Header="Element" Binding="{Binding ElementId}" />
                 <DataGridTextColumn Header="T1" Binding="{Binding Lastwerte[0]}" />
                 <DataGridTextColumn Header="T2" Binding="{Binding Lastwerte[1]}" />
                 <DataGridTextColumn Header="T3" Binding="{Binding Lastwerte[2]}" />

@@ -1,15 +1,15 @@
-﻿using FEBibliothek.Modell;
+﻿using System.Windows;
+using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
 public class FederElement : Abstrakt2D
 {
     private readonly FeModell modell;
-    private Knoten node;
 
     private readonly double[,] steifigkeitsMatrix = new double[3, 3];
+    private Knoten node;
 
     // ... Constructor ........................................................
     public FederElement(string[] federKnoten, string eMaterialId, FeModell feModel)
@@ -58,19 +58,16 @@ public class FederElement : Abstrakt2D
         SystemIndizesElement = new int[KnotenProElement * ElementFreiheitsgrade];
         var counter = 0;
         for (var i = 0; i < KnotenProElement; i++)
-        {
-            for (var j = 0; j < ElementFreiheitsgrade; j++)
-                SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
-        }
+        for (var j = 0; j < ElementFreiheitsgrade; j++)
+            SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
     }
+
     public override Point BerechneSchwerpunkt()
     {
         var cg = new Point();
 
         if (!modell.Knoten.TryGetValue(KnotenIds[0], out node))
-        {
             throw new ModellAusnahme("\nFederElement: " + ElementId + " nicht im Modell gefunden");
-        }
 
         cg.X = node.Koordinaten[0];
         cg.Y = node.Koordinaten[1];

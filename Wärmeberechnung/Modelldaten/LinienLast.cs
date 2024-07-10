@@ -1,5 +1,5 @@
-﻿using FEBibliothek.Modell.abstrakte_Klassen;
-using System;
+﻿using System;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
@@ -11,6 +11,7 @@ public class LinienLast : AbstraktLinienlast
         EndKnotenId = endKnotenId;
         Lastwerte = p;
     }
+
     public LinienLast(string id, string startKnotenId, string endKnotenId, double[] p)
     {
         LastId = id;
@@ -18,6 +19,7 @@ public class LinienLast : AbstraktLinienlast
         EndKnotenId = endKnotenId;
         Lastwerte = p;
     }
+
     // ....Compute concentrated node forces in local coordinate system....
     public override double[] BerechneLastVektor()
     {

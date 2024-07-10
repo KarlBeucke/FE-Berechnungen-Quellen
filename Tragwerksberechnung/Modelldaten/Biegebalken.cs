@@ -1,20 +1,20 @@
-﻿using FEBibliothek.Modell;
+﻿using System.Windows;
+using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using FEBibliothek.Werkzeuge;
-using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
 public class Biegebalken : AbstraktBalken
 {
-    protected AbstraktMaterial Material;
-    private AbstraktElement _element;
-    protected Querschnitt Querschnitt;
+    private readonly double[] _massenMatrix = new double[6];
     private readonly FeModell _modell;
+    private AbstraktElement _element;
 
     private double _emodul, _masse, _fläche, _trägheitsmoment;
     private double[,] _steifigkeitsMatrix = new double[6, 6];
-    private readonly double[] _massenMatrix = new double[6];
+    protected AbstraktMaterial Material;
+    protected Querschnitt Querschnitt;
 
     //private readonly double[] shapeFunction = new double[6];
     //private readonly double[] _lastVektor = new double[6];
@@ -51,19 +51,22 @@ public class Biegebalken : AbstraktBalken
         if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt)) return null;
         _fläche = A == 0 ? querschnitt.QuerschnittsWerte[0] : A;
         _trägheitsmoment = I == 0 ? querschnitt.QuerschnittsWerte[1] : I;
-        var h2 = _emodul * _trägheitsmoment;      // EI
+        var h2 = _emodul * _trägheitsmoment; // EI
         var c1 = _emodul * _fläche / BalkenLänge; // EA/L
         var c2 = 12.0 * h2 / BalkenLänge / BalkenLänge / BalkenLänge;
         var c3 = 6.0 * h2 / BalkenLänge / BalkenLänge;
         var c4 = 4.0 * h2 / BalkenLänge;
         var c5 = 0.5 * c4;
 
-        double[,] lokaleMatrix = {{ c1,  0,  0, -c1,  0,  0},
-            { 0,  c2,  c3,  0, -c2,  c3},
-            { 0,  c3,  c4,  0, -c3,  c5},
-            {-c1,  0,  0,  c1,  0,  0},
-            { 0, -c2, -c3,  0,  c2, -c3},
-            { 0,  c3,  c5,  0, -c3,  c4}};
+        double[,] lokaleMatrix =
+        {
+            { c1, 0, 0, -c1, 0, 0 },
+            { 0, c2, c3, 0, -c2, c3 },
+            { 0, c3, c4, 0, -c3, c5 },
+            { -c1, 0, 0, c1, 0, 0 },
+            { 0, -c2, -c3, 0, c2, -c3 },
+            { 0, c3, c5, 0, -c3, c4 }
+        };
         return lokaleMatrix;
     }
 
@@ -71,9 +74,7 @@ public class Biegebalken : AbstraktBalken
     public override double[] BerechneDiagonalMatrix()
     {
         if (ElementMaterial.MaterialWerte.Length < 3 && M == 0)
-        {
             throw new ModellAusnahme("\nBiegebalken " + ElementId + ", spezifische Masse noch nicht definiert");
-        }
 
         if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) return null;
         _masse = M == 0 ? material.MaterialWerte[2] : M;
@@ -202,41 +203,40 @@ public class Biegebalken : AbstraktBalken
     {
         var elementFreiheitsgrade = ElementFreiheitsgrade;
         for (var i = 0; i < matrix.GetLength(0); i += elementFreiheitsgrade)
+        for (var k = 0; k < matrix.GetLength(0); k += elementFreiheitsgrade)
         {
-            for (var k = 0; k < matrix.GetLength(0); k += elementFreiheitsgrade)
-            {
-                var m11 = matrix[i, k];
-                var m12 = matrix[i, k + 1];
-                var m13 = matrix[i, k + 2];
+            var m11 = matrix[i, k];
+            var m12 = matrix[i, k + 1];
+            var m13 = matrix[i, k + 2];
 
-                var m21 = matrix[i + 1, k];
-                var m22 = matrix[i + 1, k + 1];
-                var m23 = matrix[i + 1, k + 2];
+            var m21 = matrix[i + 1, k];
+            var m22 = matrix[i + 1, k + 1];
+            var m23 = matrix[i + 1, k + 2];
 
-                var m31 = matrix[i + 2, k];
-                var m32 = matrix[i + 2, k + 1];
+            var m31 = matrix[i + 2, k];
+            var m32 = matrix[i + 2, k + 1];
 
-                var e11 = RotationsMatrix[0, 0];
-                var e12 = RotationsMatrix[0, 1];
-                var e21 = RotationsMatrix[1, 0];
-                var e22 = RotationsMatrix[1, 1];
+            var e11 = RotationsMatrix[0, 0];
+            var e12 = RotationsMatrix[0, 1];
+            var e21 = RotationsMatrix[1, 0];
+            var e22 = RotationsMatrix[1, 1];
 
-                var h11 = e11 * m11 + e12 * m21;
-                var h12 = e11 * m12 + e12 * m22;
-                var h21 = e21 * m11 + e22 * m21;
-                var h22 = e21 * m12 + e22 * m22;
+            var h11 = e11 * m11 + e12 * m21;
+            var h12 = e11 * m12 + e12 * m22;
+            var h21 = e21 * m11 + e22 * m21;
+            var h22 = e21 * m12 + e22 * m22;
 
-                matrix[i, k] = h11 * e11 + h12 * e12;
-                matrix[i, k + 1] = h11 * e21 + h12 * e22;
-                matrix[i + 1, k] = h21 * e11 + h22 * e12;
-                matrix[i + 1, k + 1] = h21 * e21 + h22 * e22;
+            matrix[i, k] = h11 * e11 + h12 * e12;
+            matrix[i, k + 1] = h11 * e21 + h12 * e22;
+            matrix[i + 1, k] = h21 * e11 + h22 * e12;
+            matrix[i + 1, k + 1] = h21 * e21 + h22 * e22;
 
-                matrix[i, k + 2] = e11 * m13 + e12 * m23;
-                matrix[i + 1, k + 2] = e21 * m13 + e22 * m23;
-                matrix[i + 2, k] = m31 * e11 + m32 * e12;
-                matrix[i + 2, k + 1] = m31 * e21 + m32 * e22;
-            }
+            matrix[i, k + 2] = e11 * m13 + e12 * m23;
+            matrix[i + 1, k + 2] = e21 * m13 + e22 * m23;
+            matrix[i + 2, k] = m31 * e11 + m32 * e12;
+            matrix[i + 2, k + 1] = m31 * e21 + m32 * e22;
         }
+
         return matrix;
     }
 
@@ -265,6 +265,7 @@ public class Biegebalken : AbstraktBalken
             vektor = linienLast.BerechneLokalenLastVektor();
             for (var i = 0; i < vektor.Length; i++) ElementZustand[i] -= vektor[i];
         }
+
         ElementZustand[0] = -ElementZustand[0];
         ElementZustand[1] = -ElementZustand[1];
         ElementZustand[2] = -ElementZustand[2];
@@ -281,6 +282,7 @@ public class Biegebalken : AbstraktBalken
             ElementVerformungen[i] = Knoten[0].Knotenfreiheitsgrade[i];
             ElementVerformungen[i + ndof] = Knoten[1].Knotenfreiheitsgrade[i];
         }
+
         // transformiere in das lokale Koordinatensystem
         var temp0 = RotationsMatrix[0, 0] * ElementVerformungen[0]
                     + RotationsMatrix[1, 0] * ElementVerformungen[1];
@@ -310,17 +312,14 @@ public class Biegebalken : AbstraktBalken
         SystemIndizesElement = new int[KnotenProElement * ElementFreiheitsgrade];
         var counter = 0;
         for (var i = 0; i < KnotenProElement; i++)
-        {
-            for (var j = 0; j < ElementFreiheitsgrade; j++)
-                SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
-        }
+        for (var j = 0; j < ElementFreiheitsgrade; j++)
+            SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
     }
+
     public override Point BerechneSchwerpunkt()
     {
         if (!_modell.Elemente.TryGetValue(ElementId, out _element))
-        {
             throw new ModellAusnahme("\nBiegebalken: " + ElementId + " nicht im Modell gefunden");
-        }
         return Schwerpunkt(_element);
     }
 }

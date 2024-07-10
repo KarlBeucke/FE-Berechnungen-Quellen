@@ -7,8 +7,8 @@
         Title="Neue Knotenlast" Height="300" Width="310">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
@@ -25,27 +25,33 @@
 
         <Label Grid.Column="0" Margin="0,0,0,5" Grid.Row="1">Last ID:</Label>
         <Label Grid.Row="1" Grid.Column="0" Margin="0,15,0,34" FontSize="8" Grid.RowSpan="2">(generiert aus "K_L_" und Knoten ID)</Label>
-        <TextBox Name="LastId" Grid.Row="1" Grid.Column="1" Margin="10,10,-10,0" Height="20" 
-                 VerticalAlignment="Top" LostFocus="LastIdLostFocus"/>
+        <TextBox Name="LastId" Grid.Row="1" Grid.Column="1" Margin="10,10,-10,0" Height="20"
+                 VerticalAlignment="Top" LostFocus="LastIdLostFocus" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,0,0,5">Knoten ID:</Label>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,14,0,1" FontSize="8">(click vorhandene Knoten ID)</Label>
-        <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="10,9.6,10,5.6" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" LostFocus="KnotenIdLostFocus"/>
+        <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="10,9.6,10,5.6" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" LostFocus="KnotenIdLostFocus" />
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5.4,0,0">Lastwert in x-Richtung:</Label>
-        <TextBox Name="Px" Grid.Row="3" Grid.Column="1" Margin="10,10,10,4.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="Px" Grid.Row="3" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5.4,0,0">Lastwert in y-Richtung:</Label>
-        <TextBox Name="Py" Grid.Row="4" Grid.Column="1" Margin="10,10,10,4.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="Py" Grid.Row="4" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
         <Label Grid.Row="5" Grid.Column="0" Margin="0,5.4,0,0">Knotenmoment:</Label>
-        <TextBox Name="M" Grid.Row="5" Grid.Column="1" Margin="10,10,10,4.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="M" Grid.Row="5" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
 
-        <Button Grid.Row="6" Grid.Column="0" Width="50"  Height="26" Margin="5,0,0,4.6" 
-                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" >löschen</Button>
-        <Button IsDefault="True" Grid.Row="6" Grid.Column="1"  Margin="96,5,-31,1" 
-                Click="BtnDialogOk_Click">_Ok</Button>
-        <Button Grid.Row="6" Grid.Column="1" Margin="10,5,10.8,0.4" 
-                Click="BtnDialogCancel_Click">_Abbrechen</Button>
+        <Button Grid.Row="6" Grid.Column="0" Width="50" Height="26" Margin="5,0,0,4.6"
+                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            löschen
+        </Button>
+        <Button IsDefault="True" Grid.Row="6" Grid.Column="1" Margin="96,5,-31,1"
+                Click="BtnDialogOk_Click">
+            _Ok
+        </Button>
+        <Button Grid.Row="6" Grid.Column="1" Margin="10,5,10.8,0.4"
+                Click="BtnDialogCancel_Click">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

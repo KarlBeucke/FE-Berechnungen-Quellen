@@ -1,15 +1,16 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class PunktlastNeu
 {
     private readonly FeModell _modell;
+
     public PunktlastNeu(FeModell modell)
     {
         InitializeComponent();
@@ -44,10 +45,12 @@ public partial class PunktlastNeu
             _modell.PunktLasten.TryGetValue(punktlastId, out var vorhandenePunktlast);
             if (vorhandenePunktlast != null)
             {
-                if (ElementId.Text.Length > 0) vorhandenePunktlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
+                if (ElementId.Text.Length > 0)
+                    vorhandenePunktlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
                 try
                 {
-                    if (ElementId.Text.Length > 0) vorhandenePunktlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
+                    if (ElementId.Text.Length > 0)
+                        vorhandenePunktlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
                     if (Px.Text.Length > 0) vorhandenePunktlast.Lastwerte[0] = double.Parse(Px.Text);
                     if (Py.Text.Length > 0) vorhandenePunktlast.Lastwerte[1] = double.Parse(Py.Text);
                     if (Offset.Text.Length > 0) vorhandenePunktlast.Offset = double.Parse(Offset.Text);
@@ -83,6 +86,7 @@ public partial class PunktlastNeu
             };
             _modell.PunktLasten.Add(punktlastId, punktLast);
         }
+
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
@@ -96,6 +100,7 @@ public partial class PunktlastNeu
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
     }
+
     private void PunktlastIdLostFocus(object sender, RoutedEventArgs e)
     {
         if (!_modell.PunktLasten.ContainsKey(LastId.Text))
@@ -117,6 +122,7 @@ public partial class PunktlastNeu
         Py.Text = vorhandenePunktlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
         Offset.Text = vorhandenePunktlast.Offset.ToString("G3", CultureInfo.CurrentCulture);
     }
+
     private void ElementIdLostFocus(object sender, RoutedEventArgs e)
     {
         _modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement);
@@ -127,6 +133,7 @@ public partial class PunktlastNeu
             ElementId.Text = "";
             return;
         }
+
         if (LastId.Text == "") LastId.Text = "LL_" + ElementId.Text;
     }
 

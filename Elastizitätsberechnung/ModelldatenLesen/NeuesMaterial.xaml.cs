@@ -1,15 +1,16 @@
-﻿using FEBibliothek.Modell;
-using System.Windows;
+﻿using System.Windows;
+using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 public partial class NeuesMaterial
 {
-    private readonly FeModell modell;
+    private readonly FeModell _modell;
 
     public NeuesMaterial(FeModell modell)
     {
-        this.modell = modell;
+        _modell = modell;
         InitializeComponent();
         MaterialId.Text = string.Empty;
         Elastizitätsmodul.Text = string.Empty;
@@ -22,14 +23,14 @@ public partial class NeuesMaterial
     {
         var materialId = MaterialId.Text;
         double elastizität = 0, poisson = 0, schub = 0;
-        if (Elastizitätsmodul.Text != string.Empty) { elastizität = double.Parse(Elastizitätsmodul.Text); }
-        if (Poisson.Text != string.Empty) { poisson = double.Parse(Poisson.Text); }
-        if (Schubmodul.Text != string.Empty) { schub = double.Parse(Schubmodul.Text); }
-        var material = new Modelldaten.Material(elastizität, poisson, schub)
+        if (Elastizitätsmodul.Text != string.Empty) elastizität = double.Parse(Elastizitätsmodul.Text);
+        if (Poisson.Text != string.Empty) poisson = double.Parse(Poisson.Text);
+        if (Schubmodul.Text != string.Empty) schub = double.Parse(Schubmodul.Text);
+        var material = new Material(elastizität, poisson, schub)
         {
             MaterialId = materialId
         };
-        modell.Material.Add(materialId, material);
+        _modell.Material.Add(materialId, material);
         Close();
     }
 

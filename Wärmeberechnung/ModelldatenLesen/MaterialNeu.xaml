@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-       Title="Neues Material" Height="280" Width="340">
+        Title="Neues Material" Height="280" Width="340">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180"/>
-            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="180" />
+            <ColumnDefinition Width="120" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
@@ -24,27 +24,32 @@
         </Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Material ID:</Label>
-        <TextBox Name="MaterialId" Grid.Row="1" Grid.Column="1" Margin="10,7.8,0,0" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="32" LostFocus="MaterialIdLostFocus"
-                 />
+        <TextBox Name="MaterialId" Grid.Row="1" Grid.Column="1" Margin="10,7.8,0,0" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="32" LostFocus="MaterialIdLostFocus" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">Leitfähigkeit x</Label>
-        <TextBox Name="LeitfähigkeitX" Grid.Row="2" Grid.Column="1" Margin="10,5.4,0,0" 
-                 HorizontalAlignment="Left" Width="45" Height="20"/>
+        <TextBox Name="LeitfähigkeitX" Grid.Row="2" Grid.Column="1" Margin="10,5.4,0,0"
+                 HorizontalAlignment="Left" Width="45" Height="20" />
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5.4,0,0">Leitfähigkeit y</Label>
-        <TextBox Name="LeitfähigkeitY" Grid.Row="3" Grid.Column="1" Margin="10,5.4,0,0" 
-                 HorizontalAlignment="Left" Width="45" Height="20"/>
+        <TextBox Name="LeitfähigkeitY" Grid.Row="3" Grid.Column="1" Margin="10,5.4,0,0"
+                 HorizontalAlignment="Left" Width="45" Height="20" />
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5.4,0,0.6">Leitfähigkeit z</Label>
-        <TextBox Name="LeitfähigkeitZ" Grid.Row="4" Grid.Column="1" Margin="10,5.4,0,0" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="45"/>
+        <TextBox Name="LeitfähigkeitZ" Grid.Row="4" Grid.Column="1" Margin="10,5.4,0,0" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="45" />
         <Label Grid.Row="5" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">Dichte*Leitfähigkeit</Label>
-        <TextBox Name="DichteLeitfähigkeit" Grid.Row="5" Grid.Column="1" Margin="10,5.4,0,0" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="45"/>
+        <TextBox Name="DichteLeitfähigkeit" Grid.Row="5" Grid.Column="1" Margin="10,5.4,0,0" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="45" />
 
-        <Button Grid.Row="6" Grid.Column="0" Width="50"  Height="26" Margin="5,0,0,4.6" 
-                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" >löschen</Button>
-        <Button IsDefault="True" Grid.Row="6" Width="35"  Height="26" Margin="12.2,0,0,4.2" 
-                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1">_Ok</Button>
-        <Button Grid.Row="6" Grid.Column="1" Height="26" Margin="55.2,0,-25.4,4.2" 
-                Click="BtnDialogCancel_Click" VerticalAlignment="Bottom">_Abbrechen</Button>
+        <Button Grid.Row="6" Grid.Column="0" Width="50" Height="26" Margin="5,0,0,4.6"
+                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            löschen
+        </Button>
+        <Button IsDefault="True" Grid.Row="6" Width="35" Height="26" Margin="12.2,0,0,4.2"
+                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1">
+            _Ok
+        </Button>
+        <Button Grid.Row="6" Grid.Column="1" Height="26" Margin="55.2,0,-25.4,4.2"
+                Click="BtnDialogCancel_Click" VerticalAlignment="Bottom">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

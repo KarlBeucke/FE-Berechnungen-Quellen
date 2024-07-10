@@ -17,11 +17,12 @@
             <RowDefinition Height="170.4" />
         </Grid.RowDefinitions>
 
-        <Grid x:Name="Parameter" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="40,20,0,0" Width="288" Height="155"
-            Grid.Row="0" Grid.ColumnSpan="2" Background="AliceBlue">
+        <Grid x:Name="Parameter" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="40,20,0,0" Width="288"
+              Height="155"
+              Grid.Row="0" Grid.ColumnSpan="2" Background="AliceBlue">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="58"/>
+                <ColumnDefinition Width="58" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -34,70 +35,78 @@
             </Grid.RowDefinitions>
 
             <TextBlock FontSize="12" FontWeight="Bold" Grid.ColumnSpan="2" Grid.Row="0" Margin="0,0,0,0">Anzahl Eigenlösungen und Integrationsparameter</TextBlock>
-            <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,0,0,0" >Anzahl Eigenlösungen =</TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,0,0,0">Anzahl Eigenlösungen =</TextBlock>
             <TextBlock Grid.Row="2" Grid.Column="0" Margin="0,0,0,0">Zeitintervall Delta T =</TextBlock>
             <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,0,0,0">Maximalzeit Tmax =</TextBlock>
             <TextBlock Grid.Row="4" Grid.Column="0" Margin="0,0,0,0">Integrations Methode =</TextBlock>
             <TextBlock Grid.Row="5" Grid.Column="0" Margin="0,0,0,0">Integrationsparameter =</TextBlock>
             <TextBlock Grid.Row="6" Grid.Column="0" Margin="0,0,0,0">Integrationsparameter =</TextBlock>
 
-            <TextBox Name ="Eigen" Grid.Column="1" Grid.Row="1" Text="{Binding Eigenzustand.AnzahlZustände}" Margin="0,0,0,0"/>
-            <TextBox Name ="ZeitintDt" Grid.Column="1" Grid.Row="2" Text="{Binding Zeitintegration.Dt}" Margin="0,0,0,0"/>
-            <TextBox Name ="ZeitintTmax" Grid.Column="1" Grid.Row="3" Text="{Binding Zeitintegration.Tmax}" Margin="0,0,0,0"/>
-            <TextBox Name ="ZeitintMethode" Grid.Column="1" Grid.Row="4" Text="{Binding Zeitintegration.Methode}" Margin="0,0,0,0"/>
-            <TextBox Name ="ZeitintParameter1" Grid.Column="1" Grid.Row="5" Text="{Binding Zeitintegration.Parameter1}" Margin="0,0,0,0"/>
-            <TextBox Name ="ZeitintParameter2" Grid.Column="1" Grid.Row="6" Text="{Binding Zeitintegration.Parameter2}" Margin="0,0,0,0"/>
+            <TextBox Name="Eigen" Grid.Column="1" Grid.Row="1" Text="{Binding Eigenzustand.AnzahlZustände}"
+                     Margin="0,0,0,0" />
+            <TextBox Name="ZeitintDt" Grid.Column="1" Grid.Row="2" Text="{Binding Zeitintegration.Dt}" Margin="0,0,0,0" />
+            <TextBox Name="ZeitintTmax" Grid.Column="1" Grid.Row="3" Text="{Binding Zeitintegration.Tmax}"
+                     Margin="0,0,0,0" />
+            <TextBox Name="ZeitintMethode" Grid.Column="1" Grid.Row="4" Text="{Binding Zeitintegration.Methode}"
+                     Margin="0,0,0,0" />
+            <TextBox Name="ZeitintParameter1" Grid.Column="1" Grid.Row="5" Text="{Binding Zeitintegration.Parameter1}"
+                     Margin="0,0,0,0" />
+            <TextBox Name="ZeitintParameter2" Grid.Column="1" Grid.Row="6" Text="{Binding Zeitintegration.Parameter2}"
+                     Margin="0,0,0,0" />
         </Grid>
 
-        <Label x:Name="Anfangsbedingungen" Content="Knotenanfangswerte" FontWeight="Bold" HorizontalAlignment="Left" Grid.Column="0" Width="191" 
-               Margin="10,1,0,0" Height="30" VerticalAlignment="Top" Grid.Row="1"/>
+        <Label x:Name="Anfangsbedingungen" Content="Knotenanfangswerte" FontWeight="Bold" HorizontalAlignment="Left"
+               Grid.Column="0" Width="191"
+               Margin="10,1,0,0" Height="30" VerticalAlignment="Top" Grid.Row="1" />
         <DataGrid
-        Name="AnfangsbedingungenGrid" Margin="10,25,1,1" AlternatingRowBackground="Aqua"
+            Name="AnfangsbedingungenGrid" Margin="10,25,1,1" AlternatingRowBackground="Aqua"
             Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" AutoGenerateColumns="False"
-            MouseDoubleClick="NeueKnotenanfangswerte" CellEditEnding="Model_Changed" 
+            MouseDoubleClick="NeueKnotenanfangswerte" CellEditEnding="Model_Changed"
             SelectionChanged="AnfangswerteZeileSelected" UnloadingRow="AnfangswerteZeileLoeschen">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
-                <DataGridTextColumn Header="1 d0" Binding="{Binding Werte[0]}"/>
-                <DataGridTextColumn Header="1 v0" Binding="{Binding Werte[1]}"/>
-                <DataGridTextColumn Header="2 d0" Binding="{Binding Werte[2]}"/>
-                <DataGridTextColumn Header="2 v0" Binding="{Binding Werte[3]}"/>
-                <DataGridTextColumn Header="3 d0" Binding="{Binding Werte[4]}"/>
-                <DataGridTextColumn Header="3 v0" Binding="{Binding Werte[5]}"/>
+                <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
+                <DataGridTextColumn Header="1 d0" Binding="{Binding Werte[0]}" />
+                <DataGridTextColumn Header="1 v0" Binding="{Binding Werte[1]}" />
+                <DataGridTextColumn Header="2 d0" Binding="{Binding Werte[2]}" />
+                <DataGridTextColumn Header="2 v0" Binding="{Binding Werte[3]}" />
+                <DataGridTextColumn Header="3 d0" Binding="{Binding Werte[4]}" />
+                <DataGridTextColumn Header="3 v0" Binding="{Binding Werte[5]}" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <Label x:Name="Knotenlasten" Grid.Row="1" Grid.Column="1" Content="zeitabhängige Knotenlasten" FontWeight="Bold" 
-               Margin="10,1,77.6,0" Height="30" VerticalAlignment="Top"/>
+        <Label x:Name="Knotenlasten" Grid.Row="1" Grid.Column="1" Content="zeitabhängige Knotenlasten"
+               FontWeight="Bold"
+               Margin="10,1,77.6,0" Height="30" VerticalAlignment="Top" />
 
-        <Label x:Name="Boden" Grid.Row="1" Grid.Column="1" Margin="188,1,0,0" 
-               HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="30"/>
-        <Label Grid.Row="1" Grid.Column="1" Content="aus Datei" Margin="7,21,0,0" 
-               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30"/>
+        <Label x:Name="Boden" Grid.Row="1" Grid.Column="1" Margin="188,1,0,0"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="30" />
+        <Label Grid.Row="1" Grid.Column="1" Content="aus Datei" Margin="7,21,0,0"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30" />
         <Grid Margin="2,28,1,1" Grid.Row="1" Grid.Column="1">
             <DataGrid Grid.Column="0"
                       Name="DateiGrid" Margin="5,17,-1.6,-64" AlternatingRowBackground="Aqua"
-                      AutoGenerateColumns="False" HorizontalAlignment="Left" Width="321" Height="93" VerticalAlignment="Top"
+                      AutoGenerateColumns="False" HorizontalAlignment="Left" Width="321" Height="93"
+                      VerticalAlignment="Top"
                       MouseDoubleClick="NeueKnotenlast" CellEditEnding="Model_Changed"
                       SelectionChanged="KnotenDateiSelectionChanged" UnloadingRow="KnotenDateiZeileLoeschen">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" Binding="{Binding LastId}"/>
-                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
-                    <DataGridTextColumn Header="DoF" Binding="{Binding KnotenFreiheitsgrad}"/>
+                    <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
+                    <DataGridTextColumn Header="DoF" Binding="{Binding KnotenFreiheitsgrad}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
 
-        <Label Grid.Row="1" Grid.Column="1" Content="harmonisch" Margin="1,134,0,0" 
-               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30"/>
-        <Grid Margin="4,160,0.6,0" Grid.Row="1" Grid.Column="1" Height="104" 
+        <Label Grid.Row="1" Grid.Column="1" Content="harmonisch" Margin="1,134,0,0"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30" />
+        <Grid Margin="4,160,0.6,0" Grid.Row="1" Grid.Column="1" Height="104"
               VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="50*"/>
-                <ColumnDefinition Width="50*"/>
-                <ColumnDefinition Width="60*"/>
-                <ColumnDefinition Width="60*"/>
+                <ColumnDefinition Width="20*" />
+                <ColumnDefinition Width="50*" />
+                <ColumnDefinition Width="50*" />
+                <ColumnDefinition Width="60*" />
+                <ColumnDefinition Width="60*" />
             </Grid.ColumnDefinitions>
             <DataGrid
                 Name="HarmonischGrid" Margin="1,1,1,1" AlternatingRowBackground="Aqua"
@@ -105,31 +114,31 @@
                 MouseDoubleClick="NeueKnotenlast" CellEditEnding="Model_Changed"
                 SelectionChanged="KnotenHarmonischSelectionChanged" UnloadingRow="KnotenHarmonischZeileLoeschen">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" Binding="{Binding LastId}"/>
-                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
-                    <DataGridTextColumn Header="DoF" Binding="{Binding KnotenFreiheitsgrad}"/>
-                    <DataGridTextColumn Header="Amplitude" Binding="{Binding Amplitude}"/>
-                    <DataGridTextColumn Header="Frequenz" Binding="{Binding Frequenz, StringFormat=N4}"/>
-                    <DataGridTextColumn Header="Phase" Binding="{Binding PhasenWinkel, StringFormat=N4}"/>
+                    <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
+                    <DataGridTextColumn Header="DoF" Binding="{Binding KnotenFreiheitsgrad}" />
+                    <DataGridTextColumn Header="Amplitude" Binding="{Binding Amplitude}" />
+                    <DataGridTextColumn Header="Frequenz" Binding="{Binding Frequenz, StringFormat=N4}" />
+                    <DataGridTextColumn Header="Phase" Binding="{Binding PhasenWinkel, StringFormat=N4}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
 
-        <Label Grid.Column="1" Content="stückweise linear" Margin="5,0.4,0,0" 
-               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="24" Grid.Row="2"/>
-        <Label Grid.Column="1" Content="Wertepaare (t=Zeit,T=Temperatur)" Margin="5,14.4,0,0" 
-               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30" Grid.Row="2"/>
+        <Label Grid.Column="1" Content="stückweise linear" Margin="5,0.4,0,0"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="24" Grid.Row="2" />
+        <Label Grid.Column="1" Content="Wertepaare (t=Zeit,T=Temperatur)" Margin="5,14.4,0,0"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30" Grid.Row="2" />
         <Grid Margin="3,40,1,1" Grid.Row="2" Grid.Column="1">
             <DataGrid
                 Name="LinearGrid" AlternatingRowBackground="Aqua"
-                AutoGenerateColumns="False" Height="127" VerticalAlignment="Top" 
+                AutoGenerateColumns="False" Height="127" VerticalAlignment="Top"
                 Margin="1,0,1,0"
                 MouseDoubleClick="NeueKnotenlast" CellEditEnding="Model_Changed"
                 SelectionChanged="KnotenLinearSelectionChanged" UnloadingRow="KnotenLinearZeileLoeschen">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" Binding="{Binding LastId}"/>
-                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}"/>
-                    <DataGridTextColumn Header="DoF" Binding="{Binding KnotenFreiheitsgrad}"/>
+                    <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
+                    <DataGridTextColumn Header="DoF" Binding="{Binding KnotenFreiheitsgrad}" />
                     <DataGridTextColumn Header="t" Binding="{Binding Intervall[0]}" />
                     <DataGridTextColumn Header="T" Binding="{Binding Intervall[1]}" />
                     <DataGridTextColumn Header="t" Binding="{Binding Intervall[2]}" />
@@ -147,17 +156,17 @@
         </Grid>
 
 
-        <Label x:Name="Dämpfung" Content="modale Dämpfungsraten" FontWeight="Bold" Grid.Column="2" 
-               Margin="10.6,1,0,0" Height="30" VerticalAlignment="Top" Grid.Row="1"/>
+        <Label x:Name="Dämpfung" Content="modale Dämpfungsraten" FontWeight="Bold" Grid.Column="2"
+               Margin="10.6,1,0,0" Height="30" VerticalAlignment="Top" Grid.Row="1" />
         <DataGrid
-        Name="DämpfungGrid" Margin="5,27,1,88" AlternatingRowBackground="Aqua"
+            Name="DämpfungGrid" Margin="5,27,1,88" AlternatingRowBackground="Aqua"
             Grid.Row="1" Grid.Column="2" AutoGenerateColumns="False"
             MouseDoubleClick="NeueDämpfungsraten" CellEditEnding="Model_Changed"
             SelectionChanged="DämpfungZeileSelected" UnloadingRow="DämpfungZeileLoeschen">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Dämpfungsmaße" Binding="{Binding Dämpfung}"/>
-                <DataGridTextColumn Binding="{Binding Text}"/>
-                </DataGrid.Columns>
+                <DataGridTextColumn Header="Dämpfungsmaße" Binding="{Binding Dämpfung}" />
+                <DataGridTextColumn Binding="{Binding Text}" />
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </Window>

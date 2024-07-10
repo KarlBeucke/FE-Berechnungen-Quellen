@@ -1,14 +1,14 @@
-﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class ElementNeu
 {
-    private readonly FeModell modell;
     private readonly ElementKeys elementKeys;
+    private readonly FeModell modell;
 
     public ElementNeu(FeModell modell)
     {
@@ -30,10 +30,7 @@ public partial class ElementNeu
         // vorhandenes Element wird komplett entfernt, da Elementdefinition
         // (Element2D2, Element2D3, Element2D4, Element3D8) geändert werden kann
         // neues Element wird angelegt und unter vorhandenem Key gespeichert
-        if (modell.Elemente.ContainsKey(ElementId.Text))
-        {
-            modell.Elemente.Remove(ElementId.Text);
-        }
+        if (modell.Elemente.ContainsKey(ElementId.Text)) modell.Elemente.Remove(ElementId.Text);
 
         string[] knotenIds;
         if (Element2D2Check.IsChecked != null && (bool)Element2D2Check.IsChecked)
@@ -86,6 +83,7 @@ public partial class ElementNeu
             var element = new Element3D8(ElementId.Text, knotenIds, MaterialId.Text, modell);
             modell.Elemente.Add(ElementId.Text, element);
         }
+
         Close();
         StartFenster.TragwerkVisual.Close();
         elementKeys?.Close();
@@ -124,7 +122,8 @@ public partial class ElementNeu
 
         // vorhandene element definitionen
         modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement);
-        Debug.Assert(vorhandenesElement != null, nameof(vorhandenesElement) + " != null"); ElementId.Text = "";
+        Debug.Assert(vorhandenesElement != null, nameof(vorhandenesElement) + " != null");
+        ElementId.Text = "";
 
         ElementId.Text = vorhandenesElement.ElementId;
         Knoten1Id.Text = vorhandenesElement.KnotenIds[0];
@@ -132,25 +131,33 @@ public partial class ElementNeu
         {
             case Element2D2:
                 Element2D2Check.IsChecked = true;
-                Element2D3Check.IsChecked = false; Element2D4Check.IsChecked = false; Element3D8Check.IsChecked = false;
+                Element2D3Check.IsChecked = false;
+                Element2D4Check.IsChecked = false;
+                Element3D8Check.IsChecked = false;
                 Knoten2Id.Text = vorhandenesElement.KnotenIds[1];
                 break;
             case Element2D3:
                 Element2D3Check.IsChecked = true;
-                Element2D2Check.IsChecked = false; Element2D4Check.IsChecked = false; Element3D8Check.IsChecked = false;
+                Element2D2Check.IsChecked = false;
+                Element2D4Check.IsChecked = false;
+                Element3D8Check.IsChecked = false;
                 Knoten2Id.Text = vorhandenesElement.KnotenIds[1];
                 Knoten3Id.Text = vorhandenesElement.KnotenIds[2];
                 break;
             case Element2D4:
                 Element2D4Check.IsChecked = true;
-                Element2D2Check.IsChecked = false; Element2D3Check.IsChecked = false; Element3D8Check.IsChecked = false;
+                Element2D2Check.IsChecked = false;
+                Element2D3Check.IsChecked = false;
+                Element3D8Check.IsChecked = false;
                 Knoten2Id.Text = vorhandenesElement.KnotenIds[1];
                 Knoten3Id.Text = vorhandenesElement.KnotenIds[2];
                 Knoten4Id.Text = vorhandenesElement.KnotenIds[3];
                 break;
             case Element3D8:
                 Element3D8Check.IsChecked = true;
-                Element2D2Check.IsChecked = false; Element2D3Check.IsChecked = false; Element2D4Check.IsChecked = false;
+                Element2D2Check.IsChecked = false;
+                Element2D3Check.IsChecked = false;
+                Element2D4Check.IsChecked = false;
                 Knoten2Id.Text = vorhandenesElement.KnotenIds[1];
                 Knoten3Id.Text = vorhandenesElement.KnotenIds[2];
                 Knoten4Id.Text = vorhandenesElement.KnotenIds[3];
@@ -160,6 +167,7 @@ public partial class ElementNeu
                 Knoten8Id.Text = vorhandenesElement.KnotenIds[7];
                 break;
         }
+
         MaterialId.Text = vorhandenesElement.ElementMaterialId;
     }
 }

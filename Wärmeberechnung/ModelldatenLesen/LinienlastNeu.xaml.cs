@@ -1,17 +1,17 @@
-﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class LinienlastNeu
 {
+    private readonly WärmelastenKeys lastenKeys;
     private readonly FeModell modell;
     private AbstraktLinienlast vorhandeneLast;
-    private readonly WärmelastenKeys lastenKeys;
 
     public LinienlastNeu(FeModell modell)
     {
@@ -37,9 +37,11 @@ public partial class LinienlastNeu
             modell.LinienLasten.TryGetValue(linienlastId, out vorhandeneLast);
             Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null");
 
-            if (StartknotenId.Text.Length > 0) vorhandeneLast.StartKnotenId = StartknotenId.Text.ToString(CultureInfo.CurrentCulture);
+            if (StartknotenId.Text.Length > 0)
+                vorhandeneLast.StartKnotenId = StartknotenId.Text.ToString(CultureInfo.CurrentCulture);
             if (Start.Text.Length > 0) vorhandeneLast.Lastwerte[0] = double.Parse(Start.Text);
-            if (EndknotenId.Text.Length > 0) vorhandeneLast.EndKnotenId = EndknotenId.Text.ToString(CultureInfo.CurrentCulture);
+            if (EndknotenId.Text.Length > 0)
+                vorhandeneLast.EndKnotenId = EndknotenId.Text.ToString(CultureInfo.CurrentCulture);
             if (End.Text.Length > 0) vorhandeneLast.Lastwerte[1] = double.Parse(End.Text);
         }
         // neue Linienlast
@@ -58,6 +60,7 @@ public partial class LinienlastNeu
             };
             modell.LinienLasten.Add(linienlastId, linienlast);
         }
+
         lastenKeys?.Close();
         Close();
         StartFenster.WärmeVisual.Close();

@@ -6,12 +6,16 @@
         mc:Ignorable="d"
         Title="Löschen von Objekten im Wärmemodell" Height="100" Width="220">
     <Grid>
-        <TextBlock Margin="5,5,0,0"> 
-            Click auf Objekt des Wärmemodells,<LineBreak/> welches gelöscht werden soll
+        <TextBlock Margin="5,5,0,0">
+            Click auf Objekt des Wärmemodells,<LineBreak /> welches gelöscht werden soll
         </TextBlock>
-        <Button IsDefault="True" Name="BtnDialogOk" Width="25"  Margin="0,0,2,1" 
-                Click="BtnDialogOk_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="19">_Ok</Button>
-        <Button Name="BtnDialogCancel" Width="70" Margin="0,0,33,1" 
-                Click="BtnDialogCancel_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom">_Abbrechen</Button>
+        <Button IsDefault="True" Name="BtnDialogOk" Width="25" Margin="0,0,2,1"
+                Click="BtnDialogOk_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="19">
+            _Ok
+        </Button>
+        <Button Name="BtnDialogCancel" Width="70" Margin="0,0,33,1"
+                Click="BtnDialogCancel_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

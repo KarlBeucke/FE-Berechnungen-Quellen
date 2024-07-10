@@ -1,17 +1,16 @@
-﻿using FEBibliothek.Modell;
-using System.Linq;
+﻿using System.Linq;
+using FEBibliothek.Modell;
 
-namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
+namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
+
+public partial class QuerschnittKeys
 {
-    public partial class QuerschnittKeys
+    public QuerschnittKeys(FeModell modell)
     {
-        public QuerschnittKeys(FeModell modell)
-        {
-            InitializeComponent();
-            this.Left = 2 * this.Width;
-            this.Top = this.Height;
-            var querschnitt = modell.Querschnitt.Select(item => item.Value).ToList();
-            QuerschnittKey.ItemsSource = querschnitt;
-        }
+        InitializeComponent();
+        Left = 2 * Width;
+        Top = Height;
+        var querschnitt = modell.Querschnitt.Select(item => item.Value).ToList();
+        QuerschnittKey.ItemsSource = querschnitt;
     }
 }

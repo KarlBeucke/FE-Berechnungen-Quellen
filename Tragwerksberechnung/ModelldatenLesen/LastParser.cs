@@ -1,24 +1,24 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using System.Collections.Generic;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Collections.Generic;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 internal class LastParser
 {
-    private FeModell modell;
-    private string[] substrings;
     private readonly char[] delimiters = { '\t' };
+    private string elementId;
+    private bool inElementCoordinateSystem;
+    private KnotenLast knotenLast;
 
     private string loadId;
-    private string elementId;
+    private FeModell modell;
     private string nodeId;
-    private double[] p;
-    private KnotenLast knotenLast;
-    private PunktLast punktLast;
     private double offset;
-    private bool inElementCoordinateSystem;
+    private double[] p;
+    private PunktLast punktLast;
+    private string[] substrings;
 
     public void ParseLasten(string[] lines, FeModell feModel)
     {
@@ -61,16 +61,19 @@ internal class LastParser
                         };
                         break;
                     default:
-                        {
-                            throw new ParseAusnahme((i + 2) + ":\nFachwerk, falsche Anzahl Parameter");
-                        }
+                    {
+                        throw new ParseAusnahme(i + 2 + ":\nFachwerk, falsche Anzahl Parameter");
+                    }
                 }
+
                 modell.Lasten.Add(loadId, knotenLast);
                 i++;
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }
+
     private void ParsePunktLast(IReadOnlyList<string> lines)
     {
         for (var i = 0; i < lines.Count; i++)
@@ -100,12 +103,14 @@ internal class LastParser
                         i++;
                         break;
                     default:
-                        throw new ParseAusnahme((i + 2) + ":\nPunktlast");
+                        throw new ParseAusnahme(i + 2 + ":\nPunktlast");
                 }
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }
+
     private void ParseLinienLast(IReadOnlyList<string> lines)
     {
         for (var i = 0; i < lines.Count; i++)
@@ -130,7 +135,8 @@ internal class LastParser
                         p[1] = double.Parse(substrings[3]);
                         p[2] = double.Parse(substrings[4]);
                         p[3] = double.Parse(substrings[5]);
-                        linienLast = new LinienLast(elementId, p[0], p[1], p[2], p[3]); // inElementCoordinateSystem = true
+                        linienLast =
+                            new LinienLast(elementId, p[0], p[1], p[2], p[3]); // inElementCoordinateSystem = true
                         linienLast.LastId = loadId;
                         modell.ElementLasten.Add(loadId, linienLast);
                         i++;
@@ -143,15 +149,18 @@ internal class LastParser
                         p[2] = double.Parse(substrings[4]);
                         p[3] = double.Parse(substrings[5]);
                         inElementCoordinateSystem = bool.Parse(substrings[6]);
-                        linienLast = new LinienLast(elementId, p[0], p[1], p[2], p[3], inElementCoordinateSystem); //inElementCoordinateSystem = input
+                        linienLast =
+                            new LinienLast(elementId, p[0], p[1], p[2], p[3],
+                                inElementCoordinateSystem); //inElementCoordinateSystem = input
                         linienLast.LastId = loadId;
                         modell.ElementLasten.Add(loadId, linienLast);
                         i++;
                         break;
                     default:
-                        throw new ParseAusnahme((i + 2) + ":\nLinienlast, falsche Anzahl Parameter");
+                        throw new ParseAusnahme(i + 2 + ":\nLinienlast, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }

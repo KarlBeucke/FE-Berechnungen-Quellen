@@ -1,6 +1,4 @@
-﻿using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -9,16 +7,18 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
 
 public partial class StatikErgebnisseVisualisieren
 {
-    private readonly FeModell _modell;
     private readonly Darstellung _darstellung;
-    private bool _elementTexteAn = true, _knotenTexteAn = true, _verformungenAn, _spannungenAn, _reaktionenAn;
     private readonly List<object> _hitList = [];
     private readonly List<TextBlock> _hitTextBlock = new();
+    private readonly FeModell _modell;
+    private bool _elementTexteAn = true, _knotenTexteAn = true, _verformungenAn, _spannungenAn, _reaktionenAn;
     private EllipseGeometry _hitArea;
 
     public StatikErgebnisseVisualisieren(FeModell feModell)
@@ -54,9 +54,11 @@ public partial class StatikErgebnisseVisualisieren
                 var path = (Shape)_darstellung.Verformungen[i];
                 VisualErgebnisse.Children.Remove(path);
             }
+
             _verformungenAn = false;
         }
     }
+
     private void BtnSpannungen_Click(object sender, RoutedEventArgs e)
     {
         if (!_spannungenAn)
@@ -73,9 +75,11 @@ public partial class StatikErgebnisseVisualisieren
                 var path = (Shape)_darstellung.Spannungen[i];
                 VisualErgebnisse.Children.Remove(path);
             }
+
             _spannungenAn = false;
         }
     }
+
     private void Reaktionen_Click(object sender, RoutedEventArgs e)
     {
         if (!_reaktionenAn)
@@ -92,6 +96,7 @@ public partial class StatikErgebnisseVisualisieren
                 var path = (Shape)_darstellung.Reaktionen[i];
                 VisualErgebnisse.Children.Remove(path);
             }
+
             _reaktionenAn = false;
         }
     }
@@ -109,6 +114,7 @@ public partial class StatikErgebnisseVisualisieren
             _elementTexteAn = false;
         }
     }
+
     private void BtnKnotenIDs_Click(object sender, RoutedEventArgs e)
     {
         if (!_knotenTexteAn)
@@ -118,10 +124,7 @@ public partial class StatikErgebnisseVisualisieren
         }
         else
         {
-            foreach (var id in _darstellung.KnotenIDs.Cast<TextBlock>())
-            {
-                VisualErgebnisse.Children.Remove(id);
-            }
+            foreach (var id in _darstellung.KnotenIDs.Cast<TextBlock>()) VisualErgebnisse.Children.Remove(id);
             _knotenTexteAn = false;
         }
     }
@@ -129,14 +132,12 @@ public partial class StatikErgebnisseVisualisieren
     private void BtnÜberhöhung_Click(object sender, RoutedEventArgs e)
     {
         _darstellung.ÜberhöhungVerformung = double.Parse(Überhöhung.Text);
-        foreach (var path in _darstellung.Verformungen.Cast<Shape>())
-        {
-            VisualErgebnisse.Children.Remove(path);
-        }
+        foreach (var path in _darstellung.Verformungen.Cast<Shape>()) VisualErgebnisse.Children.Remove(path);
         _verformungenAn = false;
         _darstellung.VerformteGeometrie();
         _verformungenAn = true;
     }
+
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         _hitList.Clear();
@@ -156,20 +157,21 @@ public partial class StatikErgebnisseVisualisieren
             switch (item)
             {
                 case Polygon polygon:
+                {
+                    sb.Clear();
+                    if (_modell.Elemente.TryGetValue(polygon.Name, out var multiKnotenElement))
                     {
-                        sb.Clear();
-                        if (_modell.Elemente.TryGetValue(polygon.Name, out AbstraktElement multiKnotenElement))
-                        {
-                            var element2D = (Abstrakt2D)multiKnotenElement;
-                            var elementSpannungen = element2D.BerechneZustandsvektor();
-                            sb.Append("Element = " + element2D.ElementId);
-                            sb.Append("\nElementmitte sig-xx\t= " + elementSpannungen[0].ToString("F2"));
-                            sb.Append("\nElementmitte sig-yy\t= " + elementSpannungen[1].ToString("F2"));
-                            sb.Append("\nElementmitte sig-xy\t= " + elementSpannungen[2].ToString("F2"));
-                        }
-                        MyPopupText.Text = sb.ToString();
-                        break;
+                        var element2D = (Abstrakt2D)multiKnotenElement;
+                        var elementSpannungen = element2D.BerechneZustandsvektor();
+                        sb.Append("Element = " + element2D.ElementId);
+                        sb.Append("\nElementmitte sig-xx\t= " + elementSpannungen[0].ToString("F2"));
+                        sb.Append("\nElementmitte sig-yy\t= " + elementSpannungen[1].ToString("F2"));
+                        sb.Append("\nElementmitte sig-xy\t= " + elementSpannungen[2].ToString("F2"));
                     }
+
+                    MyPopupText.Text = sb.ToString();
+                    break;
+                }
             }
         }
 
@@ -198,6 +200,7 @@ public partial class StatikErgebnisseVisualisieren
                 sb.Append("\nElementmitte sig-yy\t= " + elementSpannungen[1].ToString("F2"));
                 sb.Append("\nElementmitte sig-xy\t= " + elementSpannungen[2].ToString("F2"));
             }
+
             MyPopupText.Text = sb.ToString();
             break;
         }
@@ -227,6 +230,7 @@ public partial class StatikErgebnisseVisualisieren
                 return HitTestResultBehavior.Stop;
         }
     }
+
     private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         MyPopup.IsOpen = false;

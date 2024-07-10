@@ -7,10 +7,10 @@
         Title="Neue Linienlast" Height="320" Width="370">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="140"/>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="140" />
+            <ColumnDefinition Width="50" />
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
@@ -26,35 +26,44 @@
         </Label>
         <Label Grid.Row="1" Grid.Column="0" Margin="0,3,0,2">Last ID:</Label>
         <Label Grid.Row="1" Grid.Column="0" Margin="0,15,0,34" FontSize="8" Grid.RowSpan="2">(generiert aus "L_L_" und Element ID)</Label>
-        <TextBox Name="LastId" Grid.Row="1" Grid.Column="1" Margin="10,10,0,0" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" LostFocus="LastIdLostFocus" Grid.ColumnSpan="2"/>
+        <TextBox Name="LastId" Grid.Row="1" Grid.Column="1" Margin="10,10,0,0" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" LostFocus="LastIdLostFocus"
+                 Grid.ColumnSpan="2" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,4,0,1">Element ID:</Label>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,17,0,34" FontSize="8" Grid.RowSpan="2">(click vorhandene Element ID)</Label>
-        <TextBox Name="ElementId" Grid.Row="2" Grid.Column="1" Margin="10,9.6,10,5.6" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" LostFocus="ElementIdLostFocus"/>
+        <TextBox Name="ElementId" Grid.Row="2" Grid.Column="1" Margin="10,9.6,10,5.6" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" LostFocus="ElementIdLostFocus" />
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5.4,0.2,35" Grid.RowSpan="2">Lastwert pxa</Label>
-        <TextBox Name="Pxa" Grid.Row="3" Grid.Column="1" Margin="10,10,10,4.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="Pxa" Grid.Row="3" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
         <Label Grid.Row="3" Grid.Column="2" Margin="4,5.4,1.4,35" Grid.RowSpan="2">Lastwert pya</Label>
-        <TextBox Name="Pya" Grid.Row="3" Grid.Column="3" Margin="11.6,10.4,10,4.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="Pya" Grid.Row="3" Grid.Column="3" Margin="11.6,10.4,10,4.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5.2,0.2,0">Lastwert pxb</Label>
-        <TextBox Name="Pxb" Grid.Row="4" Grid.Column="1" Margin="10,10,10,5" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="Pxb" Grid.Row="4" Grid.Column="1" Margin="10,10,10,5" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
         <Label Grid.Row="4" Grid.Column="2" Margin="4,5.2,1.4,0">Lastwert pyb</Label>
-        <TextBox Name="Pyb" Grid.Row="4" Grid.Column="3" Margin="12,10.2,0,5" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="Pyb" Grid.Row="4" Grid.Column="3" Margin="12,10.2,0,5" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
         <CheckBox Name="InElement" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-                  Margin="13,9,4,7">Elementkoordinaten</CheckBox>
+                  Margin="13,9,4,7">
+            Elementkoordinaten
+        </CheckBox>
         <!--<Label Grid.Row="5" Grid.Column="0" Margin="0,5,0.2,0.2">in Element Koord.</Label>-->
         <!--<TextBox Name="InElement" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="11.2,10,0,5.2" Height="20" 
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>-->
 
-        <Button Grid.Row="6" Grid.Column="0" Width="50"  Height="26" Margin="5,0,0,4.6" 
-                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" >löschen</Button>
-        <Button IsDefault="True" Grid.Row="6" Grid.Column="3"  Margin="10,10,55,0" 
-                Click="BtnDialogOk_Click">_Ok</Button>
-        <Button Grid.Row="6" Grid.Column="2" Margin="10,9.8,0,0.4" 
-                Click="BtnDialogCancel_Click">_Abbrechen</Button>
+        <Button Grid.Row="6" Grid.Column="0" Width="50" Height="26" Margin="5,0,0,4.6"
+                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            löschen
+        </Button>
+        <Button IsDefault="True" Grid.Row="6" Grid.Column="3" Margin="10,10,55,0"
+                Click="BtnDialogOk_Click">
+            _Ok
+        </Button>
+        <Button Grid.Row="6" Grid.Column="2" Margin="10,9.8,0,0.4"
+                Click="BtnDialogCancel_Click">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

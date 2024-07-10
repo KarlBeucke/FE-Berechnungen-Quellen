@@ -23,97 +23,122 @@
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
 
-        <RichTextBox Grid.Row="0" Grid.Column="0" Margin="0,10,0,4" BorderThickness="0,0,0,0" >
+        <RichTextBox Grid.Row="0" Grid.Column="0" Margin="0,10,0,4" BorderThickness="0,0,0,0">
             <FlowDocument>
-                <Paragraph FontFamily="Segoe">Maximale Zeit für Integration t
+                <Paragraph FontFamily="Segoe">
+                    Maximale Zeit für Integration t
                     <Run BaselineAlignment="Subscript" FontSize="8">max</Run>
                     [s]
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <TextBox Name="MaximalZeit" Grid.Row="0" Grid.Column="1" Margin="15,0,4,0" Height="20" VerticalAlignment="Center"/>
+        <TextBox Name="MaximalZeit" Grid.Row="0" Grid.Column="1" Margin="15,0,4,0" Height="20"
+                 VerticalAlignment="Center" />
 
         <Label Grid.Row="1" Grid.Column="0" Padding="0,0,0,0" Margin="6,6,2,7">
-            Anzahl Eigenlösungen in Zeitintegration</Label>
-        <TextBox Name="Eigenlösung" Grid.Row="1" Grid.Column="1" Margin="15,0,4,0" Height="20" VerticalAlignment="Center"/>
+            Anzahl Eigenlösungen in Zeitintegration
+        </Label>
+        <TextBox Name="Eigenlösung" Grid.Row="1" Grid.Column="1" Margin="15,0,4,0" Height="20"
+                 VerticalAlignment="Center" />
 
-        <RichTextBox Grid.Row="2" Grid.Column="0" Margin="0,3,0,26" 
+        <RichTextBox Grid.Row="2" Grid.Column="0" Margin="0,3,0,26"
                      BorderThickness="0,0,0,0" HorizontalAlignment="Center" Width="208">
             <FlowDocument>
-                <Paragraph FontSize="13">modale Dämpfungsmaße &#958;
+                <Paragraph FontSize="13">
+                    modale Dämpfungsmaße &#958;
                     <Run BaselineAlignment="Subscript" FontSize="6">i</Run>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <Label Grid.Row="2" Grid.Column="0" Padding="0,0,0,0" Margin="19,27,120,6" 
-               FontSize="10" Content="Eigenform = "/>
-        <TextBox Name="Eigenform" Grid.Row="2" Grid.Column="0" Margin="80,24,72,6" 
-                 KeyDown="EigenformKeyDown" GotFocus="EigenformGotFocus"/>
-        <TextBox Name="Dämpfungsraten" Grid.Row="2" Grid.Column="1" Margin="16,8,6,22" 
-                 MouseDoubleClick="DämpfungsratenNext"/>
+        <Label Grid.Row="2" Grid.Column="0" Padding="0,0,0,0" Margin="19,27,120,6"
+               FontSize="10" Content="Eigenform = " />
+        <TextBox Name="Eigenform" Grid.Row="2" Grid.Column="0" Margin="80,24,72,6"
+                 KeyDown="EigenformKeyDown" GotFocus="EigenformGotFocus" />
+        <TextBox Name="Dämpfungsraten" Grid.Row="2" Grid.Column="1" Margin="16,8,6,22"
+                 MouseDoubleClick="DämpfungsratenNext" />
         <TextBox Grid.Row="2" FontSize="6" Padding="0,0,0,0"
                  BorderThickness="0,0,0,0"
-                 Text = "Doppelklick für Traversieren" Margin="0,30,0,3" Grid.Column="1" HorizontalAlignment="Center" Width="76"/>
+                 Text="Doppelklick für Traversieren" Margin="0,30,0,3" Grid.Column="1" HorizontalAlignment="Center"
+                 Width="76" />
         <TextBox Grid.Row="2" FontSize="6" Padding="0,0,0,0" BorderThickness="0,0,0,0"
-                 Text = "aller Dämpfungsraten" Margin="8,38,0,2" Grid.Column="1" HorizontalAlignment="Left" Width="64"/>
+                 Text="aller Dämpfungsraten" Margin="8,38,0,2" Grid.Column="1" HorizontalAlignment="Left" Width="64" />
 
-        <Separator Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,49,0,1"/>
+        <Separator Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,49,0,1" />
 
         <Label Grid.Row="3" Grid.Column="0" Padding="0,0,0,0" Margin="13,1,7,0" Height="18" VerticalAlignment="Top">
-            Methode für Zeitintegration</Label>
+            Methode für Zeitintegration
+        </Label>
         <CheckBox x:Name="Newmark" Grid.Row="3" Grid.Column="0" Margin="12,23,7,17"
-                  Checked="Newmark_OnChecked">Newmark, Parameter β und γ</CheckBox>
-        <Label Grid.Row="3" Grid.Column="0" Margin="30,40,6,7" FontSize="8" 
-               Padding="0,0,0,0" Content="γ  &#8805; &#0189; und β &#8805; &#0188;*(γ+0.5)&#178;    unbedingt stabil"/>
+                  Checked="Newmark_OnChecked">
+            Newmark, Parameter β und γ
+        </CheckBox>
+        <Label Grid.Row="3" Grid.Column="0" Margin="30,40,6,7" FontSize="8"
+               Padding="0,0,0,0" Content="γ  &#8805; &#0189; und β &#8805; &#0188;*(γ+0.5)&#178;    unbedingt stabil" />
 
-        <TextBox Name="Beta" Grid.Row="3" Grid.Column="1" Margin="15,10,4,0" Height="20" VerticalAlignment="Top"/>
+        <TextBox Name="Beta" Grid.Row="3" Grid.Column="1" Margin="15,10,4,0" Height="20" VerticalAlignment="Top" />
         <Label Grid.Row="3" Grid.Column="1" Width="11" Margin="4,10,0,31" HorizontalAlignment="Left"
-               Padding="0,0,0,0">β</Label>
+               Padding="0,0,0,0">
+            β
+        </Label>
         <Label Grid.Row="3" Grid.Column="1" Width="11" Margin="4,36,0,5" HorizontalAlignment="Left"
-               Padding="0,0,0,0">γ</Label>
-        <TextBox Name="Gamma" Grid.Row="3" Grid.Column="1" Margin="15,35,4,0" Height="20" VerticalAlignment="Top"/>
+               Padding="0,0,0,0">
+            γ
+        </Label>
+        <TextBox Name="Gamma" Grid.Row="3" Grid.Column="1" Margin="15,35,4,0" Height="20" VerticalAlignment="Top" />
 
-        <CheckBox x:Name="Wilson" Grid.Row="4" Grid.Column="0" Margin="10,6,0,0" VerticalAlignment="Top" 
-                  Checked="Wilson_OnChecked" Height="15">Wilson θ, Parameter θ</CheckBox>
-        <Label Grid.Row="4" Grid.Column="0" Margin="27,20,10,28" FontSize="8" 
-               Padding="0,0,0,0" Content="mit ( 1 &#8804; θ &#60; 2 ),   empfohlen 1.420815"/>
-        <Label Grid.Row="4" Grid.Column="0" Margin="27,30,10,18" FontSize="8" 
-               Padding="0,0,0,0" Content="( θ &#62; 1.366025 ),  für Δt kritisch "/>
-        <Label Grid.Row="4" Grid.Column="0" Margin="27,41,10,7" FontSize="8" 
-               Padding="0,0,0,0" Content="(γ = &#0189; und β = &#8537;)"/>
+        <CheckBox x:Name="Wilson" Grid.Row="4" Grid.Column="0" Margin="10,6,0,0" VerticalAlignment="Top"
+                  Checked="Wilson_OnChecked" Height="15">
+            Wilson θ, Parameter θ
+        </CheckBox>
+        <Label Grid.Row="4" Grid.Column="0" Margin="27,20,10,28" FontSize="8"
+               Padding="0,0,0,0" Content="mit ( 1 &#8804; θ &#60; 2 ),   empfohlen 1.420815" />
+        <Label Grid.Row="4" Grid.Column="0" Margin="27,30,10,18" FontSize="8"
+               Padding="0,0,0,0" Content="( θ &#62; 1.366025 ),  für Δt kritisch " />
+        <Label Grid.Row="4" Grid.Column="0" Margin="27,41,10,7" FontSize="8"
+               Padding="0,0,0,0" Content="(γ = &#0189; und β = &#8537;)" />
         <Label Grid.Row="4" Grid.Column="1" Width="11" Margin="4,20,0,21" HorizontalAlignment="Left"
-               Padding="0,0,0,0">θ</Label>
-        <TextBox Name="Theta" Grid.Row="4" Grid.Column="1" Margin="15,0,4,0" Height="20" VerticalAlignment="Center"/>
+               Padding="0,0,0,0">
+            θ
+        </Label>
+        <TextBox Name="Theta" Grid.Row="4" Grid.Column="1" Margin="15,0,4,0" Height="20" VerticalAlignment="Center" />
 
-        <CheckBox x:Name="Taylor" Grid.Row="5" Grid.Column="0" Margin="10,8,6,0" VerticalAlignment="Top" 
-                  Checked="Taylor_OnChecked" Height="15">α Method, Parameter  (-&#8531; &#8804; α &#8804; 0)</CheckBox>
-        <Label Grid.Row="5" Grid.Column="0" Margin="31,26,6,8" FontSize="8" 
-               Padding="0,0,0,0" Content="γ = (&#0189;-α) und β = &#0188;*(1-α)&#178;"/>
+        <CheckBox x:Name="Taylor" Grid.Row="5" Grid.Column="0" Margin="10,8,6,0" VerticalAlignment="Top"
+                  Checked="Taylor_OnChecked" Height="15">
+            α Method, Parameter  (-&#8531; &#8804; α &#8804; 0)
+        </CheckBox>
+        <Label Grid.Row="5" Grid.Column="0" Margin="31,26,6,8" FontSize="8"
+               Padding="0,0,0,0" Content="γ = (&#0189;-α) und β = &#0188;*(1-α)&#178;" />
         <Label Grid.Row="5" Grid.Column="0" Margin="30,38,61,47" FontSize="8" Height="15"
-               Padding="0,0,0,0" Content="-&#0189; &#8804; α &#8804; 0    unbedingt stabil" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+               Padding="0,0,0,0" Content="-&#0189; &#8804; α &#8804; 0    unbedingt stabil" Grid.RowSpan="2"
+               Grid.ColumnSpan="2" />
 
         <Label Grid.Row="5" Grid.Column="1" Width="13" Margin="4,11,0,21" HorizontalAlignment="Left"
-               Padding="0,0,0,0">α</Label>
-        <TextBox Name="Alfa" Grid.Row="5" Grid.Column="1" Margin="15,10,4,22"/>
+               Padding="0,0,0,0">
+            α
+        </Label>
+        <TextBox Name="Alfa" Grid.Row="5" Grid.Column="1" Margin="15,10,4,22" />
 
         <Label Grid.Row="6" Grid.Column="0" Padding="0,0,0,0" Margin="6,6,2,25">
-            Zeitschritt Δt für die Lösung [s]</Label>
-        <RichTextBox Grid.Row="6" Grid.Column="0" Margin="0,24,0,19" 
-                     BorderThickness="0,0,0,0" HorizontalAlignment="Center" Width="204" >
+            Zeitschritt Δt für die Lösung [s]
+        </Label>
+        <RichTextBox Grid.Row="6" Grid.Column="0" Margin="0,24,0,19"
+                     BorderThickness="0,0,0,0" HorizontalAlignment="Center" Width="204">
             <FlowDocument>
-                <Paragraph FontSize="6" FontFamily="Segoe">sollte kleiner sein als die kleinste Periode T
+                <Paragraph FontSize="6" FontFamily="Segoe">
+                    sollte kleiner sein als die kleinste Periode T
                     <Run BaselineAlignment="Subscript" FontSize="6">min</Run>
                     in Lösung
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
 
-        <TextBox Name="Zeitintervall" Grid.Row="6" Grid.Column="1" Margin="10,7,6,26" 
-                 MouseDoubleClick="BerechneZeitintervall"/>
-        <RichTextBox Grid.Row="6" Grid.Column="1" Margin="0,28,0,5" BorderThickness="0,0,0,0" 
-                     HorizontalAlignment="Center" Width="70" >
+        <TextBox Name="Zeitintervall" Grid.Row="6" Grid.Column="1" Margin="10,7,6,26"
+                 MouseDoubleClick="BerechneZeitintervall" />
+        <RichTextBox Grid.Row="6" Grid.Column="1" Margin="0,28,0,5" BorderThickness="0,0,0,0"
+                     HorizontalAlignment="Center" Width="70">
             <FlowDocument>
-                <Paragraph FontSize="6" FontFamily="Segoe">Doppelklick für
+                <Paragraph FontSize="6" FontFamily="Segoe">
+                    Doppelklick für
                     <LineBreak /> T
                     <Run BaselineAlignment="Subscript" FontSize="6">min</Run>
                     in Lösung
@@ -121,28 +146,36 @@
             </FlowDocument>
         </RichTextBox>
 
-        <Separator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,48,0,0"/>
+        <Separator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,48,0,0" />
 
-        <Label Grid.Row="7" Grid.Column="0" Padding="0,0,0,0" Margin="6,6,2,14" Content="Anfangsbedingung"/>
-        <Label Grid.Row="7" Grid.Column="0" Padding="0,0,0,0" Margin="6,27,133,6" 
-               FontSize="10" Content="Gesamtanzahl = "/>
+        <Label Grid.Row="7" Grid.Column="0" Padding="0,0,0,0" Margin="6,6,2,14" Content="Anfangsbedingung" />
+        <Label Grid.Row="7" Grid.Column="0" Padding="0,0,0,0" Margin="6,27,133,6"
+               FontSize="10" Content="Gesamtanzahl = " />
         <TextBox Name="Gesamt" Grid.Row="7" Grid.Column="0" Padding="0,0,0,0" Margin="80,26,95,0"
-                 VerticalAlignment="Top" Height="18"/>
+                 VerticalAlignment="Top" Height="18" />
 
-        <TextBox Name="Anfangsbedingungen" Grid.Row="7" Grid.Column="1" Margin="4,12,6,24" 
-                 MouseDoubleClick="AnfangsbedingungNext"/>
-        <TextBox Grid.Row="7" Grid.Column="1"  Margin="0,40,0,0" Height="13" VerticalAlignment="Top"
+        <TextBox Name="Anfangsbedingungen" Grid.Row="7" Grid.Column="1" Margin="4,12,6,24"
+                 MouseDoubleClick="AnfangsbedingungNext" />
+        <TextBox Grid.Row="7" Grid.Column="1" Margin="0,40,0,0" Height="13" VerticalAlignment="Top"
                  FontSize="6" Padding="0,0,0,0" HorizontalAlignment="Center" Width="78"
-                 Text = "Doppelklick für Traversieren" BorderThickness="0,0,0,0"/>
+                 Text="Doppelklick für Traversieren" BorderThickness="0,0,0,0" />
         <TextBox Grid.Row="7" FontSize="6" Padding="0,0,0,0" BorderThickness="0,0,0,0"
-                 Text = "aller Anfangsbedingungen" Margin="0,47,0,2" Grid.Column="1" HorizontalAlignment="Center" Width="64"/>
+                 Text="aller Anfangsbedingungen" Margin="0,47,0,2" Grid.Column="1" HorizontalAlignment="Center"
+                 Width="64" />
 
-        <Button Grid.Row="8" Grid.Column="0" Width="50"  Height="26" Margin="5,5,0,0" 
-                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Top" >löschen</Button>
-        <Button Grid.Column="1" Grid.Row="8" Height="25" Margin="43,5,3,0" 
-                Click="BtnDialogOk_Click" VerticalAlignment="Top" HorizontalContentAlignment="Center">_Ok</Button>
-        <Button Grid.Column="0" Grid.Row="8"  Height="25" Margin="188,5,0,0" 
-                Click="BtnDialogAbbrechen_Click" VerticalAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Center" 
-                Width="62" Grid.ColumnSpan="2">_Abbrechen</Button>
+        <Button Grid.Row="8" Grid.Column="0" Width="50" Height="26" Margin="5,5,0,0"
+                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+            löschen
+        </Button>
+        <Button Grid.Column="1" Grid.Row="8" Height="25" Margin="43,5,3,0"
+                Click="BtnDialogOk_Click" VerticalAlignment="Top" HorizontalContentAlignment="Center">
+            _Ok
+        </Button>
+        <Button Grid.Column="0" Grid.Row="8" Height="25" Margin="188,5,0,0"
+                Click="BtnDialogAbbrechen_Click" VerticalAlignment="Top" HorizontalAlignment="Left"
+                HorizontalContentAlignment="Center"
+                Width="62" Grid.ColumnSpan="2">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

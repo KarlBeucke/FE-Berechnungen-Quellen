@@ -10,6 +10,7 @@ public class Material : AbstraktMaterial
         MaterialWerte[0] = _emodulus;
         MaterialWerte[1] = poisson;
     }
+
     public Material(double _emodulus, double poisson, double mass)
     {
         MaterialWerte = new double[3];

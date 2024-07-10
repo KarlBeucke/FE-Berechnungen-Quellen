@@ -1,23 +1,25 @@
-﻿using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
 public partial class InstationäreModellzuständeVisualisieren
 {
-    private readonly FeModell modell;
-    private int index;
     private readonly Darstellung darstellung;
-    private bool knotenTemperaturAn, knotenGradientenAn, elementTemperaturAn;
-    private readonly List<Shape> hitList = new List<Shape>();
+    private readonly List<Shape> hitList = new();
+    private readonly FeModell modell;
     private EllipseGeometry hitArea;
+    private int index;
+    private bool knotenTemperaturAn, knotenGradientenAn, elementTemperaturAn;
 
     public InstationäreModellzuständeVisualisieren(FeModell modell)
     {
@@ -35,23 +37,21 @@ public partial class InstationäreModellzuständeVisualisieren
         var tmax = modell.Zeitintegration.Tmax;
         var nSteps = (int)(tmax / dt) + 1;
         var zeit = new double[nSteps];
-        for (var i = 0; i < nSteps; i++) { zeit[i] = (i * dt); }
+        for (var i = 0; i < nSteps; i++) zeit[i] = i * dt;
         Zeitschrittauswahl.ItemsSource = zeit;
     }
 
-    private void DropDownZeitschrittauswahlClosed(object sender, System.EventArgs e)
+    private void DropDownZeitschrittauswahlClosed(object sender, EventArgs e)
     {
         if (Zeitschrittauswahl.SelectedIndex < 0)
         {
             _ = MessageBox.Show("kein gültiger Zeitschritt ausgewählt", "Zeitschrittauswahl");
             return;
         }
+
         index = Zeitschrittauswahl.SelectedIndex;
 
-        foreach (var item in modell.Knoten)
-        {
-            item.Value.Knotenfreiheitsgrade[0] = item.Value.KnotenVariable[0][index];
-        }
+        foreach (var item in modell.Knoten) item.Value.Knotenfreiheitsgrade[0] = item.Value.KnotenVariable[0][index];
 
         darstellung.zeitschritt = index;
         KnotentemperaturenZeichnen();
@@ -76,13 +76,11 @@ public partial class InstationäreModellzuständeVisualisieren
         else
         {
             // entferne ALLE Textdarstellungen der Knotentemperaturen
-            foreach (var knotenTemp in darstellung.Knotentemperaturen)
-            {
-                VisualErgebnisse.Children.Remove(knotenTemp);
-            }
+            foreach (var knotenTemp in darstellung.Knotentemperaturen) VisualErgebnisse.Children.Remove(knotenTemp);
             knotenTemperaturAn = false;
         }
     }
+
     private void ElementTemperaturenZeichnen()
     {
         if (!elementTemperaturAn)
@@ -100,10 +98,7 @@ public partial class InstationäreModellzuständeVisualisieren
         }
         else
         {
-            foreach (var path in darstellung.TemperaturElemente)
-            {
-                VisualErgebnisse.Children.Remove(path);
-            }
+            foreach (var path in darstellung.TemperaturElemente) VisualErgebnisse.Children.Remove(path);
             elementTemperaturAn = false;
         }
     }
@@ -130,10 +125,7 @@ public partial class InstationäreModellzuständeVisualisieren
         else
         {
             // entferne ALLE Textdarstellungen der Knotentemperaturen
-            foreach (var knotenGrad in darstellung.Knotengradienten)
-            {
-                VisualErgebnisse.Children.Remove(knotenGrad);
-            }
+            foreach (var knotenGrad in darstellung.Knotengradienten) VisualErgebnisse.Children.Remove(knotenGrad);
             knotenGradientenAn = false;
         }
     }
@@ -143,7 +135,7 @@ public partial class InstationäreModellzuständeVisualisieren
         ElementTemperaturenZeichnen();
     }
 
-    private void OnMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         hitList.Clear();
         var hitPoint = e.GetPosition(VisualErgebnisse);
@@ -154,7 +146,7 @@ public partial class InstationäreModellzuständeVisualisieren
         MyPopup.IsOpen = false;
 
         var sb = new StringBuilder();
-        foreach (var item in hitList.Where(item => !(item == null | item?.Name == string.Empty)))
+        foreach (var item in hitList.Where(item => !((item == null) | (item?.Name == string.Empty))))
         {
             sb.Clear();
             MyPopup.IsOpen = true;
@@ -171,6 +163,7 @@ public partial class InstationäreModellzuständeVisualisieren
             MyPopupText.Text = sb.ToString();
         }
     }
+
     private HitTestResultBehavior HitTestCallBack(HitTestResult result)
     {
         var intersectionDetail = ((GeometryHitTestResult)result).IntersectionDetail;
@@ -185,10 +178,11 @@ public partial class InstationäreModellzuständeVisualisieren
                     case Shape hit:
                         hitList.Add(hit);
                         break;
-                        //case TextBlock hit:
-                        //    hitTextBlock.Add(hit);
-                        //    break;
+                    //case TextBlock hit:
+                    //    hitTextBlock.Add(hit);
+                    //    break;
                 }
+
                 return HitTestResultBehavior.Continue;
             case IntersectionDetail.FullyInside:
                 return HitTestResultBehavior.Continue;
@@ -199,6 +193,7 @@ public partial class InstationäreModellzuständeVisualisieren
                         hitList.Add(hit);
                         break;
                 }
+
                 return HitTestResultBehavior.Continue;
             case IntersectionDetail.NotCalculated:
                 return HitTestResultBehavior.Continue;
@@ -206,7 +201,8 @@ public partial class InstationäreModellzuständeVisualisieren
                 return HitTestResultBehavior.Stop;
         }
     }
-    private void OnMouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+
+    private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         MyPopup.IsOpen = false;
     }

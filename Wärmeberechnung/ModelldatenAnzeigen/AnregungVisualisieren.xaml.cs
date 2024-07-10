@@ -1,18 +1,18 @@
-﻿using FEBibliothek.Modell;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
 public partial class AnregungVisualisieren
 {
+    private readonly double[] anregung;
     private readonly Darstellung darstellung;
     private readonly double dt, tmax, tmin;
     private double anregungMax, anregungMin;
-    private readonly double[] anregung;
 
     public AnregungVisualisieren(FeModell feModell)
     {
@@ -45,9 +45,11 @@ public partial class AnregungVisualisieren
         darstellung.Koordinatensystem(tmin, tmax, anregungMax, anregungMin);
         darstellung.ZeitverlaufZeichnen(dt, tmin, tmax, anregungMax, anregung);
     }
+
     private void AnregungsText(double duration, int nSteps)
     {
-        var anregungsWerte = duration.ToString("N2") + " [s] resp. " + (duration / 60 / 60).ToString("N0") + "[h]  Anregung mit "
+        var anregungsWerte = duration.ToString("N2") + " [s] resp. " + (duration / 60 / 60).ToString("N0") +
+                             "[h]  Anregung mit "
                              + nSteps + " Anregungswerten im Zeitintervall dt = " + dt.ToString("N3");
         var anregungTextBlock = new TextBlock
         {

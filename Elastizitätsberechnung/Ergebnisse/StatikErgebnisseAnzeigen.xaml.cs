@@ -1,8 +1,8 @@
-﻿using FEBibliothek.Modell;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
 
@@ -32,6 +32,7 @@ public partial class StatikErgebnisseAnzeigen
             var elementSpannung = new ElementSpannung(item.Value.BerechneZustandsvektor());
             elementSpannungen.Add(item.Key, elementSpannung);
         }
+
         ElementspannungenGrid = sender as DataGrid;
         if (ElementspannungenGrid != null) ElementspannungenGrid.ItemsSource = elementSpannungen;
     }
@@ -44,11 +45,11 @@ public partial class StatikErgebnisseAnzeigen
 
     internal class ElementSpannung
     {
-        public double[] Spannungen { get; }
-
         public ElementSpannung(double[] spannungen)
         {
             Spannungen = spannungen;
         }
+
+        public double[] Spannungen { get; }
     }
 }

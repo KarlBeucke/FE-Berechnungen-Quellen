@@ -13,38 +13,45 @@
         </Grid.ColumnDefinitions>
 
         <Grid Margin="0,0,10,0" Grid.Column="0">
-            <Label x:Name="Knotentemperatur" Content="Knotentemperaturen" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="-4.609,-0.052" Width="150"/>
+            <Label x:Name="Knotentemperatur" Content="Knotentemperaturen" HorizontalAlignment="Left" Margin="10,0,0,0"
+                   VerticalAlignment="Top" RenderTransformOrigin="-4.609,-0.052" Width="150" />
             <DataGrid Name="KnotenGrid" HorizontalAlignment="Left" Height="325" Width="170" Margin="10,25,0,0"
-                VerticalAlignment="Top" AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
-                Loaded="Knoten_Loaded" SelectionChanged="KnotenZeileSelected" LostFocus="KeinKnotenSelected" >
+                      VerticalAlignment="Top" AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
+                      Loaded="Knoten_Loaded" SelectionChanged="KnotenZeileSelected" LostFocus="KeinKnotenSelected">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Knoten"  Binding="{Binding Path=Key}"/>
-                    <DataGridTextColumn Header="Temperature" Binding="{Binding Path=Value.Knotenfreiheitsgrade[0], StringFormat=N2}"/>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding Path=Key}" />
+                    <DataGridTextColumn Header="Temperature"
+                                        Binding="{Binding Path=Value.Knotenfreiheitsgrade[0], StringFormat=N2}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
 
         <Grid Margin="0,0,10,0" Grid.Column="1">
-            <Label x:Name="Wärmeflussvektoren" Content="Wärmeflussvektoren in Elementmitte" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="274"/>
+            <Label x:Name="Wärmeflussvektoren" Content="Wärmeflussvektoren in Elementmitte" HorizontalAlignment="Left"
+                   Margin="5,0,0,0" VerticalAlignment="Top" Width="274" />
             <DataGrid Name="WärmeflussVektorGrid" HorizontalAlignment="Left" Height="325" Width="250" Margin="0,25,0,0"
-                VerticalAlignment="Top" AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
-                Loaded="WärmeflussVektoren_Loaded" SelectionChanged="ElementZeileSelected" LostFocus="KeinElementSelected" >
+                      VerticalAlignment="Top" AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
+                      Loaded="WärmeflussVektoren_Loaded" SelectionChanged="ElementZeileSelected"
+                      LostFocus="KeinElementSelected">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Element"  Binding="{Binding Path=Key}"/>
-                    <DataGridTextColumn Header="X" Binding="{Binding Path=Value.ElementZustand[0], StringFormat=N2}"/>
-                    <DataGridTextColumn Header="Y" Binding="{Binding Path=Value.ElementZustand[1], StringFormat=N2}"/>
+                    <DataGridTextColumn Header="Element" Binding="{Binding Path=Key}" />
+                    <DataGridTextColumn Header="X" Binding="{Binding Path=Value.ElementZustand[0], StringFormat=N2}" />
+                    <DataGridTextColumn Header="Y" Binding="{Binding Path=Value.ElementZustand[1], StringFormat=N2}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
         <Grid Margin="0,0,10,0" Grid.Column="2">
-            <Label x:Name="Wärmefluss" Content="vordefinierte Randtemperaturen" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="180"/>
+            <Label x:Name="Wärmefluss" Content="vordefinierte Randtemperaturen" HorizontalAlignment="Left"
+                   Margin="5,0,0,0" VerticalAlignment="Top" Width="180" />
             <DataGrid Name="WärmeflussGrid" HorizontalAlignment="Left" Height="325" Width="200" Margin="0,25,0,0"
-                VerticalAlignment="Top" AlternatingRowBackground="Aqua"
-                Loaded="Wärmefluss_Loaded" AutoGenerateColumns="False">
+                      VerticalAlignment="Top" AlternatingRowBackground="Aqua"
+                      Loaded="Wärmefluss_Loaded" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Knoten"  Binding="{Binding Path=Value.KnotenId}"/>
-                    <DataGridTextColumn Header="Wärmefluss" Binding="{Binding Path=Value.Knoten.Reaktionen[0], StringFormat=N2}"/>
-                    <DataGridTextColumn Header="Temperatur" Binding="{Binding Path=Value.Vordefiniert[0], StringFormat=N2}"/>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding Path=Value.KnotenId}" />
+                    <DataGridTextColumn Header="Wärmefluss"
+                                        Binding="{Binding Path=Value.Knoten.Reaktionen[0], StringFormat=N2}" />
+                    <DataGridTextColumn Header="Temperatur"
+                                        Binding="{Binding Path=Value.Vordefiniert[0], StringFormat=N2}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

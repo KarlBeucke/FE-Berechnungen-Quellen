@@ -1,25 +1,29 @@
-﻿using FEBibliothek.Modell;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Media;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class KnotenNeu
 {
     private readonly FeModell modell;
+
     public KnotenNeu()
     {
         InitializeComponent();
     }
+
     public KnotenNeu(FeModell feModell)
     {
         InitializeComponent();
         modell = feModell;
         // aktiviere Ereignishandler für Canvas
-        StartFenster.WärmeVisual.VisualWärmeModell.Background = System.Windows.Media.Brushes.Transparent;
+        StartFenster.WärmeVisual.VisualWärmeModell.Background = Brushes.Transparent;
         Show();
     }
+
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         // entferne Steuerungsknoten und deaktiviere Ereignishandler für Canvas
@@ -50,7 +54,7 @@ public partial class KnotenNeu
         {
             var dimension = modell.Raumdimension;
             var koordinaten = new double[dimension];
-            int anzahlKnotenDof = 1;
+            var anzahlKnotenDof = 1;
             if (X.Text.Length > 0) koordinaten[0] = double.Parse(X.Text);
             if (Y.Text.Length > 0) koordinaten[1] = double.Parse(Y.Text);
             var neuerKnoten = new Knoten(KnotenId.Text, koordinaten, anzahlKnotenDof, dimension);

@@ -1,6 +1,6 @@
-﻿using FEBibliothek.Modell;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -8,6 +8,7 @@ public partial class ZeitDämpfungsratenNeu
 {
     private readonly FeModell _modell;
     private int _eigenform;
+
     public ZeitDämpfungsratenNeu(FeModell modell)
     {
         InitializeComponent();
@@ -22,8 +23,10 @@ public partial class ZeitDämpfungsratenNeu
             var anfang = (ModaleWerte)modell.Eigenzustand.DämpfungsRaten[_eigenform - 1];
             Xi.Text = anfang.Dämpfung.ToString(CultureInfo.CurrentCulture);
         }
+
         ShowDialog();
     }
+
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
         // neues Dämpfungsmaß hinzufügen
@@ -37,8 +40,10 @@ public partial class ZeitDämpfungsratenNeu
             var anfang = (ModaleWerte)_modell.Eigenzustand.DämpfungsRaten[_eigenform];
             anfang.Dämpfung = double.Parse(Xi.Text);
         }
+
         Close();
     }
+
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();
@@ -55,6 +60,7 @@ public partial class ZeitDämpfungsratenNeu
             StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
             return;
         }
+
         var anfangsWerte = (ModaleWerte)_modell.Eigenzustand.DämpfungsRaten[_eigenform];
         Xi.Text = anfangsWerte.Dämpfung.ToString("G2");
         Close();

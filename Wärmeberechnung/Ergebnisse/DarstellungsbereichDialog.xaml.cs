@@ -5,9 +5,9 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
 public partial class Darstellungsbereich
 {
-    public double tmin, tmax;
     public double maxTemperatur;
     public double maxWärmefluss;
+    public double tmin, tmax;
 
     public Darstellungsbereich(double tmin, double tmax, double maxTemperatur, double maxWärmefluss)
     {
@@ -31,6 +31,7 @@ public partial class Darstellungsbereich
         maxWärmefluss = double.Parse(TxtMaxWärmefluss.Text);
         Close();
     }
+
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();

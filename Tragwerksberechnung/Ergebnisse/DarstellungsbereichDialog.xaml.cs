@@ -5,9 +5,9 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 
 public partial class DarstellungsbereichDialog
 {
-    public double tmin, tmax;
-    public double maxVerformung;
     public double maxBeschleunigung;
+    public double maxVerformung;
+    public double tmin, tmax;
 
     public DarstellungsbereichDialog(double tmin, double tmax, double maxVerformung, double maxBeschleunigung)
     {

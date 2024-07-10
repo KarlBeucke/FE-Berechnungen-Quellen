@@ -5,6 +5,7 @@ namespace FE_Berechnungen.Dateieingabe;
 public partial class NeuerDateiname
 {
     public string DateiName;
+
     public NeuerDateiname()
     {
         InitializeComponent();

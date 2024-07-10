@@ -5,12 +5,12 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public class MaterialParser
 {
+    private double dichteLeitfähigkeit;
+    private double[] leitfähigkeit;
+    private Material material;
+    private string materialId;
     private FeModell modell;
     private string[] substrings;
-    private string materialId;
-    private Material material;
-    private double[] leitfähigkeit;
-    private double dichteLeitfähigkeit;
 
     public void ParseMaterials(string[] lines, FeModell feModell)
     {
@@ -55,11 +55,13 @@ public class MaterialParser
                         material = new Material(materialId, leitfähigkeit, dichteLeitfähigkeit);
                         break;
                     default:
-                        throw new ParseAusnahme((i + 2) + ":\nMaterial, falsche Anzahl Parameter");
+                        throw new ParseAusnahme(i + 2 + ":\nMaterial, falsche Anzahl Parameter");
                 }
+
                 modell.Material.Add(materialId, material);
                 i++;
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }

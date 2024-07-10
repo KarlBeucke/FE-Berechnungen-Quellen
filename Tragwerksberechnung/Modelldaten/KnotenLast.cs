@@ -10,6 +10,7 @@ public class KnotenLast : AbstraktKnotenlast
         KnotenId = knotenId;
         Lastwerte = p;
     }
+
     public KnotenLast(string knotenId, double px, double py, double moment)
     {
         KnotenId = knotenId;
@@ -26,6 +27,7 @@ public class KnotenLast : AbstraktKnotenlast
         Lastwerte[0] = px;
         Lastwerte[1] = py;
     }
+
     public override double[] BerechneLastVektor()
     {
         return Lastwerte;

@@ -1,20 +1,20 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
+using FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
 public partial class DynamikDatenAnzeigen
 {
     private readonly FeModell modell;
-    private string removeKey;
     private int removeIndex;
+    private string removeKey;
 
     public DynamikDatenAnzeigen(FeModell feModell)
     {
@@ -39,30 +39,30 @@ public partial class DynamikDatenAnzeigen
         {
             var knotenBoden = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                               where item.Value.Bodenanregung
-                               select item.Value).ToList();
+                where item.Value.Bodenanregung
+                select item.Value).ToList();
             if (knotenBoden.Count > 0) Boden.Content = "Bodenanregung";
 
 
             var knotenDatei = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                               where item.Value.VariationsTyp == 0
-                               select item.Value).ToList();
+                where item.Value.VariationsTyp == 0
+                select item.Value).ToList();
             if (knotenDatei.Count > 0) DateiGrid.ItemsSource = knotenDatei;
 
 
             var knotenHarmonisch = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                                    where item.Value.VariationsTyp == 2
-                                    select item.Value).ToList();
+                where item.Value.VariationsTyp == 2
+                select item.Value).ToList();
 
             HarmonischGrid.Items.Clear();
             if (knotenHarmonisch.Count > 0) HarmonischGrid.ItemsSource = knotenHarmonisch;
 
             var knotenLinear = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                                where item.Value.VariationsTyp == 1
-                                select item.Value).ToList();
+                where item.Value.VariationsTyp == 1
+                select item.Value).ToList();
             if (knotenLinear.Count > 0) LinearGrid.ItemsSource = knotenLinear;
         }
 
@@ -80,6 +80,7 @@ public partial class DynamikDatenAnzeigen
         StartFenster.Berechnet = false;
         Close();
     }
+
     //UnloadingRow
     private void DämpfungZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -90,6 +91,7 @@ public partial class DynamikDatenAnzeigen
         var tragwerk = new DynamikDatenAnzeigen(modell);
         tragwerk.Show();
     }
+
     //SelectionChanged
     private void DämpfungZeileSelected(object sender, SelectionChangedEventArgs e)
     {
@@ -105,6 +107,7 @@ public partial class DynamikDatenAnzeigen
         StartFenster.Berechnet = false;
         Close();
     }
+
     //UnloadingRow
     private void AnfangswerteZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -115,6 +118,7 @@ public partial class DynamikDatenAnzeigen
         var tragwerk = new DynamikDatenAnzeigen(modell);
         tragwerk.Show();
     }
+
     //SelectionChanged
     private void AnfangswerteZeileSelected(object sender, SelectionChangedEventArgs e)
     {
@@ -130,6 +134,7 @@ public partial class DynamikDatenAnzeigen
         StartFenster.Berechnet = false;
         Close();
     }
+
     //UnloadingRow
     private void KnotenDateiZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -140,6 +145,7 @@ public partial class DynamikDatenAnzeigen
         var tragwerk = new DynamischeErgebnisseAnzeigen(modell);
         tragwerk.Show();
     }
+
     private void KnotenHarmonischZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
@@ -149,6 +155,7 @@ public partial class DynamikDatenAnzeigen
         var tragwerk = new DynamischeErgebnisseAnzeigen(modell);
         tragwerk.Show();
     }
+
     private void KnotenLinearZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
@@ -158,6 +165,7 @@ public partial class DynamikDatenAnzeigen
         var tragwerk = new DynamischeErgebnisseAnzeigen(modell);
         tragwerk.Show();
     }
+
     //SelectionChanged
     private void KnotenDateiSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -166,6 +174,7 @@ public partial class DynamikDatenAnzeigen
         var last = (ZeitabhängigeKnotenLast)cellInfo.Item;
         removeKey = last.LastId;
     }
+
     private void KnotenHarmonischSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (HarmonischGrid.SelectedCells.Count <= 0) return;
@@ -173,6 +182,7 @@ public partial class DynamikDatenAnzeigen
         var last = (ZeitabhängigeKnotenLast)cellInfo.Item;
         removeKey = last.LastId;
     }
+
     private void KnotenLinearSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (LinearGrid.SelectedCells.Count <= 0) return;

@@ -1,19 +1,19 @@
-﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
 public partial class InstationäreDatenAnzeigen
 {
     private readonly FeModell modell;
-    private string removeKey;
     private int removeIndex;
+    private string removeKey;
 
     public InstationäreDatenAnzeigen(FeModell modell)
     {
@@ -22,6 +22,7 @@ public partial class InstationäreDatenAnzeigen
         InitializeComponent();
         DataContext = this.modell;
     }
+
     private void InstationärLoaded(object sender, RoutedEventArgs e)
     {
         // Anfangsbedingungen
@@ -38,26 +39,26 @@ public partial class InstationäreDatenAnzeigen
         {
             var randDatei = (from item
                     in modell.ZeitabhängigeRandbedingung
-                             where item.Value.VariationsTyp == 0
-                             select item.Value).ToList();
+                where item.Value.VariationsTyp == 0
+                select item.Value).ToList();
             if (randDatei.Count > 0) RandDateiGrid.ItemsSource = randDatei;
 
             var randKonstant = (from item
                     in modell.ZeitabhängigeRandbedingung
-                                where item.Value.VariationsTyp == 1
-                                select item.Value).ToList();
+                where item.Value.VariationsTyp == 1
+                select item.Value).ToList();
             if (randKonstant.Count > 0) RandKonstantGrid.ItemsSource = randKonstant;
 
             var randHarmonisch = (from item
                     in modell.ZeitabhängigeRandbedingung
-                                  where item.Value.VariationsTyp == 2
-                                  select item.Value).ToList();
+                where item.Value.VariationsTyp == 2
+                select item.Value).ToList();
             if (randHarmonisch.Count > 0) RandHarmonischGrid.ItemsSource = randHarmonisch;
 
             var randLinear = (from item
                     in modell.ZeitabhängigeRandbedingung
-                              where item.Value.VariationsTyp == 3
-                              select item.Value).ToList();
+                where item.Value.VariationsTyp == 3
+                select item.Value).ToList();
             if (randLinear.Count > 0) RandLinearGrid.ItemsSource = randLinear;
         }
 
@@ -66,20 +67,20 @@ public partial class InstationäreDatenAnzeigen
         {
             var knotenDatei = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                               where item.Value.VariationsTyp == 0
-                               select item.Value).ToList();
+                where item.Value.VariationsTyp == 0
+                select item.Value).ToList();
             if (knotenDatei.Count > 0) KnotenDateiGrid.ItemsSource = knotenDatei;
 
             var knotenHarmonisch = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                                    where item.Value.VariationsTyp == 2
-                                    select item.Value).ToList();
+                where item.Value.VariationsTyp == 2
+                select item.Value).ToList();
             if (knotenHarmonisch.Count > 0) KnotenHarmonischGrid.ItemsSource = knotenHarmonisch;
 
             var knotenLinear = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                                where item.Value.VariationsTyp == 3
-                                select item.Value).ToList();
+                where item.Value.VariationsTyp == 3
+                select item.Value).ToList();
             if (knotenLinear.Count > 0) KnotenLinearGrid.ItemsSource = knotenLinear;
         }
 
@@ -88,9 +89,9 @@ public partial class InstationäreDatenAnzeigen
         {
             var elementLasten = (from item
                     in modell.ZeitabhängigeElementLasten
-                                 where item.Value.VariationsTyp == 1
-                                 select item.Value).ToList();
-            if (elementLasten.Count > 0) { ElementLastenGrid.ItemsSource = elementLasten; }
+                where item.Value.VariationsTyp == 1
+                select item.Value).ToList();
+            if (elementLasten.Count > 0) ElementLastenGrid.ItemsSource = elementLasten;
         }
     }
 
@@ -108,12 +109,14 @@ public partial class InstationäreDatenAnzeigen
             modell.Zeitintegration.VonStationär = false;
         }
     }
+
     private void NeueAnfangstemperatur(object sender, MouseButtonEventArgs e)
     {
         _ = new ZeitAnfangstemperaturNeu(modell);
         StartFenster.Berechnet = false;
         Close();
     }
+
     //UnloadingRow
     private void AnfangstemperaturZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -124,6 +127,7 @@ public partial class InstationäreDatenAnzeigen
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
     }
+
     //SelectionChanged
     private void AnfangstemperaturZeileSelected(object sender, SelectionChangedEventArgs e)
     {
@@ -139,6 +143,7 @@ public partial class InstationäreDatenAnzeigen
         StartFenster.Berechnet = false;
         Close();
     }
+
     //SelectionChanged
     private void RandDateiSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -147,6 +152,7 @@ public partial class InstationäreDatenAnzeigen
         var randbedingung = (ZeitabhängigeRandbedingung)cellInfo.Item;
         removeKey = randbedingung.RandbedingungId;
     }
+
     private void RandKonstantSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (RandKonstantGrid.SelectedCells.Count <= 0) return;
@@ -154,6 +160,7 @@ public partial class InstationäreDatenAnzeigen
         var randbedingung = (ZeitabhängigeRandbedingung)cellInfo.Item;
         removeKey = randbedingung.RandbedingungId;
     }
+
     private void RandHarmonischSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (RandHarmonischGrid.SelectedCells.Count <= 0) return;
@@ -161,6 +168,7 @@ public partial class InstationäreDatenAnzeigen
         var randbedingung = (ZeitabhängigeRandbedingung)cellInfo.Item;
         removeKey = randbedingung.RandbedingungId;
     }
+
     private void RandLinearSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (RandLinearGrid.SelectedCells.Count <= 0) return;
@@ -168,6 +176,7 @@ public partial class InstationäreDatenAnzeigen
         var zeitRand = (ZeitabhängigeRandbedingung)cellInfo.Item;
         removeKey = zeitRand.RandbedingungId;
     }
+
     //UnloadingRow
     private void RandDateiZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -178,6 +187,7 @@ public partial class InstationäreDatenAnzeigen
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
     }
+
     private void RandKonstantZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
@@ -187,6 +197,7 @@ public partial class InstationäreDatenAnzeigen
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
     }
+
     private void RandHarmonischZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
@@ -196,6 +207,7 @@ public partial class InstationäreDatenAnzeigen
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
     }
+
     private void RandLinearZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
@@ -213,6 +225,7 @@ public partial class InstationäreDatenAnzeigen
         StartFenster.Berechnet = false;
         Close();
     }
+
     //SelectionChanged
     private void KnotenDateiSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -221,6 +234,7 @@ public partial class InstationäreDatenAnzeigen
         var last = (ZeitabhängigeKnotenLast)cellInfo.Item;
         removeKey = last.LastId;
     }
+
     private void KnotenHarmonischSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (KnotenHarmonischGrid.SelectedCells.Count <= 0) return;
@@ -228,6 +242,7 @@ public partial class InstationäreDatenAnzeigen
         var last = (ZeitabhängigeKnotenLast)cellInfo.Item;
         removeKey = last.LastId;
     }
+
     private void KnotenLinearSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (KnotenLinearGrid.SelectedCells.Count <= 0) return;
@@ -246,6 +261,7 @@ public partial class InstationäreDatenAnzeigen
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
     }
+
     private void KnotenHarmonischZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
@@ -255,6 +271,7 @@ public partial class InstationäreDatenAnzeigen
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
     }
+
     private void KnotenLinearZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
@@ -272,6 +289,7 @@ public partial class InstationäreDatenAnzeigen
         StartFenster.Berechnet = false;
         Close();
     }
+
     //SelectionChanged
     private void ElementtemperaturSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -283,6 +301,7 @@ public partial class InstationäreDatenAnzeigen
         var wärme = new InstationäreDatenAnzeigen(modell);
         wärme.Show();
     }
+
     //UnloadingRow
     private void ElementtemperaturZeileLoeschen(object sender, DataGridRowEventArgs e)
     {

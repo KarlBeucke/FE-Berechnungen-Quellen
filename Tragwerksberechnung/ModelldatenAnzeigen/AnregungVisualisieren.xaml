@@ -14,9 +14,10 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
-                <Button Grid.Row="0"  Click="BtnAnregung_Click" Margin="3,7,41,0" IsDefault="False" Grid.Column="0">Anregungsdatei auswählen</Button>
+                <Button Grid.Row="0" Click="BtnAnregung_Click" Margin="3,7,41,0" IsDefault="False" Grid.Column="0">Anregungsdatei auswählen</Button>
             </Grid>
-            <Canvas x:Name="VisualAnregung" Height="489" Width="1000" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+            <Canvas x:Name="VisualAnregung" Height="489" Width="1000" ScrollViewer.CanContentScroll="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto" />
         </StackPanel>
     </ScrollViewer>
 </Window>

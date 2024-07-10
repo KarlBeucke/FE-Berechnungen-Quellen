@@ -1,38 +1,42 @@
-﻿using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
 
 public partial class Elastizitätsmodell3DVisualisieren
 {
-    // 3D Modellgruppe
-    private readonly Model3DGroup model3DGroup = new Model3DGroup();
-    private PerspectiveCamera theCamera;
-
-    // Anfangsposition der Kamera
-    private double cameraPhi = 0.13;        // 7,45 Grad
-    private double cameraTheta = 1.65;      // 94,5 Grad
-    private double cameraR = 60.0;
-    private double cameraX;
-    private double cameraY;
-
     // Veränderung des Kippwinkels, wenn hoch/runter Taste gedrückt wird
     //private const double CameraDPhi = 0.1;
     // Veränderung des Drehwinkels, wenn links/rechts Taste gedrückt wird
     //private const double CameraDTheta = 0.1;
     // Veränderung des Abstands, wenn BildHoch/BildRunter Taste gedrückt wird
     private const double CameraDr = 10;
+
     // Horizontalverschiebung li/re
     private const double CameraDx = 10;
+
     // Vertikalverschiebung hoch/runter
     private const double CameraDy = 5;
 
     private readonly Darstellung3D darstellung3D;
+
+    // 3D Modellgruppe
+    private readonly Model3DGroup model3DGroup = new();
+
+    // Anfangsposition der Kamera
+    private double cameraPhi = 0.13; // 7,45 Grad
+    private double cameraR = 60.0;
+    private double cameraTheta = 1.65; // 94,5 Grad
+    private double cameraX;
+    private double cameraY;
     private ModelVisual3D modelVisual;
+    private PerspectiveCamera theCamera;
+
     public Elastizitätsmodell3DVisualisieren(FeModell feModell)
     {
         darstellung3D = new Darstellung3D(feModell);
@@ -93,6 +97,7 @@ public partial class Elastizitätsmodell3DVisualisieren
 
         //_ = MessageBox.Show("Camera.Position: (" + x + ", " + y + ", " + z + ")", "3D Wireframe");
     }
+
     private void FestlegungBeleuchtung()
     {
         var ambientLight = new AmbientLight(Colors.Gray);
@@ -107,7 +112,7 @@ public partial class Elastizitätsmodell3DVisualisieren
     {
         switch (e.Key)
         {
-            case Key.Up:                    // Vertikalverschiebung
+            case Key.Up: // Vertikalverschiebung
                 //cameraPhi -= CameraDPhi;
                 //if (cameraPhi > Math.PI / 2.0) cameraPhi = Math.PI / 2.0;
                 //ScrPhi.Value = cameraPhi;
@@ -120,7 +125,7 @@ public partial class Elastizitätsmodell3DVisualisieren
                 cameraY += CameraDy;
                 break;
 
-            case Key.Left:                  // Horizontalverschiebung
+            case Key.Left: // Horizontalverschiebung
                 //cameraTheta -= CameraDTheta;
                 //ScrTheta.Value = cameraTheta;
                 cameraX += CameraDx;
@@ -131,8 +136,8 @@ public partial class Elastizitätsmodell3DVisualisieren
                 cameraX -= CameraDx;
                 break;
 
-            case Key.Add:                   //  + Ziffernblock
-            case Key.OemPlus:               //  + alfanumerisch
+            case Key.Add: //  + Ziffernblock
+            case Key.OemPlus: //  + alfanumerisch
                 cameraR -= CameraDr;
                 if (cameraR < CameraDr) cameraR = CameraDr;
                 break;
@@ -141,8 +146,8 @@ public partial class Elastizitätsmodell3DVisualisieren
                 if (cameraR < CameraDr) cameraR = CameraDr;
                 break;
 
-            case Key.Subtract:              //  - Ziffernblock
-            case Key.OemMinus:              //  - alfanumerisch
+            case Key.Subtract: //  - Ziffernblock
+            case Key.OemMinus: //  - alfanumerisch
                 cameraR += CameraDr;
                 break;
             case Key.PageDown:
@@ -156,12 +161,13 @@ public partial class Elastizitätsmodell3DVisualisieren
     }
 
     // Veränderung der Kameraposition mit Scrollbars
-    private void ScrThetaScroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
+    private void ScrThetaScroll(object sender, ScrollEventArgs e)
     {
         cameraTheta = ScrTheta.Value;
         PositionierKamera();
     }
-    private void ScrPhiScroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
+
+    private void ScrPhiScroll(object sender, ScrollEventArgs e)
     {
         cameraPhi = ScrPhi.Value;
         PositionierKamera();
@@ -172,46 +178,61 @@ public partial class Elastizitätsmodell3DVisualisieren
     {
         foreach (var koordinaten in darstellung3D.koordinaten) model3DGroup.Children.Add(koordinaten);
     }
+
     private void RemoveKoordinaten(object sender, RoutedEventArgs e)
     {
         foreach (var koordinaten in darstellung3D.koordinaten) model3DGroup.Children.Remove(koordinaten);
     }
+
     private void ShowOberflächen(object sender, RoutedEventArgs e)
     {
         foreach (var oberflächen in darstellung3D.oberflächen) model3DGroup.Children.Add(oberflächen);
     }
+
     private void RemoveOberflächen(object sender, RoutedEventArgs e)
     {
         foreach (var oberflächen in darstellung3D.oberflächen) model3DGroup.Children.Remove(oberflächen);
     }
+
     private void ShowDrahtmodell(object sender, RoutedEventArgs e)
     {
         foreach (var kanten in darstellung3D.kanten) model3DGroup.Children.Add(kanten);
     }
+
     private void RemoveDrahtmodell(object sender, RoutedEventArgs e)
     {
         foreach (var kanten in darstellung3D.kanten) model3DGroup.Children.Remove(kanten);
     }
+
     private void ShowRandbedingungenFest(object sender, RoutedEventArgs e)
     {
-        foreach (var randbedingungenFest in darstellung3D.randbedingungenFest) model3DGroup.Children.Add(randbedingungenFest);
+        foreach (var randbedingungenFest in darstellung3D.randbedingungenFest)
+            model3DGroup.Children.Add(randbedingungenFest);
     }
+
     private void RemoveRandbedingungenFest(object sender, RoutedEventArgs e)
     {
-        foreach (var randbedingungenFest in darstellung3D.randbedingungenFest) model3DGroup.Children.Remove(randbedingungenFest);
+        foreach (var randbedingungenFest in darstellung3D.randbedingungenFest)
+            model3DGroup.Children.Remove(randbedingungenFest);
     }
+
     private void ShowRandbedingungenVor(object sender, RoutedEventArgs e)
     {
-        foreach (var randbedingungenVor in darstellung3D.randbedingungenVor) model3DGroup.Children.Add(randbedingungenVor);
+        foreach (var randbedingungenVor in darstellung3D.randbedingungenVor)
+            model3DGroup.Children.Add(randbedingungenVor);
     }
+
     private void RemoveRandbedingungenVor(object sender, RoutedEventArgs e)
     {
-        foreach (var randbedingungenVor in darstellung3D.randbedingungenVor) model3DGroup.Children.Remove(randbedingungenVor);
+        foreach (var randbedingungenVor in darstellung3D.randbedingungenVor)
+            model3DGroup.Children.Remove(randbedingungenVor);
     }
+
     private void ShowKnotenlasten(object sender, RoutedEventArgs e)
     {
         foreach (var knotenlasten in darstellung3D.knotenLasten) model3DGroup.Children.Add(knotenlasten);
     }
+
     private void RemoveKnotenlasten(object sender, RoutedEventArgs e)
     {
         foreach (var knotenlasten in darstellung3D.knotenLasten) model3DGroup.Children.Remove(knotenlasten);

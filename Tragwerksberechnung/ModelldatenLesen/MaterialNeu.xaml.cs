@@ -1,10 +1,10 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -16,7 +16,7 @@ public partial class MaterialNeu
     public MaterialNeu(FeModell modell)
     {
         InitializeComponent();
-        this._modell = modell;
+        _modell = modell;
         Show();
     }
 
@@ -60,7 +60,7 @@ public partial class MaterialNeu
                 FederY.Text = "";
                 FederPhi.Text = "";
             }
-            else if (FederX.Text.Length > 0 | FederY.Text.Length > 0 | FederPhi.Text.Length > 0)
+            else if ((FederX.Text.Length > 0) | (FederY.Text.Length > 0) | (FederPhi.Text.Length > 0))
             {
                 EModul.Text = "";
                 Poisson.Text = "";
@@ -81,6 +81,7 @@ public partial class MaterialNeu
                 return;
             }
         }
+
         StartFenster.TragwerkVisual.MaterialKeys?.Close();
         Close();
     }
@@ -106,13 +107,15 @@ public partial class MaterialNeu
 
         // vorhandene Materialdefinition
         _modell.Material.TryGetValue(MaterialId.Text, out _vorhandenesMaterial);
-        Debug.Assert(_vorhandenesMaterial != null, nameof(_vorhandenesMaterial) + " != null"); MaterialId.Text = "";
+        Debug.Assert(_vorhandenesMaterial != null, nameof(_vorhandenesMaterial) + " != null");
+        MaterialId.Text = "";
 
         MaterialId.Text = _vorhandenesMaterial.MaterialId;
         if (!_vorhandenesMaterial.Feder)
         {
             EModul.Text = _vorhandenesMaterial.MaterialWerte[0].ToString("G3", CultureInfo.CurrentCulture);
-            if (Poisson.Text == "") Poisson.Text = _vorhandenesMaterial.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
+            if (Poisson.Text == "")
+                Poisson.Text = _vorhandenesMaterial.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
             Masse.Text = _vorhandenesMaterial.MaterialWerte[2].ToString("G3", CultureInfo.CurrentCulture);
             FederX.Text = "";
             FederY.Text = "";
@@ -132,19 +135,23 @@ public partial class MaterialNeu
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
         if (!_modell.Material.Keys.Contains(MaterialId.Text)) return;
-        if (MaterialReferenziert()) { return; }
+        if (MaterialReferenziert()) return;
         if (_vorhandenesMaterial != null) _modell.Material.Remove(_vorhandenesMaterial.MaterialId);
         StartFenster.TragwerkVisual.MaterialKeys?.Close();
         Close();
     }
+
     private bool MaterialReferenziert()
     {
         var id = MaterialId.Text;
         foreach (var element in _modell.Elemente.Where(element => element.Value.ElementMaterialId == id))
         {
-            _ = MessageBox.Show("Material referenziert durch Element " + element.Value.ElementId + ", kann nicht gelöscht werden", "neues Material");
+            _ = MessageBox.Show(
+                "Material referenziert durch Element " + element.Value.ElementId + ", kann nicht gelöscht werden",
+                "neues Material");
             return true;
         }
+
         //if (_modell.Elemente.All(element => element.Value.ElementMaterialId != id)) return false;
         return false;
     }

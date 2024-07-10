@@ -1,5 +1,5 @@
-﻿using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
@@ -13,6 +13,7 @@ public class Zeitintegration : AbstraktZeitintegration
         Parameter1 = parameter1;
         Anfangsbedingungen = new List<object>();
     }
+
     public Zeitintegration(double tmax, double dt, int methode, double parameter1, double parameter2)
     {
         Tmax = tmax;

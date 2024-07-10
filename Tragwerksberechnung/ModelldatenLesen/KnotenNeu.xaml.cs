@@ -1,23 +1,24 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class KnotenNeu
 {
-    private readonly FeModell _modell;
     private readonly ObservableCollection<Knoten> _knotenListe;
+    private readonly FeModell _modell;
 
     public KnotenNeu(FeModell feModell)
     {
         InitializeComponent();
         _modell = feModell;
         // aktiviere Ereignishandler für Canvas
-        StartFenster.TragwerkVisual.VisualTragwerkModel.Background = System.Windows.Media.Brushes.Transparent;
+        StartFenster.TragwerkVisual.VisualTragwerkModel.Background = Brushes.Transparent;
         Show();
 
         //KnotenId.Focus();
@@ -69,7 +70,6 @@ public partial class KnotenNeu
 
         // Knoten mit "Eintrag Tabelle" in "knotenListe" gesammelt 
         foreach (var knoten in _knotenListe)
-        {
             // vorhandener Knoten
             if (_modell.Knoten.ContainsKey(knoten.Id))
             {
@@ -85,7 +85,6 @@ public partial class KnotenNeu
             {
                 _modell.Knoten.Add(knoten.Id, knoten);
             }
-        }
 
         // entferne Steuerungsknoten und deaktiviere Ereignishandler für Canvas
         StartFenster.TragwerkVisual.VisualTragwerkModel.Children.Remove(StartFenster.TragwerkVisual.Pilot);
@@ -100,7 +99,10 @@ public partial class KnotenNeu
 
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Knoten.ContainsKey(KnotenId.Text)) { X.Focus(); }
+        if (!_modell.Knoten.ContainsKey(KnotenId.Text))
+        {
+            X.Focus();
+        }
         else
         {
             _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
@@ -133,7 +135,7 @@ public partial class KnotenNeu
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
         if (!_modell.Knoten.Keys.Contains(KnotenId.Text)) return;
-        if (KnotenReferenziert()) { return; }
+        if (KnotenReferenziert()) return;
         _modell.Knoten.Remove(KnotenId.Text);
         Close();
         StartFenster.TragwerkVisual.Close();
@@ -147,17 +149,23 @@ public partial class KnotenNeu
         foreach (var element in _modell.Elemente.Where(element
                      => element.Value.KnotenIds[0] == id || element.Value.KnotenIds[1] == id))
         {
-            _ = MessageBox.Show("Knoten referenziert durch Element " + element.Value.ElementId + ", kann nicht gelöscht werden", "neuer Knoten");
+            _ = MessageBox.Show(
+                "Knoten referenziert durch Element " + element.Value.ElementId + ", kann nicht gelöscht werden",
+                "neuer Knoten");
             return true;
         }
+
         foreach (var last in _modell.Lasten.Where(last => last.Value.KnotenId == id))
         {
-            _ = MessageBox.Show("Knoten referenziert durch Last " + last.Key + ", kann nicht gelöscht werden", "neue Last");
+            _ = MessageBox.Show("Knoten referenziert durch Last " + last.Key + ", kann nicht gelöscht werden",
+                "neue Last");
             return true;
         }
+
         foreach (var lager in _modell.Randbedingungen.Where(lager => lager.Value.KnotenId == id))
         {
-            _ = MessageBox.Show("Knoten referenziert durch Lager " + lager.Key + ", kann nicht gelöscht werden", "neues Lager");
+            _ = MessageBox.Show("Knoten referenziert durch Lager " + lager.Key + ", kann nicht gelöscht werden",
+                "neues Lager");
             return true;
         }
 

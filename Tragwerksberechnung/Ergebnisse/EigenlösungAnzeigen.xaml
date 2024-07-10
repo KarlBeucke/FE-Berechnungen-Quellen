@@ -7,29 +7,29 @@
         Title="Eigenlösung anzeigen" Height="300" Width="520">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120*"/>
-            <ColumnDefinition Width="420*"/>
+            <ColumnDefinition Width="120*" />
+            <ColumnDefinition Width="420*" />
         </Grid.ColumnDefinitions>
 
         <Label Grid.Column="0" Content="Eigenfrequenzen" FontWeight="Bold"
-               Margin="5,0,0,0"/>
+               Margin="5,0,0,0" />
         <DataGrid Name="EigenfrequenzenGrid" Grid.Column="0" Margin="5,30,1,0"
                   AlternatingRowBackground="Aqua" HorizontalAlignment="Left" Width="104"
                   Loaded="EigenfrequenzenGrid_Loaded" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Key}"/>
-                <DataGridTextColumn Binding="{Binding Value, StringFormat=N4}"/>
+                <DataGridTextColumn Binding="{Binding Key}" />
+                <DataGridTextColumn Binding="{Binding Value, StringFormat=N4}" />
             </DataGrid.Columns>
         </DataGrid>
 
         <Label Grid.Column="1" Content="Eigenvektoren" FontWeight="Bold"
-               Margin="5,0,0,0" HorizontalAlignment="Left" Width="400"/>
+               Margin="5,0,0,0" HorizontalAlignment="Left" Width="400" />
         <DataGrid Name="EigenvektorenGrid" Grid.Column="1" Margin="5,30,1,0"
                   AlternatingRowBackground="Aqua" HorizontalAlignment="Left" Width="400"
                   Loaded="EigenvektorenGrid_Loaded" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Value, StringFormat=N4}"/>
+                <DataGridTextColumn Binding="{Binding Value, StringFormat=N4}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
-</Window> 
+</Window>

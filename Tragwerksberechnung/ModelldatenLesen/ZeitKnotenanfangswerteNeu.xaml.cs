@@ -1,5 +1,5 @@
-﻿using FEBibliothek.Modell;
-using System.Windows;
+﻿using System.Windows;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -7,6 +7,7 @@ public partial class ZeitKnotenanfangswerteNeu
 {
     private readonly FeModell _modell;
     private int _aktuell;
+
     public ZeitKnotenanfangswerteNeu(FeModell modell)
     {
         InitializeComponent();
@@ -21,11 +22,13 @@ public partial class ZeitKnotenanfangswerteNeu
             Dof2D0.Text = anfang.Werte[2].ToString("G2");
             Dof2V0.Text = anfang.Werte[3].ToString("G2");
         }
+
         if (anfang.Werte.Length > 4)
         {
             Dof3D0.Text = anfang.Werte[4].ToString("G2");
             Dof3V0.Text = anfang.Werte[5].ToString("G2");
         }
+
         Show();
     }
 
@@ -42,24 +45,25 @@ public partial class ZeitKnotenanfangswerteNeu
             {
                 var nodalDof = knoten.AnzahlKnotenfreiheitsgrade;
                 var anfangsWerte = new double[2 * nodalDof];
-                if (Dof1D0.Text != string.Empty) { anfangsWerte[0] = double.Parse(Dof1D0.Text); }
-                if (Dof1V0.Text != string.Empty) { anfangsWerte[1] = double.Parse(Dof1V0.Text); }
+                if (Dof1D0.Text != string.Empty) anfangsWerte[0] = double.Parse(Dof1D0.Text);
+                if (Dof1V0.Text != string.Empty) anfangsWerte[1] = double.Parse(Dof1V0.Text);
 
                 switch (nodalDof)
                 {
                     case 2:
-                        {
-                            if (Dof2D0.Text != string.Empty) { anfangsWerte[2] = double.Parse(Dof2D0.Text); }
-                            if (Dof2V0.Text != string.Empty) { anfangsWerte[3] = double.Parse(Dof2V0.Text); }
-                            break;
-                        }
+                    {
+                        if (Dof2D0.Text != string.Empty) anfangsWerte[2] = double.Parse(Dof2D0.Text);
+                        if (Dof2V0.Text != string.Empty) anfangsWerte[3] = double.Parse(Dof2V0.Text);
+                        break;
+                    }
                     case 3:
-                        {
-                            if (Dof3D0.Text != string.Empty) { anfangsWerte[4] = double.Parse(Dof3D0.Text); }
-                            if (Dof3V0.Text != string.Empty) { anfangsWerte[5] = double.Parse(Dof3V0.Text); }
-                            break;
-                        }
+                    {
+                        if (Dof3D0.Text != string.Empty) anfangsWerte[4] = double.Parse(Dof3D0.Text);
+                        if (Dof3V0.Text != string.Empty) anfangsWerte[5] = double.Parse(Dof3V0.Text);
+                        break;
+                    }
                 }
+
                 _modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(KnotenId.Text, anfangsWerte));
             }
         }
@@ -68,10 +72,14 @@ public partial class ZeitKnotenanfangswerteNeu
         {
             var anfang = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[_aktuell];
             anfang.KnotenId = KnotenId.Text;
-            anfang.Werte[0] = double.Parse(Dof1D0.Text); anfang.Werte[1] = double.Parse(Dof1V0.Text);
-            anfang.Werte[2] = double.Parse(Dof2D0.Text); anfang.Werte[3] = double.Parse(Dof2V0.Text);
-            anfang.Werte[4] = double.Parse(Dof3D0.Text); anfang.Werte[5] = double.Parse(Dof3V0.Text);
+            anfang.Werte[0] = double.Parse(Dof1D0.Text);
+            anfang.Werte[1] = double.Parse(Dof1V0.Text);
+            anfang.Werte[2] = double.Parse(Dof2D0.Text);
+            anfang.Werte[3] = double.Parse(Dof2V0.Text);
+            anfang.Werte[4] = double.Parse(Dof3D0.Text);
+            anfang.Werte[5] = double.Parse(Dof3V0.Text);
         }
+
         Close();
     }
 
@@ -80,6 +88,7 @@ public partial class ZeitKnotenanfangswerteNeu
         Close();
         StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
     }
+
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
         _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell + 1);
@@ -90,6 +99,7 @@ public partial class ZeitKnotenanfangswerteNeu
             StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
             return;
         }
+
         var anfangsWerte = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[_aktuell];
         KnotenId.Text = anfangsWerte.KnotenId;
         Dof1D0.Text = anfangsWerte.Werte[0].ToString("G2");
@@ -106,6 +116,7 @@ public partial class ZeitKnotenanfangswerteNeu
             Dof3D0.Text = anfangsWerte.Werte[4].ToString("G2");
             Dof3V0.Text = anfangsWerte.Werte[5].ToString("G2");
         }
+
         Close();
         StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
     }

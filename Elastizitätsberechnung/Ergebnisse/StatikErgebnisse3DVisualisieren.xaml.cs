@@ -1,39 +1,43 @@
-﻿using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
 
 public partial class StatikErgebnisse3DVisualisieren
 {
-    private readonly Model3DGroup model3DGroup = new Model3DGroup();
-    private Dictionary<string, ElementSpannung> sigma;
-    private double maxSigma_xx, minSigma_xx, maxSigma_yy, minSigma_yy, maxSigma_zz, minSigma_zz;
-    private double maxSigma_xy, minSigma_xy, maxSigma_yz, minSigma_yz, maxSigma_zx, minSigma_zx;
-    private string maxKey_xx, minKey_xx, maxKey_yy, minKey_yy, maxKey_zz, minKey_zz;
-    private string maxKey_xy, minKey_xy, maxKey_yz, minKey_yz, maxKey_zx, minKey_zx;
-
-    private PerspectiveCamera theCamera;
-    // Anfangsposition der Kamera
-    private double cameraPhi = 0.13; // 7,45 Grad
-    private double cameraTheta = 1.65; // 94,5 Grad
-    private double cameraR = 60.0;
-    private double cameraX;
-    private double cameraY;
-
     // Veränderung des Abstands, wenn +/- Taste gedrückt wird
     private const double CameraDr = 1;
+
     // Horizontalverschiebung li/re
     private const double CameraDx = 1;
+
     // Vertikalverschiebung hoch/runter
     private const double CameraDy = 1;
-    private ModelVisual3D modelVisual;
     private readonly Darstellung3D darstellung3D;
+
+    private readonly Model3DGroup model3DGroup = new();
+
+    // Anfangsposition der Kamera
+    private double cameraPhi = 0.13; // 7,45 Grad
+    private double cameraR = 60.0;
+    private double cameraTheta = 1.65; // 94,5 Grad
+    private double cameraX;
+    private double cameraY;
+    private string maxKey_xx, minKey_xx, maxKey_yy, minKey_yy, maxKey_zz, minKey_zz;
+    private string maxKey_xy, minKey_xy, maxKey_yz, minKey_yz, maxKey_zx, minKey_zx;
+    private double maxSigma_xx, minSigma_xx, maxSigma_yy, minSigma_yy, maxSigma_zz, minSigma_zz;
+    private double maxSigma_xy, minSigma_xy, maxSigma_yz, minSigma_yz, maxSigma_zx, minSigma_zx;
+    private ModelVisual3D modelVisual;
+    private Dictionary<string, ElementSpannung> sigma;
+
+    private PerspectiveCamera theCamera;
 
     public StatikErgebnisse3DVisualisieren(FeModell feModell)
     {
@@ -41,6 +45,7 @@ public partial class StatikErgebnisse3DVisualisieren
         darstellung3D = new Darstellung3D(feModell);
         InitializeComponent();
     }
+
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         // Festlegung der Anfangsposition der Kamera
@@ -60,11 +65,10 @@ public partial class StatikErgebnisse3DVisualisieren
         // Elementspannungen
         sigma = new Dictionary<string, ElementSpannung>();
         foreach (var item in darstellung3D.modell.Elemente)
-        {
             sigma.Add(item.Key, new ElementSpannung(item.Value.BerechneZustandsvektor()));
-        }
         // Spannungsauswahl
-        var richtung = new List<string> { "sigma_xx", "sigma_yy", "sigma_xy", "sigma_zz", "sigma_yz", "sigma_zx", "keine" };
+        var richtung = new List<string>
+            { "sigma_xx", "sigma_yy", "sigma_xy", "sigma_zz", "sigma_yz", "sigma_zx", "keine" };
         //Spannungsauswahl.SelectedValue = "sigma_xx";
         Spannungsauswahl.ItemsSource = richtung;
 
@@ -74,6 +78,7 @@ public partial class StatikErgebnisse3DVisualisieren
         // Darstellung des "modelVisual" im Viewport
         Viewport.Children.Add(modelVisual);
     }
+
     private void DropDownSpannungsauswahlClosed(object sender, EventArgs e)
     {
         var spannung = (string)Spannungsauswahl.SelectedItem;
@@ -102,6 +107,7 @@ public partial class StatikErgebnisse3DVisualisieren
                 break;
         }
     }
+
     private void PositionierKamera()
     {
         // z-Blickrichtung, y-up, x-seitlich, _cameraR=Abstand
@@ -127,6 +133,7 @@ public partial class StatikErgebnisse3DVisualisieren
 
         //_ = MessageBox.Show("Camera.Position: (" + x + ", " + y + ", " + z + ")", "3D Wireframe");
     }
+
     private void FestlegungBeleuchtung()
     {
         var ambientLight = new AmbientLight(Colors.Gray);
@@ -140,34 +147,37 @@ public partial class StatikErgebnisse3DVisualisieren
     {
         foreach (var koordinaten in darstellung3D.koordinaten) model3DGroup.Children.Add(koordinaten);
     }
+
     private void RemoveKoordinaten(object sender, RoutedEventArgs e)
     {
         foreach (var koordinaten in darstellung3D.koordinaten) model3DGroup.Children.Remove(koordinaten);
     }
+
     private void ShowDrahtmodell(object sender, RoutedEventArgs e)
     {
         foreach (var kanten in darstellung3D.kanten) model3DGroup.Children.Add(kanten);
     }
+
     private void RemoveDrahtmodell(object sender, RoutedEventArgs e)
     {
         foreach (var kanten in darstellung3D.kanten) model3DGroup.Children.Remove(kanten);
     }
+
     private void ShowVerformungen(object sender, RoutedEventArgs e)
     {
         if (darstellung3D.verformungen.Count == 0)
-        {
             // verformte Geometrie als Drahtmodell
             darstellung3D.VerformteGeometrie(model3DGroup);
-        }
         else
-        {
-            foreach (var verformungen in darstellung3D.verformungen) model3DGroup.Children.Add(verformungen);
-        }
+            foreach (var verformungen in darstellung3D.verformungen)
+                model3DGroup.Children.Add(verformungen);
     }
+
     private void RemoveVerformungen(object sender, RoutedEventArgs e)
     {
         foreach (var verformungen in darstellung3D.verformungen) model3DGroup.Children.Remove(verformungen);
     }
+
     private void ShowSpannungen_xx()
     {
         //var maxSigma_xx = sigma.Max(elementSpannung => elementSpannung.Value.Spannungen[0]);
@@ -185,6 +195,7 @@ public partial class StatikErgebnisse3DVisualisieren
             minSigma_xx = item.Value.Spannungen[0];
             minKey_xx = item.Key;
         }
+
         MaxMin.Text = "maxSigma_xx = " + maxSigma_xx.ToString("0.###E+00") + " in Element " + maxKey_xx
                       + ",  minSigma_xx = " + minSigma_xx.ToString("0.###E+00") + " in Element " + minKey_xx;
 
@@ -205,6 +216,7 @@ public partial class StatikErgebnisse3DVisualisieren
         // Darstellung des "modelVisual" im Viewport
         Viewport.Children.Add(modelVisual);
     }
+
     private void ShowSpannungen_yy()
     {
         RemoveSpannungen();
@@ -241,6 +253,7 @@ public partial class StatikErgebnisse3DVisualisieren
         // Darstellung des "modelVisual" im Viewport
         Viewport.Children.Add(modelVisual);
     }
+
     private void ShowSpannungen_xy()
     {
         RemoveSpannungen();
@@ -277,6 +290,7 @@ public partial class StatikErgebnisse3DVisualisieren
         // Darstellung des "modelVisual" im Viewport
         Viewport.Children.Add(modelVisual);
     }
+
     private void ShowSpannungen_zz()
     {
         RemoveSpannungen();
@@ -313,6 +327,7 @@ public partial class StatikErgebnisse3DVisualisieren
         // Darstellung des "modelVisual" im Viewport
         Viewport.Children.Add(modelVisual);
     }
+
     private void ShowSpannungen_yz()
     {
         RemoveSpannungen();
@@ -349,6 +364,7 @@ public partial class StatikErgebnisse3DVisualisieren
         // Darstellung des "modelVisual" im Viewport
         Viewport.Children.Add(modelVisual);
     }
+
     private void ShowSpannungen_zx()
     {
         RemoveSpannungen();
@@ -385,6 +401,7 @@ public partial class StatikErgebnisse3DVisualisieren
         // Darstellung des "modelVisual" im Viewport
         Viewport.Children.Add(modelVisual);
     }
+
     private void RemoveSpannungen()
     {
         foreach (var sigmaModell in darstellung3D.spannungen_xx) model3DGroup.Children.Remove(sigmaModell);
@@ -396,12 +413,13 @@ public partial class StatikErgebnisse3DVisualisieren
     }
 
     // Veränderung der Kameraposition mit Scrollbars
-    private void ScrThetaScroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
+    private void ScrThetaScroll(object sender, ScrollEventArgs e)
     {
         cameraTheta = ScrTheta.Value;
         PositionierKamera();
     }
-    private void ScrPhiScroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
+
+    private void ScrPhiScroll(object sender, ScrollEventArgs e)
     {
         cameraPhi = ScrPhi.Value;
         PositionierKamera();
@@ -446,6 +464,7 @@ public partial class StatikErgebnisse3DVisualisieren
                 if (cameraR < CameraDr) cameraR = CameraDr;
                 break;
         }
+
         // Neufestlegung der Kameraposition
         PositionierKamera();
     }
@@ -460,11 +479,11 @@ public partial class StatikErgebnisse3DVisualisieren
 
     private class ElementSpannung
     {
-        public double[] Spannungen { get; }
-
         public ElementSpannung(double[] spannungen)
         {
             Spannungen = spannungen;
         }
+
+        public double[] Spannungen { get; }
     }
 }

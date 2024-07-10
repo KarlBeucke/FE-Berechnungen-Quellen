@@ -24,7 +24,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
-                <Grid  Grid.ColumnSpan="5" Height="30" VerticalAlignment="Top" FlowDirection="LeftToRight" Background="LightBlue">
+                <Grid Grid.ColumnSpan="5" Height="30" VerticalAlignment="Top" FlowDirection="LeftToRight"
+                      Background="LightBlue">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="80" />
@@ -35,23 +36,34 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40" />
                     </Grid.RowDefinitions>
-                    <TextBox Grid.Column="0" Margin="2,0,0,28" Padding="0,-3,0,0" 
-                             Height="12" Width="315" Grid.ColumnSpan="4" HorizontalAlignment="Left">Modelldefinitionen darstellen</TextBox>
+                    <TextBox Grid.Column="0" Margin="2,0,0,28" Padding="0,-3,0,0"
+                             Height="12" Width="315" Grid.ColumnSpan="4" HorizontalAlignment="Left">
+                        Modelldefinitionen darstellen
+                    </TextBox>
                     <Button Grid.Column="0" IsDefault="False" HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                            Width="70" Click="OnBtnKnotenIDs_Click" 
-                            Padding="0,-2,0,0" Height="15" 
-                            Margin="2,0,0,10" VerticalContentAlignment="Center">Knoten IDs</Button>
+                            Width="70" Click="OnBtnKnotenIDs_Click"
+                            Padding="0,-2,0,0" Height="15"
+                            Margin="2,0,0,10" VerticalContentAlignment="Center">
+                        Knoten IDs
+                    </Button>
                     <Button Grid.Column="1" IsDefault="False" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                            Width="70" Click="OnBtnElementIDs_Click" Padding="0,-2,0,0" Height="15" 
-                            Margin="2,0,0,10" VerticalContentAlignment="Center">Element IDs</Button>
+                            Width="70" Click="OnBtnElementIDs_Click" Padding="0,-2,0,0" Height="15"
+                            Margin="2,0,0,10" VerticalContentAlignment="Center">
+                        Element IDs
+                    </Button>
                     <Button Grid.Column="2" IsDefault="False" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                            Width="70" Click="OnBtnLasten_Click" Padding="0,-2,0,0" Height="15" 
-                            Margin="0,0,0,10" VerticalContentAlignment="Center">Lasten</Button>
+                            Width="70" Click="OnBtnLasten_Click" Padding="0,-2,0,0" Height="15"
+                            Margin="0,0,0,10" VerticalContentAlignment="Center">
+                        Lasten
+                    </Button>
                     <Button Grid.Column="3" IsDefault="False" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                            Width="70" Click="OnBtnLager_Click" Padding="0,-2,0,0" Height="15" 
-                            Margin="0,0,0,10">Lager</Button>
+                            Width="70" Click="OnBtnLager_Click" Padding="0,-2,0,0" Height="15"
+                            Margin="0,0,0,10">
+                        Lager
+                    </Button>
                 </Grid>
-                <Grid Column="5"  Grid.ColumnSpan="6" Height="30" VerticalAlignment="Top" FlowDirection="LeftToRight" Background="GreenYellow">
+                <Grid Column="5" Grid.ColumnSpan="6" Height="30" VerticalAlignment="Top" FlowDirection="LeftToRight"
+                      Background="GreenYellow">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="90" />
                         <ColumnDefinition Width="90" />
@@ -63,71 +75,81 @@
                         <RowDefinition Height="40" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Column="0" Margin="0,0,14,28" Padding="0,-3,0,0" 
-                             Grid.ColumnSpan="5" Height="12">Modelldefinitionen neu definieren und vorhandene editieren</TextBox>
+                    <TextBox Grid.Column="0" Margin="0,0,14,28" Padding="0,-3,0,0"
+                             Grid.ColumnSpan="5" Height="12">
+                        Modelldefinitionen neu definieren und vorhandene editieren
+                    </TextBox>
 
-                    <Menu Grid.Column="0" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight" Margin="0,15,0,12">
-                        <MenuItem Header="Knoten"  Height="18" Width="65"
+                    <Menu Grid.Column="0" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight"
+                          Margin="0,15,0,12">
+                        <MenuItem Header="Knoten" Height="18" Width="65"
                                   Padding="5,0,0,0" VerticalAlignment="Center">
-                            <MenuItem Header="Knoten" HorizontalAlignment="Left" Height="20" Width="250" 
-                                      Margin="0,0,0,0" Click="MenuBalkenKnotenNeu"/>
-                            <MenuItem Header="Knotengruppe" HorizontalAlignment="Left" Height="20" Width="250" 
-                                      Margin="0,0,0,0" Click="MenuBalkenKnotenGruppeNeu"/>
-                            <MenuItem Header="äquidistantes Knotennetz" HorizontalAlignment="Left" Height="20" Width="250" 
-                                      Margin="0,0,0,0" Click="MenuBalkenKnotenNetzÄquidistant"/>
-                            <MenuItem Header="variables Knotennetz" HorizontalAlignment="Left" Height="20" Width="250" 
-                                      Margin="0,0,0,0" Click="MenuBalkenKnotenNetzVariabel"/>
+                            <MenuItem Header="Knoten" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuBalkenKnotenNeu" />
+                            <MenuItem Header="Knotengruppe" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuBalkenKnotenGruppeNeu" />
+                            <MenuItem Header="äquidistantes Knotennetz" HorizontalAlignment="Left" Height="20"
+                                      Width="250"
+                                      Margin="0,0,0,0" Click="MenuBalkenKnotenNetzÄquidistant" />
+                            <MenuItem Header="variables Knotennetz" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuBalkenKnotenNetzVariabel" />
                         </MenuItem>
                     </Menu>
-                    <Menu Grid.Column="1" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight" Margin="0,15,0,12">
-                        <MenuItem Header="Elemente"  Height="18" Width="65"
+                    <Menu Grid.Column="1" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight"
+                          Margin="0,15,0,12">
+                        <MenuItem Header="Elemente" Height="18" Width="65"
                                   Padding="5,0,0,0" VerticalAlignment="Center">
-                            <MenuItem Header="Element" HorizontalAlignment="Left" Height="20" Width="250" 
-                                      Margin="0,0,0,0" Click="MenuBalkenElementNeu"/>
-                            <MenuItem Header="Querschnitt" HorizontalAlignment="Left" Height="20" Width="250" 
-                                      Margin="0,0,0,0" Click="MenuQuerschnittNeu"/>
-                            <Separator></Separator>
-                            <MenuItem Header="Material" HorizontalAlignment="Left" Height="20" Width="250" 
-                                      Margin="0,0,0,0" Click="MenuMaterialNeu"/>
+                            <MenuItem Header="Element" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuBalkenElementNeu" />
+                            <MenuItem Header="Querschnitt" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuQuerschnittNeu" />
+                            <Separator />
+                            <MenuItem Header="Material" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuMaterialNeu" />
                         </MenuItem>
                     </Menu>
                     <Menu Grid.Column="2" HorizontalAlignment="Center" Height="14"
                           VerticalAlignment="Bottom" Width="70" FlowDirection="LeftToRight" Margin="0,0,0,12">
-                        <MenuItem Header="Lasten"  Height="17" Width="60"
+                        <MenuItem Header="Lasten" Height="17" Width="60"
                                   Padding="5,0,0,0" VerticalAlignment="Center">
-                            <MenuItem Header="Knotenlast" HorizontalAlignment="Left" Height="20" Width="250" 
-                                      Margin="0,0,0,0" Click="MenuKnotenlastNeu"/>
-                            <MenuItem Header="Linienlast" HorizontalAlignment="Left" Height="20" Width="250" 
-                                      Margin="0,0,0,0" Click="MenuLinienlastNeu"/>
-                            <MenuItem Header="Punktlast" HorizontalAlignment="Left" Height="20" Width="250" 
-                                      Margin="0,0,0,0" Click="MenuPunktlastNeu"/>
+                            <MenuItem Header="Knotenlast" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuKnotenlastNeu" />
+                            <MenuItem Header="Linienlast" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuLinienlastNeu" />
+                            <MenuItem Header="Punktlast" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuPunktlastNeu" />
                         </MenuItem>
                     </Menu>
                     <Button Grid.Column="3" IsDefault="False" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Width="82" Click="OnBtnLagerNeu_Click" Padding="0,-2,0,0" Height="15" 
-                            Margin="0,14,0,0">Lager</Button>
-                    <Button Grid.Column="4" IsDefault="False" VerticalAlignment="Top" Click="OnBtnZeitintegrationNew_Click" Padding="0,-2,0,0" Height="15" 
-                            Margin="9,14,-9,0">Zeitintegration</Button>
+                            Width="82" Click="OnBtnLagerNeu_Click" Padding="0,-2,0,0" Height="15"
+                            Margin="0,14,0,0">
+                        Lager
+                    </Button>
+                    <Button Grid.Column="4" IsDefault="False" VerticalAlignment="Top"
+                            Click="OnBtnZeitintegrationNew_Click" Padding="0,-2,0,0" Height="15"
+                            Margin="9,14,-9,0">
+                        Zeitintegration
+                    </Button>
                 </Grid>
             </Grid>
 
             <Grid Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="400*"/>
-                    <ColumnDefinition Width="63*"/>
-                    <ColumnDefinition Width="338*"/>
-                    <ColumnDefinition Width="400*"/>
+                    <ColumnDefinition Width="400*" />
+                    <ColumnDefinition Width="63*" />
+                    <ColumnDefinition Width="338*" />
+                    <ColumnDefinition Width="400*" />
                 </Grid.ColumnDefinitions>
                 <Canvas x:Name="VisualTragwerkModel" Height="650" Width="1201" Grid.ColumnSpan="4"
                         ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                         MouseLeftButtonDown="OnMouseLeftButtonDown">
                     <Popup x:Name="MyPopup" Placement="MousePoint">
-                        <TextBlock x:Name="MyPopupText" Background="LightBlue" Foreground="Blue" Padding="10"/>
+                        <TextBlock x:Name="MyPopupText" Background="LightBlue" Foreground="Blue" Padding="10" />
                     </Popup>
-                    <Ellipse Name="Pilot"  Fill="Red" Width="10" Height="10"
-                             MouseDown="Pilot_MouseDown" 
-                             MouseMove="Pilot_MouseMove" 
-                             MouseUp="Pilot_MouseUp"/>
+                    <Ellipse Name="Pilot" Fill="Red" Width="10" Height="10"
+                             MouseDown="Pilot_MouseDown"
+                             MouseMove="Pilot_MouseMove"
+                             MouseUp="Pilot_MouseUp" />
                 </Canvas>
             </Grid>
         </StackPanel>

@@ -1,9 +1,9 @@
-﻿using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Markup;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 
@@ -12,13 +12,9 @@ public partial class DynamischeErgebnisseAnzeigen
     private readonly FeModell modell;
     private Knoten knoten;
 
-    private double Dt { get; }
-    private int NSteps { get; }
-    private int Index { get; set; }
-
     public DynamischeErgebnisseAnzeigen(FeModell feModell)
     {
-        this.Language = XmlLanguage.GetLanguage("de-DE");
+        Language = XmlLanguage.GetLanguage("de-DE");
         modell = feModell;
         InitializeComponent();
         Show();
@@ -31,22 +27,30 @@ public partial class DynamischeErgebnisseAnzeigen
         NSteps = (int)(tmax / Dt);
         const int zeitraster = 1;
         //if (NSteps > 1000) zeitraster = 10;
-        NSteps = (NSteps / zeitraster) + 1;
+        NSteps = NSteps / zeitraster + 1;
         var zeit = new double[NSteps];
-        for (var i = 0; i < NSteps; i++) { zeit[i] = i * Dt * zeitraster; }
+        for (var i = 0; i < NSteps; i++) zeit[i] = i * Dt * zeitraster;
 
         Zeitschrittauswahl.ItemsSource = zeit;
     }
 
-    private void DropDownKnotenauswahlClosed(object sender, System.EventArgs e)
+    private double Dt { get; }
+    private int NSteps { get; }
+    private int Index { get; set; }
+
+    private void DropDownKnotenauswahlClosed(object sender, EventArgs e)
     {
         if (Knotenauswahl.SelectedIndex < 0)
         {
             _ = MessageBox.Show("kein gültiger Knoten Identifikator ausgewählt", "Zeitschrittauswahl");
             return;
         }
+
         var knotenId = (string)Knotenauswahl.SelectedItem;
-        if (modell.Knoten.TryGetValue(knotenId, out knoten)) { }
+        if (modell.Knoten.TryGetValue(knotenId, out knoten))
+        {
+        }
+
         if (knoten != null)
         {
             var maxDeltaX = knoten.KnotenVariable[0].Max();
@@ -64,11 +68,13 @@ public partial class DynamischeErgebnisseAnzeigen
                           + ", max. AccY = " + maxAccY.ToString("G4") + ", t =" + maxAccYZeit.ToString("N2");
             MaxText.Text = maxText;
         }
+
         KnotenverformungenAnzeigen();
     }
+
     private void KnotenverformungenAnzeigen()
     {
-        if (knoten == null) { return; }
+        if (knoten == null) return;
 
         var knotenverformungen = new List<Knotenverformungen>();
         var dt = modell.Zeitintegration.Dt;
@@ -82,29 +88,35 @@ public partial class DynamischeErgebnisseAnzeigen
             switch (knoten.KnotenVariable.Length)
             {
                 case 2:
-                    knotenverformung = new Knotenverformungen(zeit[i], knoten.KnotenVariable[0][i], knoten.KnotenVariable[1][i],
+                    knotenverformung = new Knotenverformungen(zeit[i], knoten.KnotenVariable[0][i],
+                        knoten.KnotenVariable[1][i],
                         knoten.KnotenAbleitungen[0][i], knoten.KnotenAbleitungen[1][i]);
                     break;
                 case 3:
-                    knotenverformung = new Knotenverformungen(zeit[i], knoten.KnotenVariable[0][i], knoten.KnotenVariable[1][i], knoten.KnotenVariable[2][i],
+                    knotenverformung = new Knotenverformungen(zeit[i], knoten.KnotenVariable[0][i],
+                        knoten.KnotenVariable[1][i], knoten.KnotenVariable[2][i],
                         knoten.KnotenAbleitungen[0][i], knoten.KnotenAbleitungen[1][i], knoten.KnotenAbleitungen[2][i]);
                     break;
             }
+
             knotenverformungen.Add(knotenverformung);
             zeit[i + 1] = zeit[i] + dt;
         }
+
         KnotenverformungenGrid.ItemsSource = knotenverformungen;
     }
 
-    private void DropDownZeitschrittauswahlClosed(object sender, System.EventArgs e)
+    private void DropDownZeitschrittauswahlClosed(object sender, EventArgs e)
     {
         if (Zeitschrittauswahl.SelectedIndex < 0)
         {
             _ = MessageBox.Show("kein gültiger Zeitschritt ausgewählt", "Zeitschrittauswahl");
             return;
         }
+
         Index = Zeitschrittauswahl.SelectedIndex;
     }
+
     private void ZeitschrittGrid_Anzeigen(object sender, RoutedEventArgs e)
     {
         if (Index == 0) return;
@@ -125,19 +137,25 @@ public partial class DynamischeErgebnisseAnzeigen
             {
                 case 2:
                     knotenverformung = new Knotenverformungen(item.Value.Id,
-                        knoten.KnotenVariable[0][Index] * verformungsEinheit, knoten.KnotenVariable[1][Index] * verformungsEinheit,
-                        knoten.KnotenAbleitungen[0][Index] * verformungsEinheit, knoten.KnotenAbleitungen[1][Index] * verformungsEinheit);
+                        knoten.KnotenVariable[0][Index] * verformungsEinheit,
+                        knoten.KnotenVariable[1][Index] * verformungsEinheit,
+                        knoten.KnotenAbleitungen[0][Index] * verformungsEinheit,
+                        knoten.KnotenAbleitungen[1][Index] * verformungsEinheit);
                     break;
                 case 3:
                     knotenverformung = new Knotenverformungen(item.Value.Id,
-                        knoten.KnotenVariable[0][Index] * verformungsEinheit, knoten.KnotenVariable[1][Index] * verformungsEinheit,
+                        knoten.KnotenVariable[0][Index] * verformungsEinheit,
+                        knoten.KnotenVariable[1][Index] * verformungsEinheit,
                         knoten.KnotenVariable[2][Index] * verformungsEinheit,
-                        knoten.KnotenAbleitungen[0][Index] * verformungsEinheit, knoten.KnotenAbleitungen[1][Index] * verformungsEinheit,
+                        knoten.KnotenAbleitungen[0][Index] * verformungsEinheit,
+                        knoten.KnotenAbleitungen[1][Index] * verformungsEinheit,
                         knoten.KnotenAbleitungen[2][Index] * verformungsEinheit);
                     break;
             }
+
             zeitschritt.Add(knotenverformung);
         }
+
         ZeitschrittGrid.ItemsSource = zeitschritt;
     }
 }

@@ -1,15 +1,16 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class LinienlastNeu
 {
     private readonly FeModell _modell;
+
     public LinienlastNeu(FeModell modell)
     {
         InitializeComponent();
@@ -45,7 +46,8 @@ public partial class LinienlastNeu
         _modell.ElementLasten.TryGetValue(linienlastId, out var vorhandeneLinienlast);
         if (vorhandeneLinienlast != null)
         {
-            if (ElementId.Text.Length > 0) vorhandeneLinienlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
+            if (ElementId.Text.Length > 0)
+                vorhandeneLinienlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
             vorhandeneLinienlast.InElementKoordinatenSystem = InElement.IsChecked != null && (bool)InElement.IsChecked;
             try
             {
@@ -87,6 +89,7 @@ public partial class LinienlastNeu
             };
             _modell.ElementLasten.Add(linienlastId, linienlast);
         }
+
         StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
@@ -99,6 +102,7 @@ public partial class LinienlastNeu
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
     }
+
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
     {
         // vorhandene Linienlastdefinition
@@ -112,6 +116,7 @@ public partial class LinienlastNeu
         Pyb.Text = vorhandeneLinienlast.Lastwerte[3].ToString("G3", CultureInfo.CurrentCulture);
         vorhandeneLinienlast.InElementKoordinatenSystem = InElement.IsChecked != null && (bool)InElement.IsChecked;
     }
+
     private void ElementIdLostFocus(object sender, RoutedEventArgs e)
     {
         _modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement);
@@ -122,8 +127,10 @@ public partial class LinienlastNeu
             ElementId.Text = "";
             return;
         }
+
         if (LastId.Text == "") LastId.Text = "LL_" + ElementId.Text;
     }
+
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
         if (!_modell.ElementLasten.Keys.Contains(LastId.Text)) return;

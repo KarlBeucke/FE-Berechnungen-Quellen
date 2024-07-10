@@ -6,8 +6,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 internal class TransientParser
 {
-    private string[] substrings;
     private readonly char[] delimiters = { '\t', ';' };
+    private string[] substrings;
     public bool ZeitintegrationDaten;
 
     public void ParseZeitintegration(string[] lines, FeModell feModell)
@@ -28,10 +28,8 @@ internal class TransientParser
                 modell.Eigenzustand = new Eigenzustände(id, numberOfStates);
                 break;
             }
-            else
-            {
-                throw new ParseAusnahme((i + 2) + ":\nEigenlösungen, falsche Anzahl Parameter");
-            }
+
+            throw new ParseAusnahme(i + 2 + ":\nEigenlösungen, falsche Anzahl Parameter");
         }
 
         // suche "Zeitintegration"
@@ -62,8 +60,9 @@ internal class TransientParser
                         new Zeitintegration(tmax, dt, method, parameter1, parameter2);
                     break;
                 default:
-                    throw new ParseAusnahme((i + 2) + ":\nZeitintegration, falsche Anzahl Parameter");
+                    throw new ParseAusnahme(i + 2 + ":\nZeitintegration, falsche Anzahl Parameter");
             }
+
             ZeitintegrationDaten = true;
         }
 
@@ -76,12 +75,10 @@ internal class TransientParser
             {
                 substrings = lines[i + 1].Split(delimiters);
                 foreach (var rate in substrings)
-                {
-                    modell.Eigenzustand.DämpfungsRaten.
-                        Add(new ModaleWerte(double.Parse(rate)));
-                }
+                    modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(double.Parse(rate)));
                 i++;
             } while (lines[i + 1].Length != 0);
+
             break;
         }
 
@@ -108,16 +105,15 @@ internal class TransientParser
                         nodalDof = 3;
                         break;
                     default:
-                        throw new ParseAusnahme((i + 2) + ":\nAnfangsbedingungen, falsche Anzahl Parameter");
+                        throw new ParseAusnahme(i + 2 + ":\nAnfangsbedingungen, falsche Anzahl Parameter");
                 }
+
                 var anfangsWerte = new double[2 * nodalDof];
-                for (var k = 0; k < 2 * nodalDof; k++)
-                {
-                    anfangsWerte[k] = double.Parse(substrings[k + 1]);
-                }
+                for (var k = 0; k < 2 * nodalDof; k++) anfangsWerte[k] = double.Parse(substrings[k + 1]);
                 modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(anfangsKnotenId, anfangsWerte));
                 i++;
             } while (lines[i + 1].Length != 0);
+
             break;
         }
 
@@ -133,7 +129,7 @@ internal class TransientParser
             {
                 substrings = lines[i].Split(delimiters);
                 if (substrings.Length != 3)
-                    throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Knotenlast, falsche Anzahl Parameter");
+                    throw new ParseAusnahme(i + 2 + ":\nZeitabhängige Knotenlast, falsche Anzahl Parameter");
 
                 var knotenLastId = substrings[0];
                 var knotenId = substrings[1];
@@ -146,39 +142,47 @@ internal class TransientParser
                 {
                     // 1 Wert: lies Anregung (Lastvektor) aus Datei, Variationstyp = 0
                     case 1:
-                        {
-                            zeitabhängigeKnotenLast = new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, true, boden)
-                            { VariationsTyp = 0 };
-                            var last = (AbstraktZeitabhängigeKnotenlast)zeitabhängigeKnotenLast;
-                            modell.ZeitabhängigeKnotenLasten.Add(knotenLastId, last);
-                            break;
-                        }
+                    {
+                        zeitabhängigeKnotenLast =
+                            new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, true, boden)
+                                { VariationsTyp = 0 };
+                        var last = (AbstraktZeitabhängigeKnotenlast)zeitabhängigeKnotenLast;
+                        modell.ZeitabhängigeKnotenLasten.Add(knotenLastId, last);
+                        break;
+                    }
                     // 3 Werte: harmonische Anregung, Variationstyp = 2
                     case 3:
-                        {
-                            var amplitude = double.Parse(substrings[0]);
-                            var circularFrequency = double.Parse(substrings[1]);
-                            var phaseAngle = double.Parse(substrings[2]);
-                            zeitabhängigeKnotenLast = new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
-                            { Amplitude = amplitude, Frequenz = circularFrequency, PhasenWinkel = phaseAngle, VariationsTyp = 2 };
-                            modell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
-                            break;
-                        }
+                    {
+                        var amplitude = double.Parse(substrings[0]);
+                        var circularFrequency = double.Parse(substrings[1]);
+                        var phaseAngle = double.Parse(substrings[2]);
+                        zeitabhängigeKnotenLast =
+                            new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
+                            {
+                                Amplitude = amplitude, Frequenz = circularFrequency, PhasenWinkel = phaseAngle,
+                                VariationsTyp = 2
+                            };
+                        modell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
+                        break;
+                    }
                     // mehr als 3 Werte: lies Zeit-/Wert-Intervalle der Anregung mit linearer Interpolation, Variationstyp = 1
                     default:
+                    {
+                        var interval = new double[substrings.Length];
+                        for (var j = 0; j < substrings.Length; j += 2)
                         {
-                            var interval = new double[substrings.Length];
-                            for (var j = 0; j < substrings.Length; j += 2)
-                            {
-                                interval[j] = double.Parse(substrings[j]);
-                                interval[j + 1] = double.Parse(substrings[j + 1]);
-                            }
-                            zeitabhängigeKnotenLast = new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
-                            { Intervall = interval, VariationsTyp = 1 };
-                            modell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
-                            break;
+                            interval[j] = double.Parse(substrings[j]);
+                            interval[j + 1] = double.Parse(substrings[j + 1]);
                         }
+
+                        zeitabhängigeKnotenLast =
+                            new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
+                                { Intervall = interval, VariationsTyp = 1 };
+                        modell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
+                        break;
+                    }
                 }
+
                 i += 2;
             } while (lines[i].Length != 0);
         }

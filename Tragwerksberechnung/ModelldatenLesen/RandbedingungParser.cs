@@ -5,12 +5,12 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public class RandbedingungParser
 {
-    private FeModell _modell;
     private readonly char[] _delimiters = ['\t'];
-    private string[] _substrings;
-    private string _lagerId;
     private string _knotenId;
     private Lager _lager;
+    private string _lagerId;
+    private FeModell _modell;
+    private string[] _substrings;
 
     public void ParseRandbedingungen(string[] lines, FeModell feModell)
     {
@@ -45,6 +45,7 @@ public class RandbedingungParser
                                 break;
                         }
                     }
+
                     var vordefiniert = new double[3];
                     if (_substrings.Length > 3) vordefiniert[0] = double.Parse(_substrings[3]);
                     if (_substrings.Length > 4) vordefiniert[1] = double.Parse(_substrings[4]);
@@ -55,9 +56,10 @@ public class RandbedingungParser
                 }
                 else
                 {
-                    throw new ParseAusnahme((i + 2) + ":\nLager" + _lagerId);
+                    throw new ParseAusnahme(i + 2 + ":\nLager" + _lagerId);
                 }
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }

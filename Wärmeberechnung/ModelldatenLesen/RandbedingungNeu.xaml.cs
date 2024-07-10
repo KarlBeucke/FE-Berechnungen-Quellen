@@ -1,15 +1,16 @@
-﻿using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class RandbdingungNeu
 {
     private readonly FeModell modell;
-    private AbstraktRandbedingung vorhandeneRandbedingung;
     private readonly RandbedingungenKeys randbedingungenKeys;
+    private AbstraktRandbedingung vorhandeneRandbedingung;
 
     public RandbdingungNeu(FeModell modell)
     {
@@ -45,12 +46,13 @@ public partial class RandbdingungNeu
             if (Temperatur.Text.Length > 0)
                 temperatur = double.Parse(Temperatur.Text);
 
-            var randbedingung = new Modelldaten.Randbedingung(randbedingungId, knotenId, temperatur)
+            var randbedingung = new Randbedingung(randbedingungId, knotenId, temperatur)
             {
                 RandbedingungId = randbedingungId
             };
             modell.Randbedingungen.Add(randbedingungId, randbedingung);
         }
+
         randbedingungenKeys?.Close();
         Close();
         StartFenster.WärmeVisual.Close();

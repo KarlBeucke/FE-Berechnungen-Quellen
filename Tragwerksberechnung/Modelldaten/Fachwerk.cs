@@ -1,20 +1,19 @@
-﻿using FEBibliothek.Modell;
+﻿using System;
+using System.Windows;
+using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using FEBibliothek.Werkzeuge;
-using System;
-using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
 public class Fachwerk : AbstraktBalken
 {
-    private readonly FeModell _modell;
-    private AbstraktElement _element;
-    private double _emodul, _masse, _fläche;
-
     private static double[,] _stiffnessMatrix = new double[4, 4];
 
     private static readonly double[] MassMatrix = new double[4];
+    private readonly FeModell _modell;
+    private AbstraktElement _element;
+    private double _emodul, _masse, _fläche;
 
     public Fachwerk(string[] eKnotens, string materialId, string querschnittId, FeModell feModel)
     {
@@ -48,9 +47,7 @@ public class Fachwerk : AbstraktBalken
     public override double[] BerechneDiagonalMatrix() //throws AlgebraicException
     {
         if (ElementMaterial.MaterialWerte.Length < 3 && M == 0)
-        {
             throw new ModellAusnahme("\nFachwerk " + ElementId + ", spezifische Masse noch nicht definiert");
-        }
         // Me = specific mass * area * 0.5*length
         if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) return null;
         _masse = M == 0 ? material.MaterialWerte[2] : M;
@@ -94,17 +91,14 @@ public class Fachwerk : AbstraktBalken
         SystemIndizesElement = new int[KnotenProElement * ElementFreiheitsgrade];
         var counter = 0;
         for (var i = 0; i < KnotenProElement; i++)
-        {
-            for (var j = 0; j < ElementFreiheitsgrade; j++)
-                SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
-        }
+        for (var j = 0; j < ElementFreiheitsgrade; j++)
+            SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
     }
+
     public override Point BerechneSchwerpunkt()
     {
         if (!_modell.Elemente.TryGetValue(ElementId, out _element))
-        {
             throw new ModellAusnahme("\nFachwerk: " + ElementId + " nicht im Modell gefunden");
-        }
         return Schwerpunkt(_element);
     }
 

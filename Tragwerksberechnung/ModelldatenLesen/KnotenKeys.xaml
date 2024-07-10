@@ -10,7 +10,8 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Id" Width="30" DisplayMemberBinding="{Binding Id}" />
-                    <GridViewColumn Header="Freiheitsgrade" Width="50" DisplayMemberBinding="{Binding AnzahlKnotenfreiheitsgrade}" />
+                    <GridViewColumn Header="Freiheitsgrade" Width="50"
+                                    DisplayMemberBinding="{Binding AnzahlKnotenfreiheitsgrade}" />
                     <GridViewColumn Header="x" Width="50" DisplayMemberBinding="{Binding Koordinaten[0]}" />
                     <GridViewColumn Header="y" Width="50" DisplayMemberBinding="{Binding Koordinaten[1]}" />
                     <GridViewColumn Header="z" Width="50" DisplayMemberBinding="{Binding Koordinaten[2]}" />

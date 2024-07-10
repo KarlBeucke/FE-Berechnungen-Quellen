@@ -1,8 +1,9 @@
-﻿using FEBibliothek.Modell;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using FEBibliothek.Modell;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.FontWeights;
 using static System.Windows.Media.Brushes;
@@ -11,30 +12,32 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
 public partial class EigenlösungVisualisieren : Window
 {
-    private readonly FeModell modell;
-    private int index;
-    public Darstellung darstellung;
-    private double auflösung, maxY;
-    public double screenH, screenV;
     private const int RandLinks = 40;
-    private bool knotentemperaturenAn = false;
-    public List<object> Knotentemperaturen { get; set; }
-    public List<object> Eigenwerte { get; set; }
+    private readonly FeModell modell;
+    private double auflösung, maxY;
+    public Darstellung darstellung;
+    private int index;
+    private bool knotentemperaturenAn;
+    public double screenH, screenV;
 
     public EigenlösungVisualisieren(FeModell modell)
     {
-        this.Language = XmlLanguage.GetLanguage("de-DE");
+        Language = XmlLanguage.GetLanguage("de-DE");
         this.modell = modell;
         InitializeComponent();
         Knotentemperaturen = new List<object>();
         Eigenwerte = new List<object>();
     }
+
+    public List<object> Knotentemperaturen { get; set; }
+    public List<object> Eigenwerte { get; set; }
+
     private void ModelGrid_Loaded(object sender, RoutedEventArgs e)
     {
         // Auswahl der Eigenlösung
         var anzahlEigenformen = modell.Eigenzustand.AnzahlZustände;
         var eigenformNr = new int[anzahlEigenformen];
-        for (var i = 0; i < anzahlEigenformen; i++) { eigenformNr[i] = i + 1; }
+        for (var i = 0; i < anzahlEigenformen; i++) eigenformNr[i] = i + 1;
         Eigenlösungauswahl.ItemsSource = eigenformNr;
 
         darstellung = new Darstellung(modell, VisualErgebnisse);
@@ -45,7 +48,7 @@ public partial class EigenlösungVisualisieren : Window
     }
 
     // Combobox event
-    private void DropDownEigenformauswahlClosed(object sender, System.EventArgs e)
+    private void DropDownEigenformauswahlClosed(object sender, EventArgs e)
     {
         index = Eigenlösungauswahl.SelectedIndex;
     }
@@ -63,7 +66,7 @@ public partial class EigenlösungVisualisieren : Window
             var eigenwert = new TextBlock
             {
                 FontSize = 14,
-                Text = "Eigenwert Nr. " + (index + 1).ToString() + " = " + modell.Eigenzustand.Eigenwerte[index].ToString("N2"),
+                Text = "Eigenwert Nr. " + (index + 1) + " = " + modell.Eigenzustand.Eigenwerte[index].ToString("N2"),
                 Foreground = Blue
             };
             SetTop(eigenwert, -10);
@@ -74,11 +77,8 @@ public partial class EigenlösungVisualisieren : Window
         else
         {
             // entferne ALLE Textdarstellungen der Knotentemperaturen
-            foreach (var knotenTemp in Knotentemperaturen)
-            {
-                VisualErgebnisse.Children.Remove(knotenTemp as TextBlock);
-            }
-            foreach (TextBlock eigenwert in Eigenwerte) VisualErgebnisse.Children.Remove(eigenwert as TextBlock);
+            foreach (var knotenTemp in Knotentemperaturen) VisualErgebnisse.Children.Remove(knotenTemp as TextBlock);
+            foreach (TextBlock eigenwert in Eigenwerte) VisualErgebnisse.Children.Remove(eigenwert);
             knotentemperaturenAn = false;
         }
     }
@@ -111,8 +111,8 @@ public partial class EigenlösungVisualisieren : Window
 
     private int[] TransformKnoten(Knoten knoten, double aufl, double mY)
     {
-        this.auflösung = aufl;
-        this.maxY = mY;
+        auflösung = aufl;
+        maxY = mY;
         var fensterKnoten = new int[2];
         fensterKnoten[0] = (int)(knoten.Koordinaten[0] * auflösung);
         fensterKnoten[1] = (int)(-knoten.Koordinaten[1] * auflösung + maxY);

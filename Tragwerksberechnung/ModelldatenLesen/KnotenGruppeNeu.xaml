@@ -7,12 +7,12 @@
         Title="Knotengruppe definieren oder editieren" Height="420" Width="400">
     <Grid Height="403" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="40"/>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="40"/>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="40" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -22,30 +22,31 @@
             <RowDefinition Height="770" />
         </Grid.RowDefinitions>
         <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="6" Margin="0,0,-40,37" Grid.RowSpan="2">
-            Präfix für alle Ids eingeben, Knoten Ids werden generiert</Label>
+            Präfix für alle Ids eingeben, Knoten Ids werden generiert
+        </Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knoten Präfix</Label>
-        <TextBox Name="Präfix" Grid.Row="1" Grid.Column="1" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" LostFocus="KnotenIdLostFocus"/>
+        <TextBox Name="Präfix" Grid.Row="1" Grid.Column="1" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" LostFocus="KnotenIdLostFocus" />
         <Label Grid.Row="1" Grid.Column="2" Margin="0,5,75,0" Grid.ColumnSpan="3">Anzahl Freiheitsgrade</Label>
-        <TextBox Name="AnzahlDof" Grid.Row="1" Grid.Column="4" Margin="5,0,0,0" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="33"/>
+        <TextBox Name="AnzahlDof" Grid.Row="1" Grid.Column="4" Margin="5,0,0,0" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="33" />
 
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,10">x Koordinate</Label>
-        <TextBox Name="X" Grid.Row="2" Grid.Column="1" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="32"/>
+        <TextBox Name="X" Grid.Row="2" Grid.Column="1" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
         <Label Grid.Row="2" Grid.Column="2" Margin="4,5,0,10">y Koordinate</Label>
-        <TextBox Name="Y" Grid.Row="2" Grid.Column="3" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="34"/>
+        <TextBox Name="Y" Grid.Row="2" Grid.Column="3" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="34" />
         <Label Grid.Row="2" Grid.Column="4" Margin="0,5,0,5">z Koordinate</Label>
         <TextBox Name="Z" Grid.Row="2" Grid.Column="5" Height="20"
-                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="32"/>
+                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
 
-        <DataGrid  Name="KnotenGrid" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="6" Margin="0,0,-39,0"
-                   AlternatingRowBackground="Aqua" AutoGenerateColumns="False">
+        <DataGrid Name="KnotenGrid" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="6" Margin="0,0,-39,0"
+                  AlternatingRowBackground="Aqua" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header=" Knoten Id"  Binding="{Binding Id}"/>
-                <DataGridTextColumn Header=" Anzahl DoF"  Binding="{Binding AnzahlKnotenfreiheitsgrade}"/>
+                <DataGridTextColumn Header=" Knoten Id" Binding="{Binding Id}" />
+                <DataGridTextColumn Header=" Anzahl DoF" Binding="{Binding AnzahlKnotenfreiheitsgrade}" />
                 <DataGridTextColumn Header=" x-Koordinate" Binding="{Binding Koordinaten[0]}" />
                 <DataGridTextColumn Header=" y-Koordinate" Binding="{Binding Koordinaten[1]}" />
                 <DataGridTextColumn Header=" z-Koordinate" Binding="{Binding Koordinaten[2]}" />
@@ -53,10 +54,16 @@
         </DataGrid>
 
         <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="12,14,40,730"
-                Click="BtnTabelleneintrag">_Knotengruppe generieren</Button>
-        <Button Grid.Row="4" Grid.Column="5"  Margin="0,14,2,731" 
-                Click="BtnDialogOk_Click">_Ok</Button>
+                Click="BtnTabelleneintrag">
+            _Knotengruppe generieren
+        </Button>
+        <Button Grid.Row="4" Grid.Column="5" Margin="0,14,2,731"
+                Click="BtnDialogOk_Click">
+            _Ok
+        </Button>
         <Button Grid.Row="4" Grid.Column="4" Margin="8,14,5,730"
-                Click="BtnDialogCancel_Click">_Abbrechen</Button>
+                Click="BtnDialogCancel_Click">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

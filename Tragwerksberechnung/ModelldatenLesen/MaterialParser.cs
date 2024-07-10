@@ -5,15 +5,15 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 internal class MaterialParser
 {
-    private FeModell _modell;
     private readonly char[] _delimiters = { '\t' };
-    private string[] _substrings;
-    private string _materialId;
-    private Material _material;
     private double _eModul;
-    private double _poisson;
-    private double _masse;
     private double _kx, _ky, _kphi;
+    private double _masse;
+    private Material _material;
+    private string _materialId;
+    private FeModell _modell;
+    private double _poisson;
+    private string[] _substrings;
 
     public void ParseMaterials(string[] lines, FeModell feModell)
     {
@@ -59,26 +59,28 @@ internal class MaterialParser
                             _modell.Material.Add(_materialId, _material);
                             break;
                         case 5:
+                        {
+                            var feder = _substrings[1];
+                            _kx = double.Parse(_substrings[2]);
+                            _ky = double.Parse(_substrings[3]);
+                            _kphi = double.Parse(_substrings[4]);
+                            _material = new Material(true, _kx, _ky, _kphi)
                             {
-                                var feder = _substrings[1];
-                                _kx = double.Parse(_substrings[2]);
-                                _ky = double.Parse(_substrings[3]);
-                                _kphi = double.Parse(_substrings[4]);
-                                _material = new Material(true, _kx, _ky, _kphi)
-                                {
-                                    MaterialId = _materialId
-                                };
-                                _modell.Material.Add(_materialId, _material);
-                                break;
-                            }
+                                MaterialId = _materialId
+                            };
+                            _modell.Material.Add(_materialId, _material);
+                            break;
+                        }
                     }
+
                     i++;
                 }
                 else
                 {
-                    throw new ParseAusnahme((i + 2) + ":\nMaterial " + _materialId);
+                    throw new ParseAusnahme(i + 2 + ":\nMaterial " + _materialId);
                 }
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }

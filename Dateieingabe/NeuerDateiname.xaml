@@ -7,8 +7,8 @@
         Title="Neuer Dateiname" Height="140" Width="350">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180"/>
-            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="180" />
+            <ColumnDefinition Width="120" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
@@ -20,12 +20,16 @@
         </Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Dateiname (ohne Endung):</Label>
-        <TextBox Name="Dateiname" Grid.Row="1" Grid.Column="1" Margin="10,7.8,0,0" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="100"/>
+        <TextBox Name="Dateiname" Grid.Row="1" Grid.Column="1" Margin="10,7.8,0,0" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" />
 
-        <Button IsDefault="True" Grid.Row="2" Width="35"  Height="26" Margin="12.2,0,0,4.2"
-                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1">_Ok</Button>
-        <Button IsCancel ="True"  Grid.Row="2" Grid.Column="1" Height="26" Margin="55.2,0,-25.4,4.2" 
-                Click="BtnDialogCancel_Click" VerticalAlignment="Bottom">_Abbrechen</Button>
+        <Button IsDefault="True" Grid.Row="2" Width="35" Height="26" Margin="12.2,0,0,4.2"
+                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1">
+            _Ok
+        </Button>
+        <Button IsCancel="True" Grid.Row="2" Grid.Column="1" Height="26" Margin="55.2,0,-25.4,4.2"
+                Click="BtnDialogCancel_Click" VerticalAlignment="Bottom">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

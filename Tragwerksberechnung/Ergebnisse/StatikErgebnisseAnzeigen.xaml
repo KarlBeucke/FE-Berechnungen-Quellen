@@ -13,15 +13,15 @@
         </Grid.ColumnDefinitions>
 
         <Grid Margin="0,0,0,0" Grid.Column="0">
-            <Label x:Name="Knotenverformungen" Content="Knotenverformungen" HorizontalAlignment="Left" Margin="0,5,0,0" 
-                   VerticalAlignment="Top" Width="160"/>
+            <Label x:Name="Knotenverformungen" Content="Knotenverformungen" HorizontalAlignment="Left" Margin="0,5,0,0"
+                   VerticalAlignment="Top" Width="160" />
             <DataGrid
                 Name="KnotenverformungenGrid" Margin="5,30,0,0" Grid.Column="0"
                 AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
-                Loaded="Knotenverformungen_Loaded" SelectionChanged="KnotenZeileSelected" 
+                Loaded="Knotenverformungen_Loaded" SelectionChanged="KnotenZeileSelected"
                 LostFocus="KeinKnotenSelected" d:DataContext="{d:DesignInstance }">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Knoten"  Binding="{Binding Key}"/>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding Key}" />
                     <DataGridTextColumn Header="ux" Binding="{Binding Value.Knotenfreiheitsgrade[0], StringFormat=N4}" />
                     <DataGridTextColumn Header="uy" Binding="{Binding Value.Knotenfreiheitsgrade[1], StringFormat=N4}" />
                     <DataGridTextColumn Header="phi" Binding="{Binding Value.Knotenfreiheitsgrade[2], StringFormat=N4}" />
@@ -29,15 +29,17 @@
             </DataGrid>
         </Grid>
 
-        <Grid Margin="0,0,0,0"  Grid.Column="1">
-            <Label x:Name="ElementEndkräfte" Content="Schnittkräfte an Elementanfang und -ende" HorizontalAlignment="Left" Margin="0,5,0,0" 
-                   VerticalAlignment="Top" Width="240"/>
+        <Grid Margin="0,0,0,0" Grid.Column="1">
+            <Label x:Name="ElementEndkräfte" Content="Schnittkräfte an Elementanfang und -ende"
+                   HorizontalAlignment="Left" Margin="0,5,0,0"
+                   VerticalAlignment="Top" Width="240" />
             <DataGrid
-                Name="ElementendkräfteGrid" Margin="5,30,0,0" AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
-                Loaded="Elementendkräfte_Loaded" SelectionChanged="ElementZeileSelected" 
+                Name="ElementendkräfteGrid" Margin="5,30,0,0" AlternatingRowBackground="Aqua"
+                AutoGenerateColumns="False"
+                Loaded="Elementendkräfte_Loaded" SelectionChanged="ElementZeileSelected"
                 LostFocus="KeinElementSelected" d:DataContext="{d:DesignInstance }">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Element"  Binding="{Binding ElementId}"/>
+                    <DataGridTextColumn Header="Element" Binding="{Binding ElementId}" />
                     <DataGridTextColumn Header="Na" Binding="{Binding Na, StringFormat=N2}" />
                     <DataGridTextColumn Header="Qa" Binding="{Binding Qa, StringFormat=N2}" />
                     <DataGridTextColumn Header="Ma" Binding="{Binding Ma, StringFormat=N2}" />
@@ -49,13 +51,13 @@
         </Grid>
 
         <Grid Margin="0,0,0,0" Grid.Column="2">
-            <Label x:Name="Lagerreaktionen" Content="Lagerreaktionen" HorizontalAlignment="Left" Margin="0,5,0,0" 
-                   VerticalAlignment="Top" Width="161"/>
+            <Label x:Name="Lagerreaktionen" Content="Lagerreaktionen" HorizontalAlignment="Left" Margin="0,5,0,0"
+                   VerticalAlignment="Top" Width="161" />
             <DataGrid
                 Name="LagerreaktionenGrid" Margin="5,30,0,0" AlternatingRowBackground="Aqua"
                 Loaded="Lagerreaktionen_Loaded" AutoGenerateColumns="False" d:DataContext="{d:DesignInstance }">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Knoten"  Binding="{Binding Key}"/>
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding Key}" />
                     <DataGridTextColumn Header="Rx" Binding="{Binding Value.Reaktionen[0], StringFormat=N2}" />
                     <DataGridTextColumn Header="Ry" Binding="{Binding Value.Reaktionen[1], StringFormat=N2}" />
                     <DataGridTextColumn Header="M" Binding="{Binding Value.Reaktionen[2], StringFormat=N2}" />

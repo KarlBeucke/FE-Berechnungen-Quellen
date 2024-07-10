@@ -7,10 +7,10 @@
         Title="Knoten definieren oder editieren" Height="220" Width="370">
     <Grid Height="175" VerticalAlignment="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="128"/>
-            <ColumnDefinition Width="70"/>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="50" />
+            <ColumnDefinition Width="128" />
+            <ColumnDefinition Width="70" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -23,23 +23,29 @@
             Neue Knotenwerte eingeben, vorhandene editieren
         </Label>
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knoten ID:</Label>
-        <TextBox Name="KnotenId" Grid.Row="1" Grid.Column="1" Margin="10,10,0,7" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" LostFocus="KnotenIdLostFocus"/>
+        <TextBox Name="KnotenId" Grid.Row="1" Grid.Column="1" Margin="10,10,0,7" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" LostFocus="KnotenIdLostFocus" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">x Koordinate</Label>
-        <TextBox Name="X" Grid.Row="2" Grid.Column="1" Margin="10,9,0,7" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
+        <TextBox Name="X" Grid.Row="2" Grid.Column="1" Margin="10,9,0,7" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" />
         <Label Grid.Row="2" Grid.Column="2" Margin="3.6,5,0.2,35" Grid.RowSpan="2">y Koordinate</Label>
-        <TextBox Name="Y" Grid.Row="2" Grid.Column="3" Margin="10,10,0,10" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="33"/>
+        <TextBox Name="Y" Grid.Row="2" Grid.Column="3" Margin="10,10,0,10" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="33" />
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5,0,5">z Koordinate</Label>
-        <TextBox Name="Z" Grid.Row="3" Grid.Column="1" Margin="10,10,0,0" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
+        <TextBox Name="Z" Grid.Row="3" Grid.Column="1" Margin="10,10,0,0" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" />
 
-        <Button Grid.Column="0" Grid.Row="4" Height="26" Margin="15,2,25,0" 
-                Click="BtnLöschen_Click" VerticalAlignment="Top">löschen</Button>
-        <Button IsDefault="True" Grid.Row="4" Grid.Column="3" Width="35"  Margin="25,2,0,0" 
-                Click="BtnDialogOk_Click" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top">_Ok</Button>
-        <Button Grid.Row="4" Grid.Column="2" Height="26" Margin="83,2,51,0" 
-                Click="BtnDialogCancel_Click" VerticalAlignment="Top" Grid.ColumnSpan="2">_Abbrechen</Button>
+        <Button Grid.Column="0" Grid.Row="4" Height="26" Margin="15,2,25,0"
+                Click="BtnLöschen_Click" VerticalAlignment="Top">
+            löschen
+        </Button>
+        <Button IsDefault="True" Grid.Row="4" Grid.Column="3" Width="35" Margin="25,2,0,0"
+                Click="BtnDialogOk_Click" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top">
+            _Ok
+        </Button>
+        <Button Grid.Row="4" Grid.Column="2" Height="26" Margin="83,2,51,0"
+                Click="BtnDialogCancel_Click" VerticalAlignment="Top" Grid.ColumnSpan="2">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

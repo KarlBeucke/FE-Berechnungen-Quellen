@@ -12,10 +12,14 @@
                     <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding LastId}" />
                     <GridViewColumn Header="Knoten" Width="50" DisplayMemberBinding="{Binding KnotenId}" />
                     <GridViewColumn Header="Element" Width="50" DisplayMemberBinding="{Binding ElementId}" />
-                    <GridViewColumn Header="start x" Width="50" DisplayMemberBinding="{Binding Lastwerte[0], StringFormat=G3}"/>
-                    <GridViewColumn Header="start y" Width="50" DisplayMemberBinding="{Binding Lastwerte[1], StringFormat=G3}"/>
-                    <GridViewColumn Header="end x" Width="50" DisplayMemberBinding="{Binding Lastwerte[2], StringFormat=G3}"/>
-                    <GridViewColumn Header="end y" Width="50" DisplayMemberBinding="{Binding Lastwerte[3], StringFormat=G3}"/>
+                    <GridViewColumn Header="start x" Width="50"
+                                    DisplayMemberBinding="{Binding Lastwerte[0], StringFormat=G3}" />
+                    <GridViewColumn Header="start y" Width="50"
+                                    DisplayMemberBinding="{Binding Lastwerte[1], StringFormat=G3}" />
+                    <GridViewColumn Header="end x" Width="50"
+                                    DisplayMemberBinding="{Binding Lastwerte[2], StringFormat=G3}" />
+                    <GridViewColumn Header="end y" Width="50"
+                                    DisplayMemberBinding="{Binding Lastwerte[3], StringFormat=G3}" />
                 </GridView>
             </ListView.View>
         </ListView>

@@ -1,23 +1,23 @@
-﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
 public partial class WärmedatenAnzeigen
 {
     private readonly FeModell modell;
-    private string removeKey;
-    private Shape letztesElement;
     private Shape letzterKnoten;
+    private Shape letztesElement;
+    private string removeKey;
 
     public WärmedatenAnzeigen(FeModell modell)
     {
@@ -33,12 +33,14 @@ public partial class WärmedatenAnzeigen
         KnotenGrid = sender as DataGrid;
         if (KnotenGrid != null) KnotenGrid.ItemsSource = knoten;
     }
+
     private void NeuerKnoten(object sender, MouseButtonEventArgs e)
     {
         _ = new KnotenNeu(modell);
         StartFenster.Berechnet = false;
         Close();
     }
+
     //UnloadingRow
     private void KnotenZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -50,6 +52,7 @@ public partial class WärmedatenAnzeigen
         var wärme = new WärmedatenAnzeigen(modell);
         wärme.Show();
     }
+
     //SelectionChanged
     private void KnotenZeileSelected(object sender, SelectionChangedEventArgs e)
     {
@@ -57,12 +60,10 @@ public partial class WärmedatenAnzeigen
         var cellInfo = KnotenGrid.SelectedCells[0];
         var knoten = (Knoten)cellInfo.Item;
         removeKey = knoten.Id;
-        if (letzterKnoten != null)
-        {
-            StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letzterKnoten);
-        }
+        if (letzterKnoten != null) StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letzterKnoten);
         letzterKnoten = StartFenster.WärmeVisual.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
+
     //LostFocus
     private void KeinKnotenSelected(object sender, RoutedEventArgs e)
     {
@@ -77,12 +78,14 @@ public partial class WärmedatenAnzeigen
         ElementGrid.Items.Clear();
         ElementGrid.ItemsSource = elemente;
     }
+
     private void NeuesElement(object sender, MouseButtonEventArgs e)
     {
         _ = new ElementNeu(modell);
         StartFenster.Berechnet = false;
         Close();
     }
+
     //UnloadingRow
     private void ElementZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -94,6 +97,7 @@ public partial class WärmedatenAnzeigen
         var wärme = new WärmedatenAnzeigen(modell);
         wärme.Show();
     }
+
     //SelectionChanged
     private void ElementZeileSelected(object sender, SelectionChangedEventArgs e)
     {
@@ -101,13 +105,11 @@ public partial class WärmedatenAnzeigen
         var cellInfo = ElementGrid.SelectedCells[0];
         var element = (AbstraktElement)cellInfo.Item;
         removeKey = element.ElementId;
-        if (letztesElement != null)
-        {
-            StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
-        }
+        if (letztesElement != null) StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
         letztesElement = StartFenster.WärmeVisual.darstellung.ElementFillZeichnen((Abstrakt2D)element,
             Brushes.Black, Colors.Green, .2, 2);
     }
+
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
         StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
@@ -121,11 +123,13 @@ public partial class WärmedatenAnzeigen
         MaterialGrid.Items.Clear();
         MaterialGrid.ItemsSource = material;
     }
+
     private void NeuesMaterial(object sender, MouseButtonEventArgs e)
     {
         _ = new MaterialNeu(modell);
         Close();
     }
+
     //UnloadingRow
     private void MaterialZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -137,6 +141,7 @@ public partial class WärmedatenAnzeigen
         var wärme = new WärmedatenAnzeigen(modell);
         wärme.Show();
     }
+
     //SelectionChanged
     private void MaterialZeileSelected(object sender, SelectionChangedEventArgs e)
     {
@@ -152,12 +157,14 @@ public partial class WärmedatenAnzeigen
         RandbedingungGrid = sender as DataGrid;
         if (RandbedingungGrid != null) RandbedingungGrid.ItemsSource = rand;
     }
+
     private void NeueRandbedingung(object sender, MouseButtonEventArgs e)
     {
         _ = new RandbdingungNeu(modell);
         StartFenster.Berechnet = false;
         Close();
     }
+
     //UnloadingRow
     private void RandbedingungZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -169,6 +176,7 @@ public partial class WärmedatenAnzeigen
         var wärme = new WärmedatenAnzeigen(modell);
         wärme.Show();
     }
+
     //SelectionChanged
     private void RandbedingungZeileSelected(object sender, SelectionChangedEventArgs e)
     {
@@ -184,12 +192,14 @@ public partial class WärmedatenAnzeigen
         KnotenEinwirkungenGrid = sender as DataGrid;
         if (KnotenEinwirkungenGrid != null) KnotenEinwirkungenGrid.ItemsSource = lasten;
     }
+
     private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
     {
         _ = new KnotenlastNeu(modell);
         StartFenster.Berechnet = false;
         Close();
     }
+
     //UnloadingRow
     private void KnotenlastZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -201,6 +211,7 @@ public partial class WärmedatenAnzeigen
         var wärme = new WärmedatenAnzeigen(modell);
         wärme.Show();
     }
+
     //SelectionChanged
     private void KnotenlastZeileSelected(object sender, SelectionChangedEventArgs e)
     {
@@ -216,12 +227,14 @@ public partial class WärmedatenAnzeigen
         LinienEinwirkungenGrid = sender as DataGrid;
         if (LinienEinwirkungenGrid != null) LinienEinwirkungenGrid.ItemsSource = lasten;
     }
+
     private void NeueLinienlast(object sender, MouseButtonEventArgs e)
     {
         _ = new LinienlastNeu(modell);
         StartFenster.Berechnet = false;
         Close();
     }
+
     //UnloadingRow
     private void LinienlastZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -233,6 +246,7 @@ public partial class WärmedatenAnzeigen
         var wärme = new WärmedatenAnzeigen(modell);
         wärme.Show();
     }
+
     //SelectionChanged
     private void LinienlastZeileSelected(object sender, SelectionChangedEventArgs e)
     {
@@ -248,12 +262,14 @@ public partial class WärmedatenAnzeigen
         ElementEinwirkungenGrid = sender as DataGrid;
         if (ElementEinwirkungenGrid != null) ElementEinwirkungenGrid.ItemsSource = lasten;
     }
+
     private void NeueElementlast(object sender, MouseButtonEventArgs e)
     {
         _ = new ElementlastNeu(modell);
         StartFenster.Berechnet = false;
         Close();
     }
+
     //UnloadingRow
     private void ElementlastZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
@@ -265,6 +281,7 @@ public partial class WärmedatenAnzeigen
         var wärme = new WärmedatenAnzeigen(modell);
         wärme.Show();
     }
+
     //SelectionChanged
     private void ElementlastlastZeileSelected(object sender, SelectionChangedEventArgs e)
     {

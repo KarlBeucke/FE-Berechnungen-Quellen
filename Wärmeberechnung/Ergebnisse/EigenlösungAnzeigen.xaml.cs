@@ -1,18 +1,19 @@
-﻿using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
 public partial class EigenlösungAnzeigen : Window
 {
     private readonly FeModell modell;
+
     public EigenlösungAnzeigen(FeModell modell)
     {
-        this.Language = XmlLanguage.GetLanguage("de-DE");
+        Language = XmlLanguage.GetLanguage("de-DE");
         this.modell = modell;
         InitializeComponent();
     }
@@ -26,6 +27,7 @@ public partial class EigenlösungAnzeigen : Window
             var value = Math.Sqrt(modell.Eigenzustand.Eigenwerte[k]) / 2 / Math.PI;
             eigenfrequenzen.Add(k, value);
         }
+
         EigenwerteGrid = sender as DataGrid;
         if (EigenwerteGrid != null) EigenwerteGrid.ItemsSource = eigenfrequenzen;
     }
@@ -39,12 +41,11 @@ public partial class EigenlösungAnzeigen : Window
         {
             var line = modell.Eigenzustand.Eigenvektoren[0][i].ToString("N5");
             for (var k = 1; k < modell.Eigenzustand.AnzahlZustände; k++)
-            {
                 line += "\t" + modell.Eigenzustand.Eigenvektoren[k][i].ToString("N5");
-            }
             eienvektorGrid.Add(j.ToString(), line);
             i++;
         }
+
         EigenvektorenGrid = sender as DataGrid;
         if (EigenvektorenGrid != null) EigenvektorenGrid.ItemsSource = eienvektorGrid;
     }

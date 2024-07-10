@@ -1,9 +1,10 @@
-﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Markup;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
@@ -12,6 +13,7 @@ public partial class ZeitintegrationNeu
     private readonly FeModell modell;
     public int aktuell;
     private ZeitAnfangstemperaturNeu anfangstemperaturenNeu;
+
     public ZeitintegrationNeu(FeModell modell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
@@ -27,10 +29,11 @@ public partial class ZeitintegrationNeu
             Gesamt.Text = modell.Zeitintegration.Anfangsbedingungen.Count.ToString(CultureInfo.CurrentCulture);
             Anfangsbedingungen.Text = modell.Zeitintegration.VonStationär ? "stationäre Lösung" : "";
         }
+
         Show();
     }
 
-    private void ZeitintervallBerechnen(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void ZeitintervallBerechnen(object sender, MouseButtonEventArgs e)
     {
         var anzahl = int.Parse(Eigenlösung.Text);
         string betaM;
@@ -44,6 +47,7 @@ public partial class ZeitintegrationNeu
                 modellBerechnung.BerechneSystemMatrix();
                 StartFenster.Berechnet = true;
             }
+
             modell.Eigenzustand = new Eigenzustände("neu", anzahl);
             modellBerechnung.Eigenzustände();
         }
@@ -63,38 +67,71 @@ public partial class ZeitintegrationNeu
         }
 
         _ = MessageBox.Show("kritischer Zeitschritt für β max = " + betaM
-                            + " ist frei für Stabilität und muss gewählt werden für Genauigkeit", "Zeitintegration");
+                                                                  + " ist frei für Stabilität und muss gewählt werden für Genauigkeit",
+            "Zeitintegration");
     }
+
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
         modell.Zeitintegration = null;
         Close();
     }
+
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
         if (Zeitintervall.Text == "")
         {
-            _ = MessageBox.Show("kritischer Zeitschritt frei wählbar für Stabilität und muss gewählt werden für Genauigkeit", "Zeitintegration");
+            _ = MessageBox.Show(
+                "kritischer Zeitschritt frei wählbar für Stabilität und muss gewählt werden für Genauigkeit",
+                "Zeitintegration");
             return;
         }
 
         if (modell.Zeitintegration == null)
         {
             int anzahlEigenlösungen;
-            try { anzahlEigenlösungen = int.Parse(Eigenlösung.Text, CultureInfo.InvariantCulture); }
-            catch (FormatException) { _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration"); return; }
+            try
+            {
+                anzahlEigenlösungen = int.Parse(Eigenlösung.Text, CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration");
+                return;
+            }
 
             double dt;
-            try { dt = double.Parse(Zeitintervall.Text, CultureInfo.InvariantCulture); }
-            catch (FormatException) { _ = MessageBox.Show("Zeitinterval der Integration hat falsches Format", "neue Zeitintegration"); return; }
+            try
+            {
+                dt = double.Parse(Zeitintervall.Text, CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("Zeitinterval der Integration hat falsches Format", "neue Zeitintegration");
+                return;
+            }
 
             double tmax;
-            try { tmax = double.Parse(Maximalzeit.Text, CultureInfo.InvariantCulture); }
-            catch (FormatException) { _ = MessageBox.Show("maximale Integrationszeit tmax hat falsches Format", "neue Zeitintegration"); return; }
+            try
+            {
+                tmax = double.Parse(Maximalzeit.Text, CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("maximale Integrationszeit tmax hat falsches Format", "neue Zeitintegration");
+                return;
+            }
 
             double alfa;
-            try { alfa = double.Parse(Parameter.Text, CultureInfo.InvariantCulture); }
-            catch (FormatException) { _ = MessageBox.Show("Parameter alfa hat falsches Format", "neue Zeitintegration"); return; }
+            try
+            {
+                alfa = double.Parse(Parameter.Text, CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("Parameter alfa hat falsches Format", "neue Zeitintegration");
+                return;
+            }
 
             modell.Eigenzustand = new Eigenzustände("eigen", anzahlEigenlösungen);
             modell.Zeitintegration = new Zeitintegration(tmax, dt, alfa) { VonStationär = false };
@@ -102,18 +139,47 @@ public partial class ZeitintegrationNeu
         }
         else
         {
-            try { modell.Eigenzustand.AnzahlZustände = int.Parse(Eigenlösung.Text, CultureInfo.InvariantCulture); }
-            catch (FormatException) { _ = MessageBox.Show("number of eigensolutions has wrong format", "neue Zeitintegration"); return; }
+            try
+            {
+                modell.Eigenzustand.AnzahlZustände = int.Parse(Eigenlösung.Text, CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("number of eigensolutions has wrong format", "neue Zeitintegration");
+                return;
+            }
 
-            try { modell.Zeitintegration.Dt = double.Parse(Zeitintervall.Text, CultureInfo.InvariantCulture); }
-            catch (FormatException) { _ = MessageBox.Show("time interval of integration has wrong format", "neue Zeitintegration"); return; }
+            try
+            {
+                modell.Zeitintegration.Dt = double.Parse(Zeitintervall.Text, CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("time interval of integration has wrong format", "neue Zeitintegration");
+                return;
+            }
 
-            try { modell.Zeitintegration.Tmax = double.Parse(Maximalzeit.Text, CultureInfo.InvariantCulture); }
-            catch (FormatException) { _ = MessageBox.Show("maximum integration time has wrong format", "neue Zeitintegration"); return; }
+            try
+            {
+                modell.Zeitintegration.Tmax = double.Parse(Maximalzeit.Text, CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("maximum integration time has wrong format", "neue Zeitintegration");
+                return;
+            }
 
-            try { modell.Zeitintegration.Parameter1 = double.Parse(Parameter.Text, CultureInfo.InvariantCulture); }
-            catch (FormatException) { _ = MessageBox.Show("parameter alfa has wrong format", "neue Zeitintegration"); return; }
+            try
+            {
+                modell.Zeitintegration.Parameter1 = double.Parse(Parameter.Text, CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("parameter alfa has wrong format", "neue Zeitintegration");
+                return;
+            }
         }
+
         StartFenster.WärmeVisual.darstellung.AnfangsbedingungenEntfernen();
         anfangstemperaturenNeu?.Close();
         Close();
@@ -124,7 +190,8 @@ public partial class ZeitintegrationNeu
         anfangstemperaturenNeu?.Close();
         Close();
     }
-    private void AnfangsbedingungNext(object sender, System.Windows.Input.MouseButtonEventArgs e)
+
+    private void AnfangsbedingungNext(object sender, MouseButtonEventArgs e)
     {
         aktuell++;
         anfangstemperaturenNeu ??= new ZeitAnfangstemperaturNeu(modell);
@@ -132,7 +199,8 @@ public partial class ZeitintegrationNeu
         {
             anfangstemperaturenNeu.KnotenId.Text = "";
             anfangstemperaturenNeu.Anfangstemperatur.Text = "";
-            StartFenster.WärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text = aktuell.ToString(CultureInfo.CurrentCulture);
+            StartFenster.WärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text =
+                aktuell.ToString(CultureInfo.CurrentCulture);
         }
         else
         {
@@ -148,15 +216,18 @@ public partial class ZeitintegrationNeu
             else if (knotenwerte.KnotenId == "alle")
             {
                 anfangstemperaturenNeu.KnotenId.Text = "alle";
-                anfangstemperaturenNeu.Anfangstemperatur.Text = knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
+                anfangstemperaturenNeu.Anfangstemperatur.Text =
+                    knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
             }
             else
             {
                 anfangstemperaturenNeu.KnotenId.Text = knotenwerte.KnotenId;
-                anfangstemperaturenNeu.Anfangstemperatur.Text = knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
+                anfangstemperaturenNeu.Anfangstemperatur.Text =
+                    knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
                 var anf = aktuell.ToString("D");
                 StartFenster.WärmeVisual.zeitintegrationNeu.Anfangsbedingungen.Text = anf;
-                StartFenster.WärmeVisual.darstellung.AnfangsbedingungenZeichnen(knotenwerte.KnotenId, knotenwerte.Werte[0], anf);
+                StartFenster.WärmeVisual.darstellung.AnfangsbedingungenZeichnen(knotenwerte.KnotenId,
+                    knotenwerte.Werte[0], anf);
             }
         }
     }

@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen"
         mc:Ignorable="d"
         Title="vorhandene Querschnittdefinitionen" Height="230" Width="300">
     <Grid>
@@ -11,8 +10,10 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding QuerschnittId}" />
-                    <GridViewColumn Header="Fläche" Width="80" DisplayMemberBinding="{Binding QuerschnittsWerte[0], StringFormat=G3}"/>
-                    <GridViewColumn Header="Trägheitsmoment Ixx" Width="120" DisplayMemberBinding="{Binding QuerschnittsWerte[1], StringFormat=G3}"/>
+                    <GridViewColumn Header="Fläche" Width="80"
+                                    DisplayMemberBinding="{Binding QuerschnittsWerte[0], StringFormat=G3}" />
+                    <GridViewColumn Header="Trägheitsmoment Ixx" Width="120"
+                                    DisplayMemberBinding="{Binding QuerschnittsWerte[1], StringFormat=G3}" />
                 </GridView>
             </ListView.View>
         </ListView>

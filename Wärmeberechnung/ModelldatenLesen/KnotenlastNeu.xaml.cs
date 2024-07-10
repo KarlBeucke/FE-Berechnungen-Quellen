@@ -1,23 +1,24 @@
-﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class KnotenlastNeu
 {
+    private readonly WärmelastenKeys lastenKeys;
     private readonly FeModell modell;
     private AbstraktLast vorhandeneLast;
-    private readonly WärmelastenKeys lastenKeys;
 
     public KnotenlastNeu()
     {
         InitializeComponent();
         Show();
     }
+
     public KnotenlastNeu(FeModell modell)
     {
         this.modell = modell;
@@ -26,6 +27,7 @@ public partial class KnotenlastNeu
         lastenKeys.Show();
         Show();
     }
+
     public KnotenlastNeu(FeModell modell, string last, string knoten, double t)
     {
         InitializeComponent();
@@ -57,13 +59,14 @@ public partial class KnotenlastNeu
         // neue Knotenlast
         else
         {
-            string knotenId = "";
-            double[] t = new double[1];
+            var knotenId = "";
+            var t = new double[1];
             if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
             if (Temperatur.Text.Length > 0) t[0] = double.Parse(Temperatur.Text);
             var knotenlast = new KnotenLast(knotenlastId, knotenId, t);
             modell.Lasten.Add(knotenlastId, knotenlast);
         }
+
         lastenKeys?.Close();
         Close();
         StartFenster.WärmeVisual.Close();
@@ -86,7 +89,8 @@ public partial class KnotenlastNeu
 
         // vorhandene Knotenlastdefinition
         modell.Lasten.TryGetValue(KnotenlastId.Text, out vorhandeneLast);
-        Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null"); KnotenlastId.Text = "";
+        Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null");
+        KnotenlastId.Text = "";
 
         KnotenlastId.Text = vorhandeneLast.LastId;
 
@@ -102,5 +106,4 @@ public partial class KnotenlastNeu
         Close();
         StartFenster.WärmeVisual.Close();
     }
-
 }

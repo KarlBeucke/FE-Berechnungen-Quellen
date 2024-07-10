@@ -1,6 +1,4 @@
-﻿using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Shapes;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;
 
@@ -16,17 +16,21 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 
 public partial class DynamischeModellzuständeVisualisieren
 {
-    private readonly FeModell _modell;
+    private readonly Darstellung _darstellung;
     private readonly double _dt;
+    private readonly FeModell _modell;
     private readonly int _nSteps;
     private int _dropDownIndex, _index, _indexN, _indexQ, _indexM;
 
-    private readonly Darstellung _darstellung;
+    private bool _elementTexteAn = true,
+        _knotenTexteAn = true,
+        _verformungenAn,
+        _normalkräfteAn,
+        _querkräfteAn,
+        _momenteAn;
 
-    private bool _elementTexteAn = true, _knotenTexteAn = true,
-                 _verformungenAn, _normalkräfteAn, _querkräfteAn, _momenteAn;
-    private double _maxNormalkraft, _maxQuerkraft, _maxMoment;
     private TextBlock _maximalWerte;
+    private double _maxNormalkraft, _maxQuerkraft, _maxMoment;
 
     public DynamischeModellzuständeVisualisieren(FeModell feModel)
     {
@@ -44,9 +48,9 @@ public partial class DynamischeModellzuständeVisualisieren
         _nSteps = (int)(tmax / _dt);
         const int zeitraster = 1;
         //if (nSteps > 1000) zeitraster = 10;
-        _nSteps = (_nSteps / zeitraster) + 1;
+        _nSteps = _nSteps / zeitraster + 1;
         var zeit = new double[_nSteps];
-        for (var i = 0; i < _nSteps; i++) { zeit[i] = (i * _dt * zeitraster); }
+        for (var i = 0; i < _nSteps; i++) zeit[i] = i * _dt * zeitraster;
 
         _darstellung = new Darstellung(_modell, VisualErgebnisse);
         _darstellung.UnverformteGeometrie();
@@ -66,6 +70,7 @@ public partial class DynamischeModellzuständeVisualisieren
             _ = MessageBox.Show("kein gültiger Zeitschritt ausgewählt", "Zeitschrittauswahl");
             return;
         }
+
         _dropDownIndex = Zeitschrittauswahl.SelectedIndex;
         _index = _dropDownIndex;
         foreach (var item in _modell.Knoten)
@@ -88,13 +93,11 @@ public partial class DynamischeModellzuständeVisualisieren
 
         if (_verformungenAn)
         {
-            foreach (var path in _darstellung.Verformungen.Cast<Shape>())
-            {
-                VisualErgebnisse.Children.Remove(path);
-            }
+            foreach (var path in _darstellung.Verformungen.Cast<Shape>()) VisualErgebnisse.Children.Remove(path);
 
             _index++;
-            AktuellerZeitschritt.Text = "aktuelle Integrationszeit = " + (_index * _dt).ToString(CultureInfo.InvariantCulture);
+            AktuellerZeitschritt.Text =
+                "aktuelle Integrationszeit = " + (_index * _dt).ToString(CultureInfo.InvariantCulture);
             if (_index >= _nSteps)
             {
                 _ = MessageBox.Show("Ende der Zeitschrittberechnung", "Tragwerksberechnung");
@@ -129,13 +132,11 @@ public partial class DynamischeModellzuständeVisualisieren
 
         if (_normalkräfteAn)
         {
-            foreach (var path in _darstellung.NormalkraftListe.Cast<Shape>())
-            {
-                VisualErgebnisse.Children.Remove(path);
-            }
+            foreach (var path in _darstellung.NormalkraftListe.Cast<Shape>()) VisualErgebnisse.Children.Remove(path);
 
             _index++;
-            AktuellerZeitschritt.Text = "aktuelle Integrationszeit = " + (_index * _dt).ToString(CultureInfo.InvariantCulture);
+            AktuellerZeitschritt.Text =
+                "aktuelle Integrationszeit = " + (_index * _dt).ToString(CultureInfo.InvariantCulture);
             if (_index >= _nSteps)
             {
                 _ = MessageBox.Show("Ende der Zeitschrittberechnung", "Tragwerksberechnung");
@@ -154,12 +155,12 @@ public partial class DynamischeModellzuständeVisualisieren
             for (var i = 0; i < item.Value.AnzahlKnotenfreiheitsgrade; i++)
                 item.Value.Knotenfreiheitsgrade[i] = item.Value.KnotenVariable[i][_index];
         // Skalierung der Normalkraftdarstellung und Darstellung aller Normalkraftverteilungen
-        foreach (var beam in _modell.Elemente.
-                     Select(item => item.Value).OfType<AbstraktBalken>())
+        foreach (var beam in _modell.Elemente.Select(item => item.Value).OfType<AbstraktBalken>())
         {
             _ = beam.BerechneStabendkräfte();
             _darstellung.Normalkraft_Zeichnen(beam, _maxNormalkraft, false);
         }
+
         _verformungenAn = false;
         _normalkräfteAn = true;
         _querkräfteAn = false;
@@ -169,10 +170,7 @@ public partial class DynamischeModellzuständeVisualisieren
     private void Clean()
     {
         //index = dropDownIndex;
-        foreach (var path in _darstellung.Verformungen.Cast<Shape>())
-        {
-            VisualErgebnisse.Children.Remove(path);
-        }
+        foreach (var path in _darstellung.Verformungen.Cast<Shape>()) VisualErgebnisse.Children.Remove(path);
 
         foreach (var path in _darstellung.NormalkraftListe.Cast<Shape>())
             VisualErgebnisse.Children.Remove(path);
@@ -195,7 +193,8 @@ public partial class DynamischeModellzuständeVisualisieren
             foreach (var path in _darstellung.QuerkraftListe.Cast<Shape>())
                 VisualErgebnisse.Children.Remove(path);
             _index++;
-            AktuellerZeitschritt.Text = "aktuelle Integrationszeit = " + (_index * _dt).ToString(CultureInfo.InvariantCulture);
+            AktuellerZeitschritt.Text =
+                "aktuelle Integrationszeit = " + (_index * _dt).ToString(CultureInfo.InvariantCulture);
             if (_index >= _nSteps)
             {
                 _ = MessageBox.Show("Ende der Zeitschrittberechnung", "Tragwerksberechnung");
@@ -214,8 +213,7 @@ public partial class DynamischeModellzuständeVisualisieren
             for (var i = 0; i < item.Value.AnzahlKnotenfreiheitsgrade; i++)
                 item.Value.Knotenfreiheitsgrade[i] = item.Value.KnotenVariable[i][_index];
         // Skalierung der Querkraftdarstellung und Darstellung aller Querkraftverteilungen
-        foreach (var beam in _modell.Elemente.
-                     Select(item => item.Value).OfType<AbstraktBalken>())
+        foreach (var beam in _modell.Elemente.Select(item => item.Value).OfType<AbstraktBalken>())
         {
             _ = beam.BerechneStabendkräfte();
             _darstellung.Querkraft_Zeichnen(beam, _maxQuerkraft, false);
@@ -240,7 +238,8 @@ public partial class DynamischeModellzuständeVisualisieren
             foreach (var path in _darstellung.MomenteListe.Cast<Shape>())
                 VisualErgebnisse.Children.Remove(path);
             _index++;
-            AktuellerZeitschritt.Text = "aktuelle Integrationszeit = " + (_index * _dt).ToString(CultureInfo.InvariantCulture);
+            AktuellerZeitschritt.Text =
+                "aktuelle Integrationszeit = " + (_index * _dt).ToString(CultureInfo.InvariantCulture);
             if (_index >= _nSteps)
             {
                 _ = MessageBox.Show("Ende der Zeitschrittberechnung", "Tragwerksberechnung");
@@ -259,12 +258,12 @@ public partial class DynamischeModellzuständeVisualisieren
             for (var i = 0; i < item.Value.AnzahlKnotenfreiheitsgrade; i++)
                 item.Value.Knotenfreiheitsgrade[i] = item.Value.KnotenVariable[i][_index];
         // Skalierung der Momentendarstellung und Darstellung aller Momentverteilungen
-        foreach (var beam in _modell.Elemente.
-                     Select(item => item.Value).OfType<AbstraktBalken>())
+        foreach (var beam in _modell.Elemente.Select(item => item.Value).OfType<AbstraktBalken>())
         {
             _ = beam.BerechneStabendkräfte();
             _darstellung.Momente_Zeichnen(beam, _maxMoment, false);
         }
+
         _verformungenAn = false;
         _normalkräfteAn = false;
         _querkräfteAn = false;
@@ -286,6 +285,7 @@ public partial class DynamischeModellzuständeVisualisieren
                 knotenUxMax = item.Value.Id;
                 maxUxZeit = _dt * Array.IndexOf(item.Value.KnotenVariable[0], maxUx);
             }
+
             temp = item.Value.KnotenVariable[0].Min();
             if (minUx > temp)
             {
@@ -301,6 +301,7 @@ public partial class DynamischeModellzuständeVisualisieren
                 knotenUyMax = item.Value.Id;
                 maxUyZeit = _dt * Array.IndexOf(item.Value.KnotenVariable[1], maxUy);
             }
+
             temp = item.Value.KnotenVariable[1].Min();
             if (!(minUy > temp)) continue;
             minUy = temp;
@@ -335,6 +336,7 @@ public partial class DynamischeModellzuständeVisualisieren
                       + ", min. uy = " + minUy.ToString("G4") + ", an Knoten "
                       + knotenUyMin + " zur Zeit " + minUyZeit.ToString("G4"));
         }
+
         var maximalVerformungen = new TextBlock
         {
             FontSize = 14,
@@ -361,21 +363,55 @@ public partial class DynamischeModellzuständeVisualisieren
                 // Fachwerkstäbe
                 if (element.ElementZustand.Length == 2)
                 {
-                    if (Math.Abs(element.ElementZustand[0]) > _maxNormalkraft) { _indexN = i; _maxNormalkraft = Math.Abs(element.ElementZustand[0]); }
+                    if (Math.Abs(element.ElementZustand[0]) > _maxNormalkraft)
+                    {
+                        _indexN = i;
+                        _maxNormalkraft = Math.Abs(element.ElementZustand[0]);
+                    }
 
                     if (!(Math.Abs(element.ElementZustand[1]) > _maxNormalkraft)) continue;
-                    _indexN = i; _maxNormalkraft = Math.Abs(element.ElementZustand[1]);
+                    _indexN = i;
+                    _maxNormalkraft = Math.Abs(element.ElementZustand[1]);
                 }
 
                 // Biegebalken
                 else
                 {
-                    if (Math.Abs(element.ElementZustand[0]) > _maxNormalkraft) { _indexN = i; _maxNormalkraft = Math.Abs(element.ElementZustand[0]); }
-                    if (Math.Abs(element.ElementZustand[3]) > _maxNormalkraft) { _indexN = i; _maxNormalkraft = Math.Abs(element.ElementZustand[3]); }
-                    if (Math.Abs(element.ElementZustand[1]) > _maxQuerkraft) { _indexQ = i; _maxQuerkraft = Math.Abs(element.ElementZustand[1]); }
-                    if (Math.Abs(element.ElementZustand[4]) > _maxQuerkraft) { _indexQ = i; _maxQuerkraft = Math.Abs(element.ElementZustand[4]); }
-                    if (Math.Abs(element.ElementZustand[2]) > _maxMoment) { _indexM = i; _maxMoment = Math.Abs(element.ElementZustand[2]); }
-                    if (Math.Abs(element.ElementZustand[5]) > _maxMoment) { _indexM = i; _maxMoment = Math.Abs(element.ElementZustand[5]); }
+                    if (Math.Abs(element.ElementZustand[0]) > _maxNormalkraft)
+                    {
+                        _indexN = i;
+                        _maxNormalkraft = Math.Abs(element.ElementZustand[0]);
+                    }
+
+                    if (Math.Abs(element.ElementZustand[3]) > _maxNormalkraft)
+                    {
+                        _indexN = i;
+                        _maxNormalkraft = Math.Abs(element.ElementZustand[3]);
+                    }
+
+                    if (Math.Abs(element.ElementZustand[1]) > _maxQuerkraft)
+                    {
+                        _indexQ = i;
+                        _maxQuerkraft = Math.Abs(element.ElementZustand[1]);
+                    }
+
+                    if (Math.Abs(element.ElementZustand[4]) > _maxQuerkraft)
+                    {
+                        _indexQ = i;
+                        _maxQuerkraft = Math.Abs(element.ElementZustand[4]);
+                    }
+
+                    if (Math.Abs(element.ElementZustand[2]) > _maxMoment)
+                    {
+                        _indexM = i;
+                        _maxMoment = Math.Abs(element.ElementZustand[2]);
+                    }
+
+                    if (Math.Abs(element.ElementZustand[5]) > _maxMoment)
+                    {
+                        _indexM = i;
+                        _maxMoment = Math.Abs(element.ElementZustand[5]);
+                    }
                 }
             }
 
@@ -388,12 +424,15 @@ public partial class DynamischeModellzuständeVisualisieren
                         yield return element;
             }
         }
+
         _maximalWerte = new TextBlock
         {
             FontSize = 14,
             FontWeight = FontWeights.Bold,
-            Text = "max Normalkraft = " + _maxNormalkraft.ToString("G4") + " nach Zeit = " + (_indexN * _dt).ToString("N2") +
-                   ", max Querkraft = " + _maxQuerkraft.ToString("G4") + " nach Zeit = " + (_indexQ * _dt).ToString("N2") +
+            Text = "max Normalkraft = " + _maxNormalkraft.ToString("G4") + " nach Zeit = " +
+                   (_indexN * _dt).ToString("N2") +
+                   ", max Querkraft = " + _maxQuerkraft.ToString("G4") + " nach Zeit = " +
+                   (_indexQ * _dt).ToString("N2") +
                    " und max Moment = " + _maxMoment.ToString("G4") + " nach Zeit = " + (_indexM * _dt).ToString("N2"),
             Foreground = Red
         };
@@ -411,13 +450,11 @@ public partial class DynamischeModellzuständeVisualisieren
         }
         else
         {
-            foreach (var id in _darstellung.ElementIDs.Cast<TextBlock>())
-            {
-                VisualErgebnisse.Children.Remove(id);
-            }
+            foreach (var id in _darstellung.ElementIDs.Cast<TextBlock>()) VisualErgebnisse.Children.Remove(id);
             _elementTexteAn = false;
         }
     }
+
     private void BtnKnotenIDs_Click(object sender, RoutedEventArgs e)
     {
         if (!_knotenTexteAn)
@@ -427,10 +464,7 @@ public partial class DynamischeModellzuständeVisualisieren
         }
         else
         {
-            foreach (var id in _darstellung.KnotenIDs.Cast<TextBlock>())
-            {
-                VisualErgebnisse.Children.Remove(id);
-            }
+            foreach (var id in _darstellung.KnotenIDs.Cast<TextBlock>()) VisualErgebnisse.Children.Remove(id);
             _knotenTexteAn = false;
         }
     }
@@ -438,10 +472,7 @@ public partial class DynamischeModellzuständeVisualisieren
     private void BtnVerschiebung_Click(object sender, RoutedEventArgs e)
     {
         _darstellung.ÜberhöhungVerformung = int.Parse(Verschiebung.Text);
-        foreach (var path in _darstellung.Verformungen.Cast<Shape>())
-        {
-            VisualErgebnisse.Children.Remove(path);
-        }
+        foreach (var path in _darstellung.Verformungen.Cast<Shape>()) VisualErgebnisse.Children.Remove(path);
         _verformungenAn = false;
         _darstellung.VerformteGeometrie();
         _verformungenAn = true;

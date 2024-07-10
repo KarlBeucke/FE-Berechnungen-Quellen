@@ -7,8 +7,8 @@
         Title="modale Dämpfung" Height="150" Width="300">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="160"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="160" />
+            <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -19,22 +19,29 @@
             Definition eines neuen modalen Dämpfungsmaßes
         </Label>
 
-        <RichTextBox Grid.Row="1" Grid.Column="0" Margin="0,14,0,8" 
+        <RichTextBox Grid.Row="1" Grid.Column="0" Margin="0,14,0,8"
                      BorderThickness="0,0,0,0" HorizontalAlignment="Center" Width="158">
             <FlowDocument>
-                <Paragraph FontSize="12">modales Dämpfungsmaß &#958;
+                <Paragraph FontSize="12">
+                    modales Dämpfungsmaß &#958;
                     <Run BaselineAlignment="Subscript" FontSize="6">i</Run>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <TextBox Name="Xi" Grid.Row="1" Grid.Column="1" Margin="28.8,13.6,0,7.2" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="39"/>
+        <TextBox Name="Xi" Grid.Row="1" Grid.Column="1" Margin="28.8,13.6,0,7.2" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="39" />
 
-        <Button Grid.Row="2" Grid.Column="0" Width="50"  Height="26" Margin="5,5,0,0" 
-                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Top" >löschen</Button>
-        <Button IsDefault="True" Grid.Row="2" Grid.Column="1" Margin="82,5,-18,8" 
-                Click="BtnDialogOk_Click">_Ok</Button>
-        <Button Grid.Row="2" Grid.Column="1" Width="71" Margin="2,5,0,8" 
-                Click="BtnDialogCancel_Click" HorizontalAlignment="Left">_Abbrechen</Button>
+        <Button Grid.Row="2" Grid.Column="0" Width="50" Height="26" Margin="5,5,0,0"
+                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+            löschen
+        </Button>
+        <Button IsDefault="True" Grid.Row="2" Grid.Column="1" Margin="82,5,-18,8"
+                Click="BtnDialogOk_Click">
+            _Ok
+        </Button>
+        <Button Grid.Row="2" Grid.Column="1" Width="71" Margin="2,5,0,8"
+                Click="BtnDialogCancel_Click" HorizontalAlignment="Left">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

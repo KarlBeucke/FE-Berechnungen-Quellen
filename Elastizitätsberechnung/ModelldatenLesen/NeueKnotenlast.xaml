@@ -7,8 +7,8 @@
         Title="NeueKnotenlast" Height="280" Width="300">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
@@ -24,24 +24,28 @@
         </Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,4.8,0.2,0.4">Last ID:</Label>
-        <TextBox Name="LastId" Grid.Row="1" Grid.Column="1" Margin="10,9.8,10,5.4" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="LastId" Grid.Row="1" Grid.Column="1" Margin="10,9.8,10,5.4" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,4.6,0.2,34.8" Grid.RowSpan="2">Knoten ID:</Label>
-        <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="10,9.6,10,5.6" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="10,9.6,10,5.6" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5.4,0,0">Lastwert in x-Richtung:</Label>
-        <TextBox Name="Px" Grid.Row="3" Grid.Column="1" Margin="10,10,10,4.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="Px" Grid.Row="3" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5.4,0,0">Lastwert in y-Richtung:</Label>
-        <TextBox Name="Py" Grid.Row="4" Grid.Column="1" Margin="10,10,10,4.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="Py" Grid.Row="4" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
         <Label Grid.Row="5" Grid.Column="0" Margin="0,5.4,0,0">Lastwert in z-Richtung:</Label>
-        <TextBox Name="Pz" Grid.Row="5" Grid.Column="1" Margin="10,10,10,4.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+        <TextBox Name="Pz" Grid.Row="5" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
 
-        <Button IsDefault="True" Grid.Row="6" Grid.Column="1" Width="35"  Margin="96,5,-30.2,1.2" 
-                Click="BtnDialogOk_Click" HorizontalAlignment="Left">_Ok</Button>
-        <Button Grid.Row="6" Grid.Column="1" Margin="10,5,10.8,0.4" 
-                Click="BtnDialogCancel_Click">_Abbrechen</Button>
+        <Button IsDefault="True" Grid.Row="6" Grid.Column="1" Width="35" Margin="96,5,-30.2,1.2"
+                Click="BtnDialogOk_Click" HorizontalAlignment="Left">
+            _Ok
+        </Button>
+        <Button Grid.Row="6" Grid.Column="1" Margin="10,5,10.8,0.4"
+                Click="BtnDialogCancel_Click">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

@@ -1,5 +1,5 @@
-﻿using FEBibliothek.Modell;
-using System.Windows;
+﻿using System.Windows;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
@@ -7,6 +7,7 @@ public partial class ZeitAnfangstemperaturNeu
 {
     private readonly FeModell modell;
     private int aktuell;
+
     public ZeitAnfangstemperaturNeu(FeModell modell)
     {
         InitializeComponent();
@@ -24,14 +25,17 @@ public partial class ZeitAnfangstemperaturNeu
             KnotenId.Text = anfang.KnotenId;
             Anfangstemperatur.Text = anfang.Werte[0].ToString("G2");
         }
+
         Show();
     }
+
     private void StationäreLösungChecked(object sender, RoutedEventArgs e)
     {
         StationäreLösung.IsChecked = true;
         KnotenId.Text = "";
         Anfangstemperatur.Text = "";
     }
+
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
         if (KnotenId.Text.Length == 0) Close();
@@ -80,6 +84,7 @@ public partial class ZeitAnfangstemperaturNeu
             StartFenster.WärmeVisual.zeitintegrationNeu.Close();
             return;
         }
+
         var anfang = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell];
         KnotenId.Text = anfang.KnotenId;
         Anfangstemperatur.Text = anfang.Werte[0].ToString("G2");

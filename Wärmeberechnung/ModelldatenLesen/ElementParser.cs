@@ -1,19 +1,19 @@
-﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+﻿using System.Collections.Generic;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Collections.Generic;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public class ElementParser : FeParser
 {
-    private string[] substrings;
-    private int nodesPerElement;
-    private string elementId;
-    private string[] nodeIds;
     private AbstraktElement element;
+    private string elementId;
     private string materialId;
     private FeModell modell;
+    private string[] nodeIds;
+    private int nodesPerElement;
+    private string[] substrings;
 
     // parsing a new model to be read from file
     public void ParseWärmeElements(string[] lines, FeModell feModell)
@@ -40,27 +40,26 @@ public class ElementParser : FeParser
                 switch (substrings.Length)
                 {
                     case 4:
-                        {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            for (var k = 0; k < nodesPerElement; k++)
-                            {
-                                nodeIds[k] = substrings[k + 1];
-                            }
+                    {
+                        elementId = substrings[0];
+                        nodeIds = new string[nodesPerElement];
+                        for (var k = 0; k < nodesPerElement; k++) nodeIds[k] = substrings[k + 1];
 
-                            materialId = substrings[3];
-                            element = new Element2D2(elementId, nodeIds, materialId, modell);
-                            modell.Elemente.Add(elementId, element);
-                            i++;
-                            break;
-                        }
+                        materialId = substrings[3];
+                        element = new Element2D2(elementId, nodeIds, materialId, modell);
+                        modell.Elemente.Add(elementId, element);
+                        i++;
+                        break;
+                    }
                     default:
-                        throw new ParseAusnahme((i + 2) + ": Elemente2D2Knoten, falsche Anzahl Parameter");
+                        throw new ParseAusnahme(i + 2 + ": Elemente2D2Knoten, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }
+
     private void ParseElement2D3(IReadOnlyList<string> lines)
     {
         nodesPerElement = 3;
@@ -76,28 +75,27 @@ public class ElementParser : FeParser
                 switch (substrings.Length)
                 {
                     case 5:
-                        {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            for (var k = 0; k < nodesPerElement; k++)
-                            {
-                                nodeIds[k] = substrings[k + 1];
-                            }
+                    {
+                        elementId = substrings[0];
+                        nodeIds = new string[nodesPerElement];
+                        for (var k = 0; k < nodesPerElement; k++) nodeIds[k] = substrings[k + 1];
 
-                            materialId = substrings[4];
+                        materialId = substrings[4];
 
-                            element = new Element2D3(elementId, nodeIds, materialId, modell);
-                            modell.Elemente.Add(elementId, element);
-                            i++;
-                            break;
-                        }
+                        element = new Element2D3(elementId, nodeIds, materialId, modell);
+                        modell.Elemente.Add(elementId, element);
+                        i++;
+                        break;
+                    }
                     default:
-                        throw new ParseAusnahme((i + 2) + ":\nElemente2D3Knoten, falsche Anzahl Parameter");
+                        throw new ParseAusnahme(i + 2 + ":\nElemente2D3Knoten, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }
+
     private void ParseElement2D4(IReadOnlyList<string> lines)
     {
         nodesPerElement = 4;
@@ -113,28 +111,27 @@ public class ElementParser : FeParser
                 switch (substrings.Length)
                 {
                     case 6:
-                        {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            for (var k = 0; k < nodesPerElement; k++)
-                            {
-                                nodeIds[k] = substrings[k + 1];
-                            }
+                    {
+                        elementId = substrings[0];
+                        nodeIds = new string[nodesPerElement];
+                        for (var k = 0; k < nodesPerElement; k++) nodeIds[k] = substrings[k + 1];
 
-                            materialId = substrings[5];
+                        materialId = substrings[5];
 
-                            element = new Element2D4(elementId, nodeIds, materialId, modell);
-                            modell.Elemente.Add(elementId, element);
-                            i++;
-                            break;
-                        }
+                        element = new Element2D4(elementId, nodeIds, materialId, modell);
+                        modell.Elemente.Add(elementId, element);
+                        i++;
+                        break;
+                    }
                     default:
-                        throw new ParseAusnahme((i + 2) + ":\nElemente2D4Knoten, falsche Anzahl Parameter");
+                        throw new ParseAusnahme(i + 2 + ":\nElemente2D4Knoten, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }
+
     private void ParseElement3D8(IReadOnlyList<string> lines)
     {
         nodesPerElement = 8;
@@ -150,25 +147,23 @@ public class ElementParser : FeParser
                 switch (substrings.Length)
                 {
                     case 10:
-                        {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            for (var k = 0; k < nodesPerElement; k++)
-                            {
-                                nodeIds[k] = substrings[k + 1];
-                            }
+                    {
+                        elementId = substrings[0];
+                        nodeIds = new string[nodesPerElement];
+                        for (var k = 0; k < nodesPerElement; k++) nodeIds[k] = substrings[k + 1];
 
-                            materialId = substrings[9];
+                        materialId = substrings[9];
 
-                            element = new Element3D8(elementId, nodeIds, materialId, modell);
-                            modell.Elemente.Add(elementId, element);
-                            i++;
-                            break;
-                        }
+                        element = new Element3D8(elementId, nodeIds, materialId, modell);
+                        modell.Elemente.Add(elementId, element);
+                        i++;
+                        break;
+                    }
                     default:
-                        throw new ParseAusnahme((i + 2) + ":\nElemente3D8Knoten, falsche Anzahl Parameter");
+                        throw new ParseAusnahme(i + 2 + ":\nElemente3D8Knoten, falsche Anzahl Parameter");
                 }
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }

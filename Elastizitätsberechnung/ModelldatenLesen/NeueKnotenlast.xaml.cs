@@ -1,12 +1,13 @@
-﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+﻿using System.Windows;
+using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 using FEBibliothek.Modell;
-using System.Windows;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 public partial class NeueKnotenlast
 {
-    private readonly FeModell modell;
+    private readonly FeModell _modell;
+
     public NeueKnotenlast()
     {
         InitializeComponent();
@@ -17,7 +18,7 @@ public partial class NeueKnotenlast
         double px, double py, double pz)
     {
         InitializeComponent();
-        this.modell = modell;
+        _modell = modell;
         LastId.Text = last;
         KnotenId.Text = knoten;
         Px.Text = px.ToString("0.00");
@@ -38,7 +39,7 @@ public partial class NeueKnotenlast
         {
             LastId = loadId
         };
-        modell.Lasten.Add(loadId, knotenLast);
+        _modell.Lasten.Add(loadId, knotenLast);
         Close();
     }
 

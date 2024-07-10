@@ -1,16 +1,17 @@
-﻿using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class MaterialNeu
 {
+    private readonly MaterialKeys materialKeys;
     private readonly FeModell modell;
     private AbstraktMaterial material, vorhandenesMaterial;
-    private readonly MaterialKeys materialKeys;
 
     public MaterialNeu(FeModell modell)
     {
@@ -38,10 +39,14 @@ public partial class MaterialNeu
             modell.Material.TryGetValue(materialId, out vorhandenesMaterial);
             Debug.Assert(vorhandenesMaterial != null, nameof(vorhandenesMaterial) + " != null");
 
-            if (LeitfähigkeitX.Text.Length > 0) vorhandenesMaterial.MaterialWerte[0] = double.Parse(LeitfähigkeitX.Text);
-            if (LeitfähigkeitY.Text.Length > 0) vorhandenesMaterial.MaterialWerte[1] = double.Parse(LeitfähigkeitY.Text);
-            if (LeitfähigkeitZ.Text.Length > 0) vorhandenesMaterial.MaterialWerte[2] = double.Parse(LeitfähigkeitZ.Text);
-            if (DichteLeitfähigkeit.Text.Length > 0) vorhandenesMaterial.MaterialWerte[3] = double.Parse(DichteLeitfähigkeit.Text);
+            if (LeitfähigkeitX.Text.Length > 0)
+                vorhandenesMaterial.MaterialWerte[0] = double.Parse(LeitfähigkeitX.Text);
+            if (LeitfähigkeitY.Text.Length > 0)
+                vorhandenesMaterial.MaterialWerte[1] = double.Parse(LeitfähigkeitY.Text);
+            if (LeitfähigkeitZ.Text.Length > 0)
+                vorhandenesMaterial.MaterialWerte[2] = double.Parse(LeitfähigkeitZ.Text);
+            if (DichteLeitfähigkeit.Text.Length > 0)
+                vorhandenesMaterial.MaterialWerte[3] = double.Parse(DichteLeitfähigkeit.Text);
         }
         // neues Material
         else
@@ -54,9 +59,10 @@ public partial class MaterialNeu
                 leitfähigkeit[2] = double.Parse(LeitfähigkeitZ.Text);
             if (DichteLeitfähigkeit.Text.Length > 0)
                 dichteLeitfähigkeit = double.Parse(DichteLeitfähigkeit.Text);
-            material = new Modelldaten.Material(materialId, leitfähigkeit, dichteLeitfähigkeit);
+            material = new Material(materialId, leitfähigkeit, dichteLeitfähigkeit);
             modell.Material.Add(materialId, material);
         }
+
         materialKeys?.Close();
         Close();
     }
@@ -80,7 +86,8 @@ public partial class MaterialNeu
 
         // vorhandene Materialdefinition
         modell.Material.TryGetValue(MaterialId.Text, out vorhandenesMaterial);
-        Debug.Assert(vorhandenesMaterial != null, nameof(vorhandenesMaterial) + " != null"); MaterialId.Text = "";
+        Debug.Assert(vorhandenesMaterial != null, nameof(vorhandenesMaterial) + " != null");
+        MaterialId.Text = "";
 
         MaterialId.Text = vorhandenesMaterial.MaterialId;
 

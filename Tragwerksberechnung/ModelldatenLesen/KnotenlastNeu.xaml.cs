@@ -1,15 +1,16 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class KnotenlastNeu
 {
     private readonly FeModell _modell;
+
     public KnotenlastNeu()
     {
         InitializeComponent();
@@ -22,6 +23,7 @@ public partial class KnotenlastNeu
         _modell = modell;
         Show();
     }
+
     public KnotenlastNeu(FeModell modell, string last, string knoten, double px, double py, double m)
     {
         InitializeComponent();
@@ -47,7 +49,8 @@ public partial class KnotenlastNeu
         _modell.Lasten.TryGetValue(knotenlastId, out var vorhandeneKnotenlast);
         if (vorhandeneKnotenlast != null)
         {
-            if (KnotenId.Text.Length > 0) vorhandeneKnotenlast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
+            if (KnotenId.Text.Length > 0)
+                vorhandeneKnotenlast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
             try
             {
                 if (Px.Text.Length > 0) vorhandeneKnotenlast.Lastwerte[0] = double.Parse(Px.Text);
@@ -84,6 +87,7 @@ public partial class KnotenlastNeu
             };
             _modell.Lasten.Add(knotenlastId, knotenlast);
         }
+
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
@@ -108,6 +112,7 @@ public partial class KnotenlastNeu
         Py.Text = vorhandeneKnotenlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
         M.Text = vorhandeneKnotenlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
     }
+
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
     {
         _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
@@ -118,6 +123,7 @@ public partial class KnotenlastNeu
             KnotenId.Text = "";
             return;
         }
+
         if (LastId.Text == "") LastId.Text = "KL_" + KnotenId.Text;
     }
 

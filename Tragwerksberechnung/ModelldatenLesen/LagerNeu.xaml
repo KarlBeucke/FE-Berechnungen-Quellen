@@ -7,8 +7,8 @@
         Title="Neues Lager festlegen, vorhandenes editieren" Height="350" Width="370">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -26,33 +26,42 @@
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Lager ID:</Label>
         <Label Grid.Row="1" Grid.Column="0" Margin="0,20,0,38" FontSize="8" Grid.RowSpan="2">(generiert aus "Lager" und Knoten ID)</Label>
-        <TextBox Name="LagerId" Grid.Row="1" Grid.Column="1" Margin="13,13,-12,0" Height="20" 
-                 VerticalAlignment="Top" LostFocus="LagerIdLostFocus"/>
+        <TextBox Name="LagerId" Grid.Row="1" Grid.Column="1" Margin="13,13,-12,0" Height="20"
+                 VerticalAlignment="Top" LostFocus="LagerIdLostFocus" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Knoten ID:</Label>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,20,0,38" FontSize="8" Grid.RowSpan="2">(click vorhandene Knoten ID)</Label>
-        <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="12.2,13.2,0,6.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" LostFocus="KnotenIdLostFocus" MouseDoubleClick="KnotenPositionNeu"/>
+        <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="12.2,13.2,0,6.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" LostFocus="KnotenIdLostFocus"
+                 MouseDoubleClick="KnotenPositionNeu" />
         <Label Grid.Row="3" Grid.Column="0"
-               VerticalAlignment="Center" HorizontalAlignment="Left">Festhaltungen in x, y und r</Label>
+               VerticalAlignment="Center" HorizontalAlignment="Left">
+            Festhaltungen in x, y und r
+        </Label>
         <CheckBox Name="Xfest" Grid.Row="3" Grid.Column="1" Margin="20,15,45,5" Width="35">x</CheckBox>
         <CheckBox Name="Yfest" Grid.Row="3" Grid.Column="1" Margin="70,15,-5,5" Width="35">y</CheckBox>
         <CheckBox Name="Rfest" Grid.Row="3" Grid.Column="1" Margin="120,15,-55,5" Width="35">r</CheckBox>
 
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5,0,0">vordefinierte Verschiebung in x:</Label>
-        <TextBox Name="VorX" Grid.Row="4" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
+        <TextBox Name="VorX" Grid.Row="4" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" />
         <Label Grid.Row="5" Grid.Column="0" Margin="0,5,0,0">vordefinierte Verschiebung in y:</Label>
-        <TextBox Name="VorY" Grid.Row="5" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
+        <TextBox Name="VorY" Grid.Row="5" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" />
         <Label Grid.Row="6" Grid.Column="0" Margin="0,5,0,0">vordefinierte Rotation:</Label>
-        <TextBox Name="VorRot" Grid.Row="6" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32"/>
+        <TextBox Name="VorRot" Grid.Row="6" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" />
 
-        <Button Grid.Row="7" Grid.Column="0" Width="50"  Height="26" Margin="5,0,0,4.6" 
-                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" >löschen</Button>
-        <Button IsDefault="True" Grid.Row="7" Grid.Column="1"  Height="26" Margin="101,0,-36,0" 
-                Click="BtnDialogOk_Click" VerticalAlignment="Center">_Ok</Button>
-        <Button Grid.Row="7" Grid.Column="1" Width="71" Height="26" Margin="21.2,0,0,7.8" 
-                Click="BtnDialogCancel_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">_Abbrechen</Button>
+        <Button Grid.Row="7" Grid.Column="0" Width="50" Height="26" Margin="5,0,0,4.6"
+                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            löschen
+        </Button>
+        <Button IsDefault="True" Grid.Row="7" Grid.Column="1" Height="26" Margin="101,0,-36,0"
+                Click="BtnDialogOk_Click" VerticalAlignment="Center">
+            _Ok
+        </Button>
+        <Button Grid.Row="7" Grid.Column="1" Width="71" Height="26" Margin="21.2,0,0,7.8"
+                Click="BtnDialogCancel_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

@@ -1,10 +1,10 @@
-﻿using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
+using FEBibliothek.Modell;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;
 using static System.Windows.Media.Color;
@@ -13,22 +13,21 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 
 public partial class KnotenzeitverläufeVisualisieren
 {
-    private readonly FeModell modell;
-    private Knoten knoten;
-    private readonly double dt;
-    private double zeit;
-    private double maxVerformung, minVerformung;
-    private double absMaxVerformung;
-    private double maxBeschleunigung, minBeschleunigung;
-    private double absMaxBeschleunigung;
-    private double ausschnittMax, ausschnittMin;
-
     private readonly Darstellung darstellung;
+    private readonly double dt;
+    private readonly FeModell modell;
+    private double absMaxBeschleunigung;
+    private double absMaxVerformung;
+    private bool accXVerlauf, accYVerlauf;
     private DarstellungsbereichDialog ausschnitt;
+    private double ausschnittMax, ausschnittMin;
     private bool darstellungsBereichNeu;
     private bool deltaXVerlauf, deltaYVerlauf;
-    private bool accXVerlauf, accYVerlauf;
+    private Knoten knoten;
+    private double maxBeschleunigung, minBeschleunigung;
     private TextBlock maximal;
+    private double maxVerformung, minVerformung;
+    private double zeit;
 
     public KnotenzeitverläufeVisualisieren(FeModell feModell)
     {
@@ -58,13 +57,18 @@ public partial class KnotenzeitverläufeVisualisieren
             _ = MessageBox.Show("kein gültiger Knotenidentifikator ausgewählt", "Zeitschrittauswahl");
             return;
         }
+
         var knotenId = (string)Knotenauswahl.SelectedItem;
-        if (modell.Knoten.TryGetValue(knotenId, out knoten)) { }
+        if (modell.Knoten.TryGetValue(knotenId, out knoten))
+        {
+        }
     }
 
     private void BtnDeltaX_Click(object sender, RoutedEventArgs e)
     {
-        deltaYVerlauf = false; accXVerlauf = false; accYVerlauf = false;
+        deltaYVerlauf = false;
+        accXVerlauf = false;
+        accYVerlauf = false;
         maxVerformung = knoten.KnotenVariable[0].Max();
         minVerformung = knoten.KnotenVariable[0].Min();
         if (maxVerformung > Math.Abs(minVerformung))
@@ -80,6 +84,7 @@ public partial class KnotenzeitverläufeVisualisieren
             DeltaXNeuZeichnen();
         }
     }
+
     private void DeltaXNeuZeichnen()
     {
         if (knoten == null)
@@ -113,15 +118,19 @@ public partial class KnotenzeitverläufeVisualisieren
 
             darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxVerformung, knoten.KnotenVariable[0]);
 
-            deltaXVerlauf = true; deltaYVerlauf = false;
-            accXVerlauf = false; accYVerlauf = false;
+            deltaXVerlauf = true;
+            deltaYVerlauf = false;
+            accXVerlauf = false;
+            accYVerlauf = false;
             darstellungsBereichNeu = false;
         }
     }
 
     private void BtnDeltaY_Click(object sender, RoutedEventArgs e)
     {
-        deltaXVerlauf = false; accXVerlauf = false; accYVerlauf = false;
+        deltaXVerlauf = false;
+        accXVerlauf = false;
+        accYVerlauf = false;
         maxVerformung = knoten.KnotenVariable[1].Max();
         minVerformung = knoten.KnotenVariable[1].Min();
         if (maxVerformung > Math.Abs(minVerformung))
@@ -137,6 +146,7 @@ public partial class KnotenzeitverläufeVisualisieren
             DeltaYNeuZeichnen();
         }
     }
+
     private void DeltaYNeuZeichnen()
     {
         if (knoten == null)
@@ -170,15 +180,19 @@ public partial class KnotenzeitverläufeVisualisieren
 
             darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxVerformung, knoten.KnotenVariable[1]);
 
-            deltaXVerlauf = false; deltaYVerlauf = true;
-            accXVerlauf = false; accYVerlauf = false;
+            deltaXVerlauf = false;
+            deltaYVerlauf = true;
+            accXVerlauf = false;
+            accYVerlauf = false;
             darstellungsBereichNeu = false;
         }
     }
 
     private void BtnAccX_Click(object sender, RoutedEventArgs e)
     {
-        deltaXVerlauf = false; deltaYVerlauf = false; accYVerlauf = false;
+        deltaXVerlauf = false;
+        deltaYVerlauf = false;
+        accYVerlauf = false;
         maxBeschleunigung = knoten.KnotenAbleitungen[0].Max();
         minBeschleunigung = knoten.KnotenAbleitungen[0].Min();
         if (maxBeschleunigung > Math.Abs(minBeschleunigung))
@@ -194,6 +208,7 @@ public partial class KnotenzeitverläufeVisualisieren
             AccXNeuZeichnen();
         }
     }
+
     private void AccXNeuZeichnen()
     {
         if (knoten == null)
@@ -225,17 +240,22 @@ public partial class KnotenzeitverläufeVisualisieren
             // Textdarstellung des Maximalwertes mit Zeitpunkt
             MaximalwertText("Beschleunigung x", absMaxBeschleunigung, zeit);
 
-            darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxBeschleunigung, knoten.KnotenAbleitungen[0]);
+            darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxBeschleunigung,
+                knoten.KnotenAbleitungen[0]);
 
-            deltaXVerlauf = false; deltaYVerlauf = false;
-            accXVerlauf = true; accYVerlauf = false;
+            deltaXVerlauf = false;
+            deltaYVerlauf = false;
+            accXVerlauf = true;
+            accYVerlauf = false;
             darstellungsBereichNeu = false;
         }
     }
 
     private void BtnAccY_Click(object sender, RoutedEventArgs e)
     {
-        deltaXVerlauf = false; deltaYVerlauf = false; accXVerlauf = false;
+        deltaXVerlauf = false;
+        deltaYVerlauf = false;
+        accXVerlauf = false;
         maxBeschleunigung = knoten.KnotenAbleitungen[1].Max();
         minBeschleunigung = knoten.KnotenAbleitungen[1].Min();
         if (maxBeschleunigung > Math.Abs(minBeschleunigung))
@@ -251,6 +271,7 @@ public partial class KnotenzeitverläufeVisualisieren
             AccYNeuZeichnen();
         }
     }
+
     private void AccYNeuZeichnen()
     {
         if (knoten == null)
@@ -282,10 +303,13 @@ public partial class KnotenzeitverläufeVisualisieren
             // Textdarstellung des Maximalwertes mit Zeitpunkt
             MaximalwertText("Beschleunigung y", absMaxBeschleunigung, zeit);
 
-            darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxBeschleunigung, knoten.KnotenAbleitungen[1]);
+            darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxBeschleunigung,
+                knoten.KnotenAbleitungen[1]);
 
-            deltaXVerlauf = false; deltaYVerlauf = false;
-            accXVerlauf = false; accYVerlauf = true;
+            deltaXVerlauf = false;
+            deltaYVerlauf = false;
+            accXVerlauf = false;
+            accYVerlauf = true;
             darstellungsBereichNeu = false;
         }
     }
@@ -299,7 +323,8 @@ public partial class KnotenzeitverläufeVisualisieren
         else
         {
             VisualErgebnisse.Children.Clear();
-            ausschnitt = new DarstellungsbereichDialog(ausschnittMin, ausschnittMax, absMaxVerformung, absMaxBeschleunigung);
+            ausschnitt =
+                new DarstellungsbereichDialog(ausschnittMin, ausschnittMax, absMaxVerformung, absMaxBeschleunigung);
             ausschnittMin = ausschnitt.tmin;
             ausschnittMax = ausschnitt.tmax;
             maxVerformung = ausschnitt.maxVerformung;

@@ -12,6 +12,7 @@ public class ZeitabhängigeRandbedingung : AbstraktZeitabhängigeRandbedingung
         Datei = datei;
         VariationsTyp = 0;
     }
+
     public ZeitabhängigeRandbedingung(string knotenId, double konstanteTemperatur)
     {
         KnotenId = knotenId;
@@ -20,6 +21,7 @@ public class ZeitabhängigeRandbedingung : AbstraktZeitabhängigeRandbedingung
         KonstanteTemperatur = konstanteTemperatur;
         VariationsTyp = 3;
     }
+
     public ZeitabhängigeRandbedingung(string knotenId, double[] intervall)
     {
         KnotenId = knotenId;
@@ -28,6 +30,7 @@ public class ZeitabhängigeRandbedingung : AbstraktZeitabhängigeRandbedingung
         Intervall = intervall;
         VariationsTyp = 1;
     }
+
     public ZeitabhängigeRandbedingung(string knotenId,
         double amplitude, double frequenz, double phasenWinkel)
     {

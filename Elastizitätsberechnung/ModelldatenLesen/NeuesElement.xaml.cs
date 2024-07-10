@@ -1,6 +1,6 @@
-﻿using FEBibliothek.Modell;
+﻿using System.Windows;
+using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Windows;
 using Element2D3 = FE_Berechnungen.Elastizitätsberechnung.Modelldaten.Element2D3;
 using Element3D8 = FE_Berechnungen.Elastizitätsberechnung.Modelldaten.Element3D8;
 
@@ -8,11 +8,12 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 public partial class NeuesElement
 {
-    private readonly FeModell modell;
+    private readonly FeModell _modell;
+
     public NeuesElement(FeModell modell)
     {
         InitializeComponent();
-        this.modell = modell;
+        _modell = modell;
         ElementId.Text = string.Empty;
         Knoten1Id.Text = string.Empty;
         Knoten2Id.Text = string.Empty;
@@ -40,8 +41,8 @@ public partial class NeuesElement
             elementId = ElementId.Text;
             var querschnittId = QuerschnittId.Text;
             var materialId = MaterialId.Text;
-            element = new Element2D3(nodeIds, querschnittId, materialId, modell) { ElementId = elementId };
-            modell.Elemente.Add(ElementId.Text, element);
+            element = new Element2D3(nodeIds, querschnittId, materialId, _modell) { ElementId = elementId };
+            _modell.Elemente.Add(ElementId.Text, element);
         }
         else if (Element3D8.IsChecked != null && (bool)Element3D8.IsChecked)
         {
@@ -56,11 +57,11 @@ public partial class NeuesElement
             nodeIds[7] = Knoten8Id.Text;
             elementId = ElementId.Text;
             var materialId = MaterialId.Text;
-            element = new Element3D8(nodeIds, materialId, modell) { ElementId = elementId };
-            modell.Elemente.Add(ElementId.Text, element);
+            element = new Element3D8(nodeIds, materialId, _modell) { ElementId = elementId };
+            _modell.Elemente.Add(ElementId.Text, element);
         }
 
-        if (elementId != null) modell.Elemente.Add(elementId, element);
+        if (elementId != null) _modell.Elemente.Add(elementId, element);
         Close();
     }
 

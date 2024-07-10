@@ -1,18 +1,17 @@
-﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+﻿using System.Collections.Generic;
+using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
-using System;
-using System.Collections.Generic;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 public class ElementParser
 {
-    private string[] substrings;
-    private string elementId;
-    private string[] nodeIds;
     private AbstraktElement element;
+    private string elementId;
     private FeModell modell;
+    private string[] nodeIds;
+    private string[] substrings;
 
     // parsing a new model to be read from file
     public void ParseElements(string[] lines, FeModell feModell)
@@ -40,10 +39,7 @@ public class ElementParser
                 {
                     elementId = substrings[0];
                     nodeIds = new string[nodesPerElement];
-                    for (var k = 0; k < nodesPerElement; k++)
-                    {
-                        nodeIds[k] = substrings[k + 1];
-                    }
+                    for (var k = 0; k < nodesPerElement; k++) nodeIds[k] = substrings[k + 1];
 
                     var querschnittId = substrings[4];
                     var materialId = substrings[5];
@@ -53,9 +49,10 @@ public class ElementParser
                 }
                 else
                 {
-                    throw new ParseAusnahme((i + 1) + ":\nElement2D3 erfordert 6 Eingabeparameter");
+                    throw new ParseAusnahme(i + 1 + ":\nElement2D3 erfordert 6 Eingabeparameter");
                 }
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }
@@ -76,10 +73,7 @@ public class ElementParser
                 {
                     elementId = substrings[0];
                     nodeIds = new string[nodesPerElement];
-                    for (var k = 0; k < nodesPerElement; k++)
-                    {
-                        nodeIds[k] = substrings[k + 1];
-                    }
+                    for (var k = 0; k < nodesPerElement; k++) nodeIds[k] = substrings[k + 1];
                     var materialId = substrings[9];
                     element = new Element3D8(nodeIds, materialId, modell) { ElementId = elementId };
                     modell.Elemente.Add(elementId, element);
@@ -87,9 +81,10 @@ public class ElementParser
                 }
                 else
                 {
-                    throw new ParseAusnahme((i + 1) + ":\nElement3D8 erfordert 10 Eingabeparameter");
+                    throw new ParseAusnahme(i + 1 + ":\nElement3D8 erfordert 10 Eingabeparameter");
                 }
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }
@@ -107,11 +102,9 @@ public class ElementParser
             {
                 substrings = lines[i + 1].Split(delimiters);
                 if (substrings.Length != 4)
-                {
-                    throw new ParseAusnahme((i + 1) + ":\nfalsche Anzahl Parameter für Elementeingabe:\n"
-                                                    + "muss gleich 4 sein für elementName, Knotennetzname,"
-                                                    + "Anzahl der Intervalle und Elementmaterial");
-                }
+                    throw new ParseAusnahme(i + 1 + ":\nfalsche Anzahl Parameter für Elementeingabe:\n"
+                                            + "muss gleich 4 sein für elementName, Knotennetzname,"
+                                            + "Anzahl der Intervalle und Elementmaterial");
                 var initial = substrings[0];
                 var eNodeName = substrings[1];
                 int nIntervals = short.Parse(substrings[2]);
@@ -130,7 +123,7 @@ public class ElementParser
                         {
                             var idZ = k.ToString().PadLeft(2, '0');
                             var idZp = (k + 1).ToString().PadLeft(2, '0');
-                            var eNode = new String[nodesPerElement];
+                            var eNode = new string[nodesPerElement];
                             var elementName = initial + idX + idY + idZ;
                             if (modell.Elemente.TryGetValue(elementName, out element))
                                 throw new ParseAusnahme($"\nElement \"{elementName}\" bereits vorhanden.");
@@ -148,6 +141,7 @@ public class ElementParser
                     }
                 }
             } while (lines[i + 2].Length != 0);
+
             break;
         }
     }
@@ -170,6 +164,7 @@ public class ElementParser
                 modell.Querschnitt.Add(querschnittId, querschnitt);
                 i++;
             } while (lines[i + 1].Length != 0);
+
             break;
         }
     }

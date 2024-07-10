@@ -9,13 +9,13 @@
         <ListView Margin="10" Name="ElementKey">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ID" Width="30" 
+                    <GridViewColumn Header="ID" Width="30"
                                     DisplayMemberBinding="{Binding ElementId}" />
-                    <GridViewColumn Header="Start" Width="30" 
+                    <GridViewColumn Header="Start" Width="30"
                                     DisplayMemberBinding="{Binding KnotenIds[0]}" />
-                    <GridViewColumn Header="Ende" Width="30" 
+                    <GridViewColumn Header="Ende" Width="30"
                                     DisplayMemberBinding="{Binding KnotenIds[1]}" />
-                    <GridViewColumn Header="Material" Width="50" 
+                    <GridViewColumn Header="Material" Width="50"
                                     DisplayMemberBinding="{Binding ElementMaterialId}" />
                 </GridView>
             </ListView.View>

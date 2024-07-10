@@ -1,5 +1,5 @@
-﻿using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
@@ -10,7 +10,10 @@ public class Zeitintegration : AbstraktZeitintegration
     //public double[] Initial { get { return initial; } set { initial = value; } }
     //public double[][] ForceFunction { get { return forceFunction; } set { forceFunction = value; } }
 
-    public Zeitintegration() { }
+    public Zeitintegration()
+    {
+    }
+
     public Zeitintegration(double tmax, double dt, double alfa)
     {
         Tmax = tmax;

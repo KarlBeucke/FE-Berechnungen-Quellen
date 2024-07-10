@@ -3,13 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen"
         mc:Ignorable="d"
-       Title="Neuer Querschnitt" Height="175" Width="340">
+        Title="Neuer Querschnitt" Height="175" Width="340">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180"/>
-            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="180" />
+            <ColumnDefinition Width="120" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
@@ -23,16 +22,20 @@
         </Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Querschnitt ID:</Label>
-        <TextBox Name="QuerschnittId" Grid.Row="1" Grid.Column="1" Margin="10,7.8,0,0" Height="20" 
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="32"/>
+        <TextBox Name="QuerschnittId" Grid.Row="1" Grid.Column="1" Margin="10,7.8,0,0" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="32" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">Dicke:</Label>
-        <TextBox Name="Dicke" Grid.Row="2" Grid.Column="1" Margin="10,5.4,0,0" 
-                 HorizontalAlignment="Left" Width="45" Height="20"/>
+        <TextBox Name="Dicke" Grid.Row="2" Grid.Column="1" Margin="10,5.4,0,0"
+                 HorizontalAlignment="Left" Width="45" Height="20" />
 
 
-        <Button IsDefault="True" Grid.Row="3" Width="35"  Height="26" Margin="12.2,0,0,4.2" 
-                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1">_Ok</Button>
-        <Button Grid.Row="3" Grid.Column="1" Height="26" Margin="55.2,0,-25.4,4.2" 
-                Click="BtnDialogCancel_Click" VerticalAlignment="Bottom">_Abbrechen</Button>
+        <Button IsDefault="True" Grid.Row="3" Width="35" Height="26" Margin="12.2,0,0,4.2"
+                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1">
+            _Ok
+        </Button>
+        <Button Grid.Row="3" Grid.Column="1" Height="26" Margin="55.2,0,-25.4,4.2"
+                Click="BtnDialogCancel_Click" VerticalAlignment="Bottom">
+            _Abbrechen
+        </Button>
     </Grid>
 </Window>

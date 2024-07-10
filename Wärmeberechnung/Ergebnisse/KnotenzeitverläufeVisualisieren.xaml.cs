@@ -1,10 +1,10 @@
-﻿using FEBibliothek.Modell;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
+using FEBibliothek.Modell;
 using static System.Windows.Media.Brushes;
 using static System.Windows.Media.Color;
 
@@ -12,21 +12,20 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
 public partial class KnotenzeitverläufeVisualisieren
 {
-    private readonly FeModell modell;
-    private Knoten knoten;
-    private readonly double dt;
-    private double zeit;
-    private double maxTemperatur, minTemperatur;
-    private double absMaxTemperatur;
-    private double maxWärmefluss, minWärmefluss;
-    private double absMaxWärmefluss;
-
     private readonly Darstellung darstellung;
+    private readonly double dt;
+    private readonly FeModell modell;
+    private double absMaxTemperatur;
+    private double absMaxWärmefluss;
     private Darstellungsbereich ausschnitt;
     private double ausschnittMax, ausschnittMin;
     private bool darstellungsBereichNeu;
-    private bool temperaturVerlauf, wärmeflussVerlauf;
+    private Knoten knoten;
     private TextBlock maximal;
+    private double maxTemperatur, minTemperatur;
+    private double maxWärmefluss, minWärmefluss;
+    private bool temperaturVerlauf, wärmeflussVerlauf;
+    private double zeit;
 
     public KnotenzeitverläufeVisualisieren(FeModell modell)
     {
@@ -56,8 +55,11 @@ public partial class KnotenzeitverläufeVisualisieren
             _ = MessageBox.Show("kein gültiger Knoten Identifikator ausgewählt", "Zeitschrittauswahl");
             return;
         }
+
         var knotenId = (string)Knotenauswahl.SelectedItem;
-        if (modell.Knoten.TryGetValue(knotenId, out knoten)) { }
+        if (modell.Knoten.TryGetValue(knotenId, out knoten))
+        {
+        }
     }
 
     private void BtnTemperatur_Click(object sender, RoutedEventArgs e)
@@ -78,6 +80,7 @@ public partial class KnotenzeitverläufeVisualisieren
             TemperaturNeuZeichnen();
         }
     }
+
     private void TemperaturNeuZeichnen()
     {
         if (knoten == null)
@@ -134,6 +137,7 @@ public partial class KnotenzeitverläufeVisualisieren
             WärmeflussVerlaufNeuZeichnen();
         }
     }
+
     private void WärmeflussVerlaufNeuZeichnen()
     {
         const int unendlicheWärmeflussAnzeige = 100;
@@ -160,14 +164,20 @@ public partial class KnotenzeitverläufeVisualisieren
 
             Darstellungsbereich.Text = ausschnittMin.ToString("N2") + " <= zeit <= "
                                                                     + ausschnittMax.ToString("N2");
-            if (maxWärmefluss > double.MaxValue) { maxWärmefluss = unendlicheWärmeflussAnzeige; minWärmefluss = -maxWärmefluss; }
+            if (maxWärmefluss > double.MaxValue)
+            {
+                maxWärmefluss = unendlicheWärmeflussAnzeige;
+                minWärmefluss = -maxWärmefluss;
+            }
+
             darstellung.Koordinatensystem(ausschnittMin, ausschnittMax, maxWärmefluss, minWärmefluss);
 
             // Textdarstellung des Maximalwertes mit Zeitpunkt
             VisualErgebnisse.Children.Remove(maximal);
             MaximalwertText("Wärmefluss", absMaxWärmefluss, zeit);
 
-            darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxWärmefluss, knoten.KnotenAbleitungen[0]);
+            darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxWärmefluss,
+                knoten.KnotenAbleitungen[0]);
 
             temperaturVerlauf = false;
             wärmeflussVerlauf = true;
