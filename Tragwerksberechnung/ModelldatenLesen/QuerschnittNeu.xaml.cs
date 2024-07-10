@@ -97,7 +97,7 @@ public partial class QuerschnittNeu
     private bool QuerschnittReferenziert()
     {
         var id = QuerschnittId.Text;
-        foreach (var element in _modell.Elemente.Where(element => element.Value.ElementQuerschnittId  == id))
+        foreach (var element in _modell.Elemente.Where(element => element.Value.ElementQuerschnittId == id))
         {
             _ = MessageBox.Show("Querschnitt referenziert durch Element " + element.Value.ElementId + ", kann nicht gelöscht werden", "neuer Querschnitt");
             return true;

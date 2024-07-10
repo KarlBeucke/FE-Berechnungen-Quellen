@@ -31,7 +31,7 @@
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Knoten ID:</Label>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,20,0,38" FontSize="8" Grid.RowSpan="2">(click vorhandene Knoten ID)</Label>
         <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="12.2,13.2,0,6.8" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" MouseDoubleClick="KnotenPositionNeu"/>
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" LostFocus="KnotenIdLostFocus" MouseDoubleClick="KnotenPositionNeu"/>
         <Label Grid.Row="3" Grid.Column="0"
                VerticalAlignment="Center" HorizontalAlignment="Left">Festhaltungen in x, y und r</Label>
         <CheckBox Name="Xfest" Grid.Row="3" Grid.Column="1" Margin="20,15,45,5" Width="35">x</CheckBox>

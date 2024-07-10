@@ -1,7 +1,6 @@
 ﻿using FEBibliothek.Modell;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;

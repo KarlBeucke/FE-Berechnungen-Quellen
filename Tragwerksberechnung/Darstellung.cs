@@ -919,19 +919,23 @@ public class Darstellung
                     balken = true;
                     // Einspannung links
                     if (Math.Abs(lagerKnoten.Koordinaten[0] - _minX) < double.Epsilon
-                        && lager.Typ >4) {links = true; unten = false; }
+                        && lager.Typ > 4) { links = true; unten = false; }
                     // Einspannung rechts
                     else if (Math.Abs(lagerKnoten.Koordinaten[0] - _maxX) < double.Epsilon
-                        && lager.Typ >4) {rechts = true; unten = false; }
+                        && lager.Typ > 4) { rechts = true; unten = false; }
                 }
                 else
                 {
                     // horizontale Festhaltungen oberer Koordinaten
                     if (Math.Abs(lagerKnoten.Koordinaten[0] - _minX) < double.Epsilon
-                        && Math.Abs(lagerKnoten.Koordinaten[1] - _minY) > double.Epsilon) {links = true; unten = false;
+                        && Math.Abs(lagerKnoten.Koordinaten[1] - _minY) > double.Epsilon)
+                    {
+                        links = true; unten = false;
                     }
                     else if (Math.Abs(lagerKnoten.Koordinaten[0] - _maxX) < double.Epsilon
-                        && Math.Abs(lagerKnoten.Koordinaten[1] - _minY) > double.Epsilon) {rechts = true; unten = false;
+                        && Math.Abs(lagerKnoten.Koordinaten[1] - _minY) > double.Epsilon)
+                    {
+                        rechts = true; unten = false;
                     }
                 }
 
@@ -1551,8 +1555,8 @@ public class Darstellung
                     var anzahlq1 = anzahl - (int)(lq0 / inkrement);
                     var polyLine1 = new Point[anzahlq1 + 2];
                     polyLine1[0] = polyLine0[anzahlq0];
-                    Array.ConstrainedCopy(polyLinePointArray, anzahlq0+1, polyLine1, 1, anzahlq1);
-                    polyLine1[anzahlq1+1] = endPoint;
+                    Array.ConstrainedCopy(polyLinePointArray, anzahlq0 + 1, polyLine1, 1, anzahlq1);
+                    polyLine1[anzahlq1 + 1] = endPoint;
                     qSegment = new PolyLineSegment { Points = new PointCollection(polyLine1) };
 
                     pathGeometry = new PathGeometry();
@@ -1847,7 +1851,7 @@ public class Darstellung
                         var x = i * inkrement;
                         // M(x) = Ma - Qa*x + qa*x*x/2 + (qb-qa)/l/6 *x*x*x
                         var m = element.ElementZustand[2] - element.ElementZustand[1] * x
-                                + qa/2 * x*x + (qb-qa)/l/6 * x*x*x;
+                                + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x;
                         polyLinePointArray[i] = new Point((element.Knoten[0].Koordinaten[0] + x) * Auflösung,
                             m / skalierungMoment * MaxMomentScreen);
                     }
@@ -1861,7 +1865,7 @@ public class Darstellung
                         var x = i * inkrement;
                         // M(x) = Mb - Qb*x + qb/2 *x*x + (qa-qb)/l/6 *x*x*x
                         var m = element.ElementZustand[5] + element.ElementZustand[4] * x
-                                + qb/2 * x*x + (qa-qb)/l/6 * x*x*x;
+                                + qb / 2 * x * x + (qa - qb) / l / 6 * x * x * x;
                         polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - x) * Auflösung,
                             m / skalierungMoment * MaxMomentScreen);
                     }
@@ -1907,7 +1911,7 @@ public class Darstellung
                         {
                             var x = i * inkrement;
                             m = element.ElementZustand[2] - element.ElementZustand[1] * x
-                                + qa/2 * x*x + (qb-qa)/l/6 * x*x*x;
+                                + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x;
                             var mPoint = new Point((element.Knoten[0].Koordinaten[0] + x) * Auflösung,
                                 m / skalierungMoment * MaxMomentScreen);
                             polyLinePointArray[i] = mPoint;
@@ -1916,7 +1920,7 @@ public class Darstellung
                         {
                             var x = i * inkrement;
                             m = element.ElementZustand[2] - element.ElementZustand[1] * x
-                                + qa/2 * x*x + (qb-qa)/l/6 * x*x*x
+                                + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x
                                 + punktLast.Lastwerte[1] * (x - abstandPunktlast);
                             var mPoint = new Point((element.Knoten[0].Koordinaten[0] + x) * Auflösung,
                                 m / skalierungMoment * MaxMomentScreen);
@@ -1958,7 +1962,7 @@ public class Darstellung
                             var y = i * inkrement;
                             // M(y) = Mb - Qb*y + qb/2 *y*y + (qa-qb)/l/6 *y*y*y
                             m = element.ElementZustand[5] + element.ElementZustand[4] * y
-                                                          + qb/2 * y*y + (qa-qb)/l/6 * y*y*y;
+                                                          + qb / 2 * y * y + (qa - qb) / l / 6 * y * y * y;
                             polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - y) * Auflösung,
                               m / skalierungMoment * MaxMomentScreen);
                         }
@@ -1968,7 +1972,7 @@ public class Darstellung
                             var x = i * inkrement;
                             // M(x) = Mb - Qb*x + qb/2 *x*x + (qa-qb)/l/6 *y*y*y
                             m = element.ElementZustand[5] + element.ElementZustand[4] * x
-                                                          + qb/2 * x*x + (qa-qb)/l/6 * x*x*x
+                                                          + qb / 2 * x * x + (qa - qb) / l / 6 * x * x * x
                                                           + punktLast.Lastwerte[1] * (x - abstandPunktlast);
                             polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - x) * Auflösung,
                                m / skalierungMoment * MaxMomentScreen);

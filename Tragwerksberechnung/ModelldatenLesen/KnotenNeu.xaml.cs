@@ -1,9 +1,9 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FEBibliothek.Modell;
-using System.Globalization;
-using System.Windows;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
+using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -144,21 +144,28 @@ public partial class KnotenNeu
     private bool KnotenReferenziert()
     {
         var id = KnotenId.Text;
-        if (_modell.Elemente.Any(element => element.Value.KnotenIds.Any(knoten => knoten == id)))
+        foreach (var element in _modell.Elemente.Where(element
+                     => element.Value.KnotenIds[0] == id || element.Value.KnotenIds[1] == id))
         {
-            _ = MessageBox.Show("Knoten referenziert durch ein Element, kann nicht gelöscht werden", "neuer Knoten");
+            _ = MessageBox.Show("Knoten referenziert durch Element " + element.Value.ElementId + ", kann nicht gelöscht werden", "neuer Knoten");
             return true;
         }
-        if (_modell.Lasten.Any(last => last.Value.KnotenId == id))
+        foreach (var last in _modell.Lasten.Where(last => last.Value.KnotenId == id))
         {
-            _ = MessageBox.Show("Knoten referenziert durch eine Last, kann nicht gelöscht werden", "neuer Knoten");
+            _ = MessageBox.Show("Knoten referenziert durch Last " + last.Key + ", kann nicht gelöscht werden", "neue Last");
             return true;
         }
-        if (_modell.Randbedingungen.Any(lager => lager.Value.KnotenId == id))
+        foreach (var lager in _modell.Randbedingungen.Where(lager => lager.Value.KnotenId == id))
         {
-            _ = MessageBox.Show("Knoten referenziert durch ein Lager, kann nicht gelöscht werden", "neuer Knoten");
+            _ = MessageBox.Show("Knoten referenziert durch Lager " + lager.Key + ", kann nicht gelöscht werden", "neues Lager");
             return true;
         }
+
+        //if (_modell.Elemente.Any(element => element.Value.KnotenIds.Any(knoten => knoten == id)))
+        //{
+        //    _ = MessageBox.Show("Knoten referenziert durch ein Element, kann nicht gelöscht werden", "neuer Knoten");
+        //    return true;
+        //}
         return false;
     }
 }

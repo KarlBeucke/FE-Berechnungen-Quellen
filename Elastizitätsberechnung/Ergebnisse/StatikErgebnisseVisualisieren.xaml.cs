@@ -156,20 +156,20 @@ public partial class StatikErgebnisseVisualisieren
             switch (item)
             {
                 case Polygon polygon:
-                {
-                    sb.Clear();
-                    if (_modell.Elemente.TryGetValue(polygon.Name, out AbstraktElement multiKnotenElement))
                     {
-                        var element2D = (Abstrakt2D)multiKnotenElement;
-                        var elementSpannungen = element2D.BerechneZustandsvektor();
-                        sb.Append("Element = " + element2D.ElementId);
-                        sb.Append("\nElementmitte sig-xx\t= " + elementSpannungen[0].ToString("F2"));
-                        sb.Append("\nElementmitte sig-yy\t= " + elementSpannungen[1].ToString("F2"));
-                        sb.Append("\nElementmitte sig-xy\t= " + elementSpannungen[2].ToString("F2"));
+                        sb.Clear();
+                        if (_modell.Elemente.TryGetValue(polygon.Name, out AbstraktElement multiKnotenElement))
+                        {
+                            var element2D = (Abstrakt2D)multiKnotenElement;
+                            var elementSpannungen = element2D.BerechneZustandsvektor();
+                            sb.Append("Element = " + element2D.ElementId);
+                            sb.Append("\nElementmitte sig-xx\t= " + elementSpannungen[0].ToString("F2"));
+                            sb.Append("\nElementmitte sig-yy\t= " + elementSpannungen[1].ToString("F2"));
+                            sb.Append("\nElementmitte sig-xy\t= " + elementSpannungen[2].ToString("F2"));
+                        }
+                        MyPopupText.Text = sb.ToString();
+                        break;
                     }
-                    MyPopupText.Text = sb.ToString();
-                    break;
-                }
             }
         }
 

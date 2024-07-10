@@ -4,7 +4,6 @@ using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
@@ -68,7 +67,7 @@ public partial class ElementNeu
             element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
         else if (BalkenCheck.IsChecked != null && (bool)BalkenCheck.IsChecked)
         {
-            if(Gelenk1.IsChecked != null && (bool)Gelenk1.IsChecked &&
+            if (Gelenk1.IsChecked != null && (bool)Gelenk1.IsChecked &&
                Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked)
             {
                 element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
@@ -80,13 +79,13 @@ public partial class ElementNeu
             {
                 _modell.Knoten.TryGetValue(knotenIds[0], out var startKnoten);
                 _modell.Knoten.TryGetValue(knotenIds[1], out var endKnoten);
-                if(startKnoten == null) {_ = MessageBox.Show("Startknoten ist nicht definiert", "neues Element"); return;}
-                if(endKnoten == null) {_ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element"); return;}
+                if (startKnoten == null) { _ = MessageBox.Show("Startknoten ist nicht definiert", "neues Element"); return; }
+                if (endKnoten == null) { _ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element"); return; }
                 element = startKnoten.AnzahlKnotenfreiheitsgrade switch
                 {
                     3 when endKnoten.AnzahlKnotenfreiheitsgrade == 3 => new Biegebalken(knotenIds, MaterialId.Text,
                         QuerschnittId.Text, _modell),
-                    < 3 when endKnoten.AnzahlKnotenfreiheitsgrade == 3 => new BiegebalkenGelenk(knotenIds, MaterialId.Text, 
+                    < 3 when endKnoten.AnzahlKnotenfreiheitsgrade == 3 => new BiegebalkenGelenk(knotenIds, MaterialId.Text,
                         QuerschnittId.Text, _modell, 1),
                     3 when endKnoten.AnzahlKnotenfreiheitsgrade < 3 => new BiegebalkenGelenk(knotenIds, MaterialId.Text,
                         QuerschnittId.Text, _modell, 2),
@@ -98,7 +97,7 @@ public partial class ElementNeu
             else if (Gelenk1.IsChecked != null && (bool)Gelenk1.IsChecked)
             {
                 _modell.Knoten.TryGetValue(knotenIds[1], out var endKnoten);
-                if(endKnoten == null) {_ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element"); return;}
+                if (endKnoten == null) { _ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element"); return; }
 
                 if (endKnoten.AnzahlKnotenfreiheitsgrade == 3)
                     element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 1);
@@ -108,7 +107,7 @@ public partial class ElementNeu
             else if (Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked)
             {
                 _modell.Knoten.TryGetValue(knotenIds[0], out var startKnoten);
-                if(startKnoten == null) {_ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element"); return;}
+                if (startKnoten == null) { _ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element"); return; }
 
                 if (startKnoten.AnzahlKnotenfreiheitsgrade == 3)
                     element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 2);

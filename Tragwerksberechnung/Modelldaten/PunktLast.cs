@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization.Formatters;
-using FEBibliothek.Modell.abstrakte_Klassen;
+﻿using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 

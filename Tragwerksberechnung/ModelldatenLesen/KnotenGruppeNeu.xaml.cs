@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using FEBibliothek.Modell;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
@@ -54,7 +54,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         }
 
         private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
-        { 
+        {
             X.Focus();
             //Close();
             //_knotenKeys.Close();

@@ -1,21 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C202F0FE-76B9-46CF-BC37-28DF830E809F}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>FE_Berechnungen</RootNamespace>
-    <AssemblyName>FE Berechnungen</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile />
     <PublishUrl>C:\Users\karlb\Documents\FE-Berechnungen\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -28,31 +16,14 @@
     <MapFileExtensions>true</MapFileExtensions>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>45</ApplicationRevision>
+    <ApplicationRevision>46</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -68,662 +39,6 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Dateieingabe\ModelldatenEditieren.xaml.cs">
-      <DependentUpon>ModelldatenEditieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dateieingabe\NeuerDateiname.xaml.cs">
-      <DependentUpon>NeuerDateiname.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\Darstellung.cs" />
-    <Compile Include="Elastizitätsberechnung\Darstellung3D.cs" />
-    <Compile Include="Elastizitätsberechnung\Ergebnisse\StatikErgebnisse3DVisualisieren.xaml.cs">
-      <DependentUpon>StatikErgebnisse3DVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\Ergebnisse\StatikErgebnisseAnzeigen.xaml.cs">
-      <DependentUpon>StatikErgebnisseAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\Ergebnisse\StatikErgebnisseVisualisieren.xaml.cs">
-      <DependentUpon>StatikErgebnisseVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\NetzErweiterungen.cs" />
-    <Compile Include="Elastizitätsberechnung\ModelldatenAnzeigen\ElastizitätsdatenAnzeigen.xaml.cs">
-      <DependentUpon>ElastizitätsdatenAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\ModelldatenAnzeigen\Elastizitätsmodell3DVisualisieren.xaml.cs">
-      <DependentUpon>Elastizitätsmodell3DVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\ModelldatenAnzeigen\ElastizitätsmodellVisualisieren.xaml.cs">
-      <DependentUpon>ElastizitätsmodellVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\ModelldatenAnzeigen\Lagerbedingung.cs" />
-    <Compile Include="Elastizitätsberechnung\ModelldatenLesen\ElastizitätsParser.cs" />
-    <Compile Include="Elastizitätsberechnung\ModelldatenLesen\ElementParser.cs" />
-    <Compile Include="Elastizitätsberechnung\ModelldatenLesen\LastParser.cs" />
-    <Compile Include="Elastizitätsberechnung\ModelldatenLesen\MaterialParser.cs" />
-    <Compile Include="Elastizitätsberechnung\ModelldatenLesen\NeueKnotenlast.xaml.cs">
-      <DependentUpon>NeueKnotenlast.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\ModelldatenLesen\NeuerKnoten.xaml.cs">
-      <DependentUpon>NeuerKnoten.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\ModelldatenLesen\NeuerQuerschnitt.xaml.cs">
-      <DependentUpon>NeuerQuerschnitt.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\ModelldatenLesen\NeuesElement.xaml.cs">
-      <DependentUpon>NeuesElement.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\ModelldatenLesen\NeuesLager.xaml.cs">
-      <DependentUpon>NeuesLager.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\ModelldatenLesen\NeuesMaterial.xaml.cs">
-      <DependentUpon>NeuesMaterial.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Elastizitätsberechnung\ModelldatenLesen\RandbedingungenParser.cs" />
-    <Compile Include="Elastizitätsberechnung\Modelldaten\Element2D3.cs" />
-    <Compile Include="Elastizitätsberechnung\Modelldaten\Element3D8.cs" />
-    <Compile Include="Elastizitätsberechnung\Modelldaten\KnotenLast.cs" />
-    <Compile Include="Elastizitätsberechnung\Modelldaten\Lager.cs" />
-    <Compile Include="Elastizitätsberechnung\Modelldaten\LinienLast.cs" />
-    <Compile Include="Elastizitätsberechnung\Modelldaten\Material.cs" />
-    <Compile Include="Tragwerksberechnung\Ergebnisse\DarstellungsbereichDialog.xaml.cs">
-      <DependentUpon>DarstellungsbereichDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\Ergebnisse\DynamischeErgebnisseAnzeigen.xaml.cs">
-      <DependentUpon>DynamischeErgebnisseAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\Ergebnisse\DynamischeModellzuständeVisualisieren.xaml.cs">
-      <DependentUpon>DynamischeModellzuständeVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\Ergebnisse\EigenlösungAnzeigen.xaml.cs">
-      <DependentUpon>EigenlösungAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\Ergebnisse\EigenlösungVisualisieren.xaml.cs">
-      <DependentUpon>EigenlösungVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\Ergebnisse\Knotenverformungen.cs" />
-    <Compile Include="Tragwerksberechnung\Ergebnisse\KnotenzeitverläufeVisualisieren.xaml.cs">
-      <DependentUpon>KnotenzeitverläufeVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\Ergebnisse\Stabendkräfte.cs" />
-    <Compile Include="Tragwerksberechnung\Ergebnisse\StatikErgebnisseAnzeigen.xaml.cs">
-      <DependentUpon>StatikErgebnisseAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\Ergebnisse\StatikErgebnisseVisualisieren.cs">
-      <DependentUpon>StatikErgebnisseVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenAnzeigen\AnregungVisualisieren.xaml.cs">
-      <DependentUpon>AnregungVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenAnzeigen\DialogLöschTragwerksObjekte.xaml.cs">
-      <DependentUpon>DialogLöschTragwerksObjekte.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenAnzeigen\DynamikDatenAnzeigen.xaml.cs">
-      <DependentUpon>DynamikDatenAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenAnzeigen\Zeitintervall.cs" />
-    <Compile Include="Tragwerksberechnung\ModelldatenAnzeigen\TragwerkdatenAnzeigen.xaml.cs">
-      <DependentUpon>TragwerkdatenAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenAnzeigen\TragwerkmodellVisualisieren.xaml.cs">
-      <DependentUpon>TragwerkmodellVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ElementParser.cs" />
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenGruppeNeu.xaml.cs">
-      <DependentUpon>KnotenGruppeNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenKeys.xaml.cs">
-      <DependentUpon>KnotenKeys.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzVariabel.xaml.cs">
-      <DependentUpon>KnotenNetzVariabel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzÄquidistant.xaml.cs">
-      <DependentUpon>KnotenNetzÄquidistant.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\LagerKeys.xaml.cs">
-      <DependentUpon>LagerKeys.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\LastParser.cs" />
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ElementKeys.xaml.cs">
-      <DependentUpon>ElementKeys.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\MaterialKeys.xaml.cs">
-      <DependentUpon>MaterialKeys.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\MaterialParser.cs" />
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenlastNeu.xaml.cs">
-      <DependentUpon>KnotenlastNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\LinienlastNeu.xaml.cs">
-      <DependentUpon>LinienlastNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\PunktlastNeu.xaml.cs">
-      <DependentUpon>PunktlastNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\KnotenNeu.xaml.cs">
-      <DependentUpon>KnotenNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\QuerschnittKeys.xaml.cs">
-      <DependentUpon>QuerschnittKeys.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\QuerschnittNeu.xaml.cs">
-      <DependentUpon>QuerschnittNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ElementNeu.xaml.cs">
-      <DependentUpon>ElementNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\LagerNeu.xaml.cs">
-      <DependentUpon>LagerNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\MaterialNeu.xaml.cs">
-      <DependentUpon>MaterialNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\RandbedingungParser.cs" />
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\TragwerkLastenKeys.xaml.cs">
-      <DependentUpon>TragwerkLastenKeys.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\TransientParser.cs" />
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ZeitDämpfungsratenNeu.xaml.cs">
-      <DependentUpon>ZeitDämpfungsratenNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ZeitintegrationNeu.xaml.cs">
-      <DependentUpon>ZeitintegrationNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ZeitKnotenanfangswerteNeu.xaml.cs">
-      <DependentUpon>ZeitKnotenanfangswerteNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\ModelldatenLesen\ZeitKnotenlastNeu.xaml.cs">
-      <DependentUpon>ZeitKnotenlastNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tragwerksberechnung\Modelldaten\AnregungsFunktion.cs" />
-    <Compile Include="Tragwerksberechnung\Modelldaten\Biegebalken.cs" />
-    <Compile Include="Tragwerksberechnung\Modelldaten\BiegebalkenGelenk.cs" />
-    <Compile Include="Tragwerksberechnung\Modelldaten\Fachwerk.cs" />
-    <Compile Include="Tragwerksberechnung\Modelldaten\FederElement.cs" />
-    <Compile Include="Tragwerksberechnung\Modelldaten\KnotenLast.cs" />
-    <Compile Include="Tragwerksberechnung\Modelldaten\Lager.cs" />
-    <Compile Include="Tragwerksberechnung\Modelldaten\LinienLast.cs" />
-    <Compile Include="Tragwerksberechnung\Modelldaten\Material.cs" />
-    <Compile Include="Tragwerksberechnung\Modelldaten\PunktLast.cs" />
-    <Compile Include="Tragwerksberechnung\Modelldaten\ZeitabhängigeKnotenLast.cs" />
-    <Compile Include="Tragwerksberechnung\Modelldaten\Zeitintegration.cs" />
-    <Compile Include="Tragwerksberechnung\Darstellung.cs" />
-    <Compile Include="Wärmeberechnung\Darstellung.cs" />
-    <Compile Include="Wärmeberechnung\Ergebnisse\DarstellungsbereichDialog.xaml.cs">
-      <DependentUpon>DarstellungsbereichDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\Ergebnisse\EigenlösungAnzeigen.xaml.cs">
-      <DependentUpon>EigenlösungAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\Ergebnisse\EigenlösungVisualisieren.xaml.cs">
-      <DependentUpon>EigenlösungVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\Ergebnisse\InstationäreErgebnisseAnzeigen.xaml.cs">
-      <DependentUpon>InstationäreErgebnisseAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\Ergebnisse\InstationäreModellzuständeVisualisieren.xaml.cs">
-      <DependentUpon>InstationäreModellzuständeVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\Ergebnisse\KnotenzeitverläufeVisualisieren.xaml.cs">
-      <DependentUpon>KnotenzeitverläufeVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\Ergebnisse\StationäreErgebnisseAnzeigen.xaml.cs">
-      <DependentUpon>StationäreErgebnisseAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\Ergebnisse\StationäreErgebnisseVisualisieren.xaml.cs">
-      <DependentUpon>StationäreErgebnisseVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenAnzeigen\AnregungVisualisieren.xaml.cs">
-      <DependentUpon>AnregungVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenAnzeigen\DialogLöschWärmemodellobjekt.xaml.cs">
-      <DependentUpon>DialogLöschWärmemodellobjekt.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenAnzeigen\InstationäreDatenAnzeigen.xaml.cs">
-      <DependentUpon>InstationäreDatenAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenAnzeigen\WärmedatenAnzeigen.xaml.cs">
-      <DependentUpon>WärmedatenAnzeigen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenAnzeigen\WärmemodellVisualisieren.xaml.cs">
-      <DependentUpon>WärmemodellVisualisieren.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\ElementKeys.xaml.cs">
-      <DependentUpon>ElementKeys.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\RandbedingungenKeys.xaml.cs">
-      <DependentUpon>RandbedingungenKeys.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\WärmelastenKeys.xaml.cs">
-      <DependentUpon>WärmelastenKeys.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\ElementParser.cs" />
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\KnotenNeu.xaml.cs">
-      <DependentUpon>KnotenNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\LastParser.cs" />
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\MaterialKeys.xaml.cs">
-      <DependentUpon>MaterialKeys.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\MaterialParser.cs" />
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\ElementlastNeu.xaml.cs">
-      <DependentUpon>ElementlastNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\KnotenlastNeu.xaml.cs">
-      <DependentUpon>KnotenlastNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\LinienlastNeu.xaml.cs">
-      <DependentUpon>LinienlastNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\RandbedingungNeu.xaml.cs">
-      <DependentUpon>RandbedingungNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\MaterialNeu.xaml.cs">
-      <DependentUpon>MaterialNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\ElementNeu.xaml.cs">
-      <DependentUpon>ElementNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\RandbedingungParser.cs" />
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\TransientParser.cs" />
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\ZeitAnfangstemperaturNeu.xaml.cs">
-      <DependentUpon>ZeitAnfangstemperaturNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\ZeitElementtemperaturNeu.xaml.cs">
-      <DependentUpon>ZeitElementtemperaturNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\ZeitintegrationNeu.xaml.cs">
-      <DependentUpon>ZeitintegrationNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\ZeitKnotentemperaturNeu.xaml.cs">
-      <DependentUpon>ZeitKnotentemperaturNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\ModelldatenLesen\ZeitRandtemperaturNeu.xaml.cs">
-      <DependentUpon>ZeitRandtemperaturNeu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Wärmeberechnung\Modelldaten\Element2D2.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\Element2D3.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\Element2D4.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\Element3D8.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\ElementLast3.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\ElementLast4.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\KnotenLast.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\LinienLast.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\Material.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\Randbedingung.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\ZeitabhängigeElementLast.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\ZeitabhängigeKnotenLast.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\ZeitabhängigeRandbedingung.cs" />
-    <Compile Include="Wärmeberechnung\Modelldaten\Zeitintegration.cs" />
-    <Page Include="Dateieingabe\ModelldatenEditieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dateieingabe\NeuerDateiname.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\Ergebnisse\StatikErgebnisse3DVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\Ergebnisse\StatikErgebnisseAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\Ergebnisse\StatikErgebnisseVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\ModelldatenAnzeigen\ElastizitätsdatenAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\ModelldatenAnzeigen\Elastizitätsmodell3DVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\ModelldatenAnzeigen\ElastizitätsmodellVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\ModelldatenLesen\NeueKnotenlast.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\ModelldatenLesen\NeuerKnoten.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\ModelldatenLesen\NeuerQuerschnitt.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\ModelldatenLesen\NeuesElement.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\ModelldatenLesen\NeuesLager.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elastizitätsberechnung\ModelldatenLesen\NeuesMaterial.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="StartFenster.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="StartFenster.xaml.cs">
-      <DependentUpon>StartFenster.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Tragwerksberechnung\Ergebnisse\DarstellungsbereichDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\Ergebnisse\DynamischeErgebnisseAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\Ergebnisse\DynamischeModellzuständeVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\Ergebnisse\EigenlösungAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\Ergebnisse\EigenlösungVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\Ergebnisse\KnotenzeitverläufeVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\Ergebnisse\StatikErgebnisseAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\Ergebnisse\StatikErgebnisseVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenAnzeigen\AnregungVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenAnzeigen\DialogLöschTragwerksObjekte.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenAnzeigen\DynamikDatenAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenAnzeigen\TragwerkdatenAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenAnzeigen\TragwerkmodellVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\ElementKeys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenGruppeNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenKeys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzVariabel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenNetzÄquidistant.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\LagerKeys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\MaterialKeys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenlastNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\LinienlastNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\PunktlastNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\KnotenNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\QuerschnittKeys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\QuerschnittNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\ElementNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\LagerNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\MaterialNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\TragwerkLastenKeys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\ZeitDämpfungsratenNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\ZeitintegrationNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\ZeitKnotenanfangswerteNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tragwerksberechnung\ModelldatenLesen\ZeitKnotenlastNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\Ergebnisse\DarstellungsbereichDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\Ergebnisse\EigenlösungAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\Ergebnisse\EigenlösungVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\Ergebnisse\InstationäreErgebnisseAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\Ergebnisse\InstationäreModellzuständeVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\Ergebnisse\KnotenzeitverläufeVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\Ergebnisse\StationäreErgebnisseAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\Ergebnisse\StationäreErgebnisseVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenAnzeigen\AnregungVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenAnzeigen\DialogLöschWärmemodellobjekt.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenAnzeigen\InstationäreDatenAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenAnzeigen\WärmedatenAnzeigen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenAnzeigen\WärmemodellVisualisieren.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\ElementKeys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\RandbedingungenKeys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\WärmelastenKeys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\ElementlastNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\KnotenNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\KnotenlastNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\LinienlastNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\MaterialKeys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\RandbedingungNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\MaterialNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\ElementNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\ZeitAnfangstemperaturNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\ZeitElementtemperaturNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\ZeitintegrationNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\ZeitKnotentemperaturNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Wärmeberechnung\ModelldatenLesen\ZeitRandtemperaturNeu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.7.2 %28x86 und x64%29</ProductName>
@@ -736,10 +51,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="FE Bibliothek\FE Bibliothek.csproj">
-      <Project>{628f992e-7a0b-49c4-a29a-f48d40aff8c7}</Project>
-      <Name>FE Bibliothek</Name>
-    </ProjectReference>
+    <ProjectReference Include="FE Bibliothek\FE Bibliothek.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Ressourcen\Halbraum.jpg" />
@@ -750,5 +62,61 @@
   <ItemGroup>
     <Resource Include="Ressourcen\Wandecke.jpg" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="FE Bibliothek\AssemblyInfo.cs" />
+    <Compile Remove="FE Bibliothek\Gleichungslöser\ProfillöserStatus.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\Abstrakt2D.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\Abstrakt3D.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktBalken.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktElement.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktElementLast.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktKnotenlast.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLast.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLinear2D2.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLinear2D3.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLinear2D4.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLinear3D8.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLinienlast.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktMaterial.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktRandbedingung.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktZeitabhängigeElementlast.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktZeitabhängigeKnotenlast.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktZeitabhängigeRandbedingung.cs" />
+    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktZeitintegration.cs" />
+    <Compile Remove="FE Bibliothek\Modell\Berechnung.cs" />
+    <Compile Remove="FE Bibliothek\Modell\BerechnungAusnahme.cs" />
+    <Compile Remove="FE Bibliothek\Modell\Eigenzustände.cs" />
+    <Compile Remove="FE Bibliothek\Modell\FeModell.cs" />
+    <Compile Remove="FE Bibliothek\Modell\FEParser.cs" />
+    <Compile Remove="FE Bibliothek\Modell\Gleichungen.cs" />
+    <Compile Remove="FE Bibliothek\Modell\Knoten.cs" />
+    <Compile Remove="FE Bibliothek\Modell\Knotenwerte.cs" />
+    <Compile Remove="FE Bibliothek\Modell\ModaleWerte.cs" />
+    <Compile Remove="FE Bibliothek\Modell\ModellAusnahme.cs" />
+    <Compile Remove="FE Bibliothek\Modell\ParseAusnahme.cs" />
+    <Compile Remove="FE Bibliothek\Modell\Querschnitt.cs" />
+    <Compile Remove="FE Bibliothek\obj\Debug\.NETFramework,Version=v4.6.1.AssemblyAttributes.cs" />
+    <Compile Remove="FE Bibliothek\obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
+    <Compile Remove="FE Bibliothek\obj\Debug\Input\InputFile.g.i.cs" />
+    <Compile Remove="FE Bibliothek\obj\Debug\Input\Modelleingabe.g.i.cs" />
+    <Compile Remove="FE Bibliothek\obj\Debug\Input\UserControl1.g.i.cs" />
+    <Compile Remove="FE Bibliothek\obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Remove="FE Bibliothek\obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Remove="FE Bibliothek\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Remove="FE Bibliothek\obj\Release\.NETFramework,Version=v4.6.1.AssemblyAttributes.cs" />
+    <Compile Remove="FE Bibliothek\obj\Release\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
+    <Compile Remove="FE Bibliothek\Properties\AssemblyInfo.cs" />
+    <Compile Remove="FE Bibliothek\Werkzeuge\Algebraische Ausnahme.cs" />
+    <Compile Remove="FE Bibliothek\Werkzeuge\FEGeometrie.cs" />
+    <Compile Remove="FE Bibliothek\Werkzeuge\MatrizenAlgebra.cs" />
+    <Compile Remove="FE Bibliothek\Zeitlöser\Eigenlöser.cs" />
+    <Compile Remove="FE Bibliothek\Zeitlöser\Zeitintegration1OrdnungStatus.cs" />
+    <Compile Remove="FE Bibliothek\Zeitlöser\Zeitintegration2OrdnungStatus.cs" />
+    <Compile Remove="Wärmeberechnung\Ergebnisse\Knotenauswahl.xaml.cs" />
+    <Page Remove="Wärmeberechnung\Ergebnisse\Knotenauswahl.xaml" />
+  </ItemGroup>
 </Project>

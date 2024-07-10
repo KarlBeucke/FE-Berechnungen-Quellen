@@ -1,10 +1,8 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Diagnostics;
+using System;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
@@ -12,7 +10,6 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 public partial class KnotenlastNeu
 {
     private readonly FeModell _modell;
-    private AbstraktLast _vorhandeneKnotenlast;
     public KnotenlastNeu()
     {
         InitializeComponent();
@@ -22,13 +19,13 @@ public partial class KnotenlastNeu
     public KnotenlastNeu(FeModell modell)
     {
         InitializeComponent();
-        this._modell = modell;
+        _modell = modell;
         Show();
     }
     public KnotenlastNeu(FeModell modell, string last, string knoten, double px, double py, double m)
     {
         InitializeComponent();
-        this._modell = modell;
+        _modell = modell;
         LastId.Text = last;
         KnotenId.Text = knoten;
         Px.Text = px.ToString("0.00");
@@ -47,15 +44,21 @@ public partial class KnotenlastNeu
         }
 
         // vorhandene Knotenlast
-        if (_modell.Lasten.Keys.Contains(LastId.Text))
+        _modell.Lasten.TryGetValue(knotenlastId, out var vorhandeneKnotenlast);
+        if (vorhandeneKnotenlast != null)
         {
-            _modell.Lasten.TryGetValue(knotenlastId, out _vorhandeneKnotenlast);
-            Debug.Assert(_vorhandeneKnotenlast != null, nameof(_vorhandeneKnotenlast) + " != null");
-
-            if (KnotenId.Text.Length > 0) _vorhandeneKnotenlast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Px.Text.Length > 0) _vorhandeneKnotenlast.Lastwerte[0] = double.Parse(Px.Text);
-            if (Py.Text.Length > 0) _vorhandeneKnotenlast.Lastwerte[1] = double.Parse(Py.Text);
-            if (M.Text.Length > 0) _vorhandeneKnotenlast.Lastwerte[2] = double.Parse(M.Text);
+            if (KnotenId.Text.Length > 0) vorhandeneKnotenlast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
+            try
+            {
+                if (Px.Text.Length > 0) vorhandeneKnotenlast.Lastwerte[0] = double.Parse(Px.Text);
+                if (Py.Text.Length > 0) vorhandeneKnotenlast.Lastwerte[1] = double.Parse(Py.Text);
+                if (M.Text.Length > 0) vorhandeneKnotenlast.Lastwerte[2] = double.Parse(M.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Knotenlast");
+                return;
+            }
         }
         // neue Knotenlast
         else
@@ -63,9 +66,18 @@ public partial class KnotenlastNeu
             var knotenId = "";
             double px = 0, py = 0, m = 0;
             if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Px.Text.Length > 0) px = double.Parse(Px.Text);
-            if (Py.Text.Length > 0) py = double.Parse(Py.Text);
-            if (M.Text.Length > 0) m = double.Parse(M.Text);
+            try
+            {
+                if (Px.Text.Length > 0) px = double.Parse(Px.Text);
+                if (Py.Text.Length > 0) py = double.Parse(Py.Text);
+                if (M.Text.Length > 0) m = double.Parse(M.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Knotenlast");
+                return;
+            }
+
             var knotenlast = new KnotenLast(knotenId, px, py, m)
             {
                 LastId = knotenlastId
@@ -75,7 +87,7 @@ public partial class KnotenlastNeu
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
-        StartFenster.TragwerkVisual = new ModelldatenAnzeigen.TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
     }
 
@@ -87,26 +99,28 @@ public partial class KnotenlastNeu
 
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Lasten.ContainsKey(LastId.Text))
+        // vorhandene Knotenlastdefinition
+        _modell.Lasten.TryGetValue(LastId.Text, out var vorhandeneKnotenlast);
+        if (vorhandeneKnotenlast == null) return;
+        LastId.Text = vorhandeneKnotenlast.LastId;
+        KnotenId.Text = vorhandeneKnotenlast.KnotenId;
+        Px.Text = vorhandeneKnotenlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
+        Py.Text = vorhandeneKnotenlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
+        M.Text = vorhandeneKnotenlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
+    }
+    private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
+    {
+        _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
+        if (vorhandenerKnoten == null)
         {
+            _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue Knotenlast");
+            LastId.Text = "";
             KnotenId.Text = "";
-            Px.Text = "";
-            Py.Text = "";
-            M.Text = "";
             return;
         }
-
-        // vorhandene Knotenlastdefinition
-        _modell.Lasten.TryGetValue(LastId.Text, out _vorhandeneKnotenlast);
-        Debug.Assert(_vorhandeneKnotenlast != null, nameof(_vorhandeneKnotenlast) + " != null"); LastId.Text = "";
-
-        LastId.Text = _vorhandeneKnotenlast.LastId;
-
-        KnotenId.Text = _vorhandeneKnotenlast.KnotenId;
-        Px.Text = _vorhandeneKnotenlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
-        Py.Text = _vorhandeneKnotenlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
-        M.Text = _vorhandeneKnotenlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
+        if (LastId.Text == "") LastId.Text = "KL_" + KnotenId.Text;
     }
+
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
         if (!_modell.Lasten.Keys.Contains(LastId.Text)) return;

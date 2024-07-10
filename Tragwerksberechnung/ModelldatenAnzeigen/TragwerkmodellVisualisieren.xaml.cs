@@ -1,5 +1,4 @@
-﻿using System;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
@@ -299,11 +298,11 @@ public partial class TragwerkmodellVisualisieren
             else if (_modell.PunktLasten.TryGetValue(item.Name, out var punktlast))
                 PunktlastNeu(punktlast);
             else if (_modell.ElementLasten.TryGetValue(item.Name, out var elementlast))
-                if(_linienlastNeu == null) LinienlastNeu(elementlast);
+                if (_linienlastNeu == null) LinienlastNeu(elementlast);
 
-            // Lager
-            else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
-                LagerNeu(lager);
+                // Lager
+                else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
+                    LagerNeu(lager);
         }
 
         // click auf Textdarstellungen
@@ -313,7 +312,7 @@ public partial class TragwerkmodellVisualisieren
             if (_modell.Knoten.TryGetValue(item.Text, out var knoten))
             {
                 _isKnoten = true;
-                KnotenNeu(knoten);
+                KnotenClick(knoten);
             }
 
             // Textdarstellung ist ein Element
@@ -327,7 +326,7 @@ public partial class TragwerkmodellVisualisieren
             // Textdarstellung ist eine Elementlast (Linienlast)
             else if (_modell.ElementLasten.TryGetValue(item.Text, out var linienlast))
             {
-                if(_linienlastNeu == null) LinienlastNeu(linienlast);
+                if (_linienlastNeu == null) LinienlastNeu(linienlast);
             }
 
             // Textdarstellung ist eine Punktlast
@@ -343,9 +342,9 @@ public partial class TragwerkmodellVisualisieren
         }
     }
 
-    public void KnotenNeu(Knoten knoten)
+    public void KnotenClick(Knoten knoten)
     {
-        // Knotentext angeklickt bei Definition eines neuen Elementes
+        // Knotentexte angeklickt bei Definition eines neuen Elementes
         if (_isElement)
         {
             if (_elementNeu.StartknotenId.Text == string.Empty) _elementNeu.StartknotenId.Text = knoten.Id;
@@ -376,6 +375,7 @@ public partial class TragwerkmodellVisualisieren
             return;
         }
 
+        // Knotentext angeklickt, um vorhandenen Knoten zu editieren
         _knotenNeu = new KnotenNeu(_modell)
         {
             Topmost = true,
@@ -463,8 +463,8 @@ public partial class TragwerkmodellVisualisieren
                         StartknotenId = { Text = element.KnotenIds[0] },
                         EndknotenId = { Text = element.KnotenIds[1] },
                         MaterialId = { Text = element.ElementMaterialId },
-                        EModul = { Text = emodul},
-                        Masse = { Text = masse},
+                        EModul = { Text = emodul },
+                        Masse = { Text = masse },
                         QuerschnittId = { Text = element.ElementQuerschnittId },
                         Fläche = { Text = fläche },
                         Gelenk1 = { IsChecked = true },
@@ -481,38 +481,38 @@ public partial class TragwerkmodellVisualisieren
                         StartknotenId = { Text = element.KnotenIds[0] },
                         EndknotenId = { Text = element.KnotenIds[1] },
                         MaterialId = { Text = element.ElementMaterialId },
-                        EModul = { Text = emodul},
-                        Masse = { Text = masse},
+                        EModul = { Text = emodul },
+                        Masse = { Text = masse },
                         QuerschnittId = { Text = element.ElementQuerschnittId },
                         Fläche = { Text = fläche },
-                        Trägheitsmoment = { Text = trägheitsmoment},
+                        Trägheitsmoment = { Text = trägheitsmoment },
                         Gelenk1 = { IsChecked = false },
                         Gelenk2 = { IsChecked = false }
                     };
                     break;
                 }
             case BiegebalkenGelenk:
-            {
-                var neuesElement = new ElementNeu(_modell)
                 {
-                    BalkenCheck = { IsChecked = true },
-                    ElementId = { Text = element.ElementId },
-                    StartknotenId = { Text = element.KnotenIds[0] },
-                    EndknotenId = { Text = element.KnotenIds[1] },
-                    MaterialId = { Text = element.ElementMaterialId },
-                    EModul = { Text = emodul},
-                    Masse = { Text = masse},
-                    QuerschnittId = { Text = element.ElementQuerschnittId },
-                    Fläche = { Text = fläche},
-                    Trägheitsmoment = { Text = trägheitsmoment}
-                };
-                switch (element.Typ)
-                {
-                    case 1: { neuesElement.Gelenk1.IsChecked = true; break; }
-                    case 2: { neuesElement.Gelenk2.IsChecked = true; break; }
+                    var neuesElement = new ElementNeu(_modell)
+                    {
+                        BalkenCheck = { IsChecked = true },
+                        ElementId = { Text = element.ElementId },
+                        StartknotenId = { Text = element.KnotenIds[0] },
+                        EndknotenId = { Text = element.KnotenIds[1] },
+                        MaterialId = { Text = element.ElementMaterialId },
+                        EModul = { Text = emodul },
+                        Masse = { Text = masse },
+                        QuerschnittId = { Text = element.ElementQuerschnittId },
+                        Fläche = { Text = fläche },
+                        Trägheitsmoment = { Text = trägheitsmoment }
+                    };
+                    switch (element.Typ)
+                    {
+                        case 1: { neuesElement.Gelenk1.IsChecked = true; break; }
+                        case 2: { neuesElement.Gelenk2.IsChecked = true; break; }
+                    }
+                    break;
                 }
-                break;
-            }
         }
         _isElement = false;
     }

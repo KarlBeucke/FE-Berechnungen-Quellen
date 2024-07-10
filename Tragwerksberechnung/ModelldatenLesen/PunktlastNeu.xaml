@@ -27,7 +27,7 @@
         <Label Grid.Row="2" Grid.Column="0" Margin="0,3,0,2">Element ID:</Label>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,17,0,34" FontSize="8" Grid.RowSpan="2">(click vorhandene Element ID)</Label>
         <TextBox Name="ElementId" Grid.Row="2" Grid.Column="1" Margin="10,9.6,10,5.6" Height="20" 
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" LostFocus="ElementIdLostFocus"/>
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5.4,0.2,35" Grid.RowSpan="2">Lastwert in x</Label>
         <TextBox Name="Px" Grid.Row="3" Grid.Column="1" Margin="10,10,10,4.8" Height="20" 
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="30"/>

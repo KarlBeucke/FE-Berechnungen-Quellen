@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using FEBibliothek.Modell;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
@@ -36,11 +36,11 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         {
             var dimension = _modell.Raumdimension;
             var koordinaten = new double[dimension];
-            var knotenPräfix = ""; 
+            var knotenPräfix = "";
             var anzahlKnotenDof = 3;
-            double abstandX=0, abstandY=0;
-            int wiederholungenX=0, wiederholungenY=0;
-            if(startY.Text.Length == 0)
+            double abstandX = 0, abstandY = 0;
+            int wiederholungenX = 0, wiederholungenY = 0;
+            if (startY.Text.Length == 0)
             {
                 if (Präfix.Text.Length > 0) knotenPräfix = Präfix.Text;
                 if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);

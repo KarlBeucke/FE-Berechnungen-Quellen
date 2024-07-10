@@ -9,7 +9,7 @@ public partial class ModelldatenEditieren
     public ModelldatenEditieren()
     {
         InitializeComponent();
-        OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Eingabedateien (*.inp)|*.inp" };
+        var openFileDialog = new OpenFileDialog { Filter = "Eingabedateien (*.inp)|*.inp" };
         if (openFileDialog.ShowDialog() == true)
             txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
     }
@@ -20,13 +20,13 @@ public partial class ModelldatenEditieren
     }
     private void BtnOpenFileClick(object sender, RoutedEventArgs e)
     {
-        OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Eingabedateien (*.inp)|*.inp" };
+        var openFileDialog = new OpenFileDialog { Filter = "Eingabedateien (*.inp)|*.inp" };
         if (openFileDialog.ShowDialog() == true)
             txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
     }
     private void BtnSaveFile_Click(object sender, RoutedEventArgs e)
     {
-        SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = "Eingabedateien (*.inp)|*.inp" };
+        var saveFileDialog = new SaveFileDialog { Filter = "Eingabedateien (*.inp)|*.inp" };
         if (saveFileDialog.ShowDialog() == true)
             File.WriteAllText(saveFileDialog.FileName, txtEditor.Text);
     }

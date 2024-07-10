@@ -1,18 +1,15 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Windows;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using FEBibliothek.Modell;
+using System;
+using System.Globalization;
+using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class LinienlastNeu
 {
     private readonly FeModell _modell;
-    private AbstraktElementLast _vorhandeneLinienlast;
     public LinienlastNeu(FeModell modell)
     {
         InitializeComponent();
@@ -24,7 +21,7 @@ public partial class LinienlastNeu
         double pxa, double pya, double pxb, double pyb, bool inElement)
     {
         InitializeComponent();
-        this._modell = modell;
+        _modell = modell;
         LastId.Text = last;
         ElementId.Text = element;
         Pxa.Text = pxa.ToString("0.00");
@@ -45,17 +42,23 @@ public partial class LinienlastNeu
         }
 
         // vorhandene Linienlast
-        if (_modell.ElementLasten.Keys.Contains(LastId.Text))
+        _modell.ElementLasten.TryGetValue(linienlastId, out var vorhandeneLinienlast);
+        if (vorhandeneLinienlast != null)
         {
-            _modell.ElementLasten.TryGetValue(linienlastId, out _vorhandeneLinienlast);
-            Debug.Assert(_vorhandeneLinienlast != null, nameof(_vorhandeneLinienlast) + " != null");
-
-            if (ElementId.Text.Length > 0) _vorhandeneLinienlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Pxa.Text.Length > 0) _vorhandeneLinienlast.Lastwerte[0] = double.Parse(Pxa.Text);
-            if (Pya.Text.Length > 0) _vorhandeneLinienlast.Lastwerte[1] = double.Parse(Pya.Text);
-            if (Pxb.Text.Length > 0) _vorhandeneLinienlast.Lastwerte[2] = double.Parse(Pxb.Text);
-            if (Pyb.Text.Length > 0) _vorhandeneLinienlast.Lastwerte[3] = double.Parse(Pyb.Text);
-            _vorhandeneLinienlast.InElementKoordinatenSystem = InElement.IsChecked != null && (bool)InElement.IsChecked;
+            if (ElementId.Text.Length > 0) vorhandeneLinienlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
+            vorhandeneLinienlast.InElementKoordinatenSystem = InElement.IsChecked != null && (bool)InElement.IsChecked;
+            try
+            {
+                if (Pxa.Text.Length > 0) vorhandeneLinienlast.Lastwerte[0] = double.Parse(Pxa.Text);
+                if (Pya.Text.Length > 0) vorhandeneLinienlast.Lastwerte[1] = double.Parse(Pya.Text);
+                if (Pxb.Text.Length > 0) vorhandeneLinienlast.Lastwerte[2] = double.Parse(Pxb.Text);
+                if (Pyb.Text.Length > 0) vorhandeneLinienlast.Lastwerte[3] = double.Parse(Pyb.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Linienlast");
+                return;
+            }
         }
         // neue Linienlast
         else
@@ -64,11 +67,20 @@ public partial class LinienlastNeu
             var elementId = "";
             double pxa = 0, pxb = 0, pya = 0, pyb = 0;
             if (ElementId.Text.Length > 0) elementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Pxa.Text.Length > 0) pxa = double.Parse(Pxa.Text);
-            if (Pya.Text.Length > 0) pya = double.Parse(Pya.Text);
-            if (Pxb.Text.Length > 0) pxb = double.Parse(Pxb.Text);
-            if (Pyb.Text.Length > 0) pyb = double.Parse(Pyb.Text);
             if (InElement.IsChecked != null && (bool)InElement.IsChecked) inElement = true;
+            try
+            {
+                if (Pxa.Text.Length > 0) pxa = double.Parse(Pxa.Text);
+                if (Pya.Text.Length > 0) pya = double.Parse(Pya.Text);
+                if (Pxb.Text.Length > 0) pxb = double.Parse(Pxb.Text);
+                if (Pyb.Text.Length > 0) pyb = double.Parse(Pyb.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Linienlast");
+                return;
+            }
+
             var linienlast = new LinienLast(elementId, pxa, pya, pxb, pyb, inElement)
             {
                 LastId = linienlastId
@@ -78,7 +90,7 @@ public partial class LinienlastNeu
         StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
-        StartFenster.TragwerkVisual = new ModelldatenAnzeigen.TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
     }
 
@@ -89,29 +101,28 @@ public partial class LinienlastNeu
     }
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!_modell.ElementLasten.ContainsKey(LastId.Text))
+        // vorhandene Linienlastdefinition
+        _modell.ElementLasten.TryGetValue(LastId.Text, out var vorhandeneLinienlast);
+        if (vorhandeneLinienlast == null) return;
+        LastId.Text = vorhandeneLinienlast.LastId;
+        ElementId.Text = vorhandeneLinienlast.ElementId;
+        Pxa.Text = vorhandeneLinienlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
+        Pya.Text = vorhandeneLinienlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
+        Pxb.Text = vorhandeneLinienlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
+        Pyb.Text = vorhandeneLinienlast.Lastwerte[3].ToString("G3", CultureInfo.CurrentCulture);
+        vorhandeneLinienlast.InElementKoordinatenSystem = InElement.IsChecked != null && (bool)InElement.IsChecked;
+    }
+    private void ElementIdLostFocus(object sender, RoutedEventArgs e)
+    {
+        _modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement);
+        if (vorhandenesElement == null)
         {
+            _ = MessageBox.Show("Element nicht im Modell gefunden", "neue Linienlast");
+            LastId.Text = "";
             ElementId.Text = "";
-            Pxa.Text = "";
-            Pya.Text = "";
-            Pxb.Text = "";
-            Pyb.Text = "";
-            InElement.IsChecked = true;
             return;
         }
-
-        // vorhandene Linienlastdefinition
-        _modell.ElementLasten.TryGetValue(LastId.Text, out _vorhandeneLinienlast);
-        Debug.Assert(_vorhandeneLinienlast != null, nameof(_vorhandeneLinienlast) + " != null"); LastId.Text = "";
-
-        LastId.Text = _vorhandeneLinienlast.LastId;
-
-        ElementId.Text = _vorhandeneLinienlast.ElementId;
-        Pxa.Text = _vorhandeneLinienlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
-        Pya.Text = _vorhandeneLinienlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
-        Pxb.Text = _vorhandeneLinienlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
-        Pyb.Text = _vorhandeneLinienlast.Lastwerte[3].ToString("G3", CultureInfo.CurrentCulture);
-        _vorhandeneLinienlast.InElementKoordinatenSystem = InElement.IsChecked != null && (bool)InElement.IsChecked;
+        if (LastId.Text == "") LastId.Text = "LL_" + ElementId.Text;
     }
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {

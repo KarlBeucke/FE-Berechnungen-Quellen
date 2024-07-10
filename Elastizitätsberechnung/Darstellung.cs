@@ -173,78 +173,78 @@ public class Darstellung
 
     public void VerformteGeometrie()
     {
-       try
-       {
-           if (!StartFenster.Berechnet)
-           {
-               var berechnung = new Berechnung(_modell);
-               berechnung.BerechneSystemMatrix();
-               berechnung.BerechneSystemVektor();
-               berechnung.LöseGleichungen();
-               StartFenster.Berechnet = true;
-           }
-       }
-       catch (BerechnungAusnahme e2)
-       {
-           _ = MessageBox.Show(e2.Message);
-       }
+        try
+        {
+            if (!StartFenster.Berechnet)
+            {
+                var berechnung = new Berechnung(_modell);
+                berechnung.BerechneSystemMatrix();
+                berechnung.BerechneSystemVektor();
+                berechnung.LöseGleichungen();
+                StartFenster.Berechnet = true;
+            }
+        }
+        catch (BerechnungAusnahme e2)
+        {
+            _ = MessageBox.Show(e2.Message);
+        }
 
-       //int überhöhung = 1;
-       //const int rotationÜberhöhung = 1;
-       var pathGeometry = new PathGeometry();
+        //int überhöhung = 1;
+        //const int rotationÜberhöhung = 1;
+        var pathGeometry = new PathGeometry();
 
-       IEnumerable<AbstraktElement> Elements()
-       {
-           foreach (var item in _modell.Elemente)
-           {
-               if (item.Value is { } element)
-               {
-                   yield return element;
-               }
-           }
-       }
-       foreach (var element in Elements())
-       {
-           //element.ElementState = element.ComputeElementState();
-           var pathFigure = new PathFigure();
+        IEnumerable<AbstraktElement> Elements()
+        {
+            foreach (var item in _modell.Elemente)
+            {
+                if (item.Value is { } element)
+                {
+                    yield return element;
+                }
+            }
+        }
+        foreach (var element in Elements())
+        {
+            //element.ElementState = element.ComputeElementState();
+            var pathFigure = new PathFigure();
 
-           switch (element)
-           {
-               case Element2D3 _:
-               {
-                   if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten)) { }
-                   var start = TransformVerformtenKnoten(_knoten, _auflösung, _maxY);
-                   pathFigure.StartPoint = start;
+            switch (element)
+            {
+                case Element2D3 _:
+                    {
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten)) { }
+                        var start = TransformVerformtenKnoten(_knoten, _auflösung, _maxY);
+                        pathFigure.StartPoint = start;
 
-                   for (var i = 1; i < element.KnotenIds.Length; i++)
-                   {
-                       if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten)) { }
-                       var end = TransformVerformtenKnoten(_knoten, _auflösung, _maxY);
-                       pathFigure.Segments.Add(new LineSegment(end, true));
-                   }
-                   break;
-               }
-           }
-           if (element.KnotenIds.Length > 2) pathFigure.IsClosed = true;
-           pathGeometry.Figures.Add(pathFigure);
-       }
+                        for (var i = 1; i < element.KnotenIds.Length; i++)
+                        {
+                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten)) { }
+                            var end = TransformVerformtenKnoten(_knoten, _auflösung, _maxY);
+                            pathFigure.Segments.Add(new LineSegment(end, true));
+                        }
+                        break;
+                    }
+            }
+            if (element.KnotenIds.Length > 2) pathFigure.IsClosed = true;
+            pathGeometry.Figures.Add(pathFigure);
+        }
 
-       // alle Elemente werden der GeometryGroup tragwerk hinzugefügt
-       var tragwerk = new GeometryGroup();
-       tragwerk.Children.Add(pathGeometry);
+        // alle Elemente werden der GeometryGroup tragwerk hinzugefügt
+        var tragwerk = new GeometryGroup();
+        tragwerk.Children.Add(pathGeometry);
 
-       Shape path = new Path()
-       {
-           Stroke = Red,
-           StrokeThickness = 1,
-           Data = tragwerk
-       };
-       // setz oben/links Position zum Zeichnen auf dem Canvas
-       SetLeft(path, RandLinks);
-       SetTop(path, _randOben);
-       // zeichne Shape
-       _visualErgebnisse.Children.Add(path);
-       Verformungen.Add(path);
+        Shape path = new Path()
+        {
+            Stroke = Red,
+            StrokeThickness = 1,
+            Data = tragwerk
+        };
+        // setz oben/links Position zum Zeichnen auf dem Canvas
+        SetLeft(path, RandLinks);
+        SetTop(path, _randOben);
+        // zeichne Shape
+        _visualErgebnisse.Children.Add(path);
+        Verformungen.Add(path);
     }
 
     public void LastenZeichnen()

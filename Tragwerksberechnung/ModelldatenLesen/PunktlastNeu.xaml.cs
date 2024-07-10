@@ -1,9 +1,8 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FEBibliothek.Modell;
-using System.Diagnostics;
+using System;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
@@ -14,14 +13,14 @@ public partial class PunktlastNeu
     public PunktlastNeu(FeModell modell)
     {
         InitializeComponent();
-        this._modell = modell;
+        _modell = modell;
         Show();
     }
 
     public PunktlastNeu(FeModell modell, string last, string element, double px, double py, double offset)
     {
         InitializeComponent();
-        this._modell = modell;
+        _modell = modell;
         LastId.Text = last;
         ElementId.Text = element;
         Px.Text = px.ToString("0.00");
@@ -39,17 +38,26 @@ public partial class PunktlastNeu
             return;
         }
 
-        // vorhandene Linienlast
+        // vorhandene Punktlast
         if (_modell.PunktLasten.Keys.Contains(LastId.Text))
         {
-            _modell.PunktLasten.TryGetValue(punktlastId, out var last);
-            Debug.Assert(last != null, nameof(last) + " != null");
-
-            var punktlast = (PunktLast)last;
-            if (ElementId.Text.Length > 0) punktlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Px.Text.Length > 0) punktlast.Lastwerte[0] = double.Parse(Px.Text);
-            if (Py.Text.Length > 0) punktlast.Lastwerte[1] = double.Parse(Py.Text);
-            if (Offset.Text.Length > 0) punktlast.Offset = double.Parse(Offset.Text);
+            _modell.PunktLasten.TryGetValue(punktlastId, out var vorhandenePunktlast);
+            if (vorhandenePunktlast != null)
+            {
+                if (ElementId.Text.Length > 0) vorhandenePunktlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
+                try
+                {
+                    if (ElementId.Text.Length > 0) vorhandenePunktlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
+                    if (Px.Text.Length > 0) vorhandenePunktlast.Lastwerte[0] = double.Parse(Px.Text);
+                    if (Py.Text.Length > 0) vorhandenePunktlast.Lastwerte[1] = double.Parse(Py.Text);
+                    if (Offset.Text.Length > 0) vorhandenePunktlast.Offset = double.Parse(Offset.Text);
+                }
+                catch (FormatException)
+                {
+                    _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Punktlast");
+                    return;
+                }
+            }
         }
         // neue Punktlast
         else
@@ -57,9 +65,18 @@ public partial class PunktlastNeu
             var elementId = "";
             double px = 0, py = 0, offset = 0;
             if (ElementId.Text.Length > 0) elementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Px.Text.Length > 0) px = double.Parse(Px.Text);
-            if (Py.Text.Length > 0) py = double.Parse(Py.Text);
-            if (Offset.Text.Length > 0) offset = double.Parse(Offset.Text);
+            try
+            {
+                if (Px.Text.Length > 0) px = double.Parse(Px.Text);
+                if (Py.Text.Length > 0) py = double.Parse(Py.Text);
+                if (Offset.Text.Length > 0) offset = double.Parse(Offset.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Punktlast");
+                return;
+            }
+
             var punktLast = new PunktLast(elementId, px, py, offset)
             {
                 LastId = punktlastId
@@ -91,17 +108,28 @@ public partial class PunktlastNeu
         }
 
         // vorhandene Punktlastdefinition
-        _modell.PunktLasten.TryGetValue(LastId.Text, out var last);
-        Debug.Assert(last != null, nameof(last) + " != null");
+        _modell.PunktLasten.TryGetValue(LastId.Text, out var vorhandenePunktlast);
+        if (vorhandenePunktlast == null) return;
+        LastId.Text = vorhandenePunktlast.LastId;
 
-        var punktlast = (PunktLast)last;
-        LastId.Text = punktlast.LastId;
-
-        ElementId.Text = punktlast.ElementId;
-        Px.Text = punktlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
-        Py.Text = punktlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
-        Offset.Text = punktlast.Offset.ToString("G3", CultureInfo.CurrentCulture);
+        ElementId.Text = vorhandenePunktlast.ElementId;
+        Px.Text = vorhandenePunktlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
+        Py.Text = vorhandenePunktlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
+        Offset.Text = vorhandenePunktlast.Offset.ToString("G3", CultureInfo.CurrentCulture);
     }
+    private void ElementIdLostFocus(object sender, RoutedEventArgs e)
+    {
+        _modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement);
+        if (vorhandenesElement == null)
+        {
+            _ = MessageBox.Show("Element nicht im Modell gefunden", "neue Linienlast");
+            LastId.Text = "";
+            ElementId.Text = "";
+            return;
+        }
+        if (LastId.Text == "") LastId.Text = "LL_" + ElementId.Text;
+    }
+
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
         if (!_modell.PunktLasten.Keys.Contains(LastId.Text)) return;
