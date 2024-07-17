@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
@@ -48,8 +49,15 @@ public partial class KnotenNetzVariabel
             case > 0 when inkrementsY.Text.Length == 0:
             {
                 var knotenId = knotenPräfix + "00";
-                if (startX.Text.Length > 0) startx = double.Parse(startX.Text);
-                if (startY.Text.Length > 0) starty = double.Parse(startY.Text);
+                try
+                {
+                    if (startX.Text.Length > 0) startx = double.Parse(startX.Text);
+                    if (startY.Text.Length > 0) starty = double.Parse(startY.Text);
+                }
+                catch (FormatException)
+                {
+                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Knotennetz");
+                }
                 var koordinaten = new[] { startx, starty };
                 var neuerKnoten = new Knoten(knotenId, koordinaten, anzahlKnotenDof, dimension);
                 _knotenListe.Add(neuerKnoten);
@@ -75,8 +83,15 @@ public partial class KnotenNetzVariabel
                 // Startknoten
                 var idY = "00";
                 var knotenId = knotenPräfix + "0000";
-                if (startX.Text.Length > 0) startx = double.Parse(startX.Text);
-                if (startY.Text.Length > 0) starty = double.Parse(startY.Text);
+                try
+                {
+                    if (startX.Text.Length > 0) startx = double.Parse(startX.Text);
+                    if (startY.Text.Length > 0) starty = double.Parse(startY.Text);
+                }
+                catch (FormatException)
+                {
+                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Knotennetz");
+                }
                 var koordinaten = new[] { startx, starty };
                 var neuerKnoten = new Knoten(knotenId, koordinaten, anzahlKnotenDof, dimension);
                 _knotenListe.Add(neuerKnoten);
@@ -137,21 +152,23 @@ public partial class KnotenNetzVariabel
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
         foreach (var knoten in _knotenListe)
+        {
             // vorhandener Knoten
-            if (_modell.Knoten.ContainsKey(knoten.Id))
+            if (_modell.Knoten.TryAdd(knoten.Id, knoten)) continue;
+            _modell.Knoten.TryGetValue(knoten.Id, out var vorhandenerKnoten);
+            if (vorhandenerKnoten == null) continue;
+            try
             {
-                _modell.Knoten.TryGetValue(knoten.Id, out var vorhandenerKnoten);
-                if (vorhandenerKnoten == null) continue;
                 if (AnzahlDof.Text.Length > 0)
                     vorhandenerKnoten.AnzahlKnotenfreiheitsgrade = int.Parse(AnzahlDof.Text);
                 if (startX.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(startX.Text);
                 if (startY.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(startY.Text);
             }
-            // neuer Knoten
-            else
+            catch (FormatException)
             {
-                _modell.Knoten.Add(knoten.Id, knoten);
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Knotennetz");
             }
+        }
 
         StartFenster.TragwerkVisual.Close();
         Close();

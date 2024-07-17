@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -31,22 +32,34 @@ public partial class QuerschnittNeu
         if (_modell.Querschnitt.Keys.Contains(QuerschnittId.Text))
         {
             _modell.Querschnitt.TryGetValue(querschnittId, out _vorhandenerQuerschnitt);
-            Debug.Assert(_vorhandenerQuerschnitt != null, nameof(_vorhandenerQuerschnitt) + " != null");
-
-            if (Fläche.Text == string.Empty)
+            if (_vorhandenerQuerschnitt != null)
             {
-                _ = MessageBox.Show("mindestens Fläche muss definiert sein", "neuer Querschnitt");
-                return;
-            }
+                if (Fläche.Text == string.Empty)
+                {
+                    _ = MessageBox.Show("mindestens Fläche muss definiert sein", "neuer Querschnitt");
+                    return;
+                }
 
-            _vorhandenerQuerschnitt.QuerschnittsWerte[0] = double.Parse(Fläche.Text);
+                try
+                {
+                    _vorhandenerQuerschnitt.QuerschnittsWerte[0] = double.Parse(Fläche.Text);
+                }
+                catch (FormatException)
+                {
+                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neuer Querschnitt");
+                }
 
-            if (Ixx.Text == string.Empty)
-            {
-            }
-            else
-            {
-                _vorhandenerQuerschnitt.QuerschnittsWerte[1] = double.Parse(Ixx.Text);
+                if (Ixx.Text != string.Empty)
+                {
+                    try
+                    {
+                        _vorhandenerQuerschnitt.QuerschnittsWerte[1] = double.Parse(Ixx.Text);
+                    }
+                    catch (FormatException)
+                    {
+                        _ = MessageBox.Show("ungültiges  Eingabeformat", "neuer Querschnitt");
+                    }
+                }
             }
         }
         // neuer Querschnitt

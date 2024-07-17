@@ -32,4 +32,8 @@ public class KnotenLast : AbstraktKnotenlast
     {
         return Lastwerte;
     }
+    public double[] SetzReferenzen()
+    {
+        return Lastwerte;
+    }
 }

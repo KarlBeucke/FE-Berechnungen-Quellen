@@ -49,8 +49,6 @@ public partial class PunktlastNeu
                     vorhandenePunktlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
                 try
                 {
-                    if (ElementId.Text.Length > 0)
-                        vorhandenePunktlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
                     if (Px.Text.Length > 0) vorhandenePunktlast.Lastwerte[0] = double.Parse(Px.Text);
                     if (Py.Text.Length > 0) vorhandenePunktlast.Lastwerte[1] = double.Parse(Py.Text);
                     if (Offset.Text.Length > 0) vorhandenePunktlast.Offset = double.Parse(Offset.Text);

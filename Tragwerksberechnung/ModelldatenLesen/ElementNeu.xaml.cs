@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
@@ -150,12 +151,19 @@ public partial class ElementNeu
 
         if (element != null)
         {
-            element.ElementId = ElementId.Text;
-            if (EModul.Text != string.Empty) element.E = double.Parse(EModul.Text);
-            if (Masse.Text != string.Empty) element.M = double.Parse(Masse.Text);
-            if (Fläche.Text != string.Empty) element.A = double.Parse(Fläche.Text);
-            if (Trägheitsmoment.Text != string.Empty) element.I = double.Parse(Trägheitsmoment.Text);
-            _modell.Elemente.Add(ElementId.Text, element);
+            try
+            {
+                element.ElementId = ElementId.Text;
+                if (EModul.Text != string.Empty) element.E = double.Parse(EModul.Text);
+                if (Masse.Text != string.Empty) element.M = double.Parse(Masse.Text);
+                if (Fläche.Text != string.Empty) element.A = double.Parse(Fläche.Text);
+                if (Trägheitsmoment.Text != string.Empty) element.I = double.Parse(Trägheitsmoment.Text);
+                _modell.Elemente.Add(ElementId.Text, element);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Element");
+            }
         }
 
         StartFenster.TragwerkVisual.Close();

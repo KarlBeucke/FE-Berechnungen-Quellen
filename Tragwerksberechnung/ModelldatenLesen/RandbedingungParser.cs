@@ -1,4 +1,6 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using System;
+using System.Windows;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
@@ -25,6 +27,7 @@ public class RandbedingungParser
                 _substrings = lines[i + 1].Split(_delimiters);
                 if (_substrings.Length < 7)
                 {
+                    //Parameter 1 bis 3 sind LagerId, KnotenId und Lagertyp
                     _lagerId = _substrings[0];
                     _knotenId = _substrings[1];
                     var lagerTyp = 0;
@@ -43,20 +46,30 @@ public class RandbedingungParser
                             case "r":
                                 lagerTyp += Lager.RFixed;
                                 break;
+                            default:
+                                throw new ParseAusnahme((i+2) + ":\nLagerTyp mus xyr sein");
                         }
                     }
 
                     var vordefiniert = new double[3];
-                    if (_substrings.Length > 3) vordefiniert[0] = double.Parse(_substrings[3]);
-                    if (_substrings.Length > 4) vordefiniert[1] = double.Parse(_substrings[4]);
-                    if (_substrings.Length > 5) vordefiniert[2] = double.Parse(_substrings[5]);
+                    try
+                    {
+                        // ab Parameter 4 folgen die vordefinierten Lagerverformungen
+                        if (_substrings.Length > 3) vordefiniert[0] = double.Parse(_substrings[3]);
+                        if (_substrings.Length > 4) vordefiniert[1] = double.Parse(_substrings[4]);
+                        if (_substrings.Length > 5) vordefiniert[2] = double.Parse(_substrings[5]);
+                    }
+                    catch (FormatException)
+                    {
+                        throw new ParseAusnahme((i+2) + ":\nLager vordefiniert, ungültiges  Eingabeformat");
+                    }
                     _lager = new Lager(_knotenId, lagerTyp, vordefiniert, _modell) { RandbedingungId = _lagerId };
                     _modell.Randbedingungen.Add(_lagerId, _lager);
                     i++;
                 }
                 else
                 {
-                    throw new ParseAusnahme(i + 2 + ":\nLager" + _lagerId);
+                    throw new ParseAusnahme((i+2) + ":\nLager" + _lagerId);
                 }
             } while (lines[i + 1].Length != 0);
 

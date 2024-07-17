@@ -109,7 +109,7 @@ public partial class ZeitintegrationNeu
 
     private void BerechneZeitintervall(object sender, MouseButtonEventArgs e)
     {
-        int anzahl;
+        int anzahl=0;
         Berechnung modellBerechnung = null;
 
         try
@@ -119,7 +119,6 @@ public partial class ZeitintegrationNeu
         catch (FormatException)
         {
             _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration");
-            return;
         }
 
         if (StartFenster.ModellBerechnung == null) modellBerechnung = new Berechnung(_modell);
@@ -201,9 +200,16 @@ public partial class ZeitintegrationNeu
     private void EigenformKeyDown(object sender, KeyEventArgs e)
     {
         if (Eigenform.Text.Length == 0) return;
-        if (int.Parse(Eigenform.Text) > _modell.Eigenzustand.AnzahlZustände) return;
-        EigenForm = int.Parse(Eigenform.Text);
-        Dämpfungsraten.Text = _modell.Eigenzustand.DämpfungsRaten[EigenForm].ToString();
+        try
+        {
+            if (int.Parse(Eigenform.Text) > _modell.Eigenzustand.AnzahlZustände) return;
+            EigenForm = int.Parse(Eigenform.Text);
+        }
+        catch (FormatException)
+        {
+            _ = MessageBox.Show("Anzahl Eigenzustände", "neue Zeitintegration");
+        }
+        if (Dämpfungsraten.Text.Length != 0) Dämpfungsraten.Text = _modell.Eigenzustand.DämpfungsRaten[EigenForm].ToString()!;
     }
 
     private void EigenformGotFocus(object sender, RoutedEventArgs e)
@@ -229,8 +235,8 @@ public partial class ZeitintegrationNeu
         if (_modell.Zeitintegration == null)
         {
             short methode;
-            int anzahlEigenlösungen;
-            double dt, tmax;
+            var anzahlEigenlösungen=0;
+            double dt=0, tmax=0;
 
             try
             {
@@ -239,7 +245,6 @@ public partial class ZeitintegrationNeu
             catch (FormatException)
             {
                 _ = MessageBox.Show("Zeitintervall deltaT hat falsches Format", "neue Zeitintegration");
-                return;
             }
 
             try
@@ -249,7 +254,6 @@ public partial class ZeitintegrationNeu
             catch (FormatException)
             {
                 _ = MessageBox.Show("maximale Integrationszeit tmax hat falsches Format", "neue Zeitintegration");
-                return;
             }
 
             try
@@ -259,7 +263,6 @@ public partial class ZeitintegrationNeu
             catch (FormatException)
             {
                 _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration");
-                return;
             }
 
             _modell.Eigenzustand = new Eigenzustände("eigen", anzahlEigenlösungen);
@@ -267,7 +270,7 @@ public partial class ZeitintegrationNeu
             if (Newmark.IsChecked == true)
             {
                 methode = 1;
-                double beta, gamma;
+                double beta=0, gamma=0;
                 try
                 {
                     beta = double.Parse(Beta.Text, CultureInfo.CurrentCulture);
@@ -275,7 +278,6 @@ public partial class ZeitintegrationNeu
                 catch (FormatException)
                 {
                     _ = MessageBox.Show("Parameter Beta hat falsches Format", "neue Zeitintegration");
-                    return;
                 }
 
                 try
@@ -285,7 +287,6 @@ public partial class ZeitintegrationNeu
                 catch (FormatException)
                 {
                     _ = MessageBox.Show("Parameter Gamma hat falsches Format", "neue Zeitintegration");
-                    return;
                 }
 
                 _modell.Zeitintegration = new Zeitintegration(tmax, dt, methode, beta, gamma);
@@ -293,7 +294,7 @@ public partial class ZeitintegrationNeu
             else if (Wilson.IsChecked == true)
             {
                 methode = 2;
-                double theta;
+                double theta=0;
                 try
                 {
                     theta = double.Parse(Theta.Text, CultureInfo.CurrentCulture);
@@ -301,7 +302,6 @@ public partial class ZeitintegrationNeu
                 catch (FormatException)
                 {
                     _ = MessageBox.Show("Parameter Theta hat falsches Format", "neue Zeitintegration");
-                    return;
                 }
 
                 _modell.Zeitintegration = new Zeitintegration(tmax, dt, methode, theta);
@@ -309,7 +309,7 @@ public partial class ZeitintegrationNeu
             else if (Taylor.IsChecked == true)
             {
                 methode = 3;
-                double alfa;
+                double alfa=0;
                 try
                 {
                     alfa = double.Parse(Alfa.Text, CultureInfo.CurrentCulture);
@@ -317,7 +317,6 @@ public partial class ZeitintegrationNeu
                 catch (FormatException)
                 {
                     _ = MessageBox.Show("Parameter Alfa hat falsches Format", "neue Zeitintegration");
-                    return;
                 }
 
                 _modell.Zeitintegration = new Zeitintegration(tmax, dt, methode, alfa);
@@ -334,7 +333,6 @@ public partial class ZeitintegrationNeu
             catch (FormatException)
             {
                 _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration");
-                return;
             }
 
             if (_modell.Zeitintegration == null) return;

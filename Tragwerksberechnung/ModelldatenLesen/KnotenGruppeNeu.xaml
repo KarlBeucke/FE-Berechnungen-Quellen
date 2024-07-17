@@ -55,7 +55,7 @@
 
         <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="12,14,40,730"
                 Click="BtnTabelleneintrag">
-            _Knotengruppe generieren
+            _in Tabelle eintragen
         </Button>
         <Button Grid.Row="4" Grid.Column="5" Margin="0,14,2,731"
                 Click="BtnDialogOk_Click">

@@ -3,9 +3,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
+using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FEBibliothek.Modell;
+using Lager = FE_Berechnungen.Tragwerksberechnung.Modelldaten.Lager;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -67,7 +69,7 @@ public partial class LagerNeu
             }
             catch (FormatException)
             {
-                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Knotenlast");
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neues Lager");
                 return;
             }
         }
@@ -83,7 +85,7 @@ public partial class LagerNeu
             }
             catch (FormatException)
             {
-                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Knotenlast");
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neues Lager");
                 return;
             }
 
@@ -132,13 +134,16 @@ public partial class LagerNeu
         _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
         if (vorhandenerKnoten == null)
         {
-            _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue Knotenlast");
+            _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neues Lager");
             LagerId.Text = "";
             KnotenId.Text = "";
             return;
         }
-
-        if (LagerId.Text == "") LagerId.Text = "L_" + KnotenId.Text;
+        else
+        {
+            KnotenId.Text = vorhandenerKnoten.Id;
+            if (LagerId.Text == "") LagerId.Text = "L_" + KnotenId.Text;
+        }
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
@@ -155,7 +160,7 @@ public partial class LagerNeu
     private void KnotenPositionNeu(object sender, MouseButtonEventArgs e)
     {
         _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
-        Debug.Assert(knoten != null, nameof(knoten) + " != null");
+        if(knoten == null) {_ = MessageBox.Show("Knoten nicht im Modell gefunden", "neues Lager"); return; }
         StartFenster.TragwerkVisual.KnotenClick(knoten);
         Close();
     }

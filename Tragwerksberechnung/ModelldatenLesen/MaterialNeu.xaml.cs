@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -33,14 +34,22 @@ public partial class MaterialNeu
         if (_modell.Material.Keys.Contains(MaterialId.Text))
         {
             _modell.Material.TryGetValue(materialId, out _vorhandenesMaterial);
-            Debug.Assert(_vorhandenesMaterial != null, nameof(_vorhandenesMaterial) + " != null");
-
-            if (EModul.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[0] = double.Parse(EModul.Text);
-            if (Poisson.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[1] = double.Parse(Poisson.Text);
-            if (Masse.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[2] = double.Parse(Masse.Text);
-            if (FederX.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[3] = double.Parse(FederX.Text);
-            if (FederY.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[4] = double.Parse(FederY.Text);
-            if (FederPhi.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[5] = double.Parse(FederPhi.Text);
+            if (_vorhandenesMaterial != null)
+            {
+                try
+                {
+                    if (EModul.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[0] = double.Parse(EModul.Text);
+                    if (Poisson.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[1] = double.Parse(Poisson.Text);
+                    if (Masse.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[2] = double.Parse(Masse.Text);
+                    if (FederX.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[3] = double.Parse(FederX.Text);
+                    if (FederY.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[4] = double.Parse(FederY.Text);
+                    if (FederPhi.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[5] = double.Parse(FederPhi.Text);
+                }
+                catch (FormatException)
+                {
+                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
+                }
+            }
         }
         // neues Material
         else
@@ -49,8 +58,15 @@ public partial class MaterialNeu
             {
                 var eModul = double.Parse(EModul.Text);
                 double poisson = 0, masse = 0;
-                if (Poisson.Text.Length > 0) poisson = double.Parse(Poisson.Text);
-                if (Masse.Text.Length > 0) masse = double.Parse(Masse.Text);
+                try
+                {
+                    if (Poisson.Text.Length > 0) poisson = double.Parse(Poisson.Text);
+                    if (Masse.Text.Length > 0) masse = double.Parse(Masse.Text);
+                }
+                catch (FormatException)
+                {
+                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
+                }
                 _material = new Material(eModul, poisson, masse)
                 {
                     MaterialId = materialId
@@ -66,9 +82,16 @@ public partial class MaterialNeu
                 Poisson.Text = "";
                 Masse.Text = "";
                 double federX = 0, federY = 0, federPhi = 0;
-                if (FederX.Text.Length > 0) federX = double.Parse(FederX.Text);
-                if (FederY.Text.Length > 0) federY = double.Parse(FederY.Text);
-                if (FederPhi.Text.Length > 0) federPhi = double.Parse(FederPhi.Text);
+                try
+                {
+                    if (FederX.Text.Length > 0) federX = double.Parse(FederX.Text);
+                    if (FederY.Text.Length > 0) federY = double.Parse(FederY.Text);
+                    if (FederPhi.Text.Length > 0) federPhi = double.Parse(FederPhi.Text);
+                }
+                catch (FormatException)
+                {
+                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
+                }
                 _material = new Material(true, federX, federY, federPhi)
                 {
                     MaterialId = materialId

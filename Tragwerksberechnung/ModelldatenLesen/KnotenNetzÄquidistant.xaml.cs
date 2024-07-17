@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
@@ -43,12 +44,19 @@ public partial class KnotenNetzÄquidistant
         int wiederholungenX = 0, wiederholungenY = 0;
         if (startY.Text.Length == 0)
         {
-            if (Präfix.Text.Length > 0) knotenPräfix = Präfix.Text;
-            if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
+            try
+            {
+                if (Präfix.Text.Length > 0) knotenPräfix = Präfix.Text;
+                if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
 
-            if (startX.Text.Length > 0) koordinaten[0] = double.Parse(startX.Text);
-            if (inkrementX.Text.Length > 0) abstandX = double.Parse(inkrementX.Text);
-            if (anzahlX.Text.Length > 0) wiederholungenX = int.Parse(anzahlX.Text);
+                if (startX.Text.Length > 0) koordinaten[0] = double.Parse(startX.Text);
+                if (inkrementX.Text.Length > 0) abstandX = double.Parse(inkrementX.Text);
+                if (anzahlX.Text.Length > 0) wiederholungenX = int.Parse(anzahlX.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Knotennetz");
+            }
 
             for (var k = 0; k < wiederholungenX; k++)
             {
@@ -63,15 +71,22 @@ public partial class KnotenNetzÄquidistant
         {
             koordinaten = new double[dimension];
             if (Präfix.Text.Length > 0) knotenPräfix = Präfix.Text;
-            if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
+            try
+            {
+                if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
 
-            if (startX.Text.Length > 0) koordinaten[0] = double.Parse(startX.Text);
-            if (inkrementX.Text.Length > 0) abstandX = double.Parse(inkrementX.Text);
-            if (anzahlX.Text.Length > 0) wiederholungenX = int.Parse(anzahlX.Text);
+                if (startX.Text.Length > 0) koordinaten[0] = double.Parse(startX.Text);
+                if (inkrementX.Text.Length > 0) abstandX = double.Parse(inkrementX.Text);
+                if (anzahlX.Text.Length > 0) wiederholungenX = int.Parse(anzahlX.Text);
 
-            if (startY.Text.Length > 0) koordinaten[1] = double.Parse(startY.Text);
-            if (inkrementY.Text.Length > 0) abstandY = double.Parse(inkrementY.Text);
-            if (anzahlY.Text.Length > 0) wiederholungenY = int.Parse(anzahlY.Text);
+                if (startY.Text.Length > 0) koordinaten[1] = double.Parse(startY.Text);
+                if (inkrementY.Text.Length > 0) abstandY = double.Parse(inkrementY.Text);
+                if (anzahlY.Text.Length > 0) wiederholungenY = int.Parse(anzahlY.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Knotennetz");
+            }
 
             for (var k = 0; k < wiederholungenX; k++)
             {
@@ -98,22 +113,24 @@ public partial class KnotenNetzÄquidistant
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
+        // vorhandener Knoten
         foreach (var knoten in _knotenListe)
-            // vorhandener Knoten
-            if (_modell.Knoten.ContainsKey(knoten.Id))
+        {
+            if (_modell.Knoten.TryAdd(knoten.Id, knoten)) continue;
+            _modell.Knoten.TryGetValue(knoten.Id, out var vorhandenerKnoten);
+            if (vorhandenerKnoten == null) continue;
+            try
             {
-                _modell.Knoten.TryGetValue(knoten.Id, out var vorhandenerKnoten);
-                if (vorhandenerKnoten == null) continue;
                 if (AnzahlDof.Text.Length > 0)
                     vorhandenerKnoten.AnzahlKnotenfreiheitsgrade = int.Parse(AnzahlDof.Text);
                 if (startX.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(startX.Text);
                 if (startY.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(startY.Text);
             }
-            // neuer Knoten
-            else
+            catch (FormatException)
             {
-                _modell.Knoten.Add(knoten.Id, knoten);
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Knotennetz");
             }
+        }
 
         StartFenster.TragwerkVisual.Close();
         Close();

@@ -138,4 +138,12 @@ public partial class KnotenlastNeu
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
     }
+
+    private void KnotenPositionNeu(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
+        if(knoten == null) {_ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue Knotenlast"); return; }
+        StartFenster.TragwerkVisual.KnotenClick(knoten);
+        Close();
+    }
 }

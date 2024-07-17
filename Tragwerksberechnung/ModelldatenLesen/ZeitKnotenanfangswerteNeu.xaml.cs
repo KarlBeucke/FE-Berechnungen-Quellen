@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
@@ -45,25 +46,31 @@ public partial class ZeitKnotenanfangswerteNeu
             {
                 var nodalDof = knoten.AnzahlKnotenfreiheitsgrade;
                 var anfangsWerte = new double[2 * nodalDof];
-                if (Dof1D0.Text != string.Empty) anfangsWerte[0] = double.Parse(Dof1D0.Text);
-                if (Dof1V0.Text != string.Empty) anfangsWerte[1] = double.Parse(Dof1V0.Text);
-
-                switch (nodalDof)
+                try
                 {
-                    case 2:
+                    if (Dof1D0.Text != string.Empty) anfangsWerte[0] = double.Parse(Dof1D0.Text);
+                    if (Dof1V0.Text != string.Empty) anfangsWerte[1] = double.Parse(Dof1V0.Text);
+
+                    switch (nodalDof)
                     {
-                        if (Dof2D0.Text != string.Empty) anfangsWerte[2] = double.Parse(Dof2D0.Text);
-                        if (Dof2V0.Text != string.Empty) anfangsWerte[3] = double.Parse(Dof2V0.Text);
-                        break;
-                    }
-                    case 3:
-                    {
-                        if (Dof3D0.Text != string.Empty) anfangsWerte[4] = double.Parse(Dof3D0.Text);
-                        if (Dof3V0.Text != string.Empty) anfangsWerte[5] = double.Parse(Dof3V0.Text);
-                        break;
+                        case 2:
+                        {
+                            if (Dof2D0.Text != string.Empty) anfangsWerte[2] = double.Parse(Dof2D0.Text);
+                            if (Dof2V0.Text != string.Empty) anfangsWerte[3] = double.Parse(Dof2V0.Text);
+                            break;
+                        }
+                        case 3:
+                        {
+                            if (Dof3D0.Text != string.Empty) anfangsWerte[4] = double.Parse(Dof3D0.Text);
+                            if (Dof3V0.Text != string.Empty) anfangsWerte[5] = double.Parse(Dof3V0.Text);
+                            break;
+                        }
                     }
                 }
-
+                catch (FormatException)
+                {
+                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neue ZeitKnotenanfangswerte");
+                }
                 _modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(KnotenId.Text, anfangsWerte));
             }
         }
@@ -72,12 +79,19 @@ public partial class ZeitKnotenanfangswerteNeu
         {
             var anfang = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[_aktuell];
             anfang.KnotenId = KnotenId.Text;
-            anfang.Werte[0] = double.Parse(Dof1D0.Text);
-            anfang.Werte[1] = double.Parse(Dof1V0.Text);
-            anfang.Werte[2] = double.Parse(Dof2D0.Text);
-            anfang.Werte[3] = double.Parse(Dof2V0.Text);
-            anfang.Werte[4] = double.Parse(Dof3D0.Text);
-            anfang.Werte[5] = double.Parse(Dof3V0.Text);
+            try
+            {
+                anfang.Werte[0] = double.Parse(Dof1D0.Text);
+                anfang.Werte[1] = double.Parse(Dof1V0.Text);
+                anfang.Werte[2] = double.Parse(Dof2D0.Text);
+                anfang.Werte[3] = double.Parse(Dof2V0.Text);
+                anfang.Werte[4] = double.Parse(Dof3D0.Text);
+                anfang.Werte[5] = double.Parse(Dof3V0.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neue ZeitKnotenanfangswerte");
+            }
         }
 
         Close();

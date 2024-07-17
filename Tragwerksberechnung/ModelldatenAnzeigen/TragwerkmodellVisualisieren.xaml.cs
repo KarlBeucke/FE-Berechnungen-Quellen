@@ -290,7 +290,8 @@ public partial class TragwerkmodellVisualisieren
             _mittelpunkt = new Point(e.GetPosition(VisualTragwerkModel).X, e.GetPosition(VisualTragwerkModel).Y);
             Canvas.SetLeft(Pilot, _mittelpunkt.X - Pilot.Width / 2);
             Canvas.SetTop(Pilot, _mittelpunkt.Y - Pilot.Height / 2);
-            VisualTragwerkModel.Children.Add(Pilot);
+            VisualTragwerkModel.Children.Remove(Pilot);
+
             var koordinaten = Darstellung.TransformBildPunkt(_mittelpunkt);
             _knotenNeu.X.Text = koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
             _knotenNeu.Y.Text = koordinaten[1].ToString("N2", CultureInfo.CurrentCulture);
@@ -298,7 +299,8 @@ public partial class TragwerkmodellVisualisieren
         }
 
         // click auf Shape Darstellungen
-        foreach (var item in _hitList.TakeWhile(item => !_isKnoten && !_isElement && !_isKnotenlast)
+        // nur neu, falls nicht im Benutzerdialog aktiviert
+        foreach (var item in _hitList.TakeWhile(_ => !_isKnoten && !_isElement && !_isKnotenlast && !_isLinienlast && ! _isPunktlast)
                      .Where(item => item.Name != null))
         {
             // Elemente
@@ -306,16 +308,18 @@ public partial class TragwerkmodellVisualisieren
                 ElementNeu(element);
 
             // Lasten
-            if (_modell.Lasten.TryGetValue(item.Name, out var knotenlast))
+            else if (_modell.Lasten.TryGetValue(item.Name, out var knotenlast))
                 KnotenlastNeu(knotenlast);
             else if (_modell.PunktLasten.TryGetValue(item.Name, out var punktlast))
                 PunktlastNeu(punktlast);
             else if (_modell.ElementLasten.TryGetValue(item.Name, out var elementlast))
+            {
                 if (_linienlastNeu == null) LinienlastNeu(elementlast);
+            }
 
-                // Lager
-                else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
-                    LagerNeu(lager);
+            // Lager
+            else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
+                LagerNeu(lager);
         }
 
         // click auf Textdarstellungen
@@ -329,7 +333,7 @@ public partial class TragwerkmodellVisualisieren
             }
 
             // Textdarstellung ist ein Element
-            if (_modell.Elemente.TryGetValue(item.Text, out var element))
+            else if (_modell.Elemente.TryGetValue(item.Text, out var element))
             {
                 ElementNeu(element);
             }
@@ -413,18 +417,6 @@ public partial class TragwerkmodellVisualisieren
         Canvas.SetTop(Pilot, _mittelpunkt.Y - Pilot.Height / 2);
         VisualTragwerkModel.Children.Add(Pilot);
     }
-    //public void KnotenPositionNeu(Knoten knoten)
-    //{
-    //    _knotenNeu = new KnotenNeu(_modell)
-    //    {
-    //        Topmost = true,
-    //        Owner = (Window)Parent,
-    //        KnotenId = { Text = knoten.Id },
-    //        AnzahlDof = { Text = knoten.AnzahlKnotenfreiheitsgrade.ToString("N0", CultureInfo.CurrentCulture) },
-    //        X = { Text = knoten.Koordinaten[0].ToString("N2", CultureInfo.CurrentCulture) },
-    //        Y = { Text = knoten.Koordinaten[1].ToString("N2", CultureInfo.CurrentCulture) }
-    //    };
-    //}
 
     private void ElementNeu(AbstraktElement element)
     {

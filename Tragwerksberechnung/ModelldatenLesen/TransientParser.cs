@@ -1,35 +1,39 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 internal class TransientParser
 {
-    private readonly char[] delimiters = { '\t', ';' };
-    private string[] substrings;
+    private readonly char[] _delimiters = ['\t', ';'];
+    private string[] _substrings;
     public bool ZeitintegrationDaten;
 
     public void ParseZeitintegration(string[] lines, FeModell feModell)
     {
-        var modell = feModell;
-
         // suche "Eigenlösungen"
         for (var i = 0; i < lines.Length; i++)
         {
             if (lines[i] != "Eigenlösungen") continue;
             FeParser.EingabeGefunden += "\nEigenlösungen";
 
-            substrings = lines[i + 1].Split(delimiters);
-            if (substrings.Length == 2)
+            _substrings = lines[i + 1].Split(_delimiters);
+            if (_substrings.Length != 2) throw new ParseAusnahme((i+2) + ":\nEigenlösungen, falsche Anzahl Parameter");
+            var id = _substrings[0];
+            var numberOfStates=1;
+            try
             {
-                var id = substrings[0];
-                int numberOfStates = short.Parse(substrings[1]);
-                modell.Eigenzustand = new Eigenzustände(id, numberOfStates);
-                break;
+                numberOfStates = short.Parse(_substrings[1]);
             }
+            catch (FormatException)
+            {
+                throw new ParseAusnahme((i+2) + ":\nEigenlösungen, ungültiges  Eingabeformat");
+            }
+            feModell.Eigenzustand = new Eigenzustände(id, numberOfStates);
+            break;
 
-            throw new ParseAusnahme(i + 2 + ":\nEigenlösungen, falsche Anzahl Parameter");
         }
 
         // suche "Zeitintegration"
@@ -39,28 +43,33 @@ internal class TransientParser
             FeParser.EingabeGefunden += "\nZeitintegration";
             //id, tmax, dt, method, parameter1, parameter2
             //method=1:beta,gamma  method=2:theta  method=3: alfa
-            substrings = lines[i + 1].Split(delimiters);
-            switch (substrings.Length)
+            _substrings = lines[i + 1].Split(_delimiters);
+            try
             {
-                case 5:
-                    var tmax = double.Parse(substrings[1]);
-                    var dt = double.Parse(substrings[2]);
-                    var method = short.Parse(substrings[3]);
-                    var parameter1 = double.Parse(substrings[4]);
-                    modell.Zeitintegration =
-                        new Zeitintegration(tmax, dt, method, parameter1);
-                    break;
-                case 6:
-                    tmax = double.Parse(substrings[1]);
-                    dt = double.Parse(substrings[2]);
-                    method = short.Parse(substrings[3]);
-                    parameter1 = double.Parse(substrings[4]);
-                    var parameter2 = double.Parse(substrings[5]);
-                    modell.Zeitintegration =
-                        new Zeitintegration(tmax, dt, method, parameter1, parameter2);
-                    break;
-                default:
-                    throw new ParseAusnahme(i + 2 + ":\nZeitintegration, falsche Anzahl Parameter");
+                switch (_substrings.Length)
+                {
+                    case 5:
+                        var tmax = double.Parse(_substrings[1]);
+                        var dt = double.Parse(_substrings[2]);
+                        var method = short.Parse(_substrings[3]);
+                        var parameter1 = double.Parse(_substrings[4]);
+                        feModell.Zeitintegration = new Zeitintegration(tmax, dt, method, parameter1);
+                        break;
+                    case 6:
+                        tmax = double.Parse(_substrings[1]);
+                        dt = double.Parse(_substrings[2]);
+                        method = short.Parse(_substrings[3]);
+                        parameter1 = double.Parse(_substrings[4]);
+                        var parameter2 = double.Parse(_substrings[5]);
+                        feModell.Zeitintegration = new Zeitintegration(tmax, dt, method, parameter1, parameter2);
+                        break;
+                    default:
+                        throw new ParseAusnahme(i + 2 + ":\nZeitintegration, falsche Anzahl Parameter");
+                }
+            }
+            catch (FormatException)
+            {
+                throw new ParseAusnahme((i+2) + ":\nZeitintegration, ungültiges  Eingabeformat");
             }
 
             ZeitintegrationDaten = true;
@@ -73,9 +82,16 @@ internal class TransientParser
             FeParser.EingabeGefunden += "\nDämpfung";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                foreach (var rate in substrings)
-                    modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(double.Parse(rate)));
+                _substrings = lines[i + 1].Split(_delimiters);
+                try
+                {
+                    foreach (var rate in _substrings)
+                        feModell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(double.Parse(rate)));
+                }
+                catch (FormatException)
+                {
+                    throw new ParseAusnahme((i+2) + ":\nDämpfung, ungültiges  Eingabeformat");
+                }
                 i++;
             } while (lines[i + 1].Length != 0);
 
@@ -87,34 +103,41 @@ internal class TransientParser
         {
             if (lines[i] != "Anfangsbedingungen") continue;
             FeParser.EingabeGefunden += "\nAnfangsbedingungen";
-            do
+            try
             {
-                substrings = lines[i + 1].Split(delimiters);
-                var anfangsKnotenId = substrings[0];
-                // Anfangsverformungen und Geschwindigkeiten
-                int nodalDof;
-                switch (substrings.Length)
+                do
                 {
-                    case 3:
-                        nodalDof = 1;
-                        break;
-                    case 5:
-                        nodalDof = 2;
-                        break;
-                    case 7:
-                        nodalDof = 3;
-                        break;
-                    default:
-                        throw new ParseAusnahme(i + 2 + ":\nAnfangsbedingungen, falsche Anzahl Parameter");
-                }
+                    _substrings = lines[i + 1].Split(_delimiters);
+                    var anfangsKnotenId = _substrings[0];
+                    // Anfangsverformungen und Geschwindigkeiten
+                    int nodalDof;
+                    switch (_substrings.Length)
+                    {
+                        case 3:
+                            nodalDof = 1;
+                            break;
+                        case 5:
+                            nodalDof = 2;
+                            break;
+                        case 7:
+                            nodalDof = 3;
+                            break;
+                        default:
+                            throw new ParseAusnahme((i+2) + ":\nAnfangsbedingungen, falsche Anzahl Parameter");
+                    }
 
-                var anfangsWerte = new double[2 * nodalDof];
-                for (var k = 0; k < 2 * nodalDof; k++) anfangsWerte[k] = double.Parse(substrings[k + 1]);
-                modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(anfangsKnotenId, anfangsWerte));
-                i++;
-            } while (lines[i + 1].Length != 0);
+                    var anfangsWerte = new double[2 * nodalDof];
+                    for (var k = 0; k < 2 * nodalDof; k++) anfangsWerte[k] = double.Parse(_substrings[k + 1]);
+                    feModell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(anfangsKnotenId, anfangsWerte));
+                    i++;
+                } while (lines[i + 1].Length != 0);
 
-            break;
+                break;
+            }
+            catch (FormatException)
+            {
+                throw new ParseAusnahme((i+2) + ":\nAnfangsbedingungen, ungültiges Eingabeformat");
+            }
         }
 
         // suche zeitabhängige Knotenlasten
@@ -125,66 +148,73 @@ internal class TransientParser
             var boden = false;
             i++;
 
-            do
+            try
             {
-                substrings = lines[i].Split(delimiters);
-                if (substrings.Length != 3)
-                    throw new ParseAusnahme(i + 2 + ":\nZeitabhängige Knotenlast, falsche Anzahl Parameter");
-
-                var knotenLastId = substrings[0];
-                var knotenId = substrings[1];
-                if (knotenId == "boden") boden = true;
-                var knotenFreiheitsgrad = short.Parse(substrings[2]);
-
-                substrings = lines[i + 1].Split(delimiters);
-                ZeitabhängigeKnotenLast zeitabhängigeKnotenLast;
-                switch (substrings.Length)
+                do
                 {
-                    // 1 Wert: lies Anregung (Lastvektor) aus Datei, Variationstyp = 0
-                    case 1:
+                    _substrings = lines[i].Split(_delimiters);
+                    if (_substrings.Length != 3)
+                        throw new ParseAusnahme(i + 2 + ":\nZeitabhängige Knotenlast, falsche Anzahl Parameter");
+
+                    var knotenLastId = _substrings[0];
+                    var knotenId = _substrings[1];
+                    if (knotenId == "boden") boden = true;
+                    var knotenFreiheitsgrad = short.Parse(_substrings[2]);
+
+                    _substrings = lines[i + 1].Split(_delimiters);
+                    ZeitabhängigeKnotenLast zeitabhängigeKnotenLast;
+                    switch (_substrings.Length)
                     {
-                        zeitabhängigeKnotenLast =
-                            new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, true, boden)
-                                { VariationsTyp = 0 };
-                        var last = (AbstraktZeitabhängigeKnotenlast)zeitabhängigeKnotenLast;
-                        modell.ZeitabhängigeKnotenLasten.Add(knotenLastId, last);
-                        break;
-                    }
-                    // 3 Werte: harmonische Anregung, Variationstyp = 2
-                    case 3:
-                    {
-                        var amplitude = double.Parse(substrings[0]);
-                        var circularFrequency = double.Parse(substrings[1]);
-                        var phaseAngle = double.Parse(substrings[2]);
-                        zeitabhängigeKnotenLast =
-                            new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
-                            {
-                                Amplitude = amplitude, Frequenz = circularFrequency, PhasenWinkel = phaseAngle,
-                                VariationsTyp = 2
-                            };
-                        modell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
-                        break;
-                    }
-                    // mehr als 3 Werte: lies Zeit-/Wert-Intervalle der Anregung mit linearer Interpolation, Variationstyp = 1
-                    default:
-                    {
-                        var interval = new double[substrings.Length];
-                        for (var j = 0; j < substrings.Length; j += 2)
+                        // 1 Wert: lies Anregung (Lastvektor) aus Datei, Variationstyp = 0
+                        case 1:
                         {
-                            interval[j] = double.Parse(substrings[j]);
-                            interval[j + 1] = double.Parse(substrings[j + 1]);
+                            zeitabhängigeKnotenLast =
+                                new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, true, boden)
+                                    { VariationsTyp = 0 };
+                            var last = (AbstraktZeitabhängigeKnotenlast)zeitabhängigeKnotenLast;
+                            feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, last);
+                            break;
                         }
-
-                        zeitabhängigeKnotenLast =
-                            new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
-                                { Intervall = interval, VariationsTyp = 1 };
-                        modell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
-                        break;
+                        // 3 Werte: harmonische Anregung, Variationstyp = 2
+                        case 3:
+                        {
+                            var amplitude = double.Parse(_substrings[0]);
+                            var circularFrequency = double.Parse(_substrings[1]);
+                            var phaseAngle = double.Parse(_substrings[2]);
+                            zeitabhängigeKnotenLast =
+                                new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
+                                {
+                                    Amplitude = amplitude, Frequenz = circularFrequency, PhasenWinkel = phaseAngle,
+                                    VariationsTyp = 2
+                                };
+                            feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
+                            break;
+                        }
+                        // mehr als 3 Werte: lies Zeit-/Wert-Intervalle der Anregung mit linearer Interpolation, Variationstyp = 1
+                        default:
+                        {
+                            var interval = new double[_substrings.Length];
+                            for (var j = 0; j < _substrings.Length; j += 2)
+                            {
+                                interval[j] = double.Parse(_substrings[j]);
+                                interval[j + 1] = double.Parse(_substrings[j + 1]);
+                            }
+                            
+                            zeitabhängigeKnotenLast =
+                                new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
+                                    { Intervall = interval, VariationsTyp = 1 };
+                            feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
+                            break;
+                        }
                     }
-                }
 
-                i += 2;
-            } while (lines[i].Length != 0);
+                    i += 2;
+                } while (lines[i].Length != 0);
+            }
+            catch (FormatException)
+            {
+                throw new ParseAusnahme((i+2) + ":\nZeitabhängige Knotenlast, ungültiges  Eingabeformat");
+            }
         }
     }
 }

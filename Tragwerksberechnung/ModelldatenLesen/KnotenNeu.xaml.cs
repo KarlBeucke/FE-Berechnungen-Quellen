@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -42,17 +43,14 @@ public partial class KnotenNeu
         // kein Eintrag in Tabelle, Knotenwerte mit "Ok" bestätigt
         if (_knotenListe.Count == 0)
         {
-            if (_modell.Knoten.ContainsKey(KnotenId.Text))
+            // vorhandener Knoten
+            _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
+            if (vorhandenerKnoten != null)
             {
-                // vorhandener Knoten
-                _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
-                if (vorhandenerKnoten != null)
-                {
-                    if (AnzahlDof.Text.Length > 0)
-                        vorhandenerKnoten.AnzahlKnotenfreiheitsgrade = int.Parse(AnzahlDof.Text);
-                    if (X.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(X.Text);
-                    if (Y.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(Y.Text);
-                }
+                if (AnzahlDof.Text.Length > 0)
+                    vorhandenerKnoten.AnzahlKnotenfreiheitsgrade = int.Parse(AnzahlDof.Text);
+                if (X.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(X.Text);
+                if (Y.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(Y.Text);
             }
             else
             {
@@ -60,9 +58,16 @@ public partial class KnotenNeu
                 var dimension = _modell.Raumdimension;
                 var koordinaten = new double[dimension];
                 var anzahlKnotenDof = 3;
-                if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
-                if (X.Text.Length > 0) koordinaten[0] = double.Parse(X.Text);
-                if (Y.Text.Length > 0) koordinaten[1] = double.Parse(Y.Text);
+                try
+                {
+                    if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
+                    if (X.Text.Length > 0) koordinaten[0] = double.Parse(X.Text);
+                    if (Y.Text.Length > 0) koordinaten[1] = double.Parse(Y.Text);
+                }
+                catch (FormatException)
+                {
+                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neuer Knoten");
+                }
                 var neuerKnoten = new Knoten(KnotenId.Text, koordinaten, anzahlKnotenDof, dimension);
                 _modell.Knoten.Add(KnotenId.Text, neuerKnoten);
             }
@@ -70,21 +75,23 @@ public partial class KnotenNeu
 
         // Knoten mit "Eintrag Tabelle" in "knotenListe" gesammelt 
         foreach (var knoten in _knotenListe)
+        {
             // vorhandener Knoten
-            if (_modell.Knoten.ContainsKey(knoten.Id))
+            if (_modell.Knoten.TryAdd(knoten.Id, knoten)) continue;
+            _modell.Knoten.TryGetValue(knoten.Id, out var vorhandenerKnoten);
+            if (vorhandenerKnoten == null) continue;
+            try
             {
-                _modell.Knoten.TryGetValue(knoten.Id, out var vorhandenerKnoten);
-                if (vorhandenerKnoten == null) continue;
                 if (AnzahlDof.Text.Length > 0)
                     vorhandenerKnoten.AnzahlKnotenfreiheitsgrade = int.Parse(AnzahlDof.Text);
                 if (X.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(X.Text);
                 if (Y.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(Y.Text);
             }
-            // neuer Knoten
-            else
+            catch (FormatException)
             {
-                _modell.Knoten.Add(knoten.Id, knoten);
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neuer Knoten");
             }
+        }
 
         // entferne Steuerungsknoten und deaktiviere Ereignishandler für Canvas
         StartFenster.TragwerkVisual.VisualTragwerkModel.Children.Remove(StartFenster.TragwerkVisual.Pilot);
@@ -118,9 +125,16 @@ public partial class KnotenNeu
         var dimension = _modell.Raumdimension;
         var koordinaten = new double[dimension];
         var anzahlKnotenDof = 3;
-        if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
-        if (X.Text.Length > 0) koordinaten[0] = double.Parse(X.Text);
-        if (Y.Text.Length > 0) koordinaten[1] = double.Parse(Y.Text);
+        try
+        {
+            if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
+            if (X.Text.Length > 0) koordinaten[0] = double.Parse(X.Text);
+            if (Y.Text.Length > 0) koordinaten[1] = double.Parse(Y.Text);
+        }
+        catch (FormatException)
+        {
+            _ = MessageBox.Show("ungültiges  Eingabeformat", "neuer Knoten");
+        }
         var neuerKnoten = new Knoten(KnotenId.Text, koordinaten, anzahlKnotenDof, dimension);
         _knotenListe.Add(neuerKnoten);
         if (KnotenGrid != null) KnotenGrid.ItemsSource = _knotenListe;
@@ -134,7 +148,7 @@ public partial class KnotenNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Knoten.Keys.Contains(KnotenId.Text)) return;
+        if (!_modell.Knoten.ContainsKey(KnotenId.Text)) return;
         if (KnotenReferenziert()) return;
         _modell.Knoten.Remove(KnotenId.Text);
         Close();

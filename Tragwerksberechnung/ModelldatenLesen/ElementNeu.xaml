@@ -28,8 +28,8 @@
         <Label Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,-66,0">
             Eingabewerte für ein neues oder vorhandenes Element
         </Label>
-        <Label Grid.Column="0" Margin="0,23,0,10" Grid.RowSpan="2">Element ID:</Label>
-        <Label Grid.Row="1" Grid.Column="0" Margin="0,9,0,1" FontSize="8">(generiert aus Start- und Endknoten ID)</Label>
+        <Label Grid.Row="0" Grid.Column="0" Margin="0,23,0,10" Grid.RowSpan="2">Element ID:</Label>
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,9,0,68" FontSize="8" Grid.RowSpan="2">(generiert aus Start- und Endknoten ID)</Label>
         <TextBox Name="ElementId" Grid.Row="1" Grid.Column="1" Margin="10,0,-10,0" Height="19"
                  VerticalAlignment="Center" LostFocus="ElementIdLostFocus" />
 

@@ -35,6 +35,7 @@ namespace FEBibliothek.Modell
                 k = _knoten.SetzSystemIndizes(k);
             }
             SetzReferenzen(m);
+            FreieKnoten();
         }
         // Objekt Referenzen werden erst auf Basis der eindeutigen Identifikatoren ermittelt, d.h. unmittelbar vor Objekt Instantiierung
         // wenn, eine Berechnung gestartet wird, müssen folglich ALLE Objektreferenzen auf Basis der eindeutigen Identifikatoren ermittelt werden
@@ -64,6 +65,11 @@ namespace FEBibliothek.Modell
             {
                 randbedingung.SetzRandbedingungenReferenzen(_modell);
             }
+            foreach (var last in _modell.Lasten.Select(item => item.Value))
+            {
+                var knotenlast = (AbstraktKnotenlast)last;
+                knotenlast.SetzReferenzen(_modell);
+            }
             foreach (var elementLast in _modell.ElementLasten.Select(item => item.Value))
             {
                 elementLast.SetzElementlastReferenzen(_modell);
@@ -79,6 +85,17 @@ namespace FEBibliothek.Modell
             foreach (var zeitabhängigeRandbedingung in _modell.ZeitabhängigeRandbedingung.Select(item => item.Value))
             {
                 zeitabhängigeRandbedingung.SetzRandbedingungenReferenzen(_modell);
+            }
+        }
+        private void FreieKnoten()
+        {
+            // check alle Knoten, ob sie Steifigkeit durch ein Element erhalten
+            foreach (var id in _modell.Knoten.Select(knoten => knoten.Key))
+            {
+                if (_modell.Elemente.Select((_, i)
+                        => _modell.Elemente.ElementAt(i)).Any(element
+                        => element.Value.KnotenIds[0] == id || element.Value.KnotenIds[1] == id)) continue;
+                throw new BerechnungAusnahme("\nKnoten " +id + " ist instabil, wird durch kein Element genutzt");
             }
         }
         // bestimme Dimension der Systemmatrix *************************************************************************************
@@ -772,7 +789,7 @@ namespace FEBibliothek.Modell
         }
 
         // zeitabhängige Eingabedaten
-        public void AusDatei(string inputDirectory, int spalte, IList<double> last)
+        public static void AusDatei(string inputDirectory, int spalte, IList<double> last)
         {
             string[] zeilen, substrings;
             var delimiters = new[] { '\t' };
@@ -827,7 +844,7 @@ namespace FEBibliothek.Modell
                 for (var i = 0; i < last.Count; i++) { last[i] = werte[i]; }
             }
         }
-        public List<double> AusDatei(string inputDirectory)
+        public static List<double> AusDatei(string inputDirectory)
         {
             var delimiters = new[] { '\t' };
             var werte = new List<double>();

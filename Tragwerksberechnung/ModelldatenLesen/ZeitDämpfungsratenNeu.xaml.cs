@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Windows;
 using FEBibliothek.Modell;
 
@@ -32,13 +33,27 @@ public partial class ZeitDämpfungsratenNeu
         // neues Dämpfungsmaß hinzufügen
         if (_eigenform > _modell.Eigenzustand.DämpfungsRaten.Count)
         {
-            _modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(double.Parse(Xi.Text)));
+            try
+            {
+                _modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(double.Parse(Xi.Text)));
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neue Dämmpfungsrate");
+            }
         }
         // vorhandenes Dämpfungsmaß ändern
         else
         {
             var anfang = (ModaleWerte)_modell.Eigenzustand.DämpfungsRaten[_eigenform];
-            anfang.Dämpfung = double.Parse(Xi.Text);
+            try
+            {
+                anfang.Dämpfung = double.Parse(Xi.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neue Dämmpfungsrate");
+            }
         }
 
         Close();
