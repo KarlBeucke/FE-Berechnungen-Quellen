@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
+using System.Collections.Generic;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -63,14 +63,14 @@ internal class LastParser
                             };
                             break;
                         default:
-                        {
-                            throw new ParseAusnahme((i+2) + ":\nFachwerk, falsche Anzahl Parameter");
-                        }
+                            {
+                                throw new ParseAusnahme((i + 2) + ":\nFachwerk, falsche Anzahl Parameter");
+                            }
                     }
                 }
                 catch (FormatException)
                 {
-                    throw new ParseAusnahme((i+2) + ":\nKnotenlast, ungültiges Eingabeformat");
+                    throw new ParseAusnahme((i + 2) + ":\nKnotenlast, ungültiges Eingabeformat");
                 }
 
                 _modell.Lasten.Add(_loadId, _knotenLast);
@@ -112,12 +112,12 @@ internal class LastParser
                             i++;
                             break;
                         default:
-                            throw new ParseAusnahme((i+2) + ":\nPunktlast");
+                            throw new ParseAusnahme((i + 2) + ":\nPunktlast");
                     }
                 }
                 catch (FormatException)
                 {
-                    throw new ParseAusnahme((i+2) + ":\nPunktlast, ungültiges Eingabeformat");
+                    throw new ParseAusnahme((i + 2) + ":\nPunktlast, ungültiges Eingabeformat");
                 }
             } while (lines[i + 1].Length != 0);
 
@@ -173,12 +173,12 @@ internal class LastParser
                             i++;
                             break;
                         default:
-                            throw new ParseAusnahme((i+2) + ":\nLinienlast, falsche Anzahl Parameter");
+                            throw new ParseAusnahme((i + 2) + ":\nLinienlast, falsche Anzahl Parameter");
                     }
                 }
                 catch (FormatException)
                 {
-                    throw new ParseAusnahme((i+2) + ":\nLinienlast, ungültiges Eingabeformat");
+                    throw new ParseAusnahme((i + 2) + ":\nLinienlast, ungültiges Eingabeformat");
                 }
             } while (lines[i + 1].Length != 0);
 

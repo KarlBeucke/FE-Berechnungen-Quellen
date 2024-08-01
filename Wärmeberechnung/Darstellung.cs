@@ -1,12 +1,12 @@
-﻿using System;
+﻿using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 using static System.Globalization.CultureInfo;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;
@@ -234,17 +234,17 @@ public class Darstellung
         // zeitabhängige Knotenlasten
         foreach (var zeitKnotenlast in from item
                      in modell.ZeitabhängigeKnotenLasten
-                 let zeitKnotenlast = new TextBlock
-                 {
-                     Name = "ZeitKnotenLast",
-                     Uid = item.Key,
-                     FontSize = 12,
-                     Text = item.Key,
-                     Foreground = DarkViolet
-                 }
-                 where modell.Knoten.TryGetValue(item.Value.KnotenId, out knoten)
-                 where knoten != null
-                 select zeitKnotenlast)
+                                       let zeitKnotenlast = new TextBlock
+                                       {
+                                           Name = "ZeitKnotenLast",
+                                           Uid = item.Key,
+                                           FontSize = 12,
+                                           Text = item.Key,
+                                           Foreground = DarkViolet
+                                       }
+                                       where modell.Knoten.TryGetValue(item.Value.KnotenId, out knoten)
+                                       where knoten != null
+                                       select zeitKnotenlast)
         {
             if (knoten == null) continue;
             SetTop(zeitKnotenlast, (-knoten.Koordinaten[1] + maxY) * auflösung + RandOben + lastOffset);

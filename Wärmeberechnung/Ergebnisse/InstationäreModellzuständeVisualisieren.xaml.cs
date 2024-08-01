@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +9,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
@@ -178,9 +178,9 @@ public partial class InstationäreModellzuständeVisualisieren
                     case Shape hit:
                         hitList.Add(hit);
                         break;
-                    //case TextBlock hit:
-                    //    hitTextBlock.Add(hit);
-                    //    break;
+                        //case TextBlock hit:
+                        //    hitTextBlock.Add(hit);
+                        //    break;
                 }
 
                 return HitTestResultBehavior.Continue;

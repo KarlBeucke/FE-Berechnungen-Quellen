@@ -1,8 +1,8 @@
-﻿using System;
-using System.Windows;
-using FEBibliothek.Modell;
+﻿using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using FEBibliothek.Werkzeuge;
+using System;
+using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
@@ -134,8 +134,8 @@ public class BiegebalkenGelenk : AbstraktBalken
 
         for (var k = 0; k < 5; k++) kclxinvkll[k, 0] = kcl[k, 0] * invkll[0, 0];
         for (var i = 0; i < 5; i++)
-        for (var j = 0; j < 1; j++)
-            kclxinvkllxpl[i, 0] += kclxinvkll[i, 0] * pl[j];
+            for (var j = 0; j < 1; j++)
+                kclxinvkllxpl[i, 0] += kclxinvkll[i, 0] * pl[j];
         for (var k = 0; k < 5; k++) kclxinvkllxpl[k, 0] = kclxinvkllxpl[k, 0] * -1;
         for (var k = 0; k < 5; k++) lastVektor[k] = pc[k] + kclxinvkllxpl[k, 0];
         return lastVektor;
@@ -145,39 +145,39 @@ public class BiegebalkenGelenk : AbstraktBalken
     {
         var elementFreiheitsgrade = ElementFreiheitsgrade;
         for (var i = 0; i < matrix.GetLength(0); i += elementFreiheitsgrade)
-        for (var k = 0; k < matrix.GetLength(0); k += elementFreiheitsgrade)
-        {
-            var m11 = matrix[i, k];
-            var m12 = matrix[i, k + 1];
-            var m13 = matrix[i, k + 2];
+            for (var k = 0; k < matrix.GetLength(0); k += elementFreiheitsgrade)
+            {
+                var m11 = matrix[i, k];
+                var m12 = matrix[i, k + 1];
+                var m13 = matrix[i, k + 2];
 
-            var m21 = matrix[i + 1, k];
-            var m22 = matrix[i + 1, k + 1];
-            var m23 = matrix[i + 1, k + 2];
+                var m21 = matrix[i + 1, k];
+                var m22 = matrix[i + 1, k + 1];
+                var m23 = matrix[i + 1, k + 2];
 
-            var m31 = matrix[i + 2, k];
-            var m32 = matrix[i + 2, k + 1];
+                var m31 = matrix[i + 2, k];
+                var m32 = matrix[i + 2, k + 1];
 
-            var e11 = RotationsMatrix[0, 0];
-            var e12 = RotationsMatrix[0, 1];
-            var e21 = RotationsMatrix[1, 0];
-            var e22 = RotationsMatrix[1, 1];
+                var e11 = RotationsMatrix[0, 0];
+                var e12 = RotationsMatrix[0, 1];
+                var e21 = RotationsMatrix[1, 0];
+                var e22 = RotationsMatrix[1, 1];
 
-            var h11 = e11 * m11 + e12 * m21;
-            var h12 = e11 * m12 + e12 * m22;
-            var h21 = e21 * m11 + e22 * m21;
-            var h22 = e21 * m12 + e22 * m22;
+                var h11 = e11 * m11 + e12 * m21;
+                var h12 = e11 * m12 + e12 * m22;
+                var h21 = e21 * m11 + e22 * m21;
+                var h22 = e21 * m12 + e22 * m22;
 
-            matrix[i, k] = h11 * e11 + h12 * e12;
-            matrix[i, k + 1] = h11 * e21 + h12 * e22;
-            matrix[i + 1, k] = h21 * e11 + h22 * e12;
-            matrix[i + 1, k + 1] = h21 * e21 + h22 * e22;
+                matrix[i, k] = h11 * e11 + h12 * e12;
+                matrix[i, k + 1] = h11 * e21 + h12 * e22;
+                matrix[i + 1, k] = h21 * e11 + h22 * e12;
+                matrix[i + 1, k + 1] = h21 * e21 + h22 * e22;
 
-            matrix[i, k + 2] = e11 * m13 + e12 * m23;
-            matrix[i + 1, k + 2] = e21 * m13 + e22 * m23;
-            matrix[i + 2, k] = m31 * e11 + m32 * e12;
-            matrix[i + 2, k + 1] = m31 * e21 + m32 * e22;
-        }
+                matrix[i, k + 2] = e11 * m13 + e12 * m23;
+                matrix[i + 1, k + 2] = e21 * m13 + e22 * m23;
+                matrix[i + 2, k] = m31 * e11 + m32 * e12;
+                matrix[i + 2, k + 1] = m31 * e21 + m32 * e22;
+            }
 
         return matrix;
     }
@@ -279,11 +279,11 @@ public class BiegebalkenGelenk : AbstraktBalken
         _invkll = 1 / _kll[0];
         for (var k = 0; k < 5; k++) _kllxklc[k] = _invkll * _klc[k];
         for (var i = 0; i < 5; i++)
-        for (var j = 0; j < 5; j++)
-            _kclxkllxklc[i, j] = _kcl[j] * _kllxklc[i];
+            for (var j = 0; j < 5; j++)
+                _kclxkllxklc[i, j] = _kcl[j] * _kllxklc[i];
         for (var i = 0; i < 5; i++)
-        for (var j = 0; j < 5; j++)
-            _redSteifigkeitsMatrix[i, j] = _kcc[i, j] - _kclxkllxklc[i, j];
+            for (var j = 0; j < 5; j++)
+                _redSteifigkeitsMatrix[i, j] = _kcc[i, j] - _kclxkllxklc[i, j];
         //MatrixAlgebra.Subtract(redStiffnessMatrix, kcc, kclxkllxklc);
         return _redSteifigkeitsMatrix;
     }
@@ -325,21 +325,21 @@ public class BiegebalkenGelenk : AbstraktBalken
         switch (Typ)
         {
             case Erster:
-            {
-                for (var j = 0; j < ElementFreiheitsgrade - 1; j++)
-                    SystemIndizesElement[counter++] = Knoten[0].SystemIndizes[j];
-                for (var j = 0; j < ElementFreiheitsgrade; j++)
-                    SystemIndizesElement[counter++] = Knoten[1].SystemIndizes[j];
-                break;
-            }
+                {
+                    for (var j = 0; j < ElementFreiheitsgrade - 1; j++)
+                        SystemIndizesElement[counter++] = Knoten[0].SystemIndizes[j];
+                    for (var j = 0; j < ElementFreiheitsgrade; j++)
+                        SystemIndizesElement[counter++] = Knoten[1].SystemIndizes[j];
+                    break;
+                }
             case Zweiter:
-            {
-                for (var j = 0; j < ElementFreiheitsgrade; j++)
-                    SystemIndizesElement[counter++] = Knoten[0].SystemIndizes[j];
-                for (var j = 0; j < ElementFreiheitsgrade - 1; j++)
-                    SystemIndizesElement[counter++] = Knoten[1].SystemIndizes[j];
-                break;
-            }
+                {
+                    for (var j = 0; j < ElementFreiheitsgrade; j++)
+                        SystemIndizesElement[counter++] = Knoten[0].SystemIndizes[j];
+                    for (var j = 0; j < ElementFreiheitsgrade - 1; j++)
+                        SystemIndizesElement[counter++] = Knoten[1].SystemIndizes[j];
+                    break;
+                }
             default:
                 throw new ModellAusnahme("\nBiegebalkenGelenk SetSystemIndices: Gelenktyp wurde nicht erkannt!");
         }

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Diagnostics;
+﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using FEBibliothek.Modell;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
-using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
 using Lager = FE_Berechnungen.Tragwerksberechnung.Modelldaten.Lager;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
@@ -102,6 +99,7 @@ public partial class LagerNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
+        StartFenster.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -155,13 +153,15 @@ public partial class LagerNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
+        StartFenster.Berechnet = false;
     }
 
     private void KnotenPositionNeu(object sender, MouseButtonEventArgs e)
     {
         _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
-        if(knoten == null) {_ = MessageBox.Show("Knoten nicht im Modell gefunden", "neues Lager"); return; }
+        if (knoten == null) { _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neues Lager"); return; }
         StartFenster.TragwerkVisual.KnotenClick(knoten);
         Close();
+        StartFenster.Berechnet = false;
     }
 }

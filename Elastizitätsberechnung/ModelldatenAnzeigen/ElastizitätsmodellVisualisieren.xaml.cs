@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FEBibliothek.Modell;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -6,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
 
@@ -109,39 +109,39 @@ public partial class ElastizitätsmodellVisualisieren
             switch (item)
             {
                 case { } path:
-                {
-                    if (path.Name == null) continue;
-                    if (modell.Elemente.TryGetValue(path.Name, out var element))
                     {
-                        sb.Append("\nElement\t= " + element.ElementId);
-
-                        foreach (var id in element.KnotenIds)
-                            if (modell.Knoten.TryGetValue(id, out var knoten))
-                            {
-                                sb.Append("\nKnoten " + id + "\t= " + knoten.Koordinaten[0]);
-                                for (var k = 1; k < knoten.Koordinaten.Length; k++)
-                                    sb.Append(", " + knoten.Koordinaten[k]);
-                            }
-
-                        if (modell.Material.TryGetValue(element.ElementMaterialId, out var material))
+                        if (path.Name == null) continue;
+                        if (modell.Elemente.TryGetValue(path.Name, out var element))
                         {
-                            sb.Append("\nMaterial\t= " + element.ElementMaterialId + "\t= " +
-                                      material.MaterialWerte[0]);
+                            sb.Append("\nElement\t= " + element.ElementId);
 
-                            for (var i = 1; i < material.MaterialWerte.Length; i++)
-                                sb.Append(", " + material.MaterialWerte[i].ToString("g3"));
+                            foreach (var id in element.KnotenIds)
+                                if (modell.Knoten.TryGetValue(id, out var knoten))
+                                {
+                                    sb.Append("\nKnoten " + id + "\t= " + knoten.Koordinaten[0]);
+                                    for (var k = 1; k < knoten.Koordinaten.Length; k++)
+                                        sb.Append(", " + knoten.Koordinaten[k]);
+                                }
+
+                            if (modell.Material.TryGetValue(element.ElementMaterialId, out var material))
+                            {
+                                sb.Append("\nMaterial\t= " + element.ElementMaterialId + "\t= " +
+                                          material.MaterialWerte[0]);
+
+                                for (var i = 1; i < material.MaterialWerte.Length; i++)
+                                    sb.Append(", " + material.MaterialWerte[i].ToString("g3"));
+                            }
                         }
-                    }
 
-                    if (modell.Lasten.TryGetValue(path.Name, out var knotenlast))
-                    {
-                        sb.Append("Last\t= " + path.Name);
-                        for (var i = 0; i < knotenlast.Lastwerte.Length; i++)
-                            sb.Append("\nLastwert " + i + "\t= " + knotenlast.Lastwerte[i]);
-                    }
+                        if (modell.Lasten.TryGetValue(path.Name, out var knotenlast))
+                        {
+                            sb.Append("Last\t= " + path.Name);
+                            for (var i = 0; i < knotenlast.Lastwerte.Length; i++)
+                                sb.Append("\nLastwert " + i + "\t= " + knotenlast.Lastwerte[i]);
+                        }
 
-                    sb.Append("\n");
-                }
+                        sb.Append("\n");
+                    }
                     break;
             }
         }

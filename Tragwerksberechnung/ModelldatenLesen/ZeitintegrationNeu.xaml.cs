@@ -1,10 +1,10 @@
-﻿using System;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Markup;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -109,7 +109,7 @@ public partial class ZeitintegrationNeu
 
     private void BerechneZeitintervall(object sender, MouseButtonEventArgs e)
     {
-        int anzahl=0;
+        int anzahl = 0;
         Berechnung modellBerechnung = null;
 
         try
@@ -235,8 +235,8 @@ public partial class ZeitintegrationNeu
         if (_modell.Zeitintegration == null)
         {
             short methode;
-            var anzahlEigenlösungen=0;
-            double dt=0, tmax=0;
+            var anzahlEigenlösungen = 0;
+            double dt = 0, tmax = 0;
 
             try
             {
@@ -270,7 +270,7 @@ public partial class ZeitintegrationNeu
             if (Newmark.IsChecked == true)
             {
                 methode = 1;
-                double beta=0, gamma=0;
+                double beta = 0, gamma = 0;
                 try
                 {
                     beta = double.Parse(Beta.Text, CultureInfo.CurrentCulture);
@@ -294,7 +294,7 @@ public partial class ZeitintegrationNeu
             else if (Wilson.IsChecked == true)
             {
                 methode = 2;
-                double theta=0;
+                double theta = 0;
                 try
                 {
                     theta = double.Parse(Theta.Text, CultureInfo.CurrentCulture);
@@ -309,7 +309,7 @@ public partial class ZeitintegrationNeu
             else if (Taylor.IsChecked == true)
             {
                 methode = 3;
-                double alfa=0;
+                double alfa = 0;
                 try
                 {
                     alfa = double.Parse(Alfa.Text, CultureInfo.CurrentCulture);

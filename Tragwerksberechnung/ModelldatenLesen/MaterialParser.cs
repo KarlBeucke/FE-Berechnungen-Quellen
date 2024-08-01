@@ -1,6 +1,6 @@
-﻿using System;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FEBibliothek.Modell;
+using System;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -62,30 +62,30 @@ internal class MaterialParser
                                 _modell.Material.Add(_materialId, _material);
                                 break;
                             case 5:
-                            {
-                                var feder = _substrings[1];
-                                _kx = double.Parse(_substrings[2]);
-                                _ky = double.Parse(_substrings[3]);
-                                _kphi = double.Parse(_substrings[4]);
-                                _material = new Material(true, _kx, _ky, _kphi)
                                 {
-                                    MaterialId = _materialId
-                                };
-                                _modell.Material.Add(_materialId, _material);
-                                break;
-                            }
+                                    var feder = _substrings[1];
+                                    _kx = double.Parse(_substrings[2]);
+                                    _ky = double.Parse(_substrings[3]);
+                                    _kphi = double.Parse(_substrings[4]);
+                                    _material = new Material(true, _kx, _ky, _kphi)
+                                    {
+                                        MaterialId = _materialId
+                                    };
+                                    _modell.Material.Add(_materialId, _material);
+                                    break;
+                                }
                         }
 
                         i++;
                     }
                     else
                     {
-                        throw new ParseAusnahme((i+2) + ":\nMaterial " + _materialId);
+                        throw new ParseAusnahme((i + 2) + ":\nMaterial " + _materialId);
                     }
                 }
                 catch (FormatException)
                 {
-                    throw new ParseAusnahme((i+2) + ":\nMaterial, ungültiges Eingabeformat");
+                    throw new ParseAusnahme((i + 2) + ":\nMaterial, ungültiges Eingabeformat");
                 }
             } while (lines[i + 1].Length != 0);
 

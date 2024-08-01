@@ -1,6 +1,6 @@
-﻿using System;
+﻿using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
 using System.Runtime.Serialization;
-using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 

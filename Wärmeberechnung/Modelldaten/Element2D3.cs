@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using FEBibliothek.Modell;
+﻿using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using FEBibliothek.Werkzeuge;
+using System.Windows;
 
 namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
@@ -114,8 +114,8 @@ public class Element2D3 : AbstraktLinear2D3
         SystemIndizesElement = new int[KnotenProElement * ElementFreiheitsgrade];
         var counter = 0;
         for (var i = 0; i < KnotenProElement; i++)
-        for (var j = 0; j < ElementFreiheitsgrade; j++)
-            SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
+            for (var j = 0; j < ElementFreiheitsgrade; j++)
+                SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
     }
 
     public override Point BerechneSchwerpunkt()

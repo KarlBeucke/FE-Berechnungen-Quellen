@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Windows;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -172,6 +172,7 @@ public partial class ElementNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
+        StartFenster.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -190,6 +191,7 @@ public partial class ElementNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
+        StartFenster.Berechnet = false;
     }
 
     private void ElementIdLostFocus(object sender, RoutedEventArgs e)
@@ -224,22 +226,22 @@ public partial class ElementNeu
                 EndknotenId.Text = vorhandenesElement.KnotenIds[1];
                 break;
             case BiegebalkenGelenk:
-            {
-                BalkenCheck.IsChecked = true;
-                switch (vorhandenesElement.Typ)
                 {
-                    case 1:
-                        Gelenk1.IsChecked = true;
-                        break;
-                    case 2:
-                        Gelenk2.IsChecked = true;
-                        break;
-                }
+                    BalkenCheck.IsChecked = true;
+                    switch (vorhandenesElement.Typ)
+                    {
+                        case 1:
+                            Gelenk1.IsChecked = true;
+                            break;
+                        case 2:
+                            Gelenk2.IsChecked = true;
+                            break;
+                    }
 
-                FachwerkCheck.IsChecked = false;
-                EndknotenId.Text = vorhandenesElement.KnotenIds[1];
-                break;
-            }
+                    FachwerkCheck.IsChecked = false;
+                    EndknotenId.Text = vorhandenesElement.KnotenIds[1];
+                    break;
+                }
             case FederElement:
                 FederCheck.IsChecked = true;
                 break;

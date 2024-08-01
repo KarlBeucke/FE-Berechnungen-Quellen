@@ -1,11 +1,11 @@
-﻿using System;
+﻿using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Elastizitätsberechnung;
 
@@ -240,7 +240,7 @@ public class Darstellung3D
                     ErzeugQuader(mesh, punkte);
 
                     randbedingungenModell = new GeometryModel3D(mesh, randbedingungenFestMaterial)
-                        { BackMaterial = randbedingungenFestMaterial };
+                    { BackMaterial = randbedingungenFestMaterial };
                     modelGroup.Children.Add(randbedingungenModell);
 
                     randbedingungenFest.Add(randbedingungenModell);
@@ -259,7 +259,7 @@ public class Darstellung3D
                     ErzeugQuader(mesh, punkte);
 
                     randbedingungenModell = new GeometryModel3D(mesh, randbedingungenFestMaterial)
-                        { BackMaterial = randbedingungenFestMaterial };
+                    { BackMaterial = randbedingungenFestMaterial };
                     modelGroup.Children.Add(randbedingungenModell);
 
                     randbedingungenFest.Add(randbedingungenModell);
@@ -289,7 +289,7 @@ public class Darstellung3D
                     ErzeugQuader(mesh, punkte);
 
                     randbedingungenBoussinesqModell = new GeometryModel3D(mesh, randbedingungenVorMaterial)
-                        { BackMaterial = randbedingungenVorMaterial };
+                    { BackMaterial = randbedingungenVorMaterial };
                     modelGroup.Children.Add(randbedingungenBoussinesqModell);
                     randbedingungenVor.Add(randbedingungenBoussinesqModell);
                     break;
@@ -307,7 +307,7 @@ public class Darstellung3D
                     ErzeugQuader(mesh, punkte);
 
                     randbedingungenBoussinesqModell = new GeometryModel3D(mesh, randbedingungenVorMaterial)
-                        { BackMaterial = randbedingungenVorMaterial };
+                    { BackMaterial = randbedingungenVorMaterial };
                     modelGroup.Children.Add(randbedingungenBoussinesqModell);
                     randbedingungenVor.Add(randbedingungenBoussinesqModell);
                     break;
@@ -325,7 +325,7 @@ public class Darstellung3D
                     ErzeugQuader(mesh, punkte);
 
                     randbedingungenBoussinesqModell = new GeometryModel3D(mesh, randbedingungenVorMaterial)
-                        { BackMaterial = randbedingungenVorMaterial };
+                    { BackMaterial = randbedingungenVorMaterial };
                     modelGroup.Children.Add(randbedingungenBoussinesqModell);
                     randbedingungenVor.Add(randbedingungenBoussinesqModell);
                     break;

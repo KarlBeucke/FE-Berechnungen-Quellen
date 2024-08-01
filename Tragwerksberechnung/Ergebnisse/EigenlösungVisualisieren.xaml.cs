@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -8,9 +11,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;
 
@@ -136,109 +136,109 @@ public partial class EigenlösungVisualisieren
             switch (element)
             {
                 case Fachwerk _:
-                {
-                    if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                     {
-                    }
-
-                    start = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
-                    pathFigure.StartPoint = start;
-
-                    for (var i = 1; i < element.KnotenIds.Length; i++)
-                    {
-                        if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
                         }
 
-                        end = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
-                        pathFigure.Segments.Add(new LineSegment(end, true));
-                    }
+                        start = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
+                        pathFigure.StartPoint = start;
 
-                    break;
-                }
+                        for (var i = 1; i < element.KnotenIds.Length; i++)
+                        {
+                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                            {
+                            }
+
+                            end = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
+                            pathFigure.Segments.Add(new LineSegment(end, true));
+                        }
+
+                        break;
+                    }
                 case Biegebalken _:
-                {
-                    if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                     {
-                    }
-
-                    start = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
-                    pathFigure.StartPoint = start;
-                    if (_knoten != null)
-                    {
-                        startWinkel = -zustand[_knoten.SystemIndizes[2]] * 180 / Math.PI;
-
-                        for (var i = 1; i < element.KnotenIds.Length; i++)
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
-                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
-                            {
-                            }
-
-                            end = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
-                            var richtung = end - start;
-                            richtung.Normalize();
-
-                            richtung = RotateVectorScreen(richtung, startWinkel);
-                            var control1 = start + richtung * element.BalkenLänge / 4 * _auflösung;
-                            richtung = start - end;
-                            richtung.Normalize();
-
-                            if (_knoten == null) continue;
-                            endWinkel = -zustand[_knoten.SystemIndizes[2]] * 180 / Math.PI;
-                            richtung = RotateVectorScreen(richtung, endWinkel);
-                            var control2 = end + richtung * element.BalkenLänge / 4 * _auflösung;
-                            pathFigure.Segments.Add(new BezierSegment(control1, control2, end, true));
                         }
-                    }
 
-                    break;
-                }
+                        start = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
+                        pathFigure.StartPoint = start;
+                        if (_knoten != null)
+                        {
+                            startWinkel = -zustand[_knoten.SystemIndizes[2]] * 180 / Math.PI;
+
+                            for (var i = 1; i < element.KnotenIds.Length; i++)
+                            {
+                                if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                                {
+                                }
+
+                                end = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
+                                var richtung = end - start;
+                                richtung.Normalize();
+
+                                richtung = RotateVectorScreen(richtung, startWinkel);
+                                var control1 = start + richtung * element.BalkenLänge / 4 * _auflösung;
+                                richtung = start - end;
+                                richtung.Normalize();
+
+                                if (_knoten == null) continue;
+                                endWinkel = -zustand[_knoten.SystemIndizes[2]] * 180 / Math.PI;
+                                richtung = RotateVectorScreen(richtung, endWinkel);
+                                var control2 = end + richtung * element.BalkenLänge / 4 * _auflösung;
+                                pathFigure.Segments.Add(new BezierSegment(control1, control2, end, true));
+                            }
+                        }
+
+                        break;
+                    }
                 case BiegebalkenGelenk _:
-                {
-                    if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                     {
-                    }
-
-                    start = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
-                    pathFigure.StartPoint = start;
-                    if (_knoten != null)
-                    {
-                        startWinkel = -zustand[_knoten.SystemIndizes[2]] * 180 / Math.PI;
-
-                        var control = start;
-                        for (var i = 1; i < element.KnotenIds.Length; i++)
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
-                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
-                            {
-                            }
-
-                            if (_knoten == null) continue;
-                            end = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
-                            endWinkel = -zustand[_knoten.SystemIndizes[2]] * 180 / Math.PI;
-
-                            Vector richtung;
-                            switch (element.Typ)
-                            {
-                                case 1:
-                                    richtung = start - end;
-                                    richtung.Normalize();
-                                    richtung = RotateVectorScreen(richtung, endWinkel);
-                                    control = end + richtung * element.BalkenLänge / 4 * _auflösung;
-                                    break;
-                                case 2:
-                                    richtung = end - start;
-                                    richtung.Normalize();
-                                    richtung = RotateVectorScreen(richtung, startWinkel);
-                                    control = start + richtung * element.BalkenLänge / 4 * _auflösung;
-                                    break;
-                            }
-
-                            pathFigure.Segments.Add(new QuadraticBezierSegment(control, end, true));
                         }
-                    }
 
-                    break;
-                }
+                        start = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
+                        pathFigure.StartPoint = start;
+                        if (_knoten != null)
+                        {
+                            startWinkel = -zustand[_knoten.SystemIndizes[2]] * 180 / Math.PI;
+
+                            var control = start;
+                            for (var i = 1; i < element.KnotenIds.Length; i++)
+                            {
+                                if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                                {
+                                }
+
+                                if (_knoten == null) continue;
+                                end = TransformKnoten(_knoten, zustand, _auflösung, _maxY);
+                                endWinkel = -zustand[_knoten.SystemIndizes[2]] * 180 / Math.PI;
+
+                                Vector richtung;
+                                switch (element.Typ)
+                                {
+                                    case 1:
+                                        richtung = start - end;
+                                        richtung.Normalize();
+                                        richtung = RotateVectorScreen(richtung, endWinkel);
+                                        control = end + richtung * element.BalkenLänge / 4 * _auflösung;
+                                        break;
+                                    case 2:
+                                        richtung = end - start;
+                                        richtung.Normalize();
+                                        richtung = RotateVectorScreen(richtung, startWinkel);
+                                        control = start + richtung * element.BalkenLänge / 4 * _auflösung;
+                                        break;
+                                }
+
+                                pathFigure.Segments.Add(new QuadraticBezierSegment(control, end, true));
+                            }
+                        }
+
+                        break;
+                    }
             }
 
             if (element.KnotenIds.Length > 2) pathFigure.IsClosed = true;

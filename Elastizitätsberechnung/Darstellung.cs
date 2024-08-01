@@ -1,13 +1,13 @@
-﻿using System;
+﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;
 using static System.Windows.Media.Color;
@@ -160,22 +160,22 @@ public class Darstellung
         {
             // Elemente mit mehreren Knoten
             default:
-            {
-                // PointCollection für Polygondarstellung
-                var elementPointCollection = new PointCollection { startPunkt };
-                for (var i = 1; i < element.KnotenIds.Length; i++)
                 {
-                    if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out node))
+                    // PointCollection für Polygondarstellung
+                    var elementPointCollection = new PointCollection { startPunkt };
+                    for (var i = 1; i < element.KnotenIds.Length; i++)
                     {
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out node))
+                        {
+                        }
+
+                        var endPunkt = TransformKnoten(node, _auflösung, _maxY);
+                        elementPointCollection.Add(endPunkt);
                     }
 
-                    var endPunkt = TransformKnoten(node, _auflösung, _maxY);
-                    elementPointCollection.Add(endPunkt);
+                    PolygonZeichnen(element, elementPointCollection);
+                    return;
                 }
-
-                PolygonZeichnen(element, elementPointCollection);
-                return;
-            }
         }
     }
 
@@ -216,26 +216,26 @@ public class Darstellung
             switch (element)
             {
                 case Element2D3 _:
-                {
-                    if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                     {
-                    }
-
-                    var start = TransformVerformtenKnoten(_knoten, _auflösung, _maxY);
-                    pathFigure.StartPoint = start;
-
-                    for (var i = 1; i < element.KnotenIds.Length; i++)
-                    {
-                        if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
                         }
 
-                        var end = TransformVerformtenKnoten(_knoten, _auflösung, _maxY);
-                        pathFigure.Segments.Add(new LineSegment(end, true));
-                    }
+                        var start = TransformVerformtenKnoten(_knoten, _auflösung, _maxY);
+                        pathFigure.StartPoint = start;
 
-                    break;
-                }
+                        for (var i = 1; i < element.KnotenIds.Length; i++)
+                        {
+                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                            {
+                            }
+
+                            var end = TransformVerformtenKnoten(_knoten, _auflösung, _maxY);
+                            pathFigure.Segments.Add(new LineSegment(end, true));
+                        }
+
+                        break;
+                    }
             }
 
             if (element.KnotenIds.Length > 2) pathFigure.IsClosed = true;
@@ -478,14 +478,14 @@ public class Darstellung
                 // X_FIXED = 1, Y_FIXED = 2, R_FIXED = 4, XY_FIXED = 3, 
                 // XR_FIXED = 5, YR_FIXED = 6, XYR_FIXED = 7
                 case 1:
-                {
-                    pathGeometry = EineFesthaltungZeichnen(lagerKnoten);
-                    double drehWinkel = 45;
-                    if (lagerKnoten != null && lagerKnoten.Koordinaten[0] - _minX < _maxX - lagerKnoten.Koordinaten[0])
-                        drehWinkel = -45;
-                    pathGeometry.Transform = new RotateTransform(drehWinkel, drehPunkt.X, drehPunkt.Y);
-                    break;
-                }
+                    {
+                        pathGeometry = EineFesthaltungZeichnen(lagerKnoten);
+                        double drehWinkel = 45;
+                        if (lagerKnoten != null && lagerKnoten.Koordinaten[0] - _minX < _maxX - lagerKnoten.Koordinaten[0])
+                            drehWinkel = -45;
+                        pathGeometry.Transform = new RotateTransform(drehWinkel, drehPunkt.X, drehPunkt.Y);
+                        break;
+                    }
                 case 2:
                     pathGeometry = EineFesthaltungZeichnen(lagerKnoten);
                     break;

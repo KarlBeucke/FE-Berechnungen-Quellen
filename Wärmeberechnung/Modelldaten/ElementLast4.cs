@@ -1,5 +1,5 @@
-﻿using System;
-using FEBibliothek.Modell.abstrakte_Klassen;
+﻿using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
 
 namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
@@ -40,17 +40,17 @@ public class ElementLast4 : AbstraktElementLast
         var vector = new double[4];
 
         foreach (var coor1 in gaussCoord)
-        foreach (var coor2 in gaussCoord)
-        {
-            var z0 = coor1;
-            var z1 = coor2;
-            element4.BerechneGeometrie(z0, z1);
-            var s = AbstraktLinear2D4.BerechneS(z0, z1);
+            foreach (var coor2 in gaussCoord)
+            {
+                var z0 = coor1;
+                var z1 = coor2;
+                element4.BerechneGeometrie(z0, z1);
+                var s = AbstraktLinear2D4.BerechneS(z0, z1);
 
-            for (row = 0; row < 4; row++)
-            for (col = 0; col < 4; col++)
-                ssT[col, row] = ssT[col, row] + element4.Determinant * s[row] * s[col];
-        }
+                for (row = 0; row < 4; row++)
+                    for (col = 0; col < 4; col++)
+                        ssT[col, row] = ssT[col, row] + element4.Determinant * s[row] * s[col];
+            }
 
         for (row = 0; row < 4; row++)
         {

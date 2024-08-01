@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -7,8 +9,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
 
@@ -157,21 +157,21 @@ public partial class StatikErgebnisseVisualisieren
             switch (item)
             {
                 case Polygon polygon:
-                {
-                    sb.Clear();
-                    if (_modell.Elemente.TryGetValue(polygon.Name, out var multiKnotenElement))
                     {
-                        var element2D = (Abstrakt2D)multiKnotenElement;
-                        var elementSpannungen = element2D.BerechneZustandsvektor();
-                        sb.Append("Element = " + element2D.ElementId);
-                        sb.Append("\nElementmitte sig-xx\t= " + elementSpannungen[0].ToString("F2"));
-                        sb.Append("\nElementmitte sig-yy\t= " + elementSpannungen[1].ToString("F2"));
-                        sb.Append("\nElementmitte sig-xy\t= " + elementSpannungen[2].ToString("F2"));
-                    }
+                        sb.Clear();
+                        if (_modell.Elemente.TryGetValue(polygon.Name, out var multiKnotenElement))
+                        {
+                            var element2D = (Abstrakt2D)multiKnotenElement;
+                            var elementSpannungen = element2D.BerechneZustandsvektor();
+                            sb.Append("Element = " + element2D.ElementId);
+                            sb.Append("\nElementmitte sig-xx\t= " + elementSpannungen[0].ToString("F2"));
+                            sb.Append("\nElementmitte sig-yy\t= " + elementSpannungen[1].ToString("F2"));
+                            sb.Append("\nElementmitte sig-xy\t= " + elementSpannungen[2].ToString("F2"));
+                        }
 
-                    MyPopupText.Text = sb.ToString();
-                    break;
-                }
+                        MyPopupText.Text = sb.ToString();
+                        break;
+                    }
             }
         }
 

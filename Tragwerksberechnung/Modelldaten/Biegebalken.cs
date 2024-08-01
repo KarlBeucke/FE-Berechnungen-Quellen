@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using FEBibliothek.Modell;
+﻿using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using FEBibliothek.Werkzeuge;
+using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
@@ -203,39 +203,39 @@ public class Biegebalken : AbstraktBalken
     {
         var elementFreiheitsgrade = ElementFreiheitsgrade;
         for (var i = 0; i < matrix.GetLength(0); i += elementFreiheitsgrade)
-        for (var k = 0; k < matrix.GetLength(0); k += elementFreiheitsgrade)
-        {
-            var m11 = matrix[i, k];
-            var m12 = matrix[i, k + 1];
-            var m13 = matrix[i, k + 2];
+            for (var k = 0; k < matrix.GetLength(0); k += elementFreiheitsgrade)
+            {
+                var m11 = matrix[i, k];
+                var m12 = matrix[i, k + 1];
+                var m13 = matrix[i, k + 2];
 
-            var m21 = matrix[i + 1, k];
-            var m22 = matrix[i + 1, k + 1];
-            var m23 = matrix[i + 1, k + 2];
+                var m21 = matrix[i + 1, k];
+                var m22 = matrix[i + 1, k + 1];
+                var m23 = matrix[i + 1, k + 2];
 
-            var m31 = matrix[i + 2, k];
-            var m32 = matrix[i + 2, k + 1];
+                var m31 = matrix[i + 2, k];
+                var m32 = matrix[i + 2, k + 1];
 
-            var e11 = RotationsMatrix[0, 0];
-            var e12 = RotationsMatrix[0, 1];
-            var e21 = RotationsMatrix[1, 0];
-            var e22 = RotationsMatrix[1, 1];
+                var e11 = RotationsMatrix[0, 0];
+                var e12 = RotationsMatrix[0, 1];
+                var e21 = RotationsMatrix[1, 0];
+                var e22 = RotationsMatrix[1, 1];
 
-            var h11 = e11 * m11 + e12 * m21;
-            var h12 = e11 * m12 + e12 * m22;
-            var h21 = e21 * m11 + e22 * m21;
-            var h22 = e21 * m12 + e22 * m22;
+                var h11 = e11 * m11 + e12 * m21;
+                var h12 = e11 * m12 + e12 * m22;
+                var h21 = e21 * m11 + e22 * m21;
+                var h22 = e21 * m12 + e22 * m22;
 
-            matrix[i, k] = h11 * e11 + h12 * e12;
-            matrix[i, k + 1] = h11 * e21 + h12 * e22;
-            matrix[i + 1, k] = h21 * e11 + h22 * e12;
-            matrix[i + 1, k + 1] = h21 * e21 + h22 * e22;
+                matrix[i, k] = h11 * e11 + h12 * e12;
+                matrix[i, k + 1] = h11 * e21 + h12 * e22;
+                matrix[i + 1, k] = h21 * e11 + h22 * e12;
+                matrix[i + 1, k + 1] = h21 * e21 + h22 * e22;
 
-            matrix[i, k + 2] = e11 * m13 + e12 * m23;
-            matrix[i + 1, k + 2] = e21 * m13 + e22 * m23;
-            matrix[i + 2, k] = m31 * e11 + m32 * e12;
-            matrix[i + 2, k + 1] = m31 * e21 + m32 * e22;
-        }
+                matrix[i, k + 2] = e11 * m13 + e12 * m23;
+                matrix[i + 1, k + 2] = e21 * m13 + e22 * m23;
+                matrix[i + 2, k] = m31 * e11 + m32 * e12;
+                matrix[i + 2, k + 1] = m31 * e21 + m32 * e22;
+            }
 
         return matrix;
     }
@@ -312,8 +312,8 @@ public class Biegebalken : AbstraktBalken
         SystemIndizesElement = new int[KnotenProElement * ElementFreiheitsgrade];
         var counter = 0;
         for (var i = 0; i < KnotenProElement; i++)
-        for (var j = 0; j < ElementFreiheitsgrade; j++)
-            SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
+            for (var j = 0; j < ElementFreiheitsgrade; j++)
+                SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
     }
 
     public override Point BerechneSchwerpunkt()

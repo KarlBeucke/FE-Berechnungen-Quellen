@@ -26,15 +26,15 @@ public class RandbedingungParser
                 switch (substrings.Length)
                 {
                     case 3:
-                    {
-                        supportId = substrings[0];
-                        nodeId = substrings[1];
-                        var pre = double.Parse(substrings[2]);
-                        randbedingung = new Randbedingung(supportId, nodeId, pre);
-                        modell.Randbedingungen.Add(supportId, randbedingung);
-                        i++;
-                        break;
-                    }
+                        {
+                            supportId = substrings[0];
+                            nodeId = substrings[1];
+                            var pre = double.Parse(substrings[2]);
+                            randbedingung = new Randbedingung(supportId, nodeId, pre);
+                            modell.Randbedingungen.Add(supportId, randbedingung);
+                            i++;
+                            break;
+                        }
                     default:
                         throw new ParseAusnahme(i + 2 + ":\nRandbedingungen, falsche Anzahl Parameter");
                 }

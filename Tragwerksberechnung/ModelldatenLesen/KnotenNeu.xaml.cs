@@ -1,11 +1,11 @@
-﻿using System;
+﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using FEBibliothek.Modell;
+using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -60,6 +60,11 @@ public partial class KnotenNeu
                 var anzahlKnotenDof = 3;
                 try
                 {
+                    var substrings = X.Text.Split(",");
+                    var x = substrings[0];
+                    substrings = Y.Text.Split(",");
+                    var y = substrings[0];
+                    if (KnotenId.Text.Length == 0) KnotenId.Text = "K" + x + y;
                     if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
                     if (X.Text.Length > 0) koordinaten[0] = double.Parse(X.Text);
                     if (Y.Text.Length > 0) koordinaten[1] = double.Parse(Y.Text);
@@ -102,22 +107,16 @@ public partial class KnotenNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
+        StartFenster.Berechnet = false;
     }
 
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Knoten.ContainsKey(KnotenId.Text))
-        {
-            X.Focus();
-        }
-        else
-        {
-            _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
-            if (vorhandenerKnoten == null) return;
-            AnzahlDof.Text = vorhandenerKnoten.AnzahlKnotenfreiheitsgrade.ToString();
-            X.Text = vorhandenerKnoten.Koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
-            Y.Text = vorhandenerKnoten.Koordinaten[1].ToString("N2", CultureInfo.CurrentCulture);
-        }
+        _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
+        if (vorhandenerKnoten == null) return;
+        AnzahlDof.Text = vorhandenerKnoten.AnzahlKnotenfreiheitsgrade.ToString();
+        X.Text = vorhandenerKnoten.Koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
+        Y.Text = vorhandenerKnoten.Koordinaten[1].ToString("N2", CultureInfo.CurrentCulture);
     }
 
     private void BtnTabelleneintrag(object sender, RoutedEventArgs e)
@@ -127,6 +126,11 @@ public partial class KnotenNeu
         var anzahlKnotenDof = 3;
         try
         {
+            var substrings = X.Text.Split(",");
+            var x = substrings[0];
+            substrings = Y.Text.Split(",");
+            var y = substrings[0];
+            if (KnotenId.Text.Length == 0) KnotenId.Text = "K" + x + y;
             if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
             if (X.Text.Length > 0) koordinaten[0] = double.Parse(X.Text);
             if (Y.Text.Length > 0) koordinaten[1] = double.Parse(Y.Text);
@@ -143,7 +147,7 @@ public partial class KnotenNeu
         X.Text = string.Empty;
         Y.Text = string.Empty;
         Z.Text = string.Empty;
-        KnotenId.Focus();
+        //KnotenId.Focus();
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
@@ -155,6 +159,7 @@ public partial class KnotenNeu
         StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
+        StartFenster.Berechnet = false;
     }
 
     private bool KnotenReferenziert()

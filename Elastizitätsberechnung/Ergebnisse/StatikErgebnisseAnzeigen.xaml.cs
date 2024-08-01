@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using FEBibliothek.Modell;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
-using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
 

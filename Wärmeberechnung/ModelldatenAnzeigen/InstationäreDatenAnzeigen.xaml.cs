@@ -1,11 +1,11 @@
-﻿using System.Linq;
+﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
+using FEBibliothek.Modell;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
-using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
@@ -39,26 +39,26 @@ public partial class InstationäreDatenAnzeigen
         {
             var randDatei = (from item
                     in modell.ZeitabhängigeRandbedingung
-                where item.Value.VariationsTyp == 0
-                select item.Value).ToList();
+                             where item.Value.VariationsTyp == 0
+                             select item.Value).ToList();
             if (randDatei.Count > 0) RandDateiGrid.ItemsSource = randDatei;
 
             var randKonstant = (from item
                     in modell.ZeitabhängigeRandbedingung
-                where item.Value.VariationsTyp == 1
-                select item.Value).ToList();
+                                where item.Value.VariationsTyp == 1
+                                select item.Value).ToList();
             if (randKonstant.Count > 0) RandKonstantGrid.ItemsSource = randKonstant;
 
             var randHarmonisch = (from item
                     in modell.ZeitabhängigeRandbedingung
-                where item.Value.VariationsTyp == 2
-                select item.Value).ToList();
+                                  where item.Value.VariationsTyp == 2
+                                  select item.Value).ToList();
             if (randHarmonisch.Count > 0) RandHarmonischGrid.ItemsSource = randHarmonisch;
 
             var randLinear = (from item
                     in modell.ZeitabhängigeRandbedingung
-                where item.Value.VariationsTyp == 3
-                select item.Value).ToList();
+                              where item.Value.VariationsTyp == 3
+                              select item.Value).ToList();
             if (randLinear.Count > 0) RandLinearGrid.ItemsSource = randLinear;
         }
 
@@ -67,20 +67,20 @@ public partial class InstationäreDatenAnzeigen
         {
             var knotenDatei = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                where item.Value.VariationsTyp == 0
-                select item.Value).ToList();
+                               where item.Value.VariationsTyp == 0
+                               select item.Value).ToList();
             if (knotenDatei.Count > 0) KnotenDateiGrid.ItemsSource = knotenDatei;
 
             var knotenHarmonisch = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                where item.Value.VariationsTyp == 2
-                select item.Value).ToList();
+                                    where item.Value.VariationsTyp == 2
+                                    select item.Value).ToList();
             if (knotenHarmonisch.Count > 0) KnotenHarmonischGrid.ItemsSource = knotenHarmonisch;
 
             var knotenLinear = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                where item.Value.VariationsTyp == 3
-                select item.Value).ToList();
+                                where item.Value.VariationsTyp == 3
+                                select item.Value).ToList();
             if (knotenLinear.Count > 0) KnotenLinearGrid.ItemsSource = knotenLinear;
         }
 
@@ -89,8 +89,8 @@ public partial class InstationäreDatenAnzeigen
         {
             var elementLasten = (from item
                     in modell.ZeitabhängigeElementLasten
-                where item.Value.VariationsTyp == 1
-                select item.Value).ToList();
+                                 where item.Value.VariationsTyp == 1
+                                 select item.Value).ToList();
             if (elementLasten.Count > 0) ElementLastenGrid.ItemsSource = elementLasten;
         }
     }

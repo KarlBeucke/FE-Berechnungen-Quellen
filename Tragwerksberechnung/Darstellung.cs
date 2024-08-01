@@ -1,13 +1,13 @@
-﻿using System;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;
 using static System.Windows.Media.Color;
@@ -126,12 +126,12 @@ public class Darstellung
         // Knotengelenke werden als EllipseGeometry der GeometryGroup tragwerk hinzugefügt
         var tragwerk = new GeometryGroup();
         foreach (var gelenk in from item in _modell.Knoten
-                 select item.Value
+                               select item.Value
                  into knoten
-                 where knoten.AnzahlKnotenfreiheitsgrade == 2
-                 select TransformKnoten(knoten, Auflösung, MaxY)
+                               where knoten.AnzahlKnotenfreiheitsgrade == 2
+                               select TransformKnoten(knoten, Auflösung, MaxY)
                  into gelenkPunkt
-                 select new EllipseGeometry(gelenkPunkt, 5, 5))
+                               select new EllipseGeometry(gelenkPunkt, 5, 5))
             tragwerk.Children.Add(gelenk);
         // Knotengelenke werden gezeichnet
         Shape tragwerkPath = new Path
@@ -177,7 +177,7 @@ public class Darstellung
             BiegebalkenGelenk =>
                 // Gelenk am Startknoten bzw. Endknoten des BiegebalkenGelenk zeichnen
                 BiegebalkenGelenkZeichnen(element),
-            var abstraktElement => MultiKnotenElementZeichnen(abstraktElement)
+            _ => MultiKnotenElementZeichnen(element)
         };
         Shape elementPath = new Path
         {
@@ -215,131 +215,131 @@ public class Darstellung
             switch (element)
             {
                 case Fachwerk:
-                {
-                    if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                     {
-                    }
-
-                    start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
-                    pathFigure.StartPoint = start;
-
-                    for (var i = 1; i < element.KnotenIds.Length; i++)
-                    {
-                        if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
                         }
 
-                        end = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
-                        pathFigure.Segments.Add(new LineSegment(end, true));
-                    }
+                        start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
+                        pathFigure.StartPoint = start;
 
-                    pathGeometry.Figures.Add(pathFigure);
-                    break;
-                }
+                        for (var i = 1; i < element.KnotenIds.Length; i++)
+                        {
+                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                            {
+                            }
+
+                            end = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
+                            pathFigure.Segments.Add(new LineSegment(end, true));
+                        }
+
+                        pathGeometry.Figures.Add(pathFigure);
+                        break;
+                    }
                 case Biegebalken:
-                {
-                    element.BerechneZustandsvektor();
-                    if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                     {
-                    }
-
-                    start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
-                    pathFigure.StartPoint = start;
-
-                    for (var i = 1; i < element.KnotenIds.Length; i++)
-                    {
-                        if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                        element.BerechneZustandsvektor();
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
                         }
 
-                        end = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
-                        var richtung = end - start;
-                        richtung.Normalize();
-                        winkel = -element.ElementVerformungen[2] * 180 / Math.PI * ÜberhöhungRotation;
-                        richtung = RotateVectorScreen(richtung, winkel);
-                        var control1 = start + richtung * element.BalkenLänge / 4 * Auflösung;
+                        start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
+                        pathFigure.StartPoint = start;
 
-                        richtung = start - end;
-                        richtung.Normalize();
-                        winkel = -element.ElementVerformungen[5] * 180 / Math.PI * ÜberhöhungRotation;
-                        richtung = RotateVectorScreen(richtung, winkel);
-                        var control2 = end + richtung * element.BalkenLänge / 4 * Auflösung;
+                        for (var i = 1; i < element.KnotenIds.Length; i++)
+                        {
+                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                            {
+                            }
 
-                        pathFigure.Segments.Add(new BezierSegment(control1, control2, end, true));
+                            end = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
+                            var richtung = end - start;
+                            richtung.Normalize();
+                            winkel = -element.ElementVerformungen[2] * 180 / Math.PI * ÜberhöhungRotation;
+                            richtung = RotateVectorScreen(richtung, winkel);
+                            var control1 = start + richtung * element.BalkenLänge / 4 * Auflösung;
+
+                            richtung = start - end;
+                            richtung.Normalize();
+                            winkel = -element.ElementVerformungen[5] * 180 / Math.PI * ÜberhöhungRotation;
+                            richtung = RotateVectorScreen(richtung, winkel);
+                            var control2 = end + richtung * element.BalkenLänge / 4 * Auflösung;
+
+                            pathFigure.Segments.Add(new BezierSegment(control1, control2, end, true));
+                        }
+
+                        pathGeometry.Figures.Add(pathFigure);
+                        break;
                     }
-
-                    pathGeometry.Figures.Add(pathFigure);
-                    break;
-                }
                 case BiegebalkenGelenk:
-                {
-                    if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                     {
-                    }
-
-                    start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
-                    pathFigure.StartPoint = start;
-
-                    var control = start;
-                    for (var i = 1; i < element.KnotenIds.Length; i++)
-                    {
-                        if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
                         }
 
-                        end = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
+                        start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
+                        pathFigure.StartPoint = start;
 
-                        switch (element.Typ)
+                        var control = start;
+                        for (var i = 1; i < element.KnotenIds.Length; i++)
                         {
-                            case 1:
+                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
                             {
-                                var richtung = start - end;
-                                richtung.Normalize();
-                                winkel = element.ElementVerformungen[4] * 180 / Math.PI * ÜberhöhungRotation;
-                                richtung = RotateVectorScreen(richtung, winkel);
-                                control = end + richtung * element.BalkenLänge / 4 * Auflösung;
-                                break;
                             }
-                            case 2:
+
+                            end = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
+
+                            switch (element.Typ)
                             {
-                                var richtung = end - start;
-                                richtung.Normalize();
-                                winkel = element.ElementVerformungen[2] * 180 / Math.PI * ÜberhöhungRotation;
-                                richtung = RotateVectorScreen(richtung, winkel);
-                                control = start + richtung * element.BalkenLänge / 4 * Auflösung;
-                                break;
+                                case 1:
+                                    {
+                                        var richtung = start - end;
+                                        richtung.Normalize();
+                                        winkel = element.ElementVerformungen[4] * 180 / Math.PI * ÜberhöhungRotation;
+                                        richtung = RotateVectorScreen(richtung, winkel);
+                                        control = end + richtung * element.BalkenLänge / 4 * Auflösung;
+                                        break;
+                                    }
+                                case 2:
+                                    {
+                                        var richtung = end - start;
+                                        richtung.Normalize();
+                                        winkel = element.ElementVerformungen[2] * 180 / Math.PI * ÜberhöhungRotation;
+                                        richtung = RotateVectorScreen(richtung, winkel);
+                                        control = start + richtung * element.BalkenLänge / 4 * Auflösung;
+                                        break;
+                                    }
                             }
+
+                            pathFigure.Segments.Add(new QuadraticBezierSegment(control, end, true));
                         }
 
-                        pathFigure.Segments.Add(new QuadraticBezierSegment(control, end, true));
+                        pathGeometry.Figures.Add(pathFigure);
+                        break;
                     }
-
-                    pathGeometry.Figures.Add(pathFigure);
-                    break;
-                }
                 default:
-                {
-                    if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                     {
-                    }
-
-                    start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
-                    pathFigure.StartPoint = start;
-
-                    for (var i = 1; i < element.KnotenIds.Length; i++)
-                    {
-                        if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
                         }
 
-                        var next = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
-                        pathFigure.Segments.Add(new LineSegment(next, true));
-                    }
+                        start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
+                        pathFigure.StartPoint = start;
 
-                    pathFigure.IsClosed = true;
-                    pathGeometry.Figures.Add(pathFigure);
-                    break;
-                }
+                        for (var i = 1; i < element.KnotenIds.Length; i++)
+                        {
+                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                            {
+                            }
+
+                            var next = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
+                            pathFigure.Segments.Add(new LineSegment(next, true));
+                        }
+
+                        pathFigure.IsClosed = true;
+                        pathGeometry.Figures.Add(pathFigure);
+                        break;
+                    }
             }
 
             Shape path = new Path
@@ -673,8 +673,8 @@ public class Darstellung
 
         maxLastWert =
             (from linienLast in _modell.ElementLasten.Select(item => (AbstraktLinienlast)item.Value)
-                from lastwert in linienLast.Lastwerte
-                select Math.Abs(lastwert)).Prepend(maxLastWert).Max();
+             from lastwert in linienLast.Lastwerte
+             select Math.Abs(lastwert)).Prepend(maxLastWert).Max();
         _lastAuflösung = maxLastScreen / maxLastWert;
 
         foreach (var item in _modell.Lasten)
@@ -1066,13 +1066,13 @@ public class Darstellung
                 // X_FIXED = 1, Y_FIXED = 2, XY_FIXED = 3, XYR_FIXED = 7
                 // R_FIXED = 4, XR_FIXED = 5, YR_FIXED = 6 werden in Balkentheorie nicht dargestellt
                 case 1:
-                {
-                    pathGeometry = EineFesthaltungZeichnen(lagerKnoten);
-                    if (links) drehWinkel = 90;
-                    else if (rechts) drehWinkel = -90;
-                    pathGeometry.Transform = new RotateTransform(drehWinkel, drehPunkt.X, drehPunkt.Y);
-                    break;
-                }
+                    {
+                        pathGeometry = EineFesthaltungZeichnen(lagerKnoten);
+                        if (links) drehWinkel = 90;
+                        else if (rechts) drehWinkel = -90;
+                        pathGeometry.Transform = new RotateTransform(drehWinkel, drehPunkt.X, drehPunkt.Y);
+                        break;
+                    }
                 case 2:
                     pathGeometry = EineFesthaltungZeichnen(lagerKnoten);
                     break;
@@ -1084,14 +1084,14 @@ public class Darstellung
                     pathGeometry.Transform = new RotateTransform(drehWinkel, drehPunkt.X, drehPunkt.Y);
                     break;
                 case 7:
-                {
-                    pathGeometry = DreiFesthaltungenZeichnen(lagerKnoten);
-                    if (links) drehWinkel = 90;
-                    else if (rechts) drehWinkel = -90;
-                    if (unten && !balken) drehWinkel = 0;
-                    pathGeometry.Transform = new RotateTransform(drehWinkel, drehPunkt.X, drehPunkt.Y);
-                    break;
-                }
+                    {
+                        pathGeometry = DreiFesthaltungenZeichnen(lagerKnoten);
+                        if (links) drehWinkel = 90;
+                        else if (rechts) drehWinkel = -90;
+                        if (unten && !balken) drehWinkel = 0;
+                        pathGeometry.Transform = new RotateTransform(drehWinkel, drehPunkt.X, drehPunkt.Y);
+                        break;
+                    }
             }
 
             Shape path = new Path
@@ -1437,16 +1437,10 @@ public class Darstellung
         var blau = FromArgb(120, 0, 0, 255);
         SolidColorBrush myBrush;
 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
-        {
-        }
-
+        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten)) { }
         var startPoint = TransformKnoten(_knoten, Auflösung, MaxY);
 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
-        {
-        }
-
+        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten)) { }
         var endPoint = TransformKnoten(_knoten, Auflösung, MaxY);
 
         if (!elementlast)
@@ -1594,25 +1588,7 @@ public class Darstellung
                     var qa = linienLast.Lastwerte[1];
                     var qb = linienLast.Lastwerte[3];
                     var l = element.BalkenLänge;
-                    double lq0 = 0;
-                    double s;
-                    if (Math.Abs(qb - qa) < double.Epsilon)
-                    {
-                        lq0 = element.ElementZustand[1] / qb;
-                    }
-                    else if (Math.Abs(qa) > Math.Abs(qb))
-                    {
-                        s = qb * l / (qa - qb);
-                        lq0 = -s + Math.Sqrt(s * s - element.ElementZustand[4] * 2 * l / (qa - qb));
-                        lq0 = l - lq0;
-                    }
-                    else if (Math.Abs(qa) < Math.Abs(qb))
-                    {
-                        s = qa * l / (qb - qa);
-                        lq0 = -s + Math.Sqrt(s * s + element.ElementZustand[1] * 2 * l / (qb - qa));
-                    }
 
-                    if (lq0 <= 0 || lq0 > l) lq0 = l;
                     const double inkrement = 1 / anzahlProEinheit;
                     var anzahl = (int)(l / inkrement);
                     var polyLinePointArray = new Point[anzahl + 1];
@@ -1642,18 +1618,32 @@ public class Darstellung
                             polyLinePointArray[anzahl - i] = qPoint;
                         }
                     }
+                    // Nulldurchgang der Querkraft
+                    var nullIndex = QuerkraftNullWert(polyLinePointArray);
+                    Point q0;
+                    Point[] polyLine0;
+                    if (nullIndex > 0)
+                    {
+                        var x0 = polyLinePointArray[nullIndex].X + (polyLinePointArray[nullIndex + 1].X - polyLinePointArray[nullIndex].X)
+                            * (polyLinePointArray[nullIndex].Y) / (-polyLinePointArray[nullIndex + 1].Y + polyLinePointArray[nullIndex].Y);
+                        q0 = new Point(x0, 0);
+                        // Querkraftlinie auf der linken Seite
+                        polyLine0 = new Point[nullIndex + 2];
+                        Array.ConstrainedCopy(polyLinePointArray, 0, polyLine0, 0, nullIndex + 1);
+                        polyLine0[nullIndex + 1] = q0;
+                    }
+                    else
+                    {
+                        // Querkraftlinie ohne Nulldurchgang
+                        polyLine0 = new Point[anzahl + 2];
+                        Array.ConstrainedCopy(polyLinePointArray, 0, polyLine0, 0, anzahl + 1);
+                        polyLine0[anzahl + 1] = endPoint;
+                    }
 
-                    // Querkraftlinie auf der linken Seite
-                    var anzahlq0 = (int)(lq0 / inkrement);
-                    var polyLine0 = new Point[anzahlq0 + 1];
-                    Array.ConstrainedCopy(polyLinePointArray, 0, polyLine0, 0, anzahlq0 + 1);
-                    polyLine0[anzahlq0].Y = 0;
                     var qSegment = new PolyLineSegment { Points = new PointCollection(polyLine0) };
-
                     pathFigure.Segments.Add(qSegment);
                     pathFigure.IsClosed = true;
                     pathGeometry.Figures.Add(pathFigure);
-
                     myBrush = new SolidColorBrush(blau);
                     if (element.ElementZustand[1] < 0) myBrush = new SolidColorBrush(rot);
                     Shape path = new Path
@@ -1669,16 +1659,15 @@ public class Darstellung
                     QuerkraftListe.Add(path);
 
                     // Querkraftlinie auf der rechten Seite, nur falls Nulldurchgang < Elementlänge
-                    if (l - lq0 < double.Epsilon) return;
-                    var anzahlq1 = anzahl - (int)(lq0 / inkrement);
-                    var polyLine1 = new Point[anzahlq1 + 2];
-                    polyLine1[0] = polyLine0[anzahlq0];
-                    Array.ConstrainedCopy(polyLinePointArray, anzahlq0 + 1, polyLine1, 1, anzahlq1);
-                    polyLine1[anzahlq1 + 1] = endPoint;
+                    if (nullIndex <= 0) return;
+                    var anzahlqb = anzahl - nullIndex;
+                    var polyLine1 = new Point[anzahlqb + 2];
+                    Array.ConstrainedCopy(polyLinePointArray, nullIndex + 1, polyLine1, 1, anzahlqb);
+                    polyLine1[anzahlqb + 1] = endPoint;
                     qSegment = new PolyLineSegment { Points = new PointCollection(polyLine1) };
 
                     pathGeometry = new PathGeometry();
-                    pathFigure = new PathFigure { StartPoint = polyLine0[anzahlq0] };
+                    pathFigure = new PathFigure { StartPoint = q0 };
                     pathFigure.Segments.Add(qSegment);
                     pathFigure.IsClosed = true;
                     pathGeometry.Figures.Add(pathFigure);
@@ -1701,7 +1690,6 @@ public class Darstellung
                 else
                 {
                     const double anzahlProEinheit = 5;
-
                     var qa = linienLast.Lastwerte[1];
                     var qb = linienLast.Lastwerte[3];
                     var l = element.BalkenLänge;
@@ -1757,25 +1745,37 @@ public class Darstellung
 
                     // Nulldurchgang der Querkraft
                     var nullIndex = QuerkraftNullWert(polyLinePointArray);
+                    Point q0;
+                    Point[] polyLine0;
+                    if (nullIndex > 0)
+                    {
+                        var x0 = polyLinePointArray[nullIndex].X + (polyLinePointArray[nullIndex + 1].X - polyLinePointArray[nullIndex].X)
+                            * (polyLinePointArray[nullIndex].Y) / (-polyLinePointArray[nullIndex + 1].Y + polyLinePointArray[nullIndex].Y);
+                        q0 = new Point(x0, 0);
+                        // Querkraftlinie auf der linken Seite
+                        polyLine0 = new Point[nullIndex + 2];
+                        Array.ConstrainedCopy(polyLinePointArray, 0, polyLine0, 0, nullIndex + 1);
+                        polyLine0[nullIndex + 1] = q0;
 
-                    if (nullIndex <= 0) return;
-                    // Querkraftlinie auf der linken Seite des Nulldurchgangs
-                    var polyLine0 = new Point[nullIndex + 2];
-                    Array.ConstrainedCopy(polyLinePointArray, 0, polyLine0, 0, nullIndex + 2);
+                    }
+                    else
+                    {
+                        // Querkraftlinie ohne Nulldurchgang
+                        polyLine0 = new Point[anzahl + 2];
+                        Array.ConstrainedCopy(polyLinePointArray, 0, polyLine0, 0, anzahl + 1);
+                        polyLine0[anzahl + 1] = endPoint;
+                    }
 
-                    polyLine0[nullIndex + 1].Y = 0;
                     var qSegment = new PolyLineSegment { Points = new PointCollection(polyLine0) };
-
                     pathFigure.Segments.Add(qSegment);
-                    pathGeometry.Figures.Add(pathFigure);
                     pathFigure.IsClosed = true;
-
+                    pathGeometry.Figures.Add(pathFigure);
                     myBrush = new SolidColorBrush(blau);
                     if (element.ElementZustand[1] < 0) myBrush = new SolidColorBrush(rot);
                     Shape path = new Path
                     {
-                        Stroke = Black,
                         Fill = myBrush,
+                        Stroke = Black,
                         StrokeThickness = 1,
                         Data = pathGeometry
                     };
@@ -1784,25 +1784,26 @@ public class Darstellung
                     _visual.Children.Add(path);
                     QuerkraftListe.Add(path);
 
-                    // Querkraftlinie auf der rechten Seite des Nulldurchgangs
-                    var polyLine1 = new Point[anzahl - nullIndex + 3];
-                    Array.ConstrainedCopy(polyLinePointArray, nullIndex + 1, polyLine1, 1, anzahl - nullIndex + 1);
-                    polyLine1[0] = polyLine0[nullIndex + 1];
-                    polyLine1[anzahl - nullIndex + 2] = endPoint;
-
+                    // Querkraftlinie auf der rechten Seite, nur falls Nulldurchgang < Elementlänge
+                    if (nullIndex <= 0) return;
+                    var anzahlqb = anzahl - nullIndex;
+                    var polyLine1 = new Point[anzahlqb + 2];
+                    Array.ConstrainedCopy(polyLinePointArray, nullIndex + 1, polyLine1, 0, anzahlqb + 1);
+                    polyLine1[anzahlqb + 1] = endPoint;
                     qSegment = new PolyLineSegment { Points = new PointCollection(polyLine1) };
+
                     pathGeometry = new PathGeometry();
-                    pathFigure = new PathFigure { StartPoint = polyLine1[0] };
+                    pathFigure = new PathFigure { StartPoint = q0 };
                     pathFigure.Segments.Add(qSegment);
+                    pathFigure.IsClosed = true;
                     pathGeometry.Figures.Add(pathFigure);
-                    pathFigure.IsClosed = false;
 
                     myBrush = new SolidColorBrush(blau);
                     if (element.ElementZustand[3] < 0) myBrush = new SolidColorBrush(rot);
                     path = new Path
                     {
-                        Stroke = Black,
                         Fill = myBrush,
+                        Stroke = Black,
                         StrokeThickness = 1,
                         Data = pathGeometry
                     };
@@ -1838,15 +1839,11 @@ public class Darstellung
         var rot = FromArgb(120, 255, 0, 0);
         var blau = FromArgb(120, 0, 0, 255);
 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
-        {
-        }
+        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten)) { }
 
         var startPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
-        {
-        }
+        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten)) { }
 
         var endPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
 
@@ -1861,10 +1858,10 @@ public class Darstellung
                 myBrush = new SolidColorBrush(rot);
                 break;
             case 0:
-            {
-                if ((int)moment2Skaliert < 0) myBrush = new SolidColorBrush(rot);
-                break;
-            }
+                {
+                    if ((int)moment2Skaliert < 0) myBrush = new SolidColorBrush(rot);
+                    break;
+                }
         }
 
         pathFigure.StartPoint = startPunkt;
@@ -1979,8 +1976,7 @@ public class Darstellung
                         // lokale x-Koordinate vom Balkenanfang 0 <= x <= Lastlänge
                         var x = i * inkrement;
                         // M(x) = Ma - Qa*x + qa*x*x/2 + (qb-qa)/l/6 *x*x*x
-                        var m = element.ElementZustand[2] - element.ElementZustand[1] * x
-                                + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x;
+                        var m = element.ElementZustand[2] - element.ElementZustand[1] * x + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x;
                         polyLinePointArray[i] = new Point((element.Knoten[0].Koordinaten[0] + x) * Auflösung,
                             m / skalierungMoment * MaxMomentScreen);
                     }
@@ -1991,8 +1987,7 @@ public class Darstellung
                         // lokale x-Koordinate vom Balkenende 0 <= x <= Lastlänge
                         var x = i * inkrement;
                         // M(x) = Mb - Qb*x + qb/2 *x*x + (qa-qb)/l/6 *x*x*x
-                        var m = element.ElementZustand[5] + element.ElementZustand[4] * x
-                                                          + qb / 2 * x * x + (qa - qb) / l / 6 * x * x * x;
+                        var m = element.ElementZustand[5] + element.ElementZustand[4] * x + qb / 2 * x * x + (qa - qb) / l / 6 * x * x * x;
                         polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - x) * Auflösung,
                             m / skalierungMoment * MaxMomentScreen);
                     }
@@ -2037,8 +2032,8 @@ public class Darstellung
                         for (var i = 0; i <= anzahlPunktlast; i++)
                         {
                             var x = i * inkrement;
-                            m = element.ElementZustand[2] - element.ElementZustand[1] * x
-                                + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x;
+                            // M(x) = Ma - Qa*x + qa/2 *x*x + (qb-qa)/l/6 *x*x*x
+                            m = element.ElementZustand[2] - element.ElementZustand[1] * x + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x;
                             var mPoint = new Point((element.Knoten[0].Koordinaten[0] + x) * Auflösung,
                                 m / skalierungMoment * MaxMomentScreen);
                             polyLinePointArray[i] = mPoint;
@@ -2047,8 +2042,8 @@ public class Darstellung
                         for (var i = anzahlPunktlast + 1; i <= anzahl; i++)
                         {
                             var x = i * inkrement;
-                            m = element.ElementZustand[2] - element.ElementZustand[1] * x
-                                + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x
+                            // M(x) = Ma - Qa*x + qa/2 *x*x + (qb-qa)/l/6 *x*x*x + P * (x-abstandPunktlast)
+                            m = element.ElementZustand[2] - element.ElementZustand[1] * x + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x
                                 + punktLast.Lastwerte[1] * (x - abstandPunktlast);
                             var mPoint = new Point((element.Knoten[0].Koordinaten[0] + x) * Auflösung,
                                 m / skalierungMoment * MaxMomentScreen);
@@ -2084,15 +2079,14 @@ public class Darstellung
                     {
                         var anzahlPunktlast = (int)((l - abstandPunktlast) / inkrement);
                         polyLinePointArray = new Point[anzahl + 2];
+
                         for (var i = 0; i <= anzahlPunktlast; i++)
                         {
-                            // lokale x-Koordinate vom Balkenende 0 <= y <= (l-abstandPunktlast)
-                            var y = i * inkrement;
-                            // M(y) = Mb - Qb*y + qb/2 *y*y + (qa-qb)/l/6 *y*y*y
-                            m = element.ElementZustand[5] + element.ElementZustand[4] * y
-                                                          + qb / 2 * y * y + (qa - qb) / l / 6 * y * y * y;
-                            polyLinePointArray[anzahl - i] = new Point(
-                                (element.Knoten[1].Koordinaten[0] - y) * Auflösung,
+                            // lokale x-Koordinate vom Balkenende 0 <= x <= Lastlänge
+                            var x = i * inkrement;
+                            // M(x) = Mb + Qb*x + qb/2 *x*x + (qa-qb)/l/6 *x*x*x
+                            m = element.ElementZustand[5] + element.ElementZustand[4] * x + qb / 2 * x * x + (qa - qb) / l / 6 * x * x * x;
+                            polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - x) * Auflösung,
                                 m / skalierungMoment * MaxMomentScreen);
                         }
 
@@ -2100,13 +2094,12 @@ public class Darstellung
                         {
                             // lokale x-Koordinate vom Balkenende (l-abstandPunktlast) < x <= l
                             var x = i * inkrement;
-                            // M(x) = Mb - Qb*x + qb/2 *x*x + (qa-qb)/l/6 *y*y*y
-                            m = element.ElementZustand[5] + element.ElementZustand[4] * x
-                                                          + qb / 2 * x * x + (qa - qb) / l / 6 * x * x * x
-                                                          + punktLast.Lastwerte[1] * (x - abstandPunktlast);
-                            polyLinePointArray[anzahl - i] = new Point(
-                                (element.Knoten[1].Koordinaten[0] - x) * Auflösung,
+                            // M(x) = Mb + Qb*x + qb/2 *x*x + (qa-qb)/l/6 *x*x*x + P * (x-(l-abstandPunktlast))
+                            m = element.ElementZustand[5] + element.ElementZustand[4] * x + qb / 2 * x * x + (qa - qb) / l / 6 * x * x * x
+                                + punktLast.Lastwerte[1] * (x - (l - abstandPunktlast));
+                            var mPoint = new Point((element.Knoten[1].Koordinaten[0] - x) * Auflösung,
                                 m / skalierungMoment * MaxMomentScreen);
+                            polyLinePointArray[anzahl - i] = mPoint;
                         }
 
                         polyLinePointArray[anzahl + 1] = endPunkt;

@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -7,10 +11,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
@@ -135,7 +135,6 @@ public partial class TragwerkmodellVisualisieren
                 VisualTragwerkModel.Children.Remove(path);
                 foreach (var id in Darstellung.LagerIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
             }
-
             _lagerAn = false;
         }
     }
@@ -300,7 +299,7 @@ public partial class TragwerkmodellVisualisieren
 
         // click auf Shape Darstellungen
         // nur neu, falls nicht im Benutzerdialog aktiviert
-        foreach (var item in _hitList.TakeWhile(_ => !_isKnoten && !_isElement && !_isKnotenlast && !_isLinienlast && ! _isPunktlast)
+        foreach (var item in _hitList.TakeWhile(_ => !_isKnoten && !_isElement && !_isKnotenlast && !_isLinienlast && !_isPunktlast)
                      .Where(item => item.Name != null))
         {
             // Elemente
@@ -335,7 +334,22 @@ public partial class TragwerkmodellVisualisieren
             // Textdarstellung ist ein Element
             else if (_modell.Elemente.TryGetValue(item.Text, out var element))
             {
-                ElementNeu(element);
+                // bei der Definition eines neuen Lagers ist Elementeingabe ungültig
+                if (_isLager)
+                {
+                    _ = MessageBox.Show("Elementeingabe ungültig bei Definition eines neuen Lagers", "neue Linienlast");
+                    return;
+                }
+                // bei der Definition einer neuen Knotenlast ist Elementeingabe ungültig
+                else if (_isKnotenlast)
+                {
+                    _ = MessageBox.Show("Elementeingabe ungültig bei Definition einer neuen Knotenlast", "neue Linienlast");
+                    return;
+                }
+                else
+                {
+                    ElementNeu(element);
+                }
             }
 
             // Textdarstellung ist eine Knotenlast
@@ -383,16 +397,28 @@ public partial class TragwerkmodellVisualisieren
         }
 
         // Knotentext angeklickt bei Definition einer neuen Knotenlast
-        if (_isKnotenlast)
+        else if (_isKnotenlast)
         {
             _knotenlastNeu.KnotenId.Text = knoten.Id;
             _knotenlastNeu.LastId.Text = "KL_" + knoten.Id;
             _knotenlastNeu.Show();
             return;
         }
+        // Knotentext angeklickt bei Definition einer neuen Elementlast
+        else if (_isLinienlast)
+        {
+            _ = MessageBox.Show("Knoteneingabe ungültig bei Definition einer neuen Elementlast", "neue Linienlast");
+            return;
+        }
+        // Knotentext angeklickt bei Definition einer neuen Elementlast
+        else if (_isPunktlast)
+        {
+            _ = MessageBox.Show("Knoteneingabe ungültig bei Definition einer neuen Elementlast", "neue Punktlast");
+            return;
+        }
 
         // Knotentext angeklickt bei Definition eines neuen Lagers
-        if (_isLager)
+        else if (_isLager)
         {
             _lagerNeu.KnotenId.Text = knoten.Id;
             _lagerNeu.LagerId.Text = "Lager_" + knoten.Id;
@@ -457,87 +483,85 @@ public partial class TragwerkmodellVisualisieren
         switch (element)
         {
             case FederElement:
-            {
-                _ = new ElementNeu(_modell)
                 {
-                    FederCheck = { IsChecked = true },
-                    ElementId = { Text = element.ElementId },
-                    StartknotenId = { Text = element.KnotenIds[0] },
-                    MaterialId = { Text = element.ElementMaterialId }
-                };
-                break;
-            }
-            case Fachwerk:
-            {
-                _ = new ElementNeu(_modell)
-                {
-                    FachwerkCheck = { IsChecked = true },
-                    ElementId = { Text = element.ElementId },
-                    StartknotenId = { Text = element.KnotenIds[0] },
-                    EndknotenId = { Text = element.KnotenIds[1] },
-                    MaterialId = { Text = element.ElementMaterialId },
-                    EModul = { Text = emodul },
-                    Masse = { Text = masse },
-                    QuerschnittId = { Text = element.ElementQuerschnittId },
-                    Fläche = { Text = fläche },
-                    Gelenk1 = { IsChecked = true },
-                    Gelenk2 = { IsChecked = true }
-                };
-                break;
-            }
-            case Biegebalken:
-            {
-                _ = new ElementNeu(_modell)
-                {
-                    BalkenCheck = { IsChecked = true },
-                    ElementId = { Text = element.ElementId },
-                    StartknotenId = { Text = element.KnotenIds[0] },
-                    EndknotenId = { Text = element.KnotenIds[1] },
-                    MaterialId = { Text = element.ElementMaterialId },
-                    EModul = { Text = emodul },
-                    Masse = { Text = masse },
-                    QuerschnittId = { Text = element.ElementQuerschnittId },
-                    Fläche = { Text = fläche },
-                    Trägheitsmoment = { Text = trägheitsmoment },
-                    Gelenk1 = { IsChecked = false },
-                    Gelenk2 = { IsChecked = false }
-                };
-                break;
-            }
-            case BiegebalkenGelenk:
-            {
-                var neuesElement = new ElementNeu(_modell)
-                {
-                    BalkenCheck = { IsChecked = true },
-                    ElementId = { Text = element.ElementId },
-                    StartknotenId = { Text = element.KnotenIds[0] },
-                    EndknotenId = { Text = element.KnotenIds[1] },
-                    MaterialId = { Text = element.ElementMaterialId },
-                    EModul = { Text = emodul },
-                    Masse = { Text = masse },
-                    QuerschnittId = { Text = element.ElementQuerschnittId },
-                    Fläche = { Text = fläche },
-                    Trägheitsmoment = { Text = trägheitsmoment }
-                };
-                switch (element.Typ)
-                {
-                    case 1:
+                    _ = new ElementNeu(_modell)
                     {
-                        neuesElement.Gelenk1.IsChecked = true;
-                        break;
-                    }
-                    case 2:
-                    {
-                        neuesElement.Gelenk2.IsChecked = true;
-                        break;
-                    }
+                        FederCheck = { IsChecked = true },
+                        ElementId = { Text = element.ElementId },
+                        StartknotenId = { Text = element.KnotenIds[0] },
+                        MaterialId = { Text = element.ElementMaterialId }
+                    };
+                    break;
                 }
-
-                break;
-            }
+            case Fachwerk:
+                {
+                    _ = new ElementNeu(_modell)
+                    {
+                        FachwerkCheck = { IsChecked = true },
+                        ElementId = { Text = element.ElementId },
+                        StartknotenId = { Text = element.KnotenIds[0] },
+                        EndknotenId = { Text = element.KnotenIds[1] },
+                        MaterialId = { Text = element.ElementMaterialId },
+                        EModul = { Text = emodul },
+                        Masse = { Text = masse },
+                        QuerschnittId = { Text = element.ElementQuerschnittId },
+                        Fläche = { Text = fläche },
+                        Gelenk1 = { IsChecked = true },
+                        Gelenk2 = { IsChecked = true }
+                    };
+                    break;
+                }
+            case Biegebalken:
+                {
+                    _ = new ElementNeu(_modell)
+                    {
+                        BalkenCheck = { IsChecked = true },
+                        ElementId = { Text = element.ElementId },
+                        StartknotenId = { Text = element.KnotenIds[0] },
+                        EndknotenId = { Text = element.KnotenIds[1] },
+                        MaterialId = { Text = element.ElementMaterialId },
+                        EModul = { Text = emodul },
+                        Masse = { Text = masse },
+                        QuerschnittId = { Text = element.ElementQuerschnittId },
+                        Fläche = { Text = fläche },
+                        Trägheitsmoment = { Text = trägheitsmoment },
+                        Gelenk1 = { IsChecked = false },
+                        Gelenk2 = { IsChecked = false }
+                    };
+                    break;
+                }
+            case BiegebalkenGelenk:
+                {
+                    var neuesElement = new ElementNeu(_modell)
+                    {
+                        BalkenCheck = { IsChecked = true },
+                        ElementId = { Text = element.ElementId },
+                        StartknotenId = { Text = element.KnotenIds[0] },
+                        EndknotenId = { Text = element.KnotenIds[1] },
+                        MaterialId = { Text = element.ElementMaterialId },
+                        EModul = { Text = emodul },
+                        Masse = { Text = masse },
+                        QuerschnittId = { Text = element.ElementQuerschnittId },
+                        Fläche = { Text = fläche },
+                        Trägheitsmoment = { Text = trägheitsmoment }
+                    };
+                    switch (element.Typ)
+                    {
+                        case 1:
+                            {
+                                neuesElement.Gelenk1.IsChecked = true;
+                                break;
+                            }
+                        case 2:
+                            {
+                                neuesElement.Gelenk2.IsChecked = true;
+                                break;
+                            }
+                    }
+                    break;
+                }
         }
-
-        _isElement = false;
+        _isElement = true;
     }
 
     private void KnotenlastNeu(AbstraktLast knotenlast)
@@ -551,7 +575,7 @@ public partial class TragwerkmodellVisualisieren
         };
         if (knotenlast.Lastwerte.Length > 2)
             _knotenlastNeu.M.Text = knotenlast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
-        _isKnotenlast = false;
+        _isKnotenlast = true;
     }
 
     private void PunktlastNeu(AbstraktElementLast punktLast)
@@ -565,7 +589,7 @@ public partial class TragwerkmodellVisualisieren
             Py = { Text = punktlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
             Offset = { Text = punktlast.Offset.ToString(CultureInfo.CurrentCulture) }
         };
-        _isPunktlast = false;
+        _isPunktlast = true;
     }
 
     private void LinienlastNeu(AbstraktElementLast linienlast)
@@ -580,7 +604,7 @@ public partial class TragwerkmodellVisualisieren
             Pyb = { Text = linienlast.Lastwerte[3].ToString(CultureInfo.CurrentCulture) },
             InElement = { IsChecked = linienlast.InElementKoordinatenSystem }
         };
-        _isLinienlast = false;
+        _isLinienlast = true;
     }
 
     private void LagerNeu(AbstraktRandbedingung lager)
@@ -596,7 +620,7 @@ public partial class TragwerkmodellVisualisieren
         if ((bool)_lagerNeu.Xfest.IsChecked) _lagerNeu.VorX.Text = lager.Vordefiniert[0].ToString("0.00");
         if ((bool)_lagerNeu.Yfest.IsChecked) _lagerNeu.VorY.Text = lager.Vordefiniert[1].ToString("0.00");
         if ((bool)_lagerNeu.Rfest.IsChecked) _lagerNeu.VorRot.Text = lager.Vordefiniert[2].ToString("0.00");
-        _isLager = false;
+        _isLager = true;
     }
 
     private HitTestResultBehavior HitTestCallBack(HitTestResult result)

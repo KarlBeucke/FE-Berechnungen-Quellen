@@ -20,16 +20,16 @@ internal class TransientParser
             FeParser.EingabeGefunden += "\nEigenlösungen";
 
             _substrings = lines[i + 1].Split(_delimiters);
-            if (_substrings.Length != 2) throw new ParseAusnahme((i+2) + ":\nEigenlösungen, falsche Anzahl Parameter");
+            if (_substrings.Length != 2) throw new ParseAusnahme((i + 2) + ":\nEigenlösungen, falsche Anzahl Parameter");
             var id = _substrings[0];
-            var numberOfStates=1;
+            var numberOfStates = 1;
             try
             {
                 numberOfStates = short.Parse(_substrings[1]);
             }
             catch (FormatException)
             {
-                throw new ParseAusnahme((i+2) + ":\nEigenlösungen, ungültiges  Eingabeformat");
+                throw new ParseAusnahme((i + 2) + ":\nEigenlösungen, ungültiges  Eingabeformat");
             }
             feModell.Eigenzustand = new Eigenzustände(id, numberOfStates);
             break;
@@ -69,7 +69,7 @@ internal class TransientParser
             }
             catch (FormatException)
             {
-                throw new ParseAusnahme((i+2) + ":\nZeitintegration, ungültiges  Eingabeformat");
+                throw new ParseAusnahme((i + 2) + ":\nZeitintegration, ungültiges  Eingabeformat");
             }
 
             ZeitintegrationDaten = true;
@@ -90,7 +90,7 @@ internal class TransientParser
                 }
                 catch (FormatException)
                 {
-                    throw new ParseAusnahme((i+2) + ":\nDämpfung, ungültiges  Eingabeformat");
+                    throw new ParseAusnahme((i + 2) + ":\nDämpfung, ungültiges  Eingabeformat");
                 }
                 i++;
             } while (lines[i + 1].Length != 0);
@@ -123,7 +123,7 @@ internal class TransientParser
                             nodalDof = 3;
                             break;
                         default:
-                            throw new ParseAusnahme((i+2) + ":\nAnfangsbedingungen, falsche Anzahl Parameter");
+                            throw new ParseAusnahme((i + 2) + ":\nAnfangsbedingungen, falsche Anzahl Parameter");
                     }
 
                     var anfangsWerte = new double[2 * nodalDof];
@@ -136,7 +136,7 @@ internal class TransientParser
             }
             catch (FormatException)
             {
-                throw new ParseAusnahme((i+2) + ":\nAnfangsbedingungen, ungültiges Eingabeformat");
+                throw new ParseAusnahme((i + 2) + ":\nAnfangsbedingungen, ungültiges Eingabeformat");
             }
         }
 
@@ -167,45 +167,47 @@ internal class TransientParser
                     {
                         // 1 Wert: lies Anregung (Lastvektor) aus Datei, Variationstyp = 0
                         case 1:
-                        {
-                            zeitabhängigeKnotenLast =
-                                new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, true, boden)
+                            {
+                                zeitabhängigeKnotenLast =
+                                    new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, true, boden)
                                     { VariationsTyp = 0 };
-                            var last = (AbstraktZeitabhängigeKnotenlast)zeitabhängigeKnotenLast;
-                            feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, last);
-                            break;
-                        }
+                                var last = (AbstraktZeitabhängigeKnotenlast)zeitabhängigeKnotenLast;
+                                feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, last);
+                                break;
+                            }
                         // 3 Werte: harmonische Anregung, Variationstyp = 2
                         case 3:
-                        {
-                            var amplitude = double.Parse(_substrings[0]);
-                            var circularFrequency = double.Parse(_substrings[1]);
-                            var phaseAngle = double.Parse(_substrings[2]);
-                            zeitabhängigeKnotenLast =
-                                new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
-                                {
-                                    Amplitude = amplitude, Frequenz = circularFrequency, PhasenWinkel = phaseAngle,
-                                    VariationsTyp = 2
-                                };
-                            feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
-                            break;
-                        }
+                            {
+                                var amplitude = double.Parse(_substrings[0]);
+                                var circularFrequency = double.Parse(_substrings[1]);
+                                var phaseAngle = double.Parse(_substrings[2]);
+                                zeitabhängigeKnotenLast =
+                                    new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
+                                    {
+                                        Amplitude = amplitude,
+                                        Frequenz = circularFrequency,
+                                        PhasenWinkel = phaseAngle,
+                                        VariationsTyp = 2
+                                    };
+                                feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
+                                break;
+                            }
                         // mehr als 3 Werte: lies Zeit-/Wert-Intervalle der Anregung mit linearer Interpolation, Variationstyp = 1
                         default:
-                        {
-                            var interval = new double[_substrings.Length];
-                            for (var j = 0; j < _substrings.Length; j += 2)
                             {
-                                interval[j] = double.Parse(_substrings[j]);
-                                interval[j + 1] = double.Parse(_substrings[j + 1]);
-                            }
-                            
-                            zeitabhängigeKnotenLast =
-                                new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
+                                var interval = new double[_substrings.Length];
+                                for (var j = 0; j < _substrings.Length; j += 2)
+                                {
+                                    interval[j] = double.Parse(_substrings[j]);
+                                    interval[j + 1] = double.Parse(_substrings[j + 1]);
+                                }
+
+                                zeitabhängigeKnotenLast =
+                                    new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
                                     { Intervall = interval, VariationsTyp = 1 };
-                            feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
-                            break;
-                        }
+                                feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
+                                break;
+                            }
                     }
 
                     i += 2;
@@ -213,7 +215,7 @@ internal class TransientParser
             }
             catch (FormatException)
             {
-                throw new ParseAusnahme((i+2) + ":\nZeitabhängige Knotenlast, ungültiges  Eingabeformat");
+                throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Knotenlast, ungültiges  Eingabeformat");
             }
         }
     }

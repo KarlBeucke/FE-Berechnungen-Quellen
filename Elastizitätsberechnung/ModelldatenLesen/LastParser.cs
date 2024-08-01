@@ -38,12 +38,12 @@ public class LastParser
                         knotenLast = new KnotenLast(nodeId, NodeLoad[0], NodeLoad[1]);
                         break;
                     case 5:
-                    {
-                        NodeLoad[2] = double.Parse(substrings[4]);
-                        //var p = 4 * NodeLoad[2];
-                        knotenLast = new KnotenLast(nodeId, NodeLoad[0], NodeLoad[1], NodeLoad[2]);
-                        break;
-                    }
+                        {
+                            NodeLoad[2] = double.Parse(substrings[4]);
+                            //var p = 4 * NodeLoad[2];
+                            knotenLast = new KnotenLast(nodeId, NodeLoad[0], NodeLoad[1], NodeLoad[2]);
+                            break;
+                        }
                     default:
                         throw new ParseAusnahme(i + 1 + ":\nKnotenlasten erfordert 4 oder 5 Eingabeparameter");
                 }

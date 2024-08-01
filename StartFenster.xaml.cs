@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Markup;
-using FE_Berechnungen.Dateieingabe;
+﻿using FE_Berechnungen.Dateieingabe;
 using FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
 using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
 using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
@@ -18,6 +11,13 @@ using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 using FEBibliothek.Modell;
 using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Markup;
 using AnregungVisualisieren = FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen.AnregungVisualisieren;
 using EigenlösungAnzeigen = FE_Berechnungen.Wärmeberechnung.Ergebnisse.EigenlösungAnzeigen;
 using EigenlösungVisualisieren = FE_Berechnungen.Wärmeberechnung.Ergebnisse.EigenlösungVisualisieren;
@@ -321,7 +321,7 @@ public partial class StartFenster
         if (_wärmeModell.Zeitintegration.VonStationär) zeilen.Add("stationäre Loesung");
 
         zeilen.AddRange(from Knotenwerte knotenwerte in _wärmeModell.Zeitintegration.Anfangsbedingungen
-            select knotenwerte.KnotenId + "\t" + knotenwerte.Werte[0]);
+                        select knotenwerte.KnotenId + "\t" + knotenwerte.Werte[0]);
 
         // zeitabhängige Randbedingungen
         if (_wärmeModell.ZeitabhängigeRandbedingung.Count != 0) zeilen.Add("\n" + "Zeitabhängige Randtemperaturen");
@@ -342,14 +342,14 @@ public partial class StartFenster
                               item.Value.PhasenWinkel);
                     break;
                 case 3:
-                {
-                    sb.Append("\tlinear");
-                    var anzahlIntervalle = item.Value.Intervall.Length;
-                    for (var i = 0; i < anzahlIntervalle; i += 2)
-                        sb.Append("\t" + item.Value.Intervall[i] + ";" + item.Value.Intervall[i + 1]);
+                    {
+                        sb.Append("\tlinear");
+                        var anzahlIntervalle = item.Value.Intervall.Length;
+                        for (var i = 0; i < anzahlIntervalle; i += 2)
+                            sb.Append("\t" + item.Value.Intervall[i] + ";" + item.Value.Intervall[i + 1]);
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             zeilen.Add(sb.ToString());
@@ -371,14 +371,14 @@ public partial class StartFenster
                               item.Value.PhasenWinkel);
                     break;
                 case 3:
-                {
-                    sb.Append("\tlinear");
-                    var anzahlIntervalle = item.Value.Intervall.Length;
-                    for (var i = 0; i < anzahlIntervalle; i += 2)
-                        sb.Append("\t" + item.Value.Intervall[i] + ";" + item.Value.Intervall[i + 1]);
+                    {
+                        sb.Append("\tlinear");
+                        var anzahlIntervalle = item.Value.Intervall.Length;
+                        for (var i = 0; i < anzahlIntervalle; i += 2)
+                            sb.Append("\t" + item.Value.Intervall[i] + ";" + item.Value.Intervall[i + 1]);
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             zeilen.Add(sb.ToString());
@@ -1440,10 +1440,10 @@ public partial class StartFenster
                     fest = "xy";
                     break;
                 case 2:
-                {
-                    if (item.Value.Typ == 7) fest = "xyr";
-                    break;
-                }
+                    {
+                        if (item.Value.Typ == 7) fest = "xyr";
+                        break;
+                    }
                 case 3 when item.Value.Typ == 1:
                     fest = "x";
                     break;
@@ -1463,10 +1463,10 @@ public partial class StartFenster
                     fest = "yz";
                     break;
                 case 3:
-                {
-                    if (item.Value.Typ == 7) fest = "xyz";
-                    break;
-                }
+                    {
+                        if (item.Value.Typ == 7) fest = "xyz";
+                        break;
+                    }
             }
 
             sb.Append(item.Key + "\t" + item.Value.KnotenId + "\t" + fest);
@@ -1494,17 +1494,17 @@ public partial class StartFenster
         switch (_elastizitätsModell.Raumdimension)
         {
             case 2:
-            {
-                var tragwerk = new ElastizitätsmodellVisualisieren(_elastizitätsModell);
-                tragwerk.Show();
-                break;
-            }
+                {
+                    var tragwerk = new ElastizitätsmodellVisualisieren(_elastizitätsModell);
+                    tragwerk.Show();
+                    break;
+                }
             case 3:
-            {
-                var tragwerk = new Elastizitätsmodell3DVisualisieren(_elastizitätsModell);
-                tragwerk.Show();
-                break;
-            }
+                {
+                    var tragwerk = new Elastizitätsmodell3DVisualisieren(_elastizitätsModell);
+                    tragwerk.Show();
+                    break;
+                }
         }
     }
 
@@ -1591,17 +1591,17 @@ public partial class StartFenster
         switch (_elastizitätsModell.Raumdimension)
         {
             case 2:
-            {
-                var tragwerk = new Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren(_elastizitätsModell);
-                tragwerk.Show();
-                break;
-            }
+                {
+                    var tragwerk = new Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren(_elastizitätsModell);
+                    tragwerk.Show();
+                    break;
+                }
             case 3:
-            {
-                var tragwerk = new StatikErgebnisse3DVisualisieren(_elastizitätsModell);
-                tragwerk.Show();
-                break;
-            }
+                {
+                    var tragwerk = new StatikErgebnisse3DVisualisieren(_elastizitätsModell);
+                    tragwerk.Show();
+                    break;
+                }
             default:
                 _ = MessageBox.Show(sb.ToString(), "falsche Raumdimension, muss 2 oder 3 sein");
                 break;

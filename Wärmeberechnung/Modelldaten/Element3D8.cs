@@ -1,9 +1,9 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Media.Media3D;
-using FEBibliothek.Modell;
+﻿using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using FEBibliothek.Werkzeuge;
+using System;
+using System.Windows;
+using System.Windows.Media.Media3D;
 
 namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
@@ -140,8 +140,8 @@ public class Element3D8 : AbstraktLinear3D8
         SystemIndizesElement = new int[KnotenProElement * ElementFreiheitsgrade];
         var counter = 0;
         for (var i = 0; i < KnotenProElement; i++)
-        for (var j = 0; j < ElementFreiheitsgrade; j++)
-            SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
+            for (var j = 0; j < ElementFreiheitsgrade; j++)
+                SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
     }
 
     public override Point3D BerechneSchwerpunkt3D()

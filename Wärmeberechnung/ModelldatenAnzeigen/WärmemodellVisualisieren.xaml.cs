@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
+using FEBibliothek.Modell;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -8,9 +11,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
@@ -285,35 +285,35 @@ public partial class WärmemodellVisualisieren
                 switch (abstractElement)
                 {
                     case Element2D2:
-                    {
-                        sb.Append("Knoten 1 = " + abstractElement.KnotenIds[0]);
-                        sb.Append("Knoten 2 = " + abstractElement.KnotenIds[1]);
-                        if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
-                            sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
+                        {
+                            sb.Append("Knoten 1 = " + abstractElement.KnotenIds[0]);
+                            sb.Append("Knoten 2 = " + abstractElement.KnotenIds[1]);
+                            if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
+                                sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
 
-                        break;
-                    }
+                            break;
+                        }
                     case Element2D3:
-                    {
-                        sb.Append("\nKnoten 1 = " + abstractElement.KnotenIds[0]);
-                        sb.Append("\nKnoten 2 = " + abstractElement.KnotenIds[1]);
-                        sb.Append("\nKnoten 3 = " + abstractElement.KnotenIds[2]);
-                        if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
-                            sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
+                        {
+                            sb.Append("\nKnoten 1 = " + abstractElement.KnotenIds[0]);
+                            sb.Append("\nKnoten 2 = " + abstractElement.KnotenIds[1]);
+                            sb.Append("\nKnoten 3 = " + abstractElement.KnotenIds[2]);
+                            if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
+                                sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
 
-                        break;
-                    }
+                            break;
+                        }
                     case Element2D4:
-                    {
-                        sb.Append("Knoten 1 = " + abstractElement.KnotenIds[0]);
-                        sb.Append("Knoten 2 = " + abstractElement.KnotenIds[1]);
-                        sb.Append("Knoten 3 = " + abstractElement.KnotenIds[2]);
-                        sb.Append("Knoten 4 = " + abstractElement.KnotenIds[3]);
-                        if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
-                            sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
+                        {
+                            sb.Append("Knoten 1 = " + abstractElement.KnotenIds[0]);
+                            sb.Append("Knoten 2 = " + abstractElement.KnotenIds[1]);
+                            sb.Append("Knoten 3 = " + abstractElement.KnotenIds[2]);
+                            sb.Append("Knoten 4 = " + abstractElement.KnotenIds[3]);
+                            if (modell.Material.TryGetValue(abstractElement.ElementMaterialId, out var material))
+                                sb.Append("\nLeitfähigkeit = " + material.MaterialWerte[0].ToString("g3"));
 
-                        break;
-                    }
+                            break;
+                        }
                 }
 
                 sb.Append("\n");

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Windows;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FEBibliothek.Modell;
+using System;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -47,7 +46,7 @@ public class RandbedingungParser
                                 lagerTyp += Lager.RFixed;
                                 break;
                             default:
-                                throw new ParseAusnahme((i+2) + ":\nLagerTyp mus xyr sein");
+                                throw new ParseAusnahme((i + 2) + ":\nLagerTyp mus xyr sein");
                         }
                     }
 
@@ -61,7 +60,7 @@ public class RandbedingungParser
                     }
                     catch (FormatException)
                     {
-                        throw new ParseAusnahme((i+2) + ":\nLager vordefiniert, ungültiges  Eingabeformat");
+                        throw new ParseAusnahme((i + 2) + ":\nLager vordefiniert, ungültiges  Eingabeformat");
                     }
                     _lager = new Lager(_knotenId, lagerTyp, vordefiniert, _modell) { RandbedingungId = _lagerId };
                     _modell.Randbedingungen.Add(_lagerId, _lager);
@@ -69,7 +68,7 @@ public class RandbedingungParser
                 }
                 else
                 {
-                    throw new ParseAusnahme((i+2) + ":\nLager" + _lagerId);
+                    throw new ParseAusnahme((i + 2) + ":\nLager" + _lagerId);
                 }
             } while (lines[i + 1].Length != 0);
 

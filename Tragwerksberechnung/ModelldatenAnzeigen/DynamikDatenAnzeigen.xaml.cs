@@ -1,12 +1,12 @@
-﻿using System.Linq;
+﻿using FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
+using FEBibliothek.Modell;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
-using FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
@@ -39,30 +39,30 @@ public partial class DynamikDatenAnzeigen
         {
             var knotenBoden = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                where item.Value.Bodenanregung
-                select item.Value).ToList();
+                               where item.Value.Bodenanregung
+                               select item.Value).ToList();
             if (knotenBoden.Count > 0) Boden.Content = "Bodenanregung";
 
 
             var knotenDatei = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                where item.Value.VariationsTyp == 0
-                select item.Value).ToList();
+                               where item.Value.VariationsTyp == 0
+                               select item.Value).ToList();
             if (knotenDatei.Count > 0) DateiGrid.ItemsSource = knotenDatei;
 
 
             var knotenHarmonisch = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                where item.Value.VariationsTyp == 2
-                select item.Value).ToList();
+                                    where item.Value.VariationsTyp == 2
+                                    select item.Value).ToList();
 
             HarmonischGrid.Items.Clear();
             if (knotenHarmonisch.Count > 0) HarmonischGrid.ItemsSource = knotenHarmonisch;
 
             var knotenLinear = (from item
                     in modell.ZeitabhängigeKnotenLasten
-                where item.Value.VariationsTyp == 1
-                select item.Value).ToList();
+                                where item.Value.VariationsTyp == 1
+                                select item.Value).ToList();
             if (knotenLinear.Count > 0) LinearGrid.ItemsSource = knotenLinear;
         }
 

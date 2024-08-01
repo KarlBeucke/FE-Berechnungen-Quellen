@@ -1,8 +1,8 @@
-﻿using System;
-using System.Windows.Media.Media3D;
-using FEBibliothek.Modell;
+﻿using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
 using FEBibliothek.Werkzeuge;
+using System;
+using System.Windows.Media.Media3D;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 
@@ -69,8 +69,8 @@ public class Element3D8 : AbstraktLinear3D8
     {
         int i, j, k;
         for (i = 0; i < 3; i++)
-        for (j = i, k = 0; k < 8; j += 3, k++)
-            b[i, j] = Sx[k, i];
+            for (j = i, k = 0; k < 8; j += 3, k++)
+                b[i, j] = Sx[k, i];
         for (i = 0, k = 0; i < 8; i++, k += 3) b[3, k] = Sx[i, 1];
         for (i = 0, k = 1; i < 8; i++, k += 3) b[3, k] = Sx[i, 0];
         for (i = 0, k = 1; i < 8; i++, k += 3) b[4, k] = Sx[i, 2];
@@ -121,8 +121,8 @@ public class Element3D8 : AbstraktLinear3D8
         SystemIndizesElement = new int[KnotenProElement * ElementFreiheitsgrade];
         var counter = 0;
         for (var i = 0; i < KnotenProElement; i++)
-        for (var j = 0; j < ElementFreiheitsgrade; j++)
-            SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
+            for (var j = 0; j < ElementFreiheitsgrade; j++)
+                SystemIndizesElement[counter++] = Knoten[i].SystemIndizes[j];
     }
 
     public override Point3D BerechneSchwerpunkt3D()

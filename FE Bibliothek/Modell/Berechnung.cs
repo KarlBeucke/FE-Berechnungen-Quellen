@@ -60,20 +60,27 @@ namespace FEBibliothek.Modell
                 abstractElement.SetzElementReferenzen(_modell);
                 abstractElement.SetzElementSystemIndizes();
             }
-
+            // Lagerreferenzen
             foreach (var randbedingung in _modell.Randbedingungen.Select(item => item.Value))
             {
                 randbedingung.SetzRandbedingungenReferenzen(_modell);
             }
+            // Lastreferenzen
             foreach (var last in _modell.Lasten.Select(item => item.Value))
             {
                 var knotenlast = (AbstraktKnotenlast)last;
                 knotenlast.SetzReferenzen(_modell);
             }
-            foreach (var elementLast in _modell.ElementLasten.Select(item => item.Value))
+            foreach (var last in _modell.ElementLasten.Select(item => item.Value))
             {
-                elementLast.SetzElementlastReferenzen(_modell);
+                var linienlast = (AbstraktLinienlast)last;
+                linienlast.SetzLinienlastReferenzen(_modell);
             }
+            foreach (var last in _modell.PunktLasten.Select(item => item.Value))
+            {
+                last.SetzElementlastReferenzen(_modell);
+            }
+            // zeitabhängige Last- und Lagerreferenzen
             foreach (var zeitabhängigeKnotenlast in _modell.ZeitabhängigeKnotenLasten.Select(item => item.Value))
             {
                 zeitabhängigeKnotenlast.SetzReferenzen(_modell);
@@ -176,10 +183,9 @@ namespace FEBibliothek.Modell
             double[] lastVektor;
 
             // Knotenlasten
-            foreach (var item in _modell.Lasten)
+            foreach (var (_, knotenLast) in _modell.Lasten)
             {
-                var knotenLast = item.Value;
-                var knotenId = item.Value.KnotenId;
+                var knotenId = knotenLast.KnotenId;
                 if (_modell.Knoten.TryGetValue(knotenId, out var lastKnoten))
                 {
                     indizes = lastKnoten.SystemIndizes;
@@ -191,28 +197,10 @@ namespace FEBibliothek.Modell
                     throw new BerechnungAusnahme("\nLastknoten " + knotenId + " ist nicht im Modell enthalten.");
                 }
             }
-            // Linienlasten
-            foreach (var item in _modell.LinienLasten)
+            // Elementlasten: Linienlasten
+            foreach (var item in _modell.ElementLasten)
             {
-                var linienLast = item.Value;
-                var startKnotenId = item.Value.StartKnotenId;
-                if (_modell.Knoten.TryGetValue(startKnotenId, out _knoten))
-                {
-                    linienLast.StartKnoten = _knoten;
-                }
-                else
-                {
-                    throw new BerechnungAusnahme("\nLinienlastknoten " + startKnotenId + " ist nicht im Modell enthalten.");
-                }
-                var endKnotenId = item.Value.EndKnotenId;
-                if (_modell.Knoten.TryGetValue(endKnotenId, out _knoten))
-                {
-                    linienLast.EndKnoten = _knoten;
-                }
-                else
-                {
-                    throw new BerechnungAusnahme("\nLinienlastknoten " + endKnotenId + " ist nicht im Modell enthalten.");
-                }
+                var linienLast = (AbstraktLinienlast)item.Value;
                 var start = linienLast.StartKnoten.SystemIndizes.Length;
                 var end = linienLast.EndKnoten.SystemIndizes.Length;
                 indizes = new int[start + end];
@@ -223,26 +211,10 @@ namespace FEBibliothek.Modell
                 lastVektor = linienLast.BerechneLastVektor();
                 _systemGleichungen.AddVektor(indizes, lastVektor);
             }
-            //Elementlasten
-            foreach (var item in _modell.ElementLasten)
+            // Elementlasten: Punktlasten
+            foreach (var (_, punktLast) in _modell.PunktLasten)
             {
-                var elementLast = item.Value;
-                var elementId = item.Value.ElementId;
-                if (_modell.Elemente.TryGetValue(elementId, out _element))
-                {
-                    indizes = _element.SystemIndizesElement;
-                    lastVektor = elementLast.BerechneLastVektor();
-                    _systemGleichungen.AddVektor(indizes, lastVektor);
-                }
-                else
-                {
-                    throw new BerechnungAusnahme("\nElement " + elementId + " für Elementlast ist nicht im Modell enthalten.");
-                }
-            }
-            foreach (var item in _modell.PunktLasten)
-            {
-                var punktLast = item.Value;
-                var elementId = item.Value.ElementId;
+                var elementId = punktLast.ElementId;
                 if (_modell.Elemente.TryGetValue(elementId, out _element))
                 {
                     punktLast.Element = _element;

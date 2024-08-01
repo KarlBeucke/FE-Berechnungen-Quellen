@@ -1,9 +1,9 @@
-﻿using System;
-using System.Globalization;
-using System.Windows;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FEBibliothek.Modell;
+using System;
+using System.Globalization;
+using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -93,6 +93,7 @@ public partial class KnotenlastNeu
         StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
+        StartFenster.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -137,13 +138,15 @@ public partial class KnotenlastNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
         StartFenster.TragwerkVisual.Show();
+        StartFenster.Berechnet = false;
     }
 
     private void KnotenPositionNeu(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
-        if(knoten == null) {_ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue Knotenlast"); return; }
+        if (knoten == null) { _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue Knotenlast"); return; }
         StartFenster.TragwerkVisual.KnotenClick(knoten);
         Close();
+        StartFenster.Berechnet = false;
     }
 }

@@ -12,13 +12,13 @@
         // falls eine Lastreferenz fehlt, wird ModellAusnahme mit entsprechender Message (Lastreferenz fehlt) ausgeworfen
         // class "TragwerkmodelVisualisieren" prüft in try-Block, ob "ModellAusnahme" ausgeworfen wurde
         // im folgenden "catch-Block" werden die beiden Messages in einer MessageBox ausgegeben
-        
+
+
+
         public void SetzElementlastReferenzen(FeModell modell)
         {
             if (modell.Elemente.TryGetValue(ElementId, out _element)) { Element = _element; }
-
-            if (_element != null) return;
-            throw new ModellAusnahme("\nLastreferenz: Element mit ID=" + ElementId + " ist nicht im Modell enthalten");
+            else throw new ModellAusnahme("\nLastreferenz: Element mit ID=" + ElementId + " ist nicht im Modell enthalten");
         }
         public bool IstInElementKoordinatenSystem() { return InElementKoordinatenSystem; }
     }

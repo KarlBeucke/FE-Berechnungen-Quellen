@@ -1,10 +1,10 @@
-﻿using System.Diagnostics;
+﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Windows;
-using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
@@ -185,21 +185,21 @@ public partial class ZeitRandtemperaturNeu
                 Winkel.Text = vorhandeneRandbedingung.PhasenWinkel.ToString("G2");
                 break;
             case 3:
-            {
-                var intervall = vorhandeneRandbedingung.Intervall;
-                var sb = new StringBuilder();
-                sb.Append(intervall[0].ToString("G2") + ";");
-                sb.Append(intervall[1].ToString("G2"));
-                for (var i = 2; i < intervall.Length; i += 2)
                 {
-                    sb.Append("\t");
-                    sb.Append(intervall[i].ToString("G2") + ";");
-                    sb.Append(intervall[i + 1].ToString("G2"));
-                }
+                    var intervall = vorhandeneRandbedingung.Intervall;
+                    var sb = new StringBuilder();
+                    sb.Append(intervall[0].ToString("G2") + ";");
+                    sb.Append(intervall[1].ToString("G2"));
+                    for (var i = 2; i < intervall.Length; i += 2)
+                    {
+                        sb.Append("\t");
+                        sb.Append(intervall[i].ToString("G2") + ";");
+                        sb.Append(intervall[i + 1].ToString("G2"));
+                    }
 
-                Linear.Text = sb.ToString();
-                break;
-            }
+                    Linear.Text = sb.ToString();
+                    break;
+                }
         }
     }
 }

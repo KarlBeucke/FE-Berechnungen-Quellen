@@ -1,4 +1,8 @@
-﻿using System;
+﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -6,10 +10,6 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
@@ -155,15 +155,15 @@ public partial class InstationäreErgebnisseAnzeigen
             switch (item.Value)
             {
                 case Abstrakt2D value:
-                {
-                    value.ElementZustand = value.BerechneElementZustand(0, 0);
-                    break;
-                }
+                    {
+                        value.ElementZustand = value.BerechneElementZustand(0, 0);
+                        break;
+                    }
                 case Element3D8 value:
-                {
-                    value.ElementZustand = value.BerechneElementZustand(0, 0, 0);
-                    break;
-                }
+                    {
+                        value.ElementZustand = value.BerechneElementZustand(0, 0, 0);
+                        break;
+                    }
             }
 
         if (WärmeflussVektorGrid != null) WärmeflussVektorGrid.ItemsSource = modell.Elemente;

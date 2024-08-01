@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
+using FEBibliothek.Modell;
+using FEBibliothek.Modell.abstrakte_Klassen;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
-using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
-using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
 
@@ -59,48 +59,48 @@ public partial class ElastizitätsdatenAnzeigen
             switch (item.Value.Typ)
             {
                 case 1:
-                {
-                    if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                    if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
-                    break;
-                }
+                    {
+                        if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
+                        if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
+                        break;
+                    }
                 case 2:
-                {
-                    if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                    if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
-                    break;
-                }
+                    {
+                        if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
+                        if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
+                        break;
+                    }
                 case 3:
-                {
-                    if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                    if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                    if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
-                    break;
-                }
+                    {
+                        if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
+                        if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
+                        if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
+                        break;
+                    }
                 case 4:
-                {
-                    if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
-                    break;
-                }
+                    {
+                        if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        break;
+                    }
                 case 5:
-                {
-                    if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                    if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
-                    break;
-                }
+                    {
+                        if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
+                        if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        break;
+                    }
                 case 6:
-                {
-                    if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                    if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
-                    break;
-                }
+                    {
+                        if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
+                        if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        break;
+                    }
                 case 7:
-                {
-                    if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                    if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                    if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
-                    break;
-                }
+                    {
+                        if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
+                        if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
+                        if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        break;
+                    }
                 default:
                     throw new ModellAusnahme("\nLagerbedingung für Lager " + supportName + " falsch definiert");
             }
