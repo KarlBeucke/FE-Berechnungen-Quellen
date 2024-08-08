@@ -1661,9 +1661,10 @@ public class Darstellung
                     // Querkraftlinie auf der rechten Seite, nur falls Nulldurchgang < Elementlänge
                     if (nullIndex <= 0) return;
                     var anzahlqb = anzahl - nullIndex;
-                    var polyLine1 = new Point[anzahlqb + 2];
+                    var polyLine1 = new Point[anzahlqb+2];
+                    polyLine1[0] = q0;
                     Array.ConstrainedCopy(polyLinePointArray, nullIndex + 1, polyLine1, 1, anzahlqb);
-                    polyLine1[anzahlqb + 1] = endPoint;
+                    polyLine1[anzahlqb+1] = endPoint;
                     qSegment = new PolyLineSegment { Points = new PointCollection(polyLine1) };
 
                     pathGeometry = new PathGeometry();

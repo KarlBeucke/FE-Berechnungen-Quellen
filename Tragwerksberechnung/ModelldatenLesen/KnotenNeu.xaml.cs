@@ -36,6 +36,8 @@ public partial class KnotenNeu
         StartFenster.TragwerkVisual.VisualTragwerkModel.Background = null;
         StartFenster.TragwerkVisual.KnotenKeys?.Close();
         Close();
+        StartFenster.TragwerkVisual.IsKnoten = false;
+
     }
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)

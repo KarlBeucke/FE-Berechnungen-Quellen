@@ -106,6 +106,7 @@ public partial class LagerNeu
     {
         StartFenster.TragwerkVisual.LagerKeys?.Close();
         Close();
+        StartFenster.TragwerkVisual.IsLager = false;
     }
 
     private void LagerIdLostFocus(object sender, RoutedEventArgs e)

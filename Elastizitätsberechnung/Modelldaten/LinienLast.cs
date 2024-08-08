@@ -53,8 +53,8 @@ public class LinienLast : AbstraktLinienlast
         {
         }
 
-        protected RuntimeException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        //protected RuntimeException(SerializationInfo info, StreamingContext context) : base(info, context)
+        //{
+        //}
     }
 }

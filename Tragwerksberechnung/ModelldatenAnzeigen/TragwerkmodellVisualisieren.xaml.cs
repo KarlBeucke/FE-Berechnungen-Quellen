@@ -16,25 +16,24 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
 public partial class TragwerkmodellVisualisieren
 {
+    private EllipseGeometry _hitArea;
     //alle gefundenen "Shapes" werden in dieser Liste gesammelt
     private readonly List<Shape> _hitList = [];
-
     //alle gefundenen "TextBlocks" werden in dieser Liste gesammelt
     private readonly List<TextBlock> _hitTextBlock = [];
+    private bool _isDragging;
+    private Point _mittelpunkt;
+
     private readonly FeModell _modell;
     public readonly Darstellung Darstellung;
-    private ElementNeu _elementNeu;
-    private EllipseGeometry _hitArea;
-    private bool _isDragging;
-    private bool _isKnoten, _isElement, _isKnotenlast, _isLinienlast, _isPunktlast, _isLager;
-    private KnotenlastNeu _knotenlastNeu;
-
-    private KnotenNeu _knotenNeu;
-    private LagerNeu _lagerNeu;
     private bool _lastenAn = true, _lagerAn = true, _knotenTexteAn = true, _elementTexteAn = true;
+    private KnotenNeu _knotenNeu;
+    private ElementNeu _elementNeu;
+    private KnotenlastNeu _knotenlastNeu;
     private LinienlastNeu _linienlastNeu;
-    private Point _mittelpunkt;
     private PunktlastNeu _punktlastNeu;
+    private LagerNeu _lagerNeu;
+    public bool IsKnoten, IsElement, IsKnotenlast, IsLinienlast, IsPunktlast, IsLager;
     public ElementKeys ElementKeys;
     public KnotenKeys KnotenKeys;
     public LagerKeys LagerKeys;
@@ -164,7 +163,7 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuBalkenElementNeu(object sender, RoutedEventArgs e)
     {
-        _isElement = true;
+        IsElement = true;
         _elementNeu = new ElementNeu(_modell) { Topmost = true, Owner = (Window)Parent };
         ElementKeys = new ElementKeys(_modell) { Topmost = true, Owner = (Window)Parent };
         ElementKeys.Show();
@@ -189,7 +188,7 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuKnotenlastNeu(object sender, RoutedEventArgs e)
     {
-        _isKnotenlast = true;
+        IsKnotenlast = true;
         _knotenlastNeu = new KnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
         TragwerkLastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
         TragwerkLastenKeys.Show();
@@ -198,7 +197,7 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuLinienlastNeu(object sender, RoutedEventArgs e)
     {
-        _isLinienlast = true;
+        IsLinienlast = true;
         _linienlastNeu = new LinienlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
         TragwerkLastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
         TragwerkLastenKeys.Show();
@@ -207,7 +206,7 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuPunktlastNeu(object sender, RoutedEventArgs e)
     {
-        _isPunktlast = true;
+        IsPunktlast = true;
         _punktlastNeu = new PunktlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
         TragwerkLastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
         TragwerkLastenKeys.Show();
@@ -216,7 +215,7 @@ public partial class TragwerkmodellVisualisieren
 
     private void OnBtnLagerNeu_Click(object sender, RoutedEventArgs e)
     {
-        _isLager = true;
+        IsLager = true;
         _lagerNeu = new LagerNeu(_modell) { Topmost = true, Owner = (Window)Parent };
         LagerKeys = new LagerKeys(_modell) { Owner = this };
         LagerKeys.Show();
@@ -270,7 +269,7 @@ public partial class TragwerkmodellVisualisieren
     {
         Pilot.ReleaseMouseCapture();
         _isDragging = false;
-        _isKnoten = false;
+        IsKnoten = false;
     }
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -299,7 +298,7 @@ public partial class TragwerkmodellVisualisieren
 
         // click auf Shape Darstellungen
         // nur neu, falls nicht im Benutzerdialog aktiviert
-        foreach (var item in _hitList.TakeWhile(_ => !_isKnoten && !_isElement && !_isKnotenlast && !_isLinienlast && !_isPunktlast)
+        foreach (var item in _hitList.TakeWhile(_ => !IsKnoten && !IsElement && !IsKnotenlast && !IsLinienlast && !IsPunktlast)
                      .Where(item => item.Name != null))
         {
             // Elemente
@@ -327,7 +326,7 @@ public partial class TragwerkmodellVisualisieren
             // Textdarstellung ist ein Knoten
             if (_modell.Knoten.TryGetValue(item.Text, out var knoten))
             {
-                _isKnoten = true;
+                IsKnoten = true;
                 KnotenClick(knoten);
             }
 
@@ -335,13 +334,13 @@ public partial class TragwerkmodellVisualisieren
             else if (_modell.Elemente.TryGetValue(item.Text, out var element))
             {
                 // bei der Definition eines neuen Lagers ist Elementeingabe ungültig
-                if (_isLager)
+                if (IsLager)
                 {
                     _ = MessageBox.Show("Elementeingabe ungültig bei Definition eines neuen Lagers", "neue Linienlast");
                     return;
                 }
                 // bei der Definition einer neuen Knotenlast ist Elementeingabe ungültig
-                else if (_isKnotenlast)
+                else if (IsKnotenlast)
                 {
                     _ = MessageBox.Show("Elementeingabe ungültig bei Definition einer neuen Knotenlast", "neue Linienlast");
                     return;
@@ -380,7 +379,7 @@ public partial class TragwerkmodellVisualisieren
     public void KnotenClick(Knoten knoten)
     {
         // Knotentexte angeklickt bei Definition eines neuen Elementes
-        if (_isElement)
+        if (IsElement)
         {
             if (_elementNeu.StartknotenId.Text == string.Empty)
             {
@@ -397,7 +396,7 @@ public partial class TragwerkmodellVisualisieren
         }
 
         // Knotentext angeklickt bei Definition einer neuen Knotenlast
-        else if (_isKnotenlast)
+        else if (IsKnotenlast)
         {
             _knotenlastNeu.KnotenId.Text = knoten.Id;
             _knotenlastNeu.LastId.Text = "KL_" + knoten.Id;
@@ -405,20 +404,20 @@ public partial class TragwerkmodellVisualisieren
             return;
         }
         // Knotentext angeklickt bei Definition einer neuen Elementlast
-        else if (_isLinienlast)
+        else if (IsLinienlast)
         {
             _ = MessageBox.Show("Knoteneingabe ungültig bei Definition einer neuen Elementlast", "neue Linienlast");
             return;
         }
         // Knotentext angeklickt bei Definition einer neuen Elementlast
-        else if (_isPunktlast)
+        else if (IsPunktlast)
         {
             _ = MessageBox.Show("Knoteneingabe ungültig bei Definition einer neuen Elementlast", "neue Punktlast");
             return;
         }
 
         // Knotentext angeklickt bei Definition eines neuen Lagers
-        else if (_isLager)
+        else if (IsLager)
         {
             _lagerNeu.KnotenId.Text = knoten.Id;
             _lagerNeu.LagerId.Text = "Lager_" + knoten.Id;
@@ -448,16 +447,17 @@ public partial class TragwerkmodellVisualisieren
     {
         // anderer Elementtext angeklickt beim Erstellen eines neuen Elementes
         // Material- und Querschnitteigenschaften werden übernommen
-        if (_isElement)
+        if (IsElement)
         {
             _elementNeu.MaterialId.Text = element.ElementMaterialId;
             _elementNeu.QuerschnittId.Text = element.ElementQuerschnittId;
             _elementNeu.Show();
+            IsElement = false;
             return;
         }
 
         // Elementtext angeklickt bei Definition einer neuen Linienlast
-        if (_isLinienlast)
+        if (IsLinienlast)
         {
             _linienlastNeu.ElementId.Text = element.ElementId;
             _linienlastNeu.LastId.Text = "ll" + element.ElementId;
@@ -466,7 +466,7 @@ public partial class TragwerkmodellVisualisieren
         }
 
         // Elementtext angeklickt bei Definition einer neuen Punktlast
-        if (_isPunktlast)
+        if (IsPunktlast)
         {
             _punktlastNeu.ElementId.Text = element.ElementId;
             _punktlastNeu.LastId.Text = "pl" + element.ElementId;
@@ -561,7 +561,7 @@ public partial class TragwerkmodellVisualisieren
                     break;
                 }
         }
-        _isElement = true;
+        IsElement = true;
     }
 
     private void KnotenlastNeu(AbstraktLast knotenlast)
@@ -575,7 +575,7 @@ public partial class TragwerkmodellVisualisieren
         };
         if (knotenlast.Lastwerte.Length > 2)
             _knotenlastNeu.M.Text = knotenlast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
-        _isKnotenlast = true;
+        IsKnotenlast = true;
     }
 
     private void PunktlastNeu(AbstraktElementLast punktLast)
@@ -589,7 +589,7 @@ public partial class TragwerkmodellVisualisieren
             Py = { Text = punktlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
             Offset = { Text = punktlast.Offset.ToString(CultureInfo.CurrentCulture) }
         };
-        _isPunktlast = true;
+        IsPunktlast = true;
     }
 
     private void LinienlastNeu(AbstraktElementLast linienlast)
@@ -604,7 +604,7 @@ public partial class TragwerkmodellVisualisieren
             Pyb = { Text = linienlast.Lastwerte[3].ToString(CultureInfo.CurrentCulture) },
             InElement = { IsChecked = linienlast.InElementKoordinatenSystem }
         };
-        _isLinienlast = true;
+        IsLinienlast = true;
     }
 
     private void LagerNeu(AbstraktRandbedingung lager)
@@ -620,7 +620,7 @@ public partial class TragwerkmodellVisualisieren
         if ((bool)_lagerNeu.Xfest.IsChecked) _lagerNeu.VorX.Text = lager.Vordefiniert[0].ToString("0.00");
         if ((bool)_lagerNeu.Yfest.IsChecked) _lagerNeu.VorY.Text = lager.Vordefiniert[1].ToString("0.00");
         if ((bool)_lagerNeu.Rfest.IsChecked) _lagerNeu.VorRot.Text = lager.Vordefiniert[2].ToString("0.00");
-        _isLager = true;
+        IsLager = true;
     }
 
     private HitTestResultBehavior HitTestCallBack(HitTestResult result)

@@ -72,6 +72,15 @@ public partial class ElementNeu
         }
         else if (BalkenCheck.IsChecked != null && (bool)BalkenCheck.IsChecked)
         {
+            if (_modell.Querschnitt.TryGetValue(QuerschnittId.Text, out var querschnitt))
+            {
+                if (querschnitt.QuerschnittsWerte.Length < 2 && Trägheitsmoment.Text.Length == 0)
+                {
+                    _ = MessageBox.Show("Trägheitsmoment ist nicht definiert", "neues Element");
+                    return;
+                }
+            }
+
             if (Gelenk1.IsChecked != null && (bool)Gelenk1.IsChecked &&
                 Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked)
             {
@@ -178,6 +187,7 @@ public partial class ElementNeu
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         StartFenster.TragwerkVisual.ElementKeys?.Close();
+        StartFenster.TragwerkVisual.IsElement = false;
         Close();
     }
 

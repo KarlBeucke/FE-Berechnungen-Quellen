@@ -100,6 +100,7 @@ public partial class KnotenlastNeu
     {
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
+        StartFenster.TragwerkVisual.IsKnotenlast = false;
     }
 
     private void LastIdLostFocus(object sender, RoutedEventArgs e)

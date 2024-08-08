@@ -140,7 +140,7 @@ public class TransientParser
                                 throw new ParseAusnahme(i + 2 +
                                                         ":\nZeitabhängige Randbedingungen linear, falsche Anzahl Parameter");
                             var k = 0;
-                            char[] paarDelimiter = { ';' };
+                            char[] paarDelimiter = [';'];
                             var interval = new double[2 * (teilStrings.Length - 3)];
 
                             for (var j = 3; j < teilStrings.Length; j++)
@@ -209,7 +209,7 @@ public class TransientParser
                                 throw new ParseAusnahme(i + 2 +
                                                         ":\nZeitabhängige Knotenlast linear, falsche Anzahl Parameter");
                             var k = 0;
-                            char[] paarDelimiter = { ';' };
+                            char[] paarDelimiter = [';'];
                             var intervall = new double[2 * (teilStrings.Length - 3)];
                             for (var j = 3; j < teilStrings.Length; j++)
                             {
@@ -281,8 +281,8 @@ public class TransientParser
         {
         }
 
-        protected ParseException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        //protected ParseException(SerializationInfo info, StreamingContext context) : base(info, context)
+        //{
+        //}
     }
 }

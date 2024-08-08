@@ -102,6 +102,7 @@ public partial class LinienlastNeu
     {
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
+        StartFenster.TragwerkVisual.IsLinienlast = false;
     }
 
     private void LastIdLostFocus(object sender, RoutedEventArgs e)

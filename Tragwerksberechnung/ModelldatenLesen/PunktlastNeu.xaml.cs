@@ -98,6 +98,7 @@ public partial class PunktlastNeu
     {
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
+        StartFenster.TragwerkVisual.IsPunktlast = false;
     }
 
     private void PunktlastIdLostFocus(object sender, RoutedEventArgs e)
