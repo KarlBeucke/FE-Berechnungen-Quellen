@@ -34,20 +34,13 @@ public class RandbedingungParser
                     for (var k = 0; k < typ.Length; k++)
                     {
                         var subTyp = typ.Substring(k, 1);
-                        switch (subTyp)
+                        lagerTyp += subTyp switch
                         {
-                            case "x":
-                                lagerTyp += Lager.XFixed;
-                                break;
-                            case "y":
-                                lagerTyp += Lager.YFixed;
-                                break;
-                            case "r":
-                                lagerTyp += Lager.RFixed;
-                                break;
-                            default:
-                                throw new ParseAusnahme((i + 2) + ":\nLagerTyp mus xyr sein");
-                        }
+                            "x" => Lager.XFixed,
+                            "y" => Lager.Yfixed,
+                            "r" => Lager.Rfixed,
+                            _ => throw new ParseAusnahme((i + 2) + ":\nLagerTyp muss 'xyr' sein")
+                        };
                     }
 
                     var vordefiniert = new double[3];

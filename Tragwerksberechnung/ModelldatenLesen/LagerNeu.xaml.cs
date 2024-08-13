@@ -56,8 +56,8 @@ public partial class LagerNeu
             if (Rfest.IsChecked != null && (bool)Rfest.IsChecked) vorhandenesLager.Festgehalten[2] = true;
             vorhandenesLager.Typ = 0;
             if (vorhandenesLager.Festgehalten[0]) vorhandenesLager.Typ = Lager.XFixed;
-            if (vorhandenesLager.Festgehalten[1]) vorhandenesLager.Typ += Lager.YFixed;
-            if (vorhandenesLager.Festgehalten[2]) vorhandenesLager.Typ += Lager.RFixed;
+            if (vorhandenesLager.Festgehalten[1]) vorhandenesLager.Typ += Lager.Yfixed;
+            if (vorhandenesLager.Festgehalten[2]) vorhandenesLager.Typ += Lager.Rfixed;
             try
             {
                 if (VorX.Text.Length > 0) vorhandenesLager.Vordefiniert[0] = double.Parse(VorX.Text);
@@ -88,8 +88,8 @@ public partial class LagerNeu
 
             var typ = 0;
             if (Xfest.IsChecked != null && (bool)Xfest.IsChecked) typ = Lager.XFixed;
-            if (Yfest.IsChecked != null && (bool)Yfest.IsChecked) typ += Lager.YFixed;
-            if (Rfest.IsChecked != null && (bool)Rfest.IsChecked) typ += Lager.RFixed;
+            if (Yfest.IsChecked != null && (bool)Yfest.IsChecked) typ += Lager.Yfixed;
+            if (Rfest.IsChecked != null && (bool)Rfest.IsChecked) typ += Lager.Rfixed;
             var lager = new Lager(KnotenId.Text, typ, vordefiniert, _modell) { RandbedingungId = lagerId };
             _modell.Randbedingungen.Add(lagerId, lager);
         }

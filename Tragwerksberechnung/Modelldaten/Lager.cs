@@ -7,79 +7,64 @@ namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 public class Lager : AbstraktRandbedingung
 {
     public const int XFixed = 1,
-        YFixed = 2,
-        RFixed = 4,
-        XyFixed = 3,
-        XrFixed = 5,
-        YrFixed = 6,
-        XyrFixed = 7;
+        Yfixed = 2,
+        Rfixed = 4,
+        XYfixed = 3,
+        XRfixed = 5,
+        YRfixed = 6,
+        XYRfixed = 7;
 
     public Lager(string knotenId, int lagerTyp, IReadOnlyList<double> pre, FeModell modell)
     {
         Typ = lagerTyp;
-        if (modell.Knoten.TryGetValue(knotenId, out _))
-        {
-        }
-        else
-        {
+        if (!modell.Knoten.TryGetValue(knotenId, out _))
             throw new ModellAusnahme("\nLagerknoten " + knotenId + " nicht definiert");
-        }
 
         Vordefiniert = new double[pre.Count];
         Festgehalten = new bool[pre.Count];
         for (var i = 0; i < pre.Count; i++) Festgehalten[i] = false;
         KnotenId = knotenId;
 
-        if (lagerTyp == XFixed)
+        switch (lagerTyp)
         {
-            Vordefiniert[0] = pre[0];
-            Festgehalten[0] = true;
-        }
-
-        if (lagerTyp == YFixed)
-        {
-            Vordefiniert[1] = pre[1];
-            Festgehalten[1] = true;
-        }
-
-        if (lagerTyp == RFixed)
-        {
-            Vordefiniert[2] = pre[2];
-            Festgehalten[2] = true;
-        }
-
-        if (lagerTyp == XyFixed)
-        {
-            Vordefiniert[0] = pre[0];
-            Festgehalten[0] = true;
-            Vordefiniert[1] = pre[1];
-            Festgehalten[1] = true;
-        }
-
-        if (lagerTyp == XrFixed)
-        {
-            Vordefiniert[0] = pre[0];
-            Festgehalten[0] = true;
-            Vordefiniert[2] = pre[2];
-            Festgehalten[2] = true;
-        }
-
-        if (lagerTyp == YrFixed)
-        {
-            Vordefiniert[1] = pre[1];
-            Festgehalten[1] = true;
-            Vordefiniert[2] = pre[2];
-            Festgehalten[2] = true;
-        }
-
-        if (lagerTyp == XyrFixed)
-        {
-            Vordefiniert[0] = pre[0];
-            Festgehalten[0] = true;
-            Vordefiniert[1] = pre[1];
-            Festgehalten[1] = true;
-            Vordefiniert[2] = pre[2];
-            Festgehalten[2] = true;
+            case XFixed:
+                Vordefiniert[0] = pre[0];
+                Festgehalten[0] = true;
+                break;
+            case Yfixed:
+                Vordefiniert[1] = pre[1];
+                Festgehalten[1] = true;
+                break;
+            case Rfixed:
+                Vordefiniert[2] = pre[2];
+                Festgehalten[2] = true;
+                break;
+            case XYfixed:
+                Vordefiniert[0] = pre[0];
+                Festgehalten[0] = true;
+                Vordefiniert[1] = pre[1];
+                Festgehalten[1] = true;
+                break;
+            case XRfixed:
+                Vordefiniert[0] = pre[0];
+                Festgehalten[0] = true;
+                Vordefiniert[2] = pre[2];
+                Festgehalten[2] = true;
+                break;
+            case YRfixed:
+                Vordefiniert[1] = pre[1];
+                Festgehalten[1] = true;
+                Vordefiniert[2] = pre[2];
+                Festgehalten[2] = true;
+                break;
+            case XYRfixed:
+                Vordefiniert[0] = pre[0];
+                Festgehalten[0] = true;
+                Vordefiniert[1] = pre[1];
+                Festgehalten[1] = true;
+                Vordefiniert[2] = pre[2];
+                Festgehalten[2] = true;
+                break;
         }
     }
 }

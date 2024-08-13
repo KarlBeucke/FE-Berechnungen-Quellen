@@ -4,17 +4,17 @@ using System;
 namespace FEBibliothek.Gleichungslöser
 {
     //--------------------------------------------------------------------
-    //  CLASS : ProfillöserStatus             Lineares Gleichungssystem
+    //  Class: ProfillöserStatus             lineares Gleichungssystem
     //--------------------------------------------------------------------
-    //  FUNKTION :
+    //  Funktion:
     //
     //  Erzeugung und Lösung eines linearen Gleichungssystems
-    //  mit symmetrischer Profilstruktur :
+    //  mit symmetrischer Profilstruktur:
     //
     //      A * u = w + q
     //
     //  A   Systemmatrix mit vordefinierten Koeffizienten
-    /// u   primal Lösungsvektor  (Vektor der Unkekannten)
+    /// u   primal Lösungsvektor  (Vektor der Unbekannten)
     //  q   dual Lösungsvektor     (Vector der Reaktionen an Randbedingungen)
     //  w   Systemvektor with mit vordefinierten Koeffizienten (Lastvektor)
     //
@@ -41,7 +41,7 @@ namespace FEBibliothek.Gleichungslöser
     {
         private readonly bool[] status;              // true  : primal vorgegeben
                                                      // false : dual   vorgegeben
-        private readonly int[] profil;              // Index der 1. spalte != 0
+        private readonly int[] profil;               // Index der 1. spalte != 0
         private readonly double[][] matrix;          // Systemmatrix A
         private double[] vector;                     // Systemvektor w
         private readonly double[] primal;            // primal Lösungsvektor
@@ -49,7 +49,7 @@ namespace FEBibliothek.Gleichungslöser
         private int row, column;
         private readonly int dimension;
 
-        //..Erzeugung des Gleichungssystems..........................
+        // Erzeugung des Gleichungssystems
         public ProfillöserStatus(double[][] mat, double[] vec,
                double[] prim, double[] dua,
                bool[] stat, int[] prof)
@@ -62,7 +62,7 @@ namespace FEBibliothek.Gleichungslöser
             profil = prof;
             dimension = matrix.Length;
         }
-        //..ohne vorgegebene Randbedingungen
+        // ohne vorgegebene Randbedingungen
         public ProfillöserStatus(double[][] mat, double[] vec,
               double[] prim,
               bool[] stat, int[] prof)
@@ -74,7 +74,7 @@ namespace FEBibliothek.Gleichungslöser
             profil = prof;
             dimension = matrix.Length;
         }
-        //..falls Matrix nur zerlegt werden soll
+        // falls Matrix nur zerlegt werden soll
         public ProfillöserStatus(double[][] mat,
               bool[] stat, int[] prof)
         {
@@ -86,10 +86,10 @@ namespace FEBibliothek.Gleichungslöser
 
         public void SetzRechteSeite(double[] newVector) { this.vector = newVector; }
 
-        // Dreieckszerlegung der Systemmatrix .........................
+        // Dreieckszerlegung der Systemmatrix
         public void Dreieckszerlegung()
         {
-            //..A[i][m] = A[i][m] - Sum(A[i][k]*A[k][m]) / A[k][k]..........
+            // A[i][m] = A[i][m] - Sum(A[i][k]*A[k][m]) / A[k][k]
             for (row = 0; row < dimension; row++)
             {
                 if (status[row]) continue;
@@ -108,7 +108,7 @@ namespace FEBibliothek.Gleichungslöser
                     matrix[row][column - profil[row]] = sum;
                 }
 
-                //..A[i][i] = sqrt{(A[i][i] - Sum(A[i][m]*A[m][i])}...................
+                // A[i][i] = sqrt{(A[i][i] - Sum(A[i][m]*A[m][i])}
                 sum = matrix[row][row - profil[row]];
                 for (var m = profil[row]; m < row; m++)
                 {
@@ -120,9 +120,9 @@ namespace FEBibliothek.Gleichungslöser
             }
         }
 
-        //__Lösung der Systemgleichungen_______________________________________
-        //..ersetze die vorgegebenen Werte in den Zeilen ohne
-        //  vorgegebene Primärvariable : u = c1 + y1 - A12 * x2
+        // Lösung der Systemgleichungen
+        // ersetze die vorgegebenen Werte in den Zeilen ohne
+        // vorgegebene Primärvariable: u = c1 + y1 - A12 * x2
         public void Lösung()
         {
             LösePrimal();
@@ -151,7 +151,7 @@ namespace FEBibliothek.Gleichungslöser
                 }
             }
 
-            //..berechne Primärvariable : zeilenweise Vorwärtszerlegung.................
+            // berechne Primärvariable: zeilenweise Vorwärtszerlegung
             for (row = 0; row < dimension; row++)
             {
                 if (status[row]) continue;
@@ -163,7 +163,7 @@ namespace FEBibliothek.Gleichungslöser
                 primal[row] /= matrix[row][row - profil[row]];
             }
 
-            //..berechne Primärvariable : zeilenweise Rückwärtszerlegung................
+            // berechne Primärvariable: zeilenweise Rückwärtszerlegung
             for (column = dimension - 1; column >= 0; column--)
             {
                 if (status[column]) continue;
@@ -175,10 +175,11 @@ namespace FEBibliothek.Gleichungslöser
                 }
             }
         }
-        public void LösDual()
+
+        private void LösDual()
         {
-            //..berechne die Dualvariablen : ersetze die Primärvariablen.........
-            //  in den Zeilen mit den Vorgegebenen Primärvariablen :
+            //  berechne die Dualvariablen: ersetze die Primärvariablen
+            //  in den Zeilen mit den vorgegebenen Primärvariablen
             for (row = 0; row < dimension; row++)
             {
                 if (!status[row]) continue;

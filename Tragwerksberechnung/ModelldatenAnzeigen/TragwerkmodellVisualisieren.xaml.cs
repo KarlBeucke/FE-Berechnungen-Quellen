@@ -1,4 +1,5 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using System;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 using FEBibliothek.Modell;
 using FEBibliothek.Modell.abstrakte_Klassen;
@@ -420,7 +421,7 @@ public partial class TragwerkmodellVisualisieren
         else if (IsLager)
         {
             _lagerNeu.KnotenId.Text = knoten.Id;
-            _lagerNeu.LagerId.Text = "Lager_" + knoten.Id;
+            if(_lagerNeu.LagerId.Text == string.Empty) _lagerNeu.LagerId.Text = "L_" + knoten.Id;
             _lagerNeu.Show();
             return;
         }

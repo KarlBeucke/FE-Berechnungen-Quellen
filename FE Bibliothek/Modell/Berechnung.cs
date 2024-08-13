@@ -262,7 +262,7 @@ namespace FEBibliothek.Modell
             }
         }
 
-        // Eigenlösungen ***********************************************************************************************************
+        // Eigenlösungen
         public void Eigenzustände()
         {
             var anzahlZustände = _modell.Eigenzustand.AnzahlZustände;
