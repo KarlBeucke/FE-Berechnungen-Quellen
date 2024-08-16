@@ -1,7 +1,6 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FEBibliothek.Modell;
 using System;
-using System.Runtime.Serialization;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 

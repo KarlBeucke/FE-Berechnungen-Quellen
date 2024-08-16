@@ -74,16 +74,16 @@ public class BiegebalkenGelenk : AbstraktBalken
     {
         BerechneGeometrie();
 
-        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) 
+        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material))
             throw new BerechnungAusnahme("Material Id" +
-                                         " für Element "+ElementId+" nicht definiert");
+                                         " für Element " + ElementId + " nicht definiert");
         // ?: operator - the ternary conditional operator
         _emodul = E == 0 ? material.MaterialWerte[0] : E;
-        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt)) 
+        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt))
             throw new BerechnungAusnahme("Querschnitt Id" +
-                                         " für Element "+ElementId+" nicht definiert");
+                                         " für Element " + ElementId + " nicht definiert");
         if (querschnitt.QuerschnittsWerte.Length < 2 && I == 0)
-            throw new BerechnungAusnahme("Trägheitsmoment für Element "+ElementId+" nicht definiert");
+            throw new BerechnungAusnahme("Trägheitsmoment für Element " + ElementId + " nicht definiert");
 
         _fläche = A == 0 ? querschnitt.QuerschnittsWerte[0] : A;
         _trägheitsmoment = I == 0 ? querschnitt.QuerschnittsWerte[1] : I;
