@@ -30,7 +30,7 @@ public class PunktLast : AbstraktElementLast
         }
     }
 
-    // ... get load vector ....................................................
+    // get load vector
     public double[] BerechneLokalenLastVektor()
     {
         switch (Element)

@@ -54,7 +54,6 @@ public partial class StartFenster
         InitializeComponent();
     }
 
-    //********************************************************************
     // Wärmeberechnung
     private void WärmedatenEinlesen(object sender, RoutedEventArgs e)
     {
@@ -691,7 +690,6 @@ public partial class StartFenster
         }
     }
 
-    //********************************************************************
     // Tragwerksberechnung
     private void TragwerksdatenEinlesen(object sender, RoutedEventArgs e)
     {
@@ -1241,7 +1239,6 @@ public partial class StartFenster
         }
     }
 
-    //********************************************************************
     // Elastizitätsberechnung
     private void ElastizitätsdatenEinlesen(object sender, RoutedEventArgs e)
     {

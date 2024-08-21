@@ -253,7 +253,6 @@ public class Biegebalken : AbstraktBalken
     {
         var lokaleMatrix = BerechneLokaleMatrix();
         var vektor = BerechneZustandsvektor();
-
         // Beitrag der Knotendeformationen
         ElementZustand = MatrizenAlgebra.Mult(lokaleMatrix, vektor);
 

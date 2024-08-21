@@ -1,6 +1,4 @@
-﻿using System.CodeDom;
-
-namespace FEBibliothek.Modell
+﻿namespace FEBibliothek.Modell
 {
     public class FeParser
     {

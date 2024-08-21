@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace FEBibliothek.Modell.abstrakte_Klassen
+﻿namespace FEBibliothek.Modell.abstrakte_Klassen
 {
     public abstract class AbstraktElement
     {

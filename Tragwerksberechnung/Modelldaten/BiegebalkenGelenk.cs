@@ -202,6 +202,7 @@ public class BiegebalkenGelenk : AbstraktBalken
         foreach (var item in _modell.PunktLasten)
         {
             if (item.Value is not PunktLast punktLast) continue;
+            if (punktLast.ElementId != ElementId) continue;
             ElementVerformungen = punktLast.BerechneLokalenLastVektor();
             for (var k = 0; k < 5; k++) _kcxuc[k] -= ElementVerformungen[k];
             break;
@@ -210,6 +211,7 @@ public class BiegebalkenGelenk : AbstraktBalken
         foreach (var item in _modell.ElementLasten)
         {
             if (item.Value is not LinienLast linienLast) continue;
+            if (linienLast.ElementId != ElementId) continue;
             ElementVerformungen = linienLast.BerechneLokalenLastVektor();
             for (var k = 0; k < 5; k++) _kcxuc[k] -= ElementVerformungen[k];
             break;

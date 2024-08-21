@@ -102,7 +102,7 @@ namespace FEBibliothek.Modell
                 if (_modell.Elemente.Select((_, i)
                         => _modell.Elemente.ElementAt(i)).Any(element
                         => element.Value.KnotenIds[0] == id || element.Value.KnotenIds[1] == id)) continue;
-                throw new BerechnungAusnahme("\nKnoten " +id + " ist instabil, wird durch kein Element genutzt");
+                throw new BerechnungAusnahme("\nKnoten " + id + " ist instabil, wird durch kein Element genutzt");
             }
         }
         // bestimme Dimension der Systemmatrix *************************************************************************************

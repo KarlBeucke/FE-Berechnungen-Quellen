@@ -50,7 +50,7 @@ public partial class StatikErgebnisseAnzeigen
         var elementKräfte = new List<Stabendkräfte>();
         foreach (var item in _modell.Elemente)
         {
-            if (!(item.Value is AbstraktBalken balken)) continue;
+            if (item.Value is not AbstraktBalken balken) continue;
             var balkenEndKräfte = balken.BerechneStabendkräfte();
             elementKräfte.Add(new Stabendkräfte(balken.ElementId, balkenEndKräfte));
         }
