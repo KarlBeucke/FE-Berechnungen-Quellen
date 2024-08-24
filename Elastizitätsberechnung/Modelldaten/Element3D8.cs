@@ -8,8 +8,8 @@ namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 
 public class Element3D8 : AbstraktLinear3D8
 {
-    private static readonly double[] GCoord = { -1.0 / Math.Sqrt(5.0 / 3.0), 0.0, 1.0 / Math.Sqrt(5.0 / 3.0) };
-    private static readonly double[] GWeight = { 5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0 }; // gaussian coordinates, weights
+    private static readonly double[] GCoord = [-1.0 / Math.Sqrt(5.0 / 3.0), 0.0, 1.0 / Math.Sqrt(5.0 / 3.0)];
+    private static readonly double[] GWeight = [5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0]; // gaussian coordinates, weights
     private readonly double[,] b = new double[6, 24]; // strain-displacement transformation
     private readonly double[,] e = new double[6, 6]; // material matrix
     private readonly double[] elementDeformations = new double[24]; // at element nodes
@@ -28,7 +28,7 @@ public class Element3D8 : AbstraktLinear3D8
         ElementMaterialId = eMaterialId;
     }
 
-    // ....Compute element matrix.....................................
+    // ....Compute element matrix
     public override double[,] BerechneElementMatrix()
     {
         MatrizenAlgebra.Clear(elementMatrix);
@@ -58,7 +58,7 @@ public class Element3D8 : AbstraktLinear3D8
         return elementMatrix;
     }
 
-    // ....Compute mass Matrix.................................
+    // ....Compute mass Matrix
     public override double[] BerechneDiagonalMatrix()
     {
         throw new ModellAusnahme("\n*** Massenmatrix noch nicht implementiert in Element3D8");
@@ -92,9 +92,9 @@ public class Element3D8 : AbstraktLinear3D8
             e[1, 0] = e[2, 0] = e[2, 1] = factor * nue / (1.0 - 2.0 * nue);
     }
 
-    // --- Elementverhalten ----------------------------------
+    // --- Elementverhalten
 
-    // ....Berechne Elementspannungen: sigma = E * B * Ue (Elementverformungen) ......
+    // ....Berechne Elementspannungen: sigma = E * B * Ue (Elementverformungen)
     public override double[] BerechneZustandsvektor()
     {
         for (var i = 0; i < 8; i++)

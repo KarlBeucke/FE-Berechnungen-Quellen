@@ -22,12 +22,12 @@
                         Width="120" Click="BtnKnotenIDs_Click">
                     Knoten IDs
                 </Button>
-                <Button Name="BtnElemente" Grid.Row="0" Grid.Column="1" Margin="50,20,0,17" IsDefault="False"
+                <Button Grid.Row="0" Grid.Column="1" Margin="50,20,0,17" IsDefault="False"
                         MaxWidth="200" HorizontalAlignment="Left"
                         Width="120" Click="BtnElementIDs_Click">
                     Element IDs
                 </Button>
-                <Button Name="BtnLasten" Grid.Row="0" Grid.Column="2" Margin="50,20,0,17" IsDefault="False"
+                <Button Grid.Row="0" Grid.Column="2" Margin="50,20,0,17" IsDefault="False"
                         MaxWidth="200" HorizontalAlignment="Left"
                         Width="120" Click="BtnLasten_Click">
                     Lasten

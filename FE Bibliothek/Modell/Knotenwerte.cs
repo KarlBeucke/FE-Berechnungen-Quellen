@@ -1,14 +1,8 @@
 ﻿namespace FEBibliothek.Modell
 {
-    public class Knotenwerte
+    public class Knotenwerte(string knotenId, double[] werte)
     {
-        public string KnotenId { get; set; }
-        public double[] Werte { get; set; }
-
-        public Knotenwerte(string knotenId, double[] werte)
-        {
-            KnotenId = knotenId;
-            Werte = werte;
-        }
+        public string KnotenId { get; set; } = knotenId;
+        public double[] Werte { get; set; } = werte;
     }
 }

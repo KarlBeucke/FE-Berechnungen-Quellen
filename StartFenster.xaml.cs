@@ -1585,7 +1585,7 @@ public partial class StartFenster
             _ = MessageBox.Show(e2.Message);
         }
 
-        switch (_elastizitätsModell.Raumdimension)
+        switch (_elastizitätsModell!.Raumdimension)
         {
             case 2:
                 {

@@ -108,10 +108,10 @@ public partial class ElastizitätsmodellVisualisieren
 
             switch (item)
             {
-                case { } path:
+                case not null:
                     {
-                        if (path.Name == null) continue;
-                        if (modell.Elemente.TryGetValue(path.Name, out var element))
+                        if (item.Name == null) continue;
+                        if (modell.Elemente.TryGetValue(item.Name, out var element))
                         {
                             sb.Append("\nElement\t= " + element.ElementId);
 
@@ -133,9 +133,9 @@ public partial class ElastizitätsmodellVisualisieren
                             }
                         }
 
-                        if (modell.Lasten.TryGetValue(path.Name, out var knotenlast))
+                        if (modell.Lasten.TryGetValue(item.Name, out var knotenlast))
                         {
-                            sb.Append("Last\t= " + path.Name);
+                            sb.Append("Last\t= " + item.Name);
                             for (var i = 0; i < knotenlast.Lastwerte.Length; i++)
                                 sb.Append("\nLastwert " + i + "\t= " + knotenlast.Lastwerte[i]);
                         }

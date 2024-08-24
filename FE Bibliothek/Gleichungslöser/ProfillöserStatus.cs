@@ -50,9 +50,7 @@ namespace FEBibliothek.Gleichungslöser
         private readonly int dimension;
 
         // Erzeugung des Gleichungssystems
-        public ProfillöserStatus(double[][] mat, double[] vec,
-               double[] prim, double[] dua,
-               bool[] stat, int[] prof)
+        public ProfillöserStatus(double[][] mat, double[] vec, double[] prim, double[] dua, bool[] stat, int[] prof)
         {
             matrix = mat;
             vector = vec;
@@ -63,9 +61,7 @@ namespace FEBibliothek.Gleichungslöser
             dimension = matrix.Length;
         }
         // ohne vorgegebene Randbedingungen
-        public ProfillöserStatus(double[][] mat, double[] vec,
-              double[] prim,
-              bool[] stat, int[] prof)
+        public ProfillöserStatus(double[][] mat, double[] vec, double[] prim, bool[] stat, int[] prof)
         {
             matrix = mat;
             vector = vec;
@@ -75,8 +71,7 @@ namespace FEBibliothek.Gleichungslöser
             dimension = matrix.Length;
         }
         // falls Matrix nur zerlegt werden soll
-        public ProfillöserStatus(double[][] mat,
-              bool[] stat, int[] prof)
+        public ProfillöserStatus(double[][] mat, bool[] stat, int[] prof)
         {
             matrix = mat;
             status = stat;

@@ -2,19 +2,12 @@
 
 namespace FEBibliothek.Modell
 {
-    public class Eigenzustände
+    public class Eigenzustände(string id, int anzahlZustände)
     {
-        public string Id { get; set; }
-        public int AnzahlZustände { get; set; }
+        public string Id { get; set; } = id;
+        public int AnzahlZustände { get; set; } = anzahlZustände;
         public double[] Eigenwerte { get; set; }
         public double[][] Eigenvektoren { get; set; }
-        public List<object> DämpfungsRaten { get; set; }
-
-        public Eigenzustände(string id, int anzahlZustände)
-        {
-            Id = id;
-            AnzahlZustände = anzahlZustände;
-            DämpfungsRaten = new List<object>();
-        }
+        public List<object> DämpfungsRaten { get; set; } = [];
     }
 }

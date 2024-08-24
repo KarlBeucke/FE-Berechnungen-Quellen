@@ -89,7 +89,7 @@ public partial class Elastizitätsmodell3DVisualisieren
 
         // Blick in Richtung Koordinatenursprung (0; 0; 0), zentriert
         // falls Koordinatenursprung links oben, versetz Darstellung um offset
-        if (darstellung3D.minX >= 0) offset = 10;
+        if (darstellung3D.MinX >= 0) offset = 10;
         theCamera.LookDirection = new Vector3D(-(x - offset), -(y + offset), -z);
 
         // Setzen der Up Richtung
@@ -176,65 +176,65 @@ public partial class Elastizitätsmodell3DVisualisieren
     // An- und Abschalten der einzelnen Modelldarstellungen (GeometryModel3Ds)
     private void ShowKoordinaten(object sender, RoutedEventArgs e)
     {
-        foreach (var koordinaten in darstellung3D.koordinaten) model3DGroup.Children.Add(koordinaten);
+        foreach (var koordinaten in darstellung3D.Koordinaten) model3DGroup.Children.Add(koordinaten);
     }
 
     private void RemoveKoordinaten(object sender, RoutedEventArgs e)
     {
-        foreach (var koordinaten in darstellung3D.koordinaten) model3DGroup.Children.Remove(koordinaten);
+        foreach (var koordinaten in darstellung3D.Koordinaten) model3DGroup.Children.Remove(koordinaten);
     }
 
     private void ShowOberflächen(object sender, RoutedEventArgs e)
     {
-        foreach (var oberflächen in darstellung3D.oberflächen) model3DGroup.Children.Add(oberflächen);
+        foreach (var oberflächen in darstellung3D.Oberflächen) model3DGroup.Children.Add(oberflächen);
     }
 
     private void RemoveOberflächen(object sender, RoutedEventArgs e)
     {
-        foreach (var oberflächen in darstellung3D.oberflächen) model3DGroup.Children.Remove(oberflächen);
+        foreach (var oberflächen in darstellung3D.Oberflächen) model3DGroup.Children.Remove(oberflächen);
     }
 
     private void ShowDrahtmodell(object sender, RoutedEventArgs e)
     {
-        foreach (var kanten in darstellung3D.kanten) model3DGroup.Children.Add(kanten);
+        foreach (var kanten in darstellung3D.Kanten) model3DGroup.Children.Add(kanten);
     }
 
     private void RemoveDrahtmodell(object sender, RoutedEventArgs e)
     {
-        foreach (var kanten in darstellung3D.kanten) model3DGroup.Children.Remove(kanten);
+        foreach (var kanten in darstellung3D.Kanten) model3DGroup.Children.Remove(kanten);
     }
 
     private void ShowRandbedingungenFest(object sender, RoutedEventArgs e)
     {
-        foreach (var randbedingungenFest in darstellung3D.randbedingungenFest)
+        foreach (var randbedingungenFest in darstellung3D.RandbedingungenFest)
             model3DGroup.Children.Add(randbedingungenFest);
     }
 
     private void RemoveRandbedingungenFest(object sender, RoutedEventArgs e)
     {
-        foreach (var randbedingungenFest in darstellung3D.randbedingungenFest)
+        foreach (var randbedingungenFest in darstellung3D.RandbedingungenFest)
             model3DGroup.Children.Remove(randbedingungenFest);
     }
 
     private void ShowRandbedingungenVor(object sender, RoutedEventArgs e)
     {
-        foreach (var randbedingungenVor in darstellung3D.randbedingungenVor)
+        foreach (var randbedingungenVor in darstellung3D.RandbedingungenVor)
             model3DGroup.Children.Add(randbedingungenVor);
     }
 
     private void RemoveRandbedingungenVor(object sender, RoutedEventArgs e)
     {
-        foreach (var randbedingungenVor in darstellung3D.randbedingungenVor)
+        foreach (var randbedingungenVor in darstellung3D.RandbedingungenVor)
             model3DGroup.Children.Remove(randbedingungenVor);
     }
 
     private void ShowKnotenlasten(object sender, RoutedEventArgs e)
     {
-        foreach (var knotenlasten in darstellung3D.knotenLasten) model3DGroup.Children.Add(knotenlasten);
+        foreach (var knotenlasten in darstellung3D.KnotenLasten) model3DGroup.Children.Add(knotenlasten);
     }
 
     private void RemoveKnotenlasten(object sender, RoutedEventArgs e)
     {
-        foreach (var knotenlasten in darstellung3D.knotenLasten) model3DGroup.Children.Remove(knotenlasten);
+        foreach (var knotenlasten in darstellung3D.KnotenLasten) model3DGroup.Children.Remove(knotenlasten);
     }
 }

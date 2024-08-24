@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
 
         <Grid Margin="0,0,5,0" Grid.Column="0" Grid.RowSpan="4">
-            <Label x:Name="Knotendefinitionen" Content="Knotendefinitionen" HorizontalAlignment="Left"
+            <Label Content="Knotendefinitionen" HorizontalAlignment="Left"
                    Margin="10,-24,-134,0"
                    VerticalAlignment="Top" Width="250" />
             <DataGrid
@@ -37,7 +37,7 @@
         </Grid>
 
         <Grid Margin="0,0,5,0" Grid.Row="0" Grid.RowSpan="4" Grid.Column="1">
-            <Label x:Name="Elementdefinitionen" Content="Elementdefinitionen" HorizontalAlignment="Left"
+            <Label Content="Elementdefinitionen" HorizontalAlignment="Left"
                    Margin="10,-24,-134,0"
                    VerticalAlignment="Top" Width="200" />
             <DataGrid
@@ -61,7 +61,7 @@
         </Grid>
 
         <Grid Margin="0,0,5,0" Grid.Column="2" Grid.Row="0">
-            <Label x:Name="Materialdefinitionen" Content="Materialdefinitionen" HorizontalAlignment="Left"
+            <Label Content="Materialdefinitionen" HorizontalAlignment="Left"
                    Margin="5,-24,0,0"
                    VerticalAlignment="Top" Width="158" />
             <DataGrid
@@ -80,7 +80,7 @@
         </Grid>
 
         <Grid Margin="0,0,5,0" Grid.Column="2" Grid.Row="1">
-            <Label x:Name="Querschnittdefinitionen" Content="Querschnittdefinitionen" HorizontalAlignment="Left"
+            <Label Content="Querschnittdefinitionen" HorizontalAlignment="Left"
                    Margin="5,0,0,0"
                    VerticalAlignment="Top" Width="158" />
             <DataGrid
@@ -96,7 +96,7 @@
         </Grid>
 
         <Grid Margin="0,0,5,0" Grid.Column="2" Grid.Row="2">
-            <Label x:Name="Randdefinitionen" Content="Randdefinitionen" HorizontalAlignment="Left" Margin="5,0,0,0"
+            <Label Content="Randdefinitionen" HorizontalAlignment="Left" Margin="5,0,0,0"
                    VerticalAlignment="Top" Width="158" />
             <DataGrid
                 Name="RandGrid" Margin="5,20,0,5" AlternatingRowBackground="Aqua"
@@ -114,7 +114,7 @@
         </Grid>
 
         <Grid Margin="0,0,5,0" Grid.Column="2" Grid.Row="3">
-            <Label x:Name="Knotenlasten" Content="Knotenlastdefinitionen" HorizontalAlignment="Left" Margin="5,0,0,0"
+            <Label Content="Knotenlastdefinitionen" HorizontalAlignment="Left" Margin="5,0,0,0"
                    VerticalAlignment="Top" Width="158" />
             <DataGrid
                 Name="KnotenlastGrid" Margin="5,20,-0.4,5.4" AlternatingRowBackground="Aqua"

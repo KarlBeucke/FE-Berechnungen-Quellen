@@ -41,16 +41,13 @@ public static class NetzErweiterungen
         // eine eindeutige ID für eine Kante mit 2 Punkten
         if (index1 > index2)
         {
-            var temp = index1;
-            index1 = index2;
-            index2 = temp;
+            (index1, index2) = (index2, index1);
         }
 
         var segmentId = index1 * mesh.Positions.Count + index2;
 
         // ignorier die Kante, falls sie schon einem anderen Dreieck hinzugefügt wurde
-        if (alreadyDrawn.ContainsKey(segmentId)) return;
-        alreadyDrawn.Add(segmentId, segmentId);
+        if (!alreadyDrawn.TryAdd(segmentId, segmentId)) return;
 
         // sonst, erzeug die Kante
         AddSegment(wireframe, mesh.Positions[index1], mesh.Positions[index2], thickness);
@@ -77,7 +74,7 @@ public static class NetzErweiterungen
     // damit Kanten mit 2 gleichen Endpunkten zusammenpassen
     // Falls ein up-Vektor fehlt, erzeug einen rechtwinkligen Vektor dafür
     private static void AddSegment(MeshGeometry3D mesh,
-        Point3D point1, Point3D point2, double thickness, bool extend)
+        Point3D point1, Point3D point2, double thickness, bool extend = false)
     {
         // finde einen Up-Vektor der nicht colinear mit der Kante ist
         // start mit einem Vektor parallel zur Y-Achse
@@ -92,12 +89,6 @@ public static class NetzErweiterungen
 
         // füg die Kante zum Netz hinzu
         AddSegment(mesh, point1, point2, up, thickness, extend);
-    }
-
-    private static void AddSegment(MeshGeometry3D mesh,
-        Point3D point1, Point3D point2, double thickness)
-    {
-        AddSegment(mesh, point1, point2, thickness, false);
     }
 
     public static void AddSegment(MeshGeometry3D mesh,

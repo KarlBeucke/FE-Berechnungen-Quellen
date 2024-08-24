@@ -20,12 +20,12 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
-                <Button Name="BtnVerformung" Grid.Row="0" Grid.Column="0" Click="BtnVerformung_Click"
+                <Button Grid.Row="0" Grid.Column="0" Click="BtnVerformung_Click"
                         Margin="10,23,0,17" IsDefault="False"
                         MaxWidth="200" HorizontalAlignment="Left" Width="133">
                     Verformungszustand
                 </Button>
-                <Button Name="BtnSpannungen" Grid.Row="0" Grid.Column="1" Click="BtnSpannungen_Click"
+                <Button Grid.Row="0" Grid.Column="1" Click="BtnSpannungen_Click"
                         Margin="10,23,0,17" IsDefault="False"
                         MaxWidth="200" HorizontalAlignment="Left" Width="133">
                     Elementspannungen
@@ -41,7 +41,7 @@
                         MaxWidth="200" HorizontalAlignment="Left" Width="90">
                     ElementIDs
                 </Button>
-                <Button Name="BtnKnotenIDs" Grid.Row="0" Grid.Column="5" Click="BtnKnotenIDs_Click" Margin="10,20,0,17"
+                <Button Grid.Row="0" Grid.Column="5" Click="BtnKnotenIDs_Click" Margin="10,20,0,17"
                         IsDefault="True"
                         MaxWidth="200" HorizontalAlignment="Left" Width="90">
                     KnotenIDs

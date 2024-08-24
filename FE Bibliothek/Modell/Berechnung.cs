@@ -105,7 +105,7 @@ namespace FEBibliothek.Modell
                 throw new BerechnungAusnahme("\nKnoten " + id + " ist instabil, wird durch kein Element genutzt");
             }
         }
-        // bestimme Dimension der Systemmatrix *************************************************************************************
+        // bestimme Dimension der Systemmatrix
         private void BestimmeDimension()
         {
             _dimension = 0;
@@ -116,7 +116,7 @@ namespace FEBibliothek.Modell
             _systemGleichungen = new Gleichungen(_dimension);
             _setzDimension = true;
         }
-        // berechne und löse die Matrix in Profilformat mit StatusVektor *****************************************************
+        // berechne und löse die Matrix in Profilformat mit StatusVektor
         private void BestimmeProfil()
         {
             foreach (var item in _modell.Elemente)
@@ -240,7 +240,7 @@ namespace FEBibliothek.Modell
                 _zerlegt = true;
             }
             _profilLöser.Lösung();
-            // ... speichere System Unbekannte (primale Werte)
+            // speichere System Unbekannte (primale Werte)
             foreach (var item in _modell.Knoten)
             {
                 _knoten = item.Value;
@@ -249,7 +249,7 @@ namespace FEBibliothek.Modell
                 for (var i = 0; i < _knoten.Knotenfreiheitsgrade.Length; i++)
                     _knoten.Knotenfreiheitsgrade[i] = _systemGleichungen.Primal[index[i]];
             }
-            // ... speichere duale Werte
+            // speichere duale Werte
             var reaktionen = _systemGleichungen.Dual;
             foreach (var randbedingung in _modell.Randbedingungen.Select(item => item.Value))
             {
@@ -339,10 +339,10 @@ namespace FEBibliothek.Modell
             _diagonalMatrix = true;
         }
 
-        // Zeitintegration 1er Ordnung ***********************************************************************************************
+        // Zeitintegration 1er Ordnung
         public void ZeitintegrationErsterOrdnung()
         {
-            // ... berechne spezifische Wärme Matrix ..............................
+            // berechne spezifische Wärme Matrix
             if (!_diagonalMatrix) BerechneDiagonalMatrix();
             _ = _systemGleichungen.DiagonalMatrix;
 
@@ -364,11 +364,11 @@ namespace FEBibliothek.Modell
             SetzAnfangsbedingungenErsterOrdnung(temperatur);
             SetzZeitabhängigenStatusVektor();
 
-            // ... berechne zeitabhängige Anregungsfunktion und Randbedingungen
+            // berechne zeitabhängige Anregungsfunktion und Randbedingungen
             BerechneAnregungsfunktionErsterOrdnung(dt, anregungsFunktion);
             BerechneRandbedingungenErsterOrdnung(dt, temperatur);
 
-            // ... Systemmatrix muss neu berechnet werden, falls Dreieckszerlegung gespeichert
+            // Systemmatrix muss neu berechnet werden, falls Dreieckszerlegung gespeichert
             if (_zerlegt) { NeuberechnungSystemMatrix(); _zerlegt = false; }
 
             var zeitintegration = new Zeitintegration1OrdnungStatus(
@@ -406,10 +406,11 @@ namespace FEBibliothek.Modell
                 }
                 else
                 {
-                    if (_modell.Knoten.TryGetValue(anf.KnotenId, out var anfKnoten))
+                    if (!_modell.Knoten.TryGetValue(anf.KnotenId, out var anfKnoten))
                     {
-                        temperatur[0][anfKnoten.SystemIndizes[0]] = anf.Werte[0];
+                        throw new BerechnungAusnahme("\nKnoten " + anf.KnotenId + " für zeitabhängige Anfangsbedingung ist nicht im Modell enthalten.");
                     }
+                    temperatur[0][anfKnoten.SystemIndizes[0]] = anf.Werte[0];
                 }
             }
         }
@@ -475,12 +476,14 @@ namespace FEBibliothek.Modell
             // finde zeitabhängige Elementlasten
             foreach (var zeitabhängigeElementLast in _modell.ZeitabhängigeElementLasten.Select(item => item.Value))
             {
-                if (_modell.Elemente.TryGetValue(zeitabhängigeElementLast.ElementId, out var abstraktElement))
+                if (!_modell.Elemente.TryGetValue(zeitabhängigeElementLast.ElementId, out var abstraktElement))
                 {
-                    var index = abstraktElement.SystemIndizesElement;
-                    var lastVektor = zeitabhängigeElementLast.BerechneLastVektor();
-                    _systemGleichungen.AddVektor(index, lastVektor);
+                    throw new BerechnungAusnahme("\nzeitabhängige Elementlast '" + zeitabhängigeElementLast.ElementId + "' nicht definiert.");
                 }
+
+                var index = abstraktElement.SystemIndizesElement;
+                var lastVektor = zeitabhängigeElementLast.BerechneLastVektor();
+                _systemGleichungen.AddVektor(index, lastVektor);
                 for (var k = 0; k < nZeitschritte; k++)
                     temperatur[k] = _systemGleichungen.Vektor;
             }
@@ -546,7 +549,7 @@ namespace FEBibliothek.Modell
             }
         }
 
-        // 2nd order time integration ***********************************************************************************************
+        // 2nd order time integration
         public void ZeitintegrationZweiterOrdnung()
         {
             var dt = _modell.Zeitintegration.Dt;
@@ -561,13 +564,13 @@ namespace FEBibliothek.Modell
             var parameter2 = _modell.Zeitintegration.Parameter2;
             var anregung = new double[nZeitschritte + 1][];
             for (var i = 0; i < (nZeitschritte + 1); i++) anregung[i] = new double[_dimension];
-            // ... berechne diagonale Massenmatrix ..............................
+            // berechne diagonale Massenmatrix
             if (!_diagonalMatrix) BerechneDiagonalMatrix();
 
-            // ... berechne diagonale Dämpfungsmatrix ..............................
+            // berechne diagonale Dämpfungsmatrix
             var dämpfungsmatrix = BerechneDämpfungsMatrix();
 
-            // ... berechne zeitabhängige Anregungsfunktion und Randbedingungen
+            // berechne zeitabhängige Anregungsfunktion und Randbedingungen
             BerechneAnregungsfunktionZweiterOrdnung(dt, anregung);
 
             var verformung = new double[nZeitschritte][];
@@ -677,7 +680,10 @@ namespace FEBibliothek.Modell
             // finde vordefinierte Anfangsbedingungen
             foreach (Knotenwerte anf in _modell.Zeitintegration.Anfangsbedingungen)
             {
-                if (!_modell.Knoten.TryGetValue(anf.KnotenId, out var anfKnoten)) continue;
+                if (!_modell.Knoten.TryGetValue(anf.KnotenId, out var anfKnoten))
+                {
+                    throw new BerechnungAusnahme("\nKnoten " + anf.KnotenId + " für vordefinierte Anfangsbedingung ist nicht im Modell enthalten.");
+                }
                 for (var i = 0; i < anf.Werte.Length / 2; i += 2)
                 {
                     foreach (var knotenIndex in anfKnoten.SystemIndizes)
@@ -749,7 +755,10 @@ namespace FEBibliothek.Modell
 
                 else
                 {
-                    if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out _knoten)) continue;
+                    if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out _knoten))
+                    {
+                        throw new BerechnungAusnahme("\nKnoten " + item.Value.KnotenId + " für zeitabhängige Knotenlast ist nicht im Modell enthalten.");
+                    }
                     var index = _knoten.SystemIndizes;
                     var knotenFreiheitsgrad = item.Value.KnotenFreiheitsgrad;
 

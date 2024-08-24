@@ -8,7 +8,7 @@ namespace FEBibliothek.Werkzeuge
 {
     public static class FeGeometrie
     {
-        private static List<Knoten> _innenKnoten = new List<Knoten>();
+        private static List<Knoten> _innenKnoten = [];
 
         public static List<Knoten> ConvexHull(List<Knoten> knoten, bool eng, double formFaktor)
         // ***** The convex hull or convex envelope or convex closure of a shape is the smallest convex set that contains it. 
@@ -27,7 +27,7 @@ namespace FEBibliothek.Werkzeuge
         //        "Geometry.innerNodes" available as a list of nodes
         // ***** 
         {
-            int factor = 1;
+            var factor = 1;
             if (eng) factor = -1;
             double startWinkel = factor * 100;
             Knoten found = null;

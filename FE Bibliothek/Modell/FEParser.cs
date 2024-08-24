@@ -64,7 +64,7 @@
                             case 2:
                                 _knotenId = _substrings[0];
                                 _koords[0] = double.Parse(_substrings[1]);
-                                knotenKoords = new[] { _koords[0] };
+                                knotenKoords = [_koords[0]];
                                 knoten = new Knoten(_knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, dimension);
                                 FeModell.Knoten.Add(_knotenId, knoten);
                                 break;
@@ -72,7 +72,7 @@
                                 _knotenId = _substrings[0];
                                 _koords[0] = double.Parse(_substrings[1]);
                                 _koords[1] = double.Parse(_substrings[2]);
-                                knotenKoords = new[] { _koords[0], _koords[1] };
+                                knotenKoords = [_koords[0], _koords[1]];
                                 knoten = new Knoten(_knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, dimension);
                                 FeModell.Knoten.Add(_knotenId, knoten);
                                 break;
@@ -81,7 +81,7 @@
                                 _koords[0] = double.Parse(_substrings[1]);
                                 _koords[1] = double.Parse(_substrings[2]);
                                 _koords[2] = double.Parse(_substrings[3]);
-                                knotenKoords = new[] { _koords[0], _koords[1], _koords[2] };
+                                knotenKoords = [_koords[0], _koords[1], _koords[2]];
                                 knoten = new Knoten(_knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, dimension);
                                 FeModell.Knoten.Add(_knotenId, knoten);
                                 break;
@@ -144,7 +144,7 @@
                                 for (var k = 0; k < _nKnotenX; k++)
                                 {
                                     _knotenId = _knotenPrefix + k.ToString().PadLeft(2, '0');
-                                    knotenKoords = new[] { _koords[0] };
+                                    knotenKoords = [_koords[0]];
                                     var node = new Knoten(_knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, Raumdimension);
                                     FeModell.Knoten.Add(_knotenId, node);
                                     _koords[0] += _xIntervall;
@@ -171,7 +171,7 @@
                                     {
                                         var idX = l.ToString().PadLeft(2, '0');
                                         _knotenId = _knotenPrefix + idX + idY;
-                                        knotenKoords = new[] { _koords[0], _koords[1] };
+                                        knotenKoords = [_koords[0], _koords[1]];
                                         var node = new Knoten(_knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade,
                                             Raumdimension);
                                         FeModell.Knoten.Add(_knotenId, node);
@@ -209,7 +209,7 @@
                                         {
                                             var idX = m.ToString().PadLeft(2, '0');
                                             _knotenId = _knotenPrefix + idX + idY + idZ;
-                                            knotenKoords = new[] { _koords[0], _koords[1], _koords[2] };
+                                            knotenKoords = [_koords[0], _koords[1], _koords[2]];
                                             var node = new Knoten(_knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade,
                                                 Raumdimension);
                                             FeModell.Knoten.Add(_knotenId, node);
@@ -260,7 +260,7 @@
                                 {
                                     _koords[0] = koord0 + offset[n];
                                     _knotenId = _knotenPrefix + n.ToString().PadLeft(2);
-                                    knotenKoords = new[] { _koords[0] };
+                                    knotenKoords = [_koords[0]];
                                     var node = new Knoten(_knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, Raumdimension);
                                     FeModell.Knoten.Add(_knotenId, node);
                                 }
@@ -278,7 +278,7 @@
                                         idX = m.ToString().PadLeft(2, '0');
                                         _koords[0] = koord0 + offset[m];
                                         _knotenId = _knotenPrefix + idX + idY;
-                                        knotenKoords = new[] { _koords[0], _koords[1] };
+                                        knotenKoords = [_koords[0], _koords[1]];
                                         var node = new Knoten(_knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, Raumdimension);
                                         FeModell.Knoten.Add(_knotenId, node);
                                     }
@@ -305,7 +305,7 @@
                                             idX = k.ToString().PadLeft(2, '0');
                                             _koords[0] = koord0 + offset[k];
                                             _knotenId = _knotenPrefix + idX + idY + idZ;
-                                            knotenKoords = new[] { _koords[0], _koords[1], _koords[2] };
+                                            knotenKoords = [_koords[0], _koords[1], _koords[2]];
                                             var node = new Knoten(_knotenId, knotenKoords, AnzahlKnotenfreiheitsgrade, Raumdimension);
                                             FeModell.Knoten.Add(_knotenId, node);
                                         }

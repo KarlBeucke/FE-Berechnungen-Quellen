@@ -4,7 +4,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 public class ElastizitätsParser : FeParser
 {
-    public static RandbedingungenParser parseElastizitätsRandbedingungen;
+    public static RandbedingungenParser ParseElastizitätsRandbedingungen;
     private FeModell modell;
     private ElementParser parseElastizitätsElemente;
     private LastParser parseElastizitätsLasten;
@@ -23,7 +23,7 @@ public class ElastizitätsParser : FeParser
         parseElastizitätsLasten = new LastParser();
         parseElastizitätsLasten.ParseLasten(lines, modell);
 
-        parseElastizitätsRandbedingungen = new RandbedingungenParser();
-        parseElastizitätsRandbedingungen.ParseRandbedingungen(lines, modell);
+        ParseElastizitätsRandbedingungen = new RandbedingungenParser();
+        ParseElastizitätsRandbedingungen.ParseRandbedingungen(lines, modell);
     }
 }

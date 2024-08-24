@@ -80,9 +80,9 @@ public class Element2D3 : AbstraktLinear2D3
         _e[2, 2] = (1.0 - 2.0 * ratio) / 2.0 / (1.0 - ratio) * factor;
     }
 
-    // --- Elementverhalten ----------------------------------
+    // --- Elementverhalten
 
-    // Berechne Elementspannungen: sigma = E∗B*Ue (Element Verformungen) ......
+    // Berechne Elementspannungen: sigma = E∗B*Ue (Element Verformungen)
     public override double[] BerechneZustandsvektor()
     {
         for (var i = 0; i < KnotenProElement; i++)

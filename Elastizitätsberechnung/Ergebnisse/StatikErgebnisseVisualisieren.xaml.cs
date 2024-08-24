@@ -16,7 +16,7 @@ public partial class StatikErgebnisseVisualisieren
 {
     private readonly Darstellung _darstellung;
     private readonly List<object> _hitList = [];
-    private readonly List<TextBlock> _hitTextBlock = new();
+    private readonly List<TextBlock> _hitTextBlock = [];
     private readonly FeModell _modell;
     private bool _elementTexteAn = true, _knotenTexteAn = true, _verformungenAn, _spannungenAn, _reaktionenAn;
     private EllipseGeometry _hitArea;
@@ -175,16 +175,14 @@ public partial class StatikErgebnisseVisualisieren
             }
         }
 
-        foreach (var item in _hitTextBlock)
+        foreach (var item in _hitTextBlock.Where(item => item != null))
         {
-            if (item == null) continue;
             MyPopup.IsOpen = true;
             if (_modell.Knoten.TryGetValue(item.Text, out var knoten))
             {
                 sb.Append("Knoten = " + knoten.Id);
                 sb.Append("\nux\t= " + knoten.Knotenfreiheitsgrade[0].ToString("F4"));
-                sb.Append("\nuy\t= " + knoten.Knotenfreiheitsgrade[1].ToString("F4"));
-                sb.Append("\n");
+                sb.Append("\nuy\t= " + knoten.Knotenfreiheitsgrade[1].ToString("F4") + "\n");
                 if (knoten.Reaktionen != null)
                 {
                     sb.Append("\nRx\t= " + knoten.Reaktionen[0].ToString("F4"));

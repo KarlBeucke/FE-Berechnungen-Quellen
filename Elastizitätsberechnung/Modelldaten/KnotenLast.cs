@@ -4,7 +4,6 @@ namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 
 public class KnotenLast : AbstraktLast
 {
-    // ... Constructor ........................................................
     public KnotenLast(string knotenId, double px, double py)
     {
         KnotenId = knotenId;

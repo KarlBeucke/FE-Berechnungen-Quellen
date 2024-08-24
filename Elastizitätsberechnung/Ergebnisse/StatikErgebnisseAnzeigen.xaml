@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid Margin="0,0,10,0" Grid.Column="0">
-            <Label x:Name="Knotenverformungen" Content="Knotenverformungen" HorizontalAlignment="Left"
+            <Label Content="Knotenverformungen" HorizontalAlignment="Left"
                    Margin="5,-24,0,0"
                    VerticalAlignment="Top" Width="180" />
             <DataGrid
@@ -29,7 +29,7 @@
         </Grid>
 
         <Grid Margin="0,0,10,0" Grid.Column="1">
-            <Label x:Name="Elementspannungen" Content="Elementspannungen" HorizontalAlignment="Left" Margin="5,-24,0,0"
+            <Label Content="Elementspannungen" HorizontalAlignment="Left" Margin="5,-24,0,0"
                    VerticalAlignment="Top" Width="200" />
             <DataGrid
                 Name="ElementspannungenGrid" Margin="0,0,0,5" AlternatingRowBackground="Aqua"
@@ -47,7 +47,7 @@
         </Grid>
 
         <Grid Margin="0,0,5,0" Grid.Column="2">
-            <Label x:Name="Reaktionen" Content="Reaktionen" HorizontalAlignment="Left" Margin="5,-24,0,0"
+            <Label Content="Reaktionen" HorizontalAlignment="Left" Margin="5,-24,0,0"
                    VerticalAlignment="Top" Width="158" />
             <DataGrid
                 Name="ReaktionenGrid" Margin="0,0,0,5" AlternatingRowBackground="Aqua"

@@ -11,47 +11,47 @@ namespace FE_Berechnungen.Elastizitätsberechnung;
 
 public class Darstellung3D
 {
-    public readonly List<GeometryModel3D> kanten = new();
-    public readonly List<GeometryModel3D> knotenLasten = new();
+    public readonly List<GeometryModel3D> Kanten = [];
+    public readonly List<GeometryModel3D> KnotenLasten = [];
 
-    public readonly List<GeometryModel3D> koordinaten = new();
+    public readonly List<GeometryModel3D> Koordinaten = [];
     private readonly double maxX, minY, maxY, minZ, maxZ;
-    public readonly double minX;
-    public readonly FeModell modell;
-    public readonly List<GeometryModel3D> oberflächen = new();
+    public readonly double MinX;
+    public readonly FeModell Modell;
+    public readonly List<GeometryModel3D> Oberflächen = [];
 
     // Erzeugung eines Dictionary, um Dreieckspunkte effizient zu finden
     private readonly Dictionary<Point3D, int> punktDictionary = new();
-    public readonly List<GeometryModel3D> randbedingungenFest = new();
-    public readonly List<GeometryModel3D> randbedingungenVor = new();
-    public readonly List<GeometryModel3D> spannungen_xx = new();
-    public readonly List<GeometryModel3D> spannungen_xy = new();
-    public readonly List<GeometryModel3D> spannungen_yy = new();
-    public readonly List<GeometryModel3D> spannungen_yz = new();
-    public readonly List<GeometryModel3D> spannungen_zx = new();
-    public readonly List<GeometryModel3D> spannungen_zz = new();
-    public readonly List<GeometryModel3D> verformungen = new();
+    public readonly List<GeometryModel3D> RandbedingungenFest = [];
+    public readonly List<GeometryModel3D> RandbedingungenVor = [];
+    public readonly List<GeometryModel3D> SpannungenXx = [];
+    public readonly List<GeometryModel3D> SpannungenXy = [];
+    public readonly List<GeometryModel3D> SpannungenYy = [];
+    public readonly List<GeometryModel3D> SpannungenYz = [];
+    public readonly List<GeometryModel3D> SpannungenZx = [];
+    public readonly List<GeometryModel3D> SpannungenZz = [];
+    public readonly List<GeometryModel3D> Verformungen = [];
     private GeometryModel3D drahtModell;
     private GeometryModel3D knotenLastenModell;
     private GeometryModel3D oberflächenModell;
     private GeometryModel3D randbedingungenBoussinesqModell;
     private GeometryModel3D randbedingungenModell;
     private GeometryModel3D spannungenModell;
-    public double überhöhungVerformung = 1;
+    public double ÜberhöhungVerformung = 1;
     private GeometryModel3D verformungsModell;
 
     public Darstellung3D(FeModell feModell)
     {
-        modell = feModell;
+        Modell = feModell;
 
         var x = new List<double>();
         var y = new List<double>();
         var z = new List<double>();
-        foreach (var item in modell.Knoten)
+        foreach (var item in Modell.Knoten)
         {
             x.Add(item.Value.Koordinaten[0]);
             maxX = x.Max();
-            minX = x.Min();
+            MinX = x.Min();
             y.Add(item.Value.Koordinaten[2]);
             maxY = y.Max();
             minY = y.Min();
@@ -70,32 +70,32 @@ public class Darstellung3D
         var meshX = new MeshGeometry3D();
         var koordinatenModell = XAchse(meshX);
         modelGroup.Children.Add(koordinatenModell);
-        koordinaten.Add(koordinatenModell);
+        Koordinaten.Add(koordinatenModell);
 
         var meshY = new MeshGeometry3D();
         koordinatenModell = YAchse(meshY);
         modelGroup.Children.Add(koordinatenModell);
-        koordinaten.Add(koordinatenModell);
+        Koordinaten.Add(koordinatenModell);
 
         var meshZ = new MeshGeometry3D();
         koordinatenModell = ZAchse(meshZ);
         modelGroup.Children.Add(koordinatenModell);
-        koordinaten.Add(koordinatenModell);
+        Koordinaten.Add(koordinatenModell);
     }
 
     private GeometryModel3D XAchse(MeshGeometry3D mesh)
     {
         const double wichte = 0.1;
-        var vektorLänge = 1.0;
-        var Achsüberstand = 0.8;
+        const double vektorLänge = 1.0;
+        const double achsüberstand = 0.8;
         // x-Achse
-        var start = new Point3D(-Achsüberstand, 0, 0);
+        var start = new Point3D(-achsüberstand, 0, 0);
         var end = new Point3D(vektorLänge, 0, 0);
         var punkte = QuaderPunkteX(start, end, wichte);
         ErzeugQuader(mesh, punkte);
 
-        var pfeillänge = 0.4;
-        var breite = 2 * wichte;
+        const double pfeillänge = 0.4;
+        const double breite = 2 * wichte;
         var pfeile = PfeilPunkteX(end, pfeillänge, breite);
         ErzeugPfeilspitze(mesh, pfeile);
 
@@ -107,16 +107,16 @@ public class Darstellung3D
     private GeometryModel3D YAchse(MeshGeometry3D mesh)
     {
         const double wichte = 0.1;
-        var vektorLänge = 1.0;
-        var Achsüberstand = 0.8;
+        const double vektorLänge = 1.0;
+        const double achsüberstand = 0.8;
         // y-Achse
-        var start = new Point3D(0, -Achsüberstand, 0);
+        var start = new Point3D(0, -achsüberstand, 0);
         var end = new Point3D(0, vektorLänge, 0);
         var punkte = QuaderPunkteY(start, end, wichte);
         ErzeugQuader(mesh, punkte);
 
-        var pfeillänge = 0.4;
-        var breite = 2 * wichte;
+        const double pfeillänge = 0.4;
+        const double breite = 2 * wichte;
         var pfeile = PfeilPunkteY(end, pfeillänge, breite);
         ErzeugPfeilspitze(mesh, pfeile);
 
@@ -127,17 +127,17 @@ public class Darstellung3D
 
     private GeometryModel3D ZAchse(MeshGeometry3D mesh)
     {
-        var wichte = 0.1;
-        var vektorLänge = 1.0;
-        var Achsüberstand = 0.8;
+        const double wichte = 0.1;
+        const double vektorLänge = 1.0;
+        const double achsüberstand = 0.8;
         // z-Achse
-        var start = new Point3D(0, 0, -Achsüberstand);
+        var start = new Point3D(0, 0, -achsüberstand);
         var end = new Point3D(0, 0, vektorLänge);
         var punkte = QuaderPunkteZ(start, end, wichte);
         ErzeugQuader(mesh, punkte);
 
-        var pfeillänge = 0.4;
-        var breite = 2 * wichte;
+        const double pfeillänge = 0.4;
+        const double breite = 2 * wichte;
         var pfeile = PfeilPunkteZ(end, pfeillänge, breite);
         ErzeugPfeilspitze(mesh, pfeile);
 
@@ -149,13 +149,13 @@ public class Darstellung3D
     public void UnverformteGeometrie(Model3DGroup modelGroup, bool volumen)
     {
         var mesh = new MeshGeometry3D();
-        foreach (var item in modell.Elemente)
+        foreach (var item in Modell.Elemente)
         {
             var punkte = new Point3DCollection();
             punktDictionary.Clear();
             punkte.Clear();
             foreach (var knotenId in item.Value.KnotenIds)
-                if (modell.Knoten.TryGetValue(knotenId, out var knoten))
+                if (Modell.Knoten.TryGetValue(knotenId, out var knoten))
                     punkte.Add(new Point3D(knoten.Koordinaten[0], -knoten.Koordinaten[2], knoten.Koordinaten[1]));
 
             ErzeugQuader(mesh, punkte);
@@ -170,7 +170,7 @@ public class Darstellung3D
                 // Hinzufügen des Modells zur Modellgruppe
                 modelGroup.Children.Add(oberflächenModell);
 
-                oberflächen.Add(oberflächenModell);
+                Oberflächen.Add(oberflächenModell);
             }
 
             // Erzeugung des Drahtmodells, thickness (Wichte der kanten) = 0.02
@@ -180,24 +180,24 @@ public class Darstellung3D
             drahtModell = new GeometryModel3D(wireframe, wireframeMaterial);
             modelGroup.Children.Add(drahtModell);
 
-            kanten.Add(drahtModell);
+            Kanten.Add(drahtModell);
         }
     }
 
     public void VerformteGeometrie(Model3DGroup modelGroup)
     {
         var mesh = new MeshGeometry3D();
-        foreach (var item in modell.Elemente)
+        foreach (var item in Modell.Elemente)
         {
             var punkte = new Point3DCollection();
             punktDictionary.Clear();
             punkte.Clear();
             foreach (var knotenId in item.Value.KnotenIds)
-                if (modell.Knoten.TryGetValue(knotenId, out var knoten))
+                if (Modell.Knoten.TryGetValue(knotenId, out var knoten))
                     punkte.Add(new Point3D(
-                        knoten.Koordinaten[0] + knoten.Knotenfreiheitsgrade[0] * überhöhungVerformung,
-                        -knoten.Koordinaten[2] - knoten.Knotenfreiheitsgrade[2] * überhöhungVerformung,
-                        knoten.Koordinaten[1] + knoten.Knotenfreiheitsgrade[1] * überhöhungVerformung));
+                        knoten.Koordinaten[0] + knoten.Knotenfreiheitsgrade[0] * ÜberhöhungVerformung,
+                        -knoten.Koordinaten[2] - knoten.Knotenfreiheitsgrade[2] * ÜberhöhungVerformung,
+                        knoten.Koordinaten[1] + knoten.Knotenfreiheitsgrade[1] * ÜberhöhungVerformung));
 
             ErzeugQuader(mesh, punkte);
 
@@ -208,7 +208,7 @@ public class Darstellung3D
             verformungsModell = new GeometryModel3D(verformung, verformungMaterial);
             modelGroup.Children.Add(verformungsModell);
 
-            verformungen.Add(verformungsModell);
+            Verformungen.Add(verformungsModell);
         }
     }
 
@@ -218,7 +218,7 @@ public class Darstellung3D
         var randbedingungenFestMaterial = new DiffuseMaterial(Brushes.Red);
         var randbedingungenVorMaterial = new DiffuseMaterial(Brushes.LightPink);
 
-        foreach (var item in ElastizitätsParser.parseElastizitätsRandbedingungen.faces)
+        foreach (var item in ElastizitätsParser.ParseElastizitätsRandbedingungen.Faces)
         {
             var punkte = new Point3DCollection();
             punktDictionary.Clear();
@@ -228,14 +228,14 @@ public class Darstellung3D
             switch (item)
             {
                 case "X0": //links
-                    punkte.Add(new Point3D(minX, -minY, minZ)); //0
-                    punkte.Add(new Point3D(minX, -maxY, minZ)); //1
-                    punkte.Add(new Point3D(minX, -maxY, maxZ)); //2
-                    punkte.Add(new Point3D(minX, -minY, maxZ)); //3
-                    punkte.Add(new Point3D(minX - d, -minY, minZ)); //4
-                    punkte.Add(new Point3D(minX - d, -maxY, minZ)); //5
-                    punkte.Add(new Point3D(minX - d, -maxY, maxZ)); //6
-                    punkte.Add(new Point3D(minX - d, -minY, maxZ)); //7
+                    punkte.Add(new Point3D(MinX, -minY, minZ)); //0
+                    punkte.Add(new Point3D(MinX, -maxY, minZ)); //1
+                    punkte.Add(new Point3D(MinX, -maxY, maxZ)); //2
+                    punkte.Add(new Point3D(MinX, -minY, maxZ)); //3
+                    punkte.Add(new Point3D(MinX - d, -minY, minZ)); //4
+                    punkte.Add(new Point3D(MinX - d, -maxY, minZ)); //5
+                    punkte.Add(new Point3D(MinX - d, -maxY, maxZ)); //6
+                    punkte.Add(new Point3D(MinX - d, -minY, maxZ)); //7
 
                     ErzeugQuader(mesh, punkte);
 
@@ -243,16 +243,16 @@ public class Darstellung3D
                     { BackMaterial = randbedingungenFestMaterial };
                     modelGroup.Children.Add(randbedingungenModell);
 
-                    randbedingungenFest.Add(randbedingungenModell);
+                    RandbedingungenFest.Add(randbedingungenModell);
                     break;
 
                 case "Y0": // hinten
-                    punkte.Add(new Point3D(minX, -minY, minZ)); //0
-                    punkte.Add(new Point3D(minX, -maxY, minZ)); //1
+                    punkte.Add(new Point3D(MinX, -minY, minZ)); //0
+                    punkte.Add(new Point3D(MinX, -maxY, minZ)); //1
                     punkte.Add(new Point3D(maxX, -maxY, minZ)); //2
                     punkte.Add(new Point3D(maxX, -minY, minZ)); //3
-                    punkte.Add(new Point3D(minX, -minY, minZ - d)); //4
-                    punkte.Add(new Point3D(minX, -maxY, minZ - d)); //5
+                    punkte.Add(new Point3D(MinX, -minY, minZ - d)); //4
+                    punkte.Add(new Point3D(MinX, -maxY, minZ - d)); //5
                     punkte.Add(new Point3D(maxX, -maxY, minZ - d)); //6
                     punkte.Add(new Point3D(maxX, -minY, minZ - d)); //7
 
@@ -262,12 +262,12 @@ public class Darstellung3D
                     { BackMaterial = randbedingungenFestMaterial };
                     modelGroup.Children.Add(randbedingungenModell);
 
-                    randbedingungenFest.Add(randbedingungenModell);
+                    RandbedingungenFest.Add(randbedingungenModell);
                     break;
             }
         }
 
-        foreach (var item2 in ElastizitätsParser.parseElastizitätsRandbedingungen.faces)
+        foreach (var item2 in ElastizitätsParser.ParseElastizitätsRandbedingungen.Faces)
         {
             var punkte = new Point3DCollection();
             punktDictionary.Clear();
@@ -291,16 +291,16 @@ public class Darstellung3D
                     randbedingungenBoussinesqModell = new GeometryModel3D(mesh, randbedingungenVorMaterial)
                     { BackMaterial = randbedingungenVorMaterial };
                     modelGroup.Children.Add(randbedingungenBoussinesqModell);
-                    randbedingungenVor.Add(randbedingungenBoussinesqModell);
+                    RandbedingungenVor.Add(randbedingungenBoussinesqModell);
                     break;
 
                 case "YMax": // unten
-                    punkte.Add(new Point3D(minX, -maxY, minZ)); //0
-                    punkte.Add(new Point3D(minX, -maxY, maxZ)); //1
+                    punkte.Add(new Point3D(MinX, -maxY, minZ)); //0
+                    punkte.Add(new Point3D(MinX, -maxY, maxZ)); //1
                     punkte.Add(new Point3D(maxX, -maxY, maxZ)); //2
                     punkte.Add(new Point3D(maxX, -maxY, minZ)); //3
-                    punkte.Add(new Point3D(minX, -maxY - d, minZ)); //4
-                    punkte.Add(new Point3D(minX, -maxY - d, maxZ)); //5
+                    punkte.Add(new Point3D(MinX, -maxY - d, minZ)); //4
+                    punkte.Add(new Point3D(MinX, -maxY - d, maxZ)); //5
                     punkte.Add(new Point3D(maxX, -maxY - d, maxZ)); //6
                     punkte.Add(new Point3D(maxX, -maxY - d, minZ)); //7
 
@@ -309,16 +309,16 @@ public class Darstellung3D
                     randbedingungenBoussinesqModell = new GeometryModel3D(mesh, randbedingungenVorMaterial)
                     { BackMaterial = randbedingungenVorMaterial };
                     modelGroup.Children.Add(randbedingungenBoussinesqModell);
-                    randbedingungenVor.Add(randbedingungenBoussinesqModell);
+                    RandbedingungenVor.Add(randbedingungenBoussinesqModell);
                     break;
 
                 case "ZMax": // vorn
-                    punkte.Add(new Point3D(minX, -minY, maxZ)); //0
-                    punkte.Add(new Point3D(minX, -maxY, maxZ)); //1
+                    punkte.Add(new Point3D(MinX, -minY, maxZ)); //0
+                    punkte.Add(new Point3D(MinX, -maxY, maxZ)); //1
                     punkte.Add(new Point3D(maxX, -maxY, maxZ)); //2
                     punkte.Add(new Point3D(maxX, -minY, maxZ)); //3  
-                    punkte.Add(new Point3D(minX, -minY, maxZ + d)); //4
-                    punkte.Add(new Point3D(minX, -maxY, maxZ + d)); //5
+                    punkte.Add(new Point3D(MinX, -minY, maxZ + d)); //4
+                    punkte.Add(new Point3D(MinX, -maxY, maxZ + d)); //5
                     punkte.Add(new Point3D(maxX, -maxY, maxZ + d)); //6
                     punkte.Add(new Point3D(maxX, -minY, maxZ + d)); //7
 
@@ -327,7 +327,7 @@ public class Darstellung3D
                     randbedingungenBoussinesqModell = new GeometryModel3D(mesh, randbedingungenVorMaterial)
                     { BackMaterial = randbedingungenVorMaterial };
                     modelGroup.Children.Add(randbedingungenBoussinesqModell);
-                    randbedingungenVor.Add(randbedingungenBoussinesqModell);
+                    RandbedingungenVor.Add(randbedingungenBoussinesqModell);
                     break;
             }
         }
@@ -339,12 +339,12 @@ public class Darstellung3D
         double lastWert = 0;
         var lastAngriff = new Point3D();
 
-        foreach (var last in modell.Lasten)
+        foreach (var last in Modell.Lasten)
         {
             var lastRichtung = new Vector3D(0, 0, 0);
             const double lastSkalierung = 10.0;
             var knotenId = last.Value.KnotenId;
-            if (modell.Knoten.TryGetValue(knotenId, out var knoten))
+            if (Modell.Knoten.TryGetValue(knotenId, out var knoten))
             {
                 lastAngriff.X = knoten.Koordinaten[0];
                 lastAngriff.Y = -knoten.Koordinaten[2];
@@ -369,15 +369,15 @@ public class Darstellung3D
 
             knotenLastenModell = LastVektor(mesh, lastAngriff, lastRichtung, lastWert);
             modelGroup.Children.Add(knotenLastenModell);
-            knotenLasten.Add(knotenLastenModell);
+            KnotenLasten.Add(knotenLastenModell);
         }
     }
 
     private GeometryModel3D LastVektor(MeshGeometry3D mesh, Point3D lastAngriff,
         Vector3D lastRichtung, double lastWert)
     {
-        var wichte = 0.1;
-        var pfeilLänge = 0.4;
+        const double wichte = 0.1;
+        const double pfeilLänge = 0.4;
         var start = lastAngriff;
         var end = new Point3D(0, 0, 0);
         var model = new GeometryModel3D();
@@ -417,7 +417,7 @@ public class Darstellung3D
             var punkte = QuaderPunkteY(start, end, wichte);
             ErzeugQuader(mesh, punkte);
 
-            var gross = 2 * wichte;
+            const double gross = 2 * wichte;
             // Pfeilspitze
             var weiter = (Vector3D)lastAngriff - lastRichtung * pfeilLänge;
             var cross = Vector3D.CrossProduct(new Vector3D(0, 0, 1), weiter);
@@ -437,14 +437,14 @@ public class Darstellung3D
         }
 
         // Horizontallast in z (Tiefenrichtung)
-        if (Math.Abs(lastRichtung.Z) > 0)
+        if (!(Math.Abs(lastRichtung.Z) > 0)) return model;
         {
             start.Z -= pfeilLänge;
             end.Z = start.Z - lastRichtung.Z * lastWert;
             var punkte = QuaderPunkteZ(start, end, wichte);
             ErzeugQuader(mesh, punkte);
 
-            var gross = 2 * wichte;
+            const double gross = 2 * wichte;
             // Pfeilspitze
             var weiter = (Vector3D)lastAngriff - lastRichtung * pfeilLänge;
             var cross = Vector3D.CrossProduct(new Vector3D(0, -1, 0), weiter);
@@ -474,7 +474,7 @@ public class Darstellung3D
         var skalierung = vektorLänge / maxSpannung;
         var normalXRichtung = new Vector3D(1, 0, 0);
 
-        foreach (var item in modell.Elemente)
+        foreach (var item in Modell.Elemente)
         {
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
@@ -489,11 +489,10 @@ public class Darstellung3D
             var punkte = QuaderPunkteX(start, end, wichte);
             ErzeugQuader(mesh, punkte);
 
-            DiffuseMaterial material;
-            material = normalXWert < 0 ? new DiffuseMaterial(Brushes.Red) : new DiffuseMaterial(Brushes.Blue);
+            var material = normalXWert < 0 ? new DiffuseMaterial(Brushes.Red) : new DiffuseMaterial(Brushes.Blue);
             spannungenModell = new GeometryModel3D(mesh, material) { BackMaterial = material };
             modelGroup.Children.Add(spannungenModell);
-            spannungen_xx.Add(spannungenModell);
+            SpannungenXx.Add(spannungenModell);
         }
     }
 
@@ -505,7 +504,7 @@ public class Darstellung3D
         var skalierung = vektorLänge / maxSpannung;
         var normalYRichtung = new Vector3D(0, 1, 0);
 
-        foreach (var item in modell.Elemente)
+        foreach (var item in Modell.Elemente)
         {
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
@@ -520,11 +519,10 @@ public class Darstellung3D
             var punkte = QuaderPunkteY(start, end, wichte);
             ErzeugQuader(mesh, punkte);
 
-            DiffuseMaterial material;
-            material = normalYWert < 0 ? new DiffuseMaterial(Brushes.Red) : new DiffuseMaterial(Brushes.Blue);
+            var material = normalYWert < 0 ? new DiffuseMaterial(Brushes.Red) : new DiffuseMaterial(Brushes.Blue);
             spannungenModell = new GeometryModel3D(mesh, material) { BackMaterial = material };
             modelGroup.Children.Add(spannungenModell);
-            spannungen_yy.Add(spannungenModell);
+            SpannungenYy.Add(spannungenModell);
         }
     }
 
@@ -536,7 +534,7 @@ public class Darstellung3D
         var skalierung = vektorLänge / maxSpannung;
         var schubXRichtung = new Vector3D(1, 0, 0);
 
-        foreach (var item in modell.Elemente)
+        foreach (var item in Modell.Elemente)
         {
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
@@ -551,11 +549,10 @@ public class Darstellung3D
             var punkte = QuaderPunkteZ(start, end, wichte);
             ErzeugQuader(mesh, punkte);
 
-            DiffuseMaterial material;
-            material = schubXWert < 0 ? new DiffuseMaterial(Brushes.Red) : new DiffuseMaterial(Brushes.Blue);
+            var material = schubXWert < 0 ? new DiffuseMaterial(Brushes.Red) : new DiffuseMaterial(Brushes.Blue);
             spannungenModell = new GeometryModel3D(mesh, material) { BackMaterial = material };
             modelGroup.Children.Add(spannungenModell);
-            spannungen_xy.Add(spannungenModell);
+            SpannungenXy.Add(spannungenModell);
         }
     }
 
@@ -567,7 +564,7 @@ public class Darstellung3D
         var skalierung = vektorLänge / maxSpannung;
         var normalZRichtung = new Vector3D(0, 0, 1);
 
-        foreach (var item in modell.Elemente)
+        foreach (var item in Modell.Elemente)
         {
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
@@ -585,7 +582,7 @@ public class Darstellung3D
             var material = normalZWert < 0 ? new DiffuseMaterial(Brushes.Red) : new DiffuseMaterial(Brushes.Blue);
             spannungenModell = new GeometryModel3D(mesh, material) { BackMaterial = material };
             modelGroup.Children.Add(spannungenModell);
-            spannungen_zz.Add(spannungenModell);
+            SpannungenZz.Add(spannungenModell);
         }
     }
 
@@ -597,7 +594,7 @@ public class Darstellung3D
         var skalierung = vektorLänge / maxSpannung;
         var schubYRichtung = new Vector3D(0, 1, 0);
 
-        foreach (var item in modell.Elemente)
+        foreach (var item in Modell.Elemente)
         {
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
@@ -615,7 +612,7 @@ public class Darstellung3D
             var material = schubYWert < 0 ? new DiffuseMaterial(Brushes.Red) : new DiffuseMaterial(Brushes.Blue);
             spannungenModell = new GeometryModel3D(mesh, material) { BackMaterial = material };
             modelGroup.Children.Add(spannungenModell);
-            spannungen_yz.Add(spannungenModell);
+            SpannungenYz.Add(spannungenModell);
         }
     }
 
@@ -627,7 +624,7 @@ public class Darstellung3D
         var skalierung = vektorLänge / maxSpannung;
         var schubZRichtung = new Vector3D(0, 0, 1);
 
-        foreach (var item in modell.Elemente)
+        foreach (var item in Modell.Elemente)
         {
             var element = (Abstrakt3D)item.Value;
             var elementSpannungen = new ElementSpannung(item.Value.BerechneZustandsvektor());
@@ -645,7 +642,7 @@ public class Darstellung3D
             var material = schubZWert < 0 ? new DiffuseMaterial(Brushes.Red) : new DiffuseMaterial(Brushes.Blue);
             spannungenModell = new GeometryModel3D(mesh, material) { BackMaterial = material };
             modelGroup.Children.Add(spannungenModell);
-            spannungen_zx.Add(spannungenModell);
+            SpannungenZx.Add(spannungenModell);
         }
     }
 
@@ -793,8 +790,8 @@ public class Darstellung3D
     private int AddPunkt(Point3DCollection points, Point3D point)
     {
         // falls der Punkt im Dictionary existiert, lies gespeicherten Index
-        if (punktDictionary.ContainsKey(point))
-            return punktDictionary[point];
+        if (punktDictionary.TryGetValue(point, out var punkt))
+            return punkt;
 
         // falls der Punkt nicht gefunden wurde, erzeuge ihn neu
         points.Add(point);
@@ -803,12 +800,7 @@ public class Darstellung3D
     }
 }
 
-internal class ElementSpannung
+internal class ElementSpannung(double[] spannungen)
 {
-    public ElementSpannung(double[] spannungen)
-    {
-        Spannungen = spannungen;
-    }
-
-    public double[] Spannungen { get; }
+    public double[] Spannungen { get; } = spannungen;
 }

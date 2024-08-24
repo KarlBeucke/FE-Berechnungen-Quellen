@@ -216,8 +216,9 @@ public class Darstellung
             {
                 case Fachwerk:
                     {
-                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+                        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
+                            throw new ModellAusnahme("\nFachwerk Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
                         }
 
                         start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
@@ -225,22 +226,22 @@ public class Darstellung
 
                         for (var i = 1; i < element.KnotenIds.Length; i++)
                         {
-                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                            if (!_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
                             {
+                                throw new ModellAusnahme("\nFachwerk Elementknoten '" + element.KnotenIds[i] + "' nicht im Modell gefunden");
                             }
 
                             end = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
                             pathFigure.Segments.Add(new LineSegment(end, true));
                         }
-
-                        pathGeometry.Figures.Add(pathFigure);
                         break;
                     }
                 case Biegebalken:
                     {
                         element.BerechneZustandsvektor();
-                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+                        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
+                            throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
                         }
 
                         start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
@@ -248,8 +249,9 @@ public class Darstellung
 
                         for (var i = 1; i < element.KnotenIds.Length; i++)
                         {
-                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                            if (!_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
                             {
+                                throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[i] + "' nicht im Modell gefunden");
                             }
 
                             end = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
@@ -268,13 +270,13 @@ public class Darstellung
                             pathFigure.Segments.Add(new BezierSegment(control1, control2, end, true));
                         }
 
-                        pathGeometry.Figures.Add(pathFigure);
                         break;
                     }
                 case BiegebalkenGelenk:
                     {
-                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+                        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
+                            throw new ModellAusnahme("\nBiegebalkenGelenk Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
                         }
 
                         start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
@@ -283,8 +285,9 @@ public class Darstellung
                         var control = start;
                         for (var i = 1; i < element.KnotenIds.Length; i++)
                         {
-                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                            if (!_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
                             {
+                                throw new ModellAusnahme("\nBiegebalkenGelenk Elementknoten '" + element.KnotenIds[i] + "' nicht im Modell gefunden");
                             }
 
                             end = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
@@ -314,13 +317,13 @@ public class Darstellung
                             pathFigure.Segments.Add(new QuadraticBezierSegment(control, end, true));
                         }
 
-                        pathGeometry.Figures.Add(pathFigure);
                         break;
                     }
                 default:
                     {
-                        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+                        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
                         {
+                            throw new ModellAusnahme("\nElementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
                         }
 
                         start = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
@@ -328,8 +331,9 @@ public class Darstellung
 
                         for (var i = 1; i < element.KnotenIds.Length; i++)
                         {
-                            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                            if (!_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
                             {
+                                throw new ModellAusnahme("\nElementknoten '" + element.KnotenIds[i] + "' nicht im Modell gefunden");
                             }
 
                             var next = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
@@ -337,10 +341,11 @@ public class Darstellung
                         }
 
                         pathFigure.IsClosed = true;
-                        pathGeometry.Figures.Add(pathFigure);
                         break;
                     }
             }
+
+            pathGeometry.Figures.Add(pathFigure);
 
             Shape path = new Path
             {
@@ -370,8 +375,9 @@ public class Darstellung
         var pathGeometry = new PathGeometry();
         var pathFigure = new PathFigure();
         // Platzierungspunkt des Federelementes
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
         {
+            throw new ModellAusnahme("\nFederelement Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
         }
 
         var startPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
@@ -381,9 +387,7 @@ public class Darstellung
 
         if (element.ElementMaterial.MaterialWerte.Length < 3)
         {
-            _ = MessageBox.Show("Materialangabe ungültig, 3 Werte für Federsteifigkeiten erforderlich",
-                "Federdarstellung");
-            return pathGeometry;
+            throw new ModellAusnahme("\nFederlager '" + element.ElementMaterialId + "' 3 Werte für Federsteifigkeiten erforderlich");
         }
 
         // x-Feder
@@ -467,12 +471,12 @@ public class Darstellung
 
     private PathGeometry FachwerkelementZeichnen(AbstraktElement element)
     {
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten)) { }
-        else throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+            throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
 
         var startPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten)) { }
-        else throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
+            throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
 
         var endPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
 
@@ -510,12 +514,12 @@ public class Darstellung
 
     private PathGeometry BiegebalkenZeichnen(AbstraktElement element)
     {
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten)) { }
-        else throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+            throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
 
         var startPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten)) { }
-        else throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
+            throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
 
         var endPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
 
@@ -532,12 +536,12 @@ public class Darstellung
         Vector direction, start;
         Point zielPunkt;
 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten)) { }
-        else throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+            throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
 
         var startPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten)) { }
-        else throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
+            throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
 
         var endPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
 
@@ -585,15 +589,15 @@ public class Darstellung
     {
         var pathGeometry = new PathGeometry();
         var pathFigure = new PathFigure();
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten)) { }
-        else throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+            throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
 
         var startPoint = TransformKnoten(_knoten, Auflösung, MaxY);
         pathFigure.StartPoint = startPoint;
         for (var i = 1; i < element.KnotenIds.Length; i++)
         {
-            if (_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten)) { }
-            else throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[i] + "' nicht im Modell gefunden");
+            if (!_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
+                throw new ModellAusnahme("\nBiegebalken Elementknoten '" + element.KnotenIds[i] + "' nicht im Modell gefunden");
 
             var nextPoint = TransformKnoten(_knoten, Auflösung, MaxY);
             pathFigure.Segments.Add(new LineSegment(nextPoint, true));
@@ -735,9 +739,8 @@ public class Darstellung
         var pathFigure = new PathFigure();
         const int lastPfeilGroesse = 10;
 
-        if (_modell.Knoten.TryGetValue(knotenlast.KnotenId, out _knoten))
-        {
-        }
+        if (!_modell.Knoten.TryGetValue(knotenlast.KnotenId, out _knoten))
+            throw new ModellAusnahme("\nBiegebalken Knotenlast Knoten '" + knotenlast.KnotenId + "' nicht im Modell gefunden");
 
         if (_knoten != null)
         {
@@ -794,20 +797,23 @@ public class Darstellung
         const int lastPfeilGrösse = 10;
 
         punktlast.SetzElementlastReferenzen(_modell);
-        if (_modell.Elemente.TryGetValue(punktlast.ElementId, out var element))
+        if (!_modell.Elemente.TryGetValue(punktlast.ElementId, out var element))
         {
+            throw new ModellAusnahme("\nPunktlast Element '" + punktlast.ElementId + "' nicht im Modell gefunden");
         }
 
         if (element == null) return pathGeometry;
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
         {
+            throw new ModellAusnahme("\nPunktlast Element Knoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
         }
 
         var startPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
 
         // zweiter Elementknoten 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
         {
+            throw new ModellAusnahme("\nPunktlast Element Knoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
         }
 
         var endPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
@@ -850,21 +856,22 @@ public class Darstellung
         var linienLastAuflösung = linienkraftÜberhöhung * _lastAuflösung;
 
         last.SetzElementlastReferenzen(_modell);
-        if (_modell.Elemente.TryGetValue(linienlast.ElementId, out var element))
+        if (!_modell.Elemente.TryGetValue(linienlast.ElementId, out var element))
         {
+            throw new ModellAusnahme("\nLinienlast Element '" + linienlast.ElementId + "' nicht im Modell gefunden");
         }
 
-        if (element == null) return pathGeometry;
-
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
         {
+            throw new ModellAusnahme("\nLinienlast Element Knoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
         }
 
         var startPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
 
         // zweiter Elementknoten 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
         {
+            throw new ModellAusnahme("\nLinienlast Element Knoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
         }
 
         var endPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
@@ -933,7 +940,10 @@ public class Darstellung
                 Text = item.Key,
                 Foreground = Red
             };
-            if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out var lastKnoten)) continue;
+            if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out var lastKnoten))
+            {
+                throw new ModellAusnahme("\nBiegebalken Lastknoten '" + item.Value.KnotenId + "' nicht im Modell gefunden");
+            }
             _platzierungText = TransformKnoten(lastKnoten, Auflösung, MaxY);
             const int knotenOffset = 20;
             SetTop(id, _platzierungText.Y + PlatzierungV - knotenOffset);
@@ -989,8 +999,9 @@ public class Darstellung
             var lager = item.Value;
             var pathGeometry = new PathGeometry();
 
-            if (_modell.Knoten.TryGetValue(lager.KnotenId, out var lagerKnoten))
+            if (!_modell.Knoten.TryGetValue(lager.KnotenId, out var lagerKnoten))
             {
+                throw new ModellAusnahme("\nLinienlast Element Knoten '" + lager.KnotenId + "' nicht im Modell gefunden");
             }
 
             var drehPunkt = TransformKnoten(lagerKnoten, Auflösung, MaxY);
@@ -1291,14 +1302,16 @@ public class Darstellung
         var rot = FromArgb(120, 255, 0, 0);
         var blau = FromArgb(120, 0, 0, 255);
 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
         {
+            throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
         }
 
         var startPoint = TransformKnoten(_knoten, Auflösung, MaxY);
 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
         {
+            throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
         }
 
         var endPoint = TransformKnoten(_knoten, Auflösung, MaxY);
@@ -1429,10 +1442,16 @@ public class Darstellung
         var blau = FromArgb(120, 0, 0, 255);
         SolidColorBrush myBrush;
 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten)) { }
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+        {
+            throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
+        }
         var startPoint = TransformKnoten(_knoten, Auflösung, MaxY);
 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten)) { }
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
+        {
+            throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
+        }
         var endPoint = TransformKnoten(_knoten, Auflösung, MaxY);
 
         if (!elementlast)
@@ -1832,11 +1851,17 @@ public class Darstellung
         var rot = FromArgb(120, 255, 0, 0);
         var blau = FromArgb(120, 0, 0, 255);
 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten)) { }
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
+        {
+            throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
+        }
 
         var startPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
 
-        if (_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten)) { }
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
+        {
+            throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
+        }
 
         var endPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
 

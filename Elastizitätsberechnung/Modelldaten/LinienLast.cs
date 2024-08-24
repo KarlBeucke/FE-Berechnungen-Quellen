@@ -17,19 +17,18 @@ public class LinienLast : AbstraktLinienlast
         Lastwerte[3] = p2Y;
     }
 
-    public int StartNDOF { get; set; }
+    public int StartNdof { get; set; }
 
-    public int EndNDOF { get; set; }
+    public int EndNdof { get; set; }
 
     public override double[] BerechneLastVektor()
     {
         var load = new double[4];
-        double c1, c2, l;
         var nStart = StartKnoten.Koordinaten;
         var nEnd = EndKnoten.Koordinaten;
-        c1 = nEnd[0] - nStart[0];
-        c2 = nEnd[1] - nStart[1];
-        l = Math.Sqrt(c1 * c1 + c2 * c2) / 6.0;
+        var c1 = nEnd[0] - nStart[0];
+        var c2 = nEnd[1] - nStart[1];
+        var l = Math.Sqrt(c1 * c1 + c2 * c2) / 6.0;
         load[0] = l * (2.0 * Lastwerte[0] + Lastwerte[2]);
         load[2] = l * (2.0 * Lastwerte[2] + Lastwerte[0]);
         load[1] = l * (2.0 * Lastwerte[1] + Lastwerte[3]);
@@ -40,17 +39,11 @@ public class LinienLast : AbstraktLinienlast
     [Serializable]
     private class RuntimeException : Exception
     {
-        public RuntimeException()
-        {
-        }
+        public RuntimeException() { }
 
-        public RuntimeException(string message) : base(message)
-        {
-        }
+        public RuntimeException(string message) : base(message) { }
 
-        public RuntimeException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+        public RuntimeException(string message, Exception innerException) : base(message, innerException) { }
 
         //protected RuntimeException(SerializationInfo info, StreamingContext context) : base(info, context)
         //{

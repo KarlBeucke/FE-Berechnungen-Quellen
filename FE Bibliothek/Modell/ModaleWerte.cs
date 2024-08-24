@@ -1,18 +1,12 @@
 ﻿namespace FEBibliothek.Modell
 {
-    public class ModaleWerte
+    public class ModaleWerte(double wert, string text)
     {
-        public double Dämpfung { get; set; }
-        public string Text { get; set; }
+        public double Dämpfung { get; set; } = wert;
+        public string Text { get; set; } = text;
 
-        public ModaleWerte(double wert)
+        public ModaleWerte(double wert) : this(wert, null)
         {
-            Dämpfung = wert;
-        }
-        public ModaleWerte(double wert, string text)
-        {
-            Dämpfung = wert;
-            Text = text;
         }
     }
 }

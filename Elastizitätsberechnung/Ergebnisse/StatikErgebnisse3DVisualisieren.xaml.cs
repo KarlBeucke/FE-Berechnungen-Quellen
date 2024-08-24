@@ -30,10 +30,10 @@ public partial class StatikErgebnisse3DVisualisieren
     private double cameraTheta = 1.65; // 94,5 Grad
     private double cameraX;
     private double cameraY;
-    private string maxKey_xx, minKey_xx, maxKey_yy, minKey_yy, maxKey_zz, minKey_zz;
-    private string maxKey_xy, minKey_xy, maxKey_yz, minKey_yz, maxKey_zx, minKey_zx;
-    private double maxSigma_xx, minSigma_xx, maxSigma_yy, minSigma_yy, maxSigma_zz, minSigma_zz;
-    private double maxSigma_xy, minSigma_xy, maxSigma_yz, minSigma_yz, maxSigma_zx, minSigma_zx;
+    private string _maxKeyXx, _minKeyXx, _maxKeyYy, _minKeyYy, _maxKeyZz, _minKeyZz;
+    private string _maxKeyXy, _minKeyXy, _maxKeyYz, _minKeyYz, _maxKeyZx, _minKeyZx;
+    private double _maxSigmaXx, _minSigmaXx, _maxSigmaYy, _minSigmaYy, _maxSigmaZz, _minSigmaZz;
+    private double _maxSigmaXy, _minSigmaXy, _maxSigmaYz, _minSigmaYz, _maxSigmaZx, _minSigmaZx;
     private ModelVisual3D modelVisual;
     private Dictionary<string, ElementSpannung> sigma;
 
@@ -64,7 +64,7 @@ public partial class StatikErgebnisse3DVisualisieren
 
         // Elementspannungen
         sigma = new Dictionary<string, ElementSpannung>();
-        foreach (var item in darstellung3D.modell.Elemente)
+        foreach (var item in darstellung3D.Modell.Elemente)
             sigma.Add(item.Key, new ElementSpannung(item.Value.BerechneZustandsvektor()));
         // Spannungsauswahl
         var richtung = new List<string>
@@ -125,7 +125,7 @@ public partial class StatikErgebnisse3DVisualisieren
 
         // Blick in Richtung Koordinatenursprung (0; 0; 0), zentriert
         // falls Koordinatenursprung links oben, versetz Darstellung um offset
-        if (darstellung3D.minX >= 0) offset = 10;
+        if (darstellung3D.MinX >= 0) offset = 10;
         theCamera.LookDirection = new Vector3D(-(x - offset), -(y + offset), -z);
 
         // Setzen der Up Richtung
@@ -145,37 +145,37 @@ public partial class StatikErgebnisse3DVisualisieren
 
     private void ShowKoordinaten(object sender, RoutedEventArgs e)
     {
-        foreach (var koordinaten in darstellung3D.koordinaten) model3DGroup.Children.Add(koordinaten);
+        foreach (var koordinaten in darstellung3D.Koordinaten) model3DGroup.Children.Add(koordinaten);
     }
 
     private void RemoveKoordinaten(object sender, RoutedEventArgs e)
     {
-        foreach (var koordinaten in darstellung3D.koordinaten) model3DGroup.Children.Remove(koordinaten);
+        foreach (var koordinaten in darstellung3D.Koordinaten) model3DGroup.Children.Remove(koordinaten);
     }
 
     private void ShowDrahtmodell(object sender, RoutedEventArgs e)
     {
-        foreach (var kanten in darstellung3D.kanten) model3DGroup.Children.Add(kanten);
+        foreach (var kanten in darstellung3D.Kanten) model3DGroup.Children.Add(kanten);
     }
 
     private void RemoveDrahtmodell(object sender, RoutedEventArgs e)
     {
-        foreach (var kanten in darstellung3D.kanten) model3DGroup.Children.Remove(kanten);
+        foreach (var kanten in darstellung3D.Kanten) model3DGroup.Children.Remove(kanten);
     }
 
     private void ShowVerformungen(object sender, RoutedEventArgs e)
     {
-        if (darstellung3D.verformungen.Count == 0)
+        if (darstellung3D.Verformungen.Count == 0)
             // verformte Geometrie als Drahtmodell
             darstellung3D.VerformteGeometrie(model3DGroup);
         else
-            foreach (var verformungen in darstellung3D.verformungen)
+            foreach (var verformungen in darstellung3D.Verformungen)
                 model3DGroup.Children.Add(verformungen);
     }
 
     private void RemoveVerformungen(object sender, RoutedEventArgs e)
     {
-        foreach (var verformungen in darstellung3D.verformungen) model3DGroup.Children.Remove(verformungen);
+        foreach (var verformungen in darstellung3D.Verformungen) model3DGroup.Children.Remove(verformungen);
     }
 
     private void ShowSpannungen_xx()
@@ -185,29 +185,29 @@ public partial class StatikErgebnisse3DVisualisieren
         RemoveSpannungen();
         foreach (var item in sigma)
         {
-            if (item.Value.Spannungen[0] > maxSigma_xx)
+            if (item.Value.Spannungen[0] > _maxSigmaXx)
             {
-                maxSigma_xx = item.Value.Spannungen[0];
-                maxKey_xx = item.Key;
+                _maxSigmaXx = item.Value.Spannungen[0];
+                _maxKeyXx = item.Key;
             }
 
-            if (!(item.Value.Spannungen[0] < minSigma_xx)) continue;
-            minSigma_xx = item.Value.Spannungen[0];
-            minKey_xx = item.Key;
+            if (!(item.Value.Spannungen[0] < _minSigmaXx)) continue;
+            _minSigmaXx = item.Value.Spannungen[0];
+            _minKeyXx = item.Key;
         }
 
-        MaxMin.Text = "maxSigma_xx = " + maxSigma_xx.ToString("0.###E+00") + " in Element " + maxKey_xx
-                      + ",  minSigma_xx = " + minSigma_xx.ToString("0.###E+00") + " in Element " + minKey_xx;
+        MaxMin.Text = "maxSigma_xx = " + _maxSigmaXx.ToString("0.###E+00") + " in Element " + _maxKeyXx
+                      + ",  minSigma_xx = " + _minSigmaXx.ToString("0.###E+00") + " in Element " + _minKeyXx;
 
-        if (darstellung3D.spannungen_xx.Count == 0)
+        if (darstellung3D.SpannungenXx.Count == 0)
         {
-            var maxWert = maxSigma_xx;
-            if (Math.Abs(minSigma_xx) > maxWert) maxWert = Math.Abs(minSigma_xx);
+            var maxWert = _maxSigmaXx;
+            if (Math.Abs(_minSigmaXx) > maxWert) maxWert = Math.Abs(_minSigmaXx);
             darstellung3D.ElementSpannungen_xx(model3DGroup, maxWert);
         }
         else
         {
-            foreach (var geometryModel3D in darstellung3D.spannungen_xx) model3DGroup.Children.Add(geometryModel3D);
+            foreach (var geometryModel3D in darstellung3D.SpannungenXx) model3DGroup.Children.Add(geometryModel3D);
         }
 
         // Hinzufügen der Modellgruppe (mainModel3DGroup) zu einem neuen ModelVisual3D
@@ -222,29 +222,29 @@ public partial class StatikErgebnisse3DVisualisieren
         RemoveSpannungen();
         foreach (var item in sigma)
         {
-            if (item.Value.Spannungen[1] > maxSigma_yy)
+            if (item.Value.Spannungen[1] > _maxSigmaYy)
             {
-                maxSigma_yy = item.Value.Spannungen[1];
-                maxKey_yy = item.Key;
+                _maxSigmaYy = item.Value.Spannungen[1];
+                _maxKeyYy = item.Key;
             }
 
-            if (!(item.Value.Spannungen[1] < minSigma_yy)) continue;
-            minSigma_yy = item.Value.Spannungen[1];
-            minKey_yy = item.Key;
+            if (!(item.Value.Spannungen[1] < _minSigmaYy)) continue;
+            _minSigmaYy = item.Value.Spannungen[1];
+            _minKeyYy = item.Key;
         }
 
-        MaxMin.Text = "maxSigma_yy = " + maxSigma_yy.ToString("0.###E+00") + " in Element " + maxKey_yy
-                      + ",  minSigma_yy = " + minSigma_yy.ToString("0.###E+00") + " in Element " + minKey_yy;
+        MaxMin.Text = "maxSigma_yy = " + _maxSigmaYy.ToString("0.###E+00") + " in Element " + _maxKeyYy
+                      + ",  minSigma_yy = " + _minSigmaYy.ToString("0.###E+00") + " in Element " + _minKeyYy;
 
-        if (darstellung3D.spannungen_yy.Count == 0)
+        if (darstellung3D.SpannungenYy.Count == 0)
         {
-            var maxWert = maxSigma_yy;
-            if (Math.Abs(minSigma_yy) > maxWert) maxWert = Math.Abs(minSigma_yy);
+            var maxWert = _maxSigmaYy;
+            if (Math.Abs(_minSigmaYy) > maxWert) maxWert = Math.Abs(_minSigmaYy);
             darstellung3D.ElementSpannungen_yy(model3DGroup, maxWert);
         }
         else
         {
-            foreach (var geometryModel3D in darstellung3D.spannungen_yy) model3DGroup.Children.Add(geometryModel3D);
+            foreach (var geometryModel3D in darstellung3D.SpannungenYy) model3DGroup.Children.Add(geometryModel3D);
         }
 
         // Hinzufügen der Modellgruppe (mainModel3DGroup) zu einem neuen ModelVisual3D
@@ -259,29 +259,29 @@ public partial class StatikErgebnisse3DVisualisieren
         RemoveSpannungen();
         foreach (var item in sigma)
         {
-            if (item.Value.Spannungen[2] > maxSigma_xy)
+            if (item.Value.Spannungen[2] > _maxSigmaXy)
             {
-                maxSigma_xy = item.Value.Spannungen[2];
-                maxKey_xy = item.Key;
+                _maxSigmaXy = item.Value.Spannungen[2];
+                _maxKeyXy = item.Key;
             }
 
-            if (!(item.Value.Spannungen[2] < minSigma_xy)) continue;
-            minSigma_xy = item.Value.Spannungen[2];
-            minKey_xy = item.Key;
+            if (!(item.Value.Spannungen[2] < _minSigmaXy)) continue;
+            _minSigmaXy = item.Value.Spannungen[2];
+            _minKeyXy = item.Key;
         }
 
-        MaxMin.Text = "maxSigma_xy = " + maxSigma_xy.ToString("0.###E+00") + " in Element " + maxKey_xy
-                      + ",  minSigma_xy = " + minSigma_xy.ToString("0.###E+00") + " in Element " + minKey_xy;
+        MaxMin.Text = "maxSigma_xy = " + _maxSigmaXy.ToString("0.###E+00") + " in Element " + _maxKeyXy
+                      + ",  minSigma_xy = " + _minSigmaXy.ToString("0.###E+00") + " in Element " + _minKeyXy;
 
-        if (darstellung3D.spannungen_xy.Count == 0)
+        if (darstellung3D.SpannungenXy.Count == 0)
         {
-            var maxWert = maxSigma_xy;
-            if (Math.Abs(minSigma_xy) > maxWert) maxWert = Math.Abs(minSigma_xy);
+            var maxWert = _maxSigmaXy;
+            if (Math.Abs(_minSigmaXy) > maxWert) maxWert = Math.Abs(_minSigmaXy);
             darstellung3D.ElementSpannungen_xy(model3DGroup, maxWert);
         }
         else
         {
-            foreach (var geometryModel3D in darstellung3D.spannungen_xy) model3DGroup.Children.Add(geometryModel3D);
+            foreach (var geometryModel3D in darstellung3D.SpannungenXy) model3DGroup.Children.Add(geometryModel3D);
         }
 
         // Hinzufügen der Modellgruppe (mainModel3DGroup) zu einem neuen ModelVisual3D
@@ -296,29 +296,29 @@ public partial class StatikErgebnisse3DVisualisieren
         RemoveSpannungen();
         foreach (var item in sigma)
         {
-            if (item.Value.Spannungen[3] > maxSigma_zz)
+            if (item.Value.Spannungen[3] > _maxSigmaZz)
             {
-                maxSigma_zz = item.Value.Spannungen[3];
-                maxKey_zz = item.Key;
+                _maxSigmaZz = item.Value.Spannungen[3];
+                _maxKeyZz = item.Key;
             }
 
-            if (!(item.Value.Spannungen[3] < minSigma_zz)) continue;
-            minSigma_zz = item.Value.Spannungen[3];
-            minKey_zz = item.Key;
+            if (!(item.Value.Spannungen[3] < _minSigmaZz)) continue;
+            _minSigmaZz = item.Value.Spannungen[3];
+            _minKeyZz = item.Key;
         }
 
-        MaxMin.Text = "maxSigma_zz = " + maxSigma_zz.ToString("0.###E+00") + " in Element " + maxKey_zz
-                      + ",  minSigma_zz = " + minSigma_zz.ToString("0.###E+00") + " in Element " + minKey_zz;
+        MaxMin.Text = "maxSigma_zz = " + _maxSigmaZz.ToString("0.###E+00") + " in Element " + _maxKeyZz
+                      + ",  minSigma_zz = " + _minSigmaZz.ToString("0.###E+00") + " in Element " + _minKeyZz;
 
-        if (darstellung3D.spannungen_zz.Count == 0)
+        if (darstellung3D.SpannungenZz.Count == 0)
         {
-            var maxWert = maxSigma_zz;
-            if (Math.Abs(minSigma_zz) > maxWert) maxWert = Math.Abs(minSigma_zz);
+            var maxWert = _maxSigmaZz;
+            if (Math.Abs(_minSigmaZz) > maxWert) maxWert = Math.Abs(_minSigmaZz);
             darstellung3D.ElementSpannungen_zz(model3DGroup, maxWert);
         }
         else
         {
-            foreach (var geometryModel3D in darstellung3D.spannungen_zz) model3DGroup.Children.Add(geometryModel3D);
+            foreach (var geometryModel3D in darstellung3D.SpannungenZz) model3DGroup.Children.Add(geometryModel3D);
         }
 
         // Hinzufügen der Modellgruppe (mainModel3DGroup) zu einem neuen ModelVisual3D
@@ -333,29 +333,29 @@ public partial class StatikErgebnisse3DVisualisieren
         RemoveSpannungen();
         foreach (var item in sigma)
         {
-            if (item.Value.Spannungen[4] > maxSigma_yz)
+            if (item.Value.Spannungen[4] > _maxSigmaYz)
             {
-                maxSigma_yz = item.Value.Spannungen[4];
-                maxKey_yz = item.Key;
+                _maxSigmaYz = item.Value.Spannungen[4];
+                _maxKeyYz = item.Key;
             }
 
-            if (!(item.Value.Spannungen[4] < minSigma_yz)) continue;
-            minSigma_yz = item.Value.Spannungen[4];
-            minKey_yz = item.Key;
+            if (!(item.Value.Spannungen[4] < _minSigmaYz)) continue;
+            _minSigmaYz = item.Value.Spannungen[4];
+            _minKeyYz = item.Key;
         }
 
-        MaxMin.Text = "maxSigma_yz = " + maxSigma_yz.ToString("0.###E+00") + " in Element " + maxKey_yz
-                      + ",  minSigma_yz = " + minSigma_yz.ToString("0.###E+00") + " in Element " + minKey_yz;
+        MaxMin.Text = "maxSigma_yz = " + _maxSigmaYz.ToString("0.###E+00") + " in Element " + _maxKeyYz
+                      + ",  minSigma_yz = " + _minSigmaYz.ToString("0.###E+00") + " in Element " + _minKeyYz;
 
-        if (darstellung3D.spannungen_yz.Count == 0)
+        if (darstellung3D.SpannungenYz.Count == 0)
         {
-            var maxWert = maxSigma_yz;
-            if (Math.Abs(minSigma_yz) > maxWert) maxWert = Math.Abs(minSigma_yz);
+            var maxWert = _maxSigmaYz;
+            if (Math.Abs(_minSigmaYz) > maxWert) maxWert = Math.Abs(_minSigmaYz);
             darstellung3D.ElementSpannungen_yz(model3DGroup, maxWert);
         }
         else
         {
-            foreach (var geometryModel3D in darstellung3D.spannungen_yz) model3DGroup.Children.Add(geometryModel3D);
+            foreach (var geometryModel3D in darstellung3D.SpannungenYz) model3DGroup.Children.Add(geometryModel3D);
         }
 
         // Hinzufügen der Modellgruppe (mainModel3DGroup) zu einem neuen ModelVisual3D
@@ -370,29 +370,29 @@ public partial class StatikErgebnisse3DVisualisieren
         RemoveSpannungen();
         foreach (var item in sigma)
         {
-            if (item.Value.Spannungen[5] > maxSigma_zx)
+            if (item.Value.Spannungen[5] > _maxSigmaZx)
             {
-                maxSigma_zx = item.Value.Spannungen[5];
-                maxKey_zx = item.Key;
+                _maxSigmaZx = item.Value.Spannungen[5];
+                _maxKeyZx = item.Key;
             }
 
-            if (!(item.Value.Spannungen[5] < minSigma_zx)) continue;
-            minSigma_zx = item.Value.Spannungen[5];
-            minKey_zx = item.Key;
+            if (!(item.Value.Spannungen[5] < _minSigmaZx)) continue;
+            _minSigmaZx = item.Value.Spannungen[5];
+            _minKeyZx = item.Key;
         }
 
-        MaxMin.Text = "maxSigma_zx = " + maxSigma_zx.ToString("0.###E+00") + " in Element " + maxKey_zx
-                      + ",  minSigma_zx = " + minSigma_zx.ToString("0.###E+00") + " in Element " + minKey_zx;
+        MaxMin.Text = "maxSigma_zx = " + _maxSigmaZx.ToString("0.###E+00") + " in Element " + _maxKeyZx
+                      + ",  minSigma_zx = " + _minSigmaZx.ToString("0.###E+00") + " in Element " + _minKeyZx;
 
-        if (darstellung3D.spannungen_zx.Count == 0)
+        if (darstellung3D.SpannungenZx.Count == 0)
         {
-            var maxWert = maxSigma_zx;
-            if (Math.Abs(minSigma_yz) > maxWert) maxWert = Math.Abs(minSigma_zx);
+            var maxWert = _maxSigmaZx;
+            if (Math.Abs(_minSigmaYz) > maxWert) maxWert = Math.Abs(_minSigmaZx);
             darstellung3D.ElementSpannungen_zx(model3DGroup, maxWert);
         }
         else
         {
-            foreach (var geometryModel3D in darstellung3D.spannungen_zx) model3DGroup.Children.Add(geometryModel3D);
+            foreach (var geometryModel3D in darstellung3D.SpannungenZx) model3DGroup.Children.Add(geometryModel3D);
         }
 
         // Hinzufügen der Modellgruppe (mainModel3DGroup) zu einem neuen ModelVisual3D
@@ -404,12 +404,12 @@ public partial class StatikErgebnisse3DVisualisieren
 
     private void RemoveSpannungen()
     {
-        foreach (var sigmaModell in darstellung3D.spannungen_xx) model3DGroup.Children.Remove(sigmaModell);
-        foreach (var sigmaModell in darstellung3D.spannungen_yy) model3DGroup.Children.Remove(sigmaModell);
-        foreach (var sigmaModell in darstellung3D.spannungen_xy) model3DGroup.Children.Remove(sigmaModell);
-        foreach (var sigmaModell in darstellung3D.spannungen_zz) model3DGroup.Children.Remove(sigmaModell);
-        foreach (var sigmaModell in darstellung3D.spannungen_yz) model3DGroup.Children.Remove(sigmaModell);
-        foreach (var sigmaModell in darstellung3D.spannungen_zx) model3DGroup.Children.Remove(sigmaModell);
+        foreach (var sigmaModell in darstellung3D.SpannungenXx) model3DGroup.Children.Remove(sigmaModell);
+        foreach (var sigmaModell in darstellung3D.SpannungenYy) model3DGroup.Children.Remove(sigmaModell);
+        foreach (var sigmaModell in darstellung3D.SpannungenXy) model3DGroup.Children.Remove(sigmaModell);
+        foreach (var sigmaModell in darstellung3D.SpannungenZz) model3DGroup.Children.Remove(sigmaModell);
+        foreach (var sigmaModell in darstellung3D.SpannungenYz) model3DGroup.Children.Remove(sigmaModell);
+        foreach (var sigmaModell in darstellung3D.SpannungenZx) model3DGroup.Children.Remove(sigmaModell);
     }
 
     // Veränderung der Kameraposition mit Scrollbars
@@ -472,18 +472,13 @@ public partial class StatikErgebnisse3DVisualisieren
     // Überhöhungsfaktor für die Darstellung der Verformungen
     private void BtnÜberhöhung_Click(object sender, RoutedEventArgs e)
     {
-        darstellung3D.überhöhungVerformung = double.Parse(Überhöhung.Text);
-        foreach (var verformungen in darstellung3D.verformungen) model3DGroup.Children.Remove(verformungen);
+        darstellung3D.ÜberhöhungVerformung = double.Parse(Überhöhung.Text);
+        foreach (var verformungen in darstellung3D.Verformungen) model3DGroup.Children.Remove(verformungen);
         darstellung3D.VerformteGeometrie(model3DGroup);
     }
 
-    private class ElementSpannung
+    private class ElementSpannung(double[] spannungen)
     {
-        public ElementSpannung(double[] spannungen)
-        {
-            Spannungen = spannungen;
-        }
-
-        public double[] Spannungen { get; }
+        public double[] Spannungen { get; } = spannungen;
     }
 }

@@ -43,13 +43,8 @@ public partial class StatikErgebnisseAnzeigen
         if (ReaktionenGrid != null) ReaktionenGrid.ItemsSource = modell.Randbedingungen;
     }
 
-    internal class ElementSpannung
+    internal class ElementSpannung(double[] spannungen)
     {
-        public ElementSpannung(double[] spannungen)
-        {
-            Spannungen = spannungen;
-        }
-
-        public double[] Spannungen { get; }
+        public double[] Spannungen { get; } = spannungen;
     }
 }

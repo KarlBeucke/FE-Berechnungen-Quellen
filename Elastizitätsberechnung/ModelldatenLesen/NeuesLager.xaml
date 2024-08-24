@@ -72,8 +72,6 @@
         </Label>
         <TextBox Name="VorZ" Grid.Row="5" Grid.Column="1" Margin="185.2,27.2,0,0" Height="20"
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="50" />
-
-
         <Button IsDefault="True" Grid.Row="6" Grid.Column="1" Width="35" Height="26" Margin="220,0,0,8"
                 Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
             _Ok

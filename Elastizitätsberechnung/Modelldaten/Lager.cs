@@ -7,13 +7,13 @@ namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 public class Lager : AbstraktRandbedingung
 {
     public const int XFixed = 1, YFixed = 2, ZFixed = 4;
-    private const int XYFixed = 3, XZFixed = 5, YZFixed = 6, XYZFixed = 7;
+    private const int XyFixed = 3, XzFixed = 5, YzFixed = 6, XyzFixed = 7;
 
-    protected double[] deflection;
+    protected double[] Deflection;
 
     //private int supportType;
     private string face;
-    protected bool timeDependent = false;
+    protected bool TimeDependent = false;
 
     public Lager(string knotenId, string face, int supportTyp, IReadOnlyList<double> pre, FeModell modell)
     {
@@ -41,56 +41,46 @@ public class Lager : AbstraktRandbedingung
         for (var i = 0; i < ndof; i++) Festgehalten[i] = false;
         KnotenId = knotenId;
 
-        if (supportTyp == XFixed)
+        switch (supportTyp)
         {
-            Vordefiniert[0] = pre[0];
-            Festgehalten[0] = true;
-        }
-
-        if (supportTyp == YFixed)
-        {
-            Vordefiniert[1] = pre[1];
-            Festgehalten[1] = true;
-        }
-
-        if (supportTyp == ZFixed)
-        {
-            Vordefiniert[2] = pre[2];
-            Festgehalten[2] = true;
-        }
-
-        if (supportTyp == XYFixed)
-        {
-            Vordefiniert[0] = pre[0];
-            Festgehalten[0] = true;
-            Vordefiniert[1] = pre[1];
-            Festgehalten[1] = true;
-        }
-
-        if (supportTyp == XZFixed)
-        {
-            Vordefiniert[0] = pre[0];
-            Festgehalten[0] = true;
-            Vordefiniert[2] = pre[2];
-            Festgehalten[2] = true;
-        }
-
-        if (supportTyp == YZFixed)
-        {
-            Vordefiniert[1] = pre[1];
-            Festgehalten[1] = true;
-            Vordefiniert[2] = pre[2];
-            Festgehalten[2] = true;
-        }
-
-        if (supportTyp == XYZFixed)
-        {
-            Vordefiniert[0] = pre[0];
-            Festgehalten[0] = true;
-            Vordefiniert[1] = pre[1];
-            Festgehalten[1] = true;
-            Vordefiniert[2] = pre[2];
-            Festgehalten[2] = true;
+            case XFixed:
+                Vordefiniert[0] = pre[0];
+                Festgehalten[0] = true;
+                break;
+            case YFixed:
+                Vordefiniert[1] = pre[1];
+                Festgehalten[1] = true;
+                break;
+            case ZFixed:
+                Vordefiniert[2] = pre[2];
+                Festgehalten[2] = true;
+                break;
+            case XyFixed:
+                Vordefiniert[0] = pre[0];
+                Festgehalten[0] = true;
+                Vordefiniert[1] = pre[1];
+                Festgehalten[1] = true;
+                break;
+            case XzFixed:
+                Vordefiniert[0] = pre[0];
+                Festgehalten[0] = true;
+                Vordefiniert[2] = pre[2];
+                Festgehalten[2] = true;
+                break;
+            case YzFixed:
+                Vordefiniert[1] = pre[1];
+                Festgehalten[1] = true;
+                Vordefiniert[2] = pre[2];
+                Festgehalten[2] = true;
+                break;
+            case XyzFixed:
+                Vordefiniert[0] = pre[0];
+                Festgehalten[0] = true;
+                Vordefiniert[1] = pre[1];
+                Festgehalten[1] = true;
+                Vordefiniert[2] = pre[2];
+                Festgehalten[2] = true;
+                break;
         }
     }
 }

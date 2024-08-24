@@ -79,7 +79,7 @@
         {
             for (var k = 0; k < index.Length; k++)
             {
-                for (int m = 0; m < index.Length; m++)
+                for (var m = 0; m < index.Length; m++)
                 {
                     if (index[m] <= index[k])
                         AddierWert(index[k], index[m], elementMatrix[k, m]);

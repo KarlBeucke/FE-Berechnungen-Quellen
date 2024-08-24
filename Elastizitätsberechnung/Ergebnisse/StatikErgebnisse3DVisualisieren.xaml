@@ -20,13 +20,13 @@
         <Viewport3D Grid.Row="1" Grid.Column="0" Name="Viewport" Margin="0,0,2,1" />
 
         <CheckBox Grid.Column="0" Grid.Row="0" Height="30" HorizontalAlignment="Left" Margin="10,16,0,0"
-                  Name="Koordinaten" VerticalAlignment="Top" Width="150"
+                  VerticalAlignment="Top" Width="150"
                   Checked="ShowKoordinaten" IsChecked="True" Content="Koordinatensystem" Unchecked="RemoveKoordinaten" />
         <CheckBox Grid.Column="0" Grid.Row="0" Height="20" HorizontalAlignment="Left" Margin="140,18,0,0"
-                  x:Name="Drahtmodell" VerticalAlignment="Top" Width="92"
+                  VerticalAlignment="Top" Width="92"
                   Checked="ShowDrahtmodell" Unchecked="RemoveDrahtmodell" IsChecked="True" Content="Drahtmodell " />
         <CheckBox Grid.Column="0" Grid.Row="0" Height="15" HorizontalAlignment="Left" Margin="240,18,0,0"
-                  Name="Verformungsmodell" VerticalAlignment="Top" Width="150"
+                  VerticalAlignment="Top" Width="150"
                   Checked="ShowVerformungen" Unchecked="RemoveVerformungen" IsChecked="False"
                   Content="Verformungsmodell" />
 
@@ -34,7 +34,7 @@
         <ComboBox Grid.Row="0" Grid.Column="0" Name="Spannungsauswahl" Margin="415,14,658,0" VerticalAlignment="Top"
                   Focusable="false" DropDownClosed="DropDownSpannungsauswahlClosed" />
 
-        <Button Name="BtnÜberhöhung" Grid.Row="0" Grid.Column="0" Click="BtnÜberhöhung_Click" Margin="776,16,0,8.2"
+        <Button Grid.Row="0" Grid.Column="0" Click="BtnÜberhöhung_Click" Margin="776,16,0,8.2"
                 IsDefault="True"
                 MaxWidth="200" HorizontalAlignment="Left" Width="161">
             Überhöhung Verformung
@@ -45,23 +45,23 @@
                    RenderTransformOrigin="0.5,0.5">
             <Bold>Scrollbars</Bold>
         </TextBlock>
-        <TextBlock Grid.Column="0" x:Name="DrehenKippen" Margin="1020,12,14,0"
+        <TextBlock Grid.Column="0" Margin="1020,12,14,0"
                    Grid.Row="0" Grid.ColumnSpan="2" Height="21" VerticalAlignment="Top">
             <Run Text="drehen, kippen" />
         </TextBlock>
-        <TextBlock Grid.Column="0" Name="Tastensteuerung" Margin="1016,31,9,690.6" Grid.Row="0" Grid.RowSpan="2">
+        <TextBlock Grid.Column="0" Margin="1016,31,9,690.6" Grid.Row="0" Grid.RowSpan="2">
             <Bold>Tastensteuerung</Bold>
         </TextBlock>
-        <TextBlock Grid.Column="0" x:Name="Abstand" Margin="1020,46,0,0" Height="21" VerticalAlignment="Top"
+        <TextBlock Grid.Column="0" Margin="1020,46,0,0" Height="21" VerticalAlignment="Top"
                    Grid.Row="0"
                    Grid.RowSpan="2">
             <Run Text="Abstand  PgUp" /><Run Text="/PgDn" />
         </TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="0" x:Name="Drehen" Margin="1020,14.8,0,659.6"
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="1020,14.8,0,659.6"
                    Text="horizontal     li/re" />
-        <TextBlock Grid.Column="0" x:Name="Kippen" Margin="1019,27.8,10,0"
+        <TextBlock Grid.Column="0" Margin="1019,27.8,10,0"
                    Text="vertikal   hoch/runter" Height="19" VerticalAlignment="Top" Grid.Row="1" />
-        <RichTextBox Grid.Row="1" Grid.Column="0" x:Name="Achsen" Margin="1019,47.8,1,0" Height="53"
+        <RichTextBox Grid.Row="1" Grid.Column="0" Margin="1019,47.8,1,0" Height="53"
                      VerticalAlignment="Top" Focusable="False">
             <RichTextBox.Resources>
                 <Style TargetType="{x:Type Paragraph}">

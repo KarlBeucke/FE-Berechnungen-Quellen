@@ -5,7 +5,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 public class LastParser
 {
-    private readonly char[] delimiters = { '\t' };
+    private readonly char[] delimiters = ['\t'];
     private KnotenLast knotenLast;
     private LinienLast linienLast;
 

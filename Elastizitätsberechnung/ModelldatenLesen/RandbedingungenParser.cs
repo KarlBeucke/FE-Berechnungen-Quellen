@@ -7,7 +7,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 public class RandbedingungenParser : FeParser
 {
-    public readonly List<string> faces = new();
+    public readonly List<string> Faces = [];
     private Lager lager;
     private FeModell modell;
     private string nodeId;
@@ -34,7 +34,7 @@ public class RandbedingungenParser : FeParser
             do
             {
                 substrings = lines[i + 1].Split(delimiters);
-                if (substrings.Length == 5 || substrings.Length == 6)
+                if (substrings.Length is 5 or 6)
                 {
                     supportId = substrings[0];
                     nodeId = substrings[1];
@@ -87,7 +87,7 @@ public class RandbedingungenParser : FeParser
                 substrings = lines[i + 1].Split(delimiters);
                 var supportInitial = substrings[0];
                 var face = substrings[1];
-                faces.Add(face);
+                Faces.Add(face);
                 var nodeInitial = substrings[2];
                 int nNodes = short.Parse(substrings[3]);
                 var type = substrings[4];
@@ -127,23 +127,15 @@ public class RandbedingungenParser : FeParser
                         var supportName = supportInitial + face + id1 + id2;
                         if (modell.Randbedingungen.TryGetValue(supportName, out _))
                             throw new ParseAusnahme($"\nRandbedingung \"{supportName}\" bereits vorhanden.");
-                        string nodeName;
                         const string faceNode = "00";
-                        switch (face.Substring(0, 1))
+                        var nodeName = face[..1] switch
                         {
-                            case "X":
-                                nodeName = nodeInitial + faceNode + id1 + id2;
-                                break;
-                            case "Y":
-                                nodeName = nodeInitial + id1 + faceNode + id2;
-                                break;
-                            case "Z":
-                                nodeName = nodeInitial + id1 + id2 + faceNode;
-                                break;
-                            default:
-                                throw new ParseAusnahme(
-                                    $"\nfalsche FlächenId = {face.Substring(0, 1)}, muss sein:\n X, Y or Z");
-                        }
+                            "X" => nodeInitial + faceNode + id1 + id2,
+                            "Y" => nodeInitial + id1 + faceNode + id2,
+                            "Z" => nodeInitial + id1 + id2 + faceNode,
+                            _ => throw new ParseAusnahme(
+                                $"\nfalsche FlächenId = {face[..1]}, muss sein:\n X, Y or Z")
+                        };
 
                         lager = new Lager(nodeName, face, conditions, prescribed, modell);
                         modell.Randbedingungen.Add(supportName, lager);
@@ -167,7 +159,7 @@ public class RandbedingungenParser : FeParser
             if (LastParser.NodeLoad == null)
                 throw new ParseAusnahme("\nKnotenlast für Boussinesq Randbedingung nicht definiert");
             var p = 4.0 * LastParser.NodeLoad[2];
-            char[] delimiters = { '\t' };
+            char[] delimiters = ['\t'];
 
             // 1. Zeile: Feld mit Offsets
             // 2. Zeile: supportInitial, face, nodeInitial, type
@@ -187,11 +179,11 @@ public class RandbedingungenParser : FeParser
 
                 var supportInitial = substrings[0];
                 var face = substrings[1];
-                faces.Add(face);
+                Faces.Add(face);
                 var nodeInitial = substrings[2];
                 //int nNodes = short.Parse(substrings[3]);
                 var nNodes = offset.Length;
-                face = $"{face.Substring(0, 1)}0{nNodes - 1}";
+                face = $"{face[..1]}0{nNodes - 1}";
                 var type = substrings[3];
                 for (var count = 0; count < type.Length; count++)
                 {
@@ -223,21 +215,14 @@ public class RandbedingungenParser : FeParser
                             throw new ParseAusnahme($"\nRandbedingung \"{supportName}\" bereits vorhanden.");
                         string nodeName;
                         var faceNode = $"0{offset.Length - 1}";
-                        switch (face.Substring(0, 1))
+                        nodeName = face[..1] switch
                         {
-                            case "X":
-                                nodeName = nodeInitial + faceNode + id1 + id2;
-                                break;
-                            case "Y":
-                                nodeName = nodeInitial + id1 + faceNode + id2;
-                                break;
-                            case "Z":
-                                nodeName = nodeInitial + id1 + id2 + faceNode;
-                                break;
-                            default:
-                                throw new ParseAusnahme(
-                                    $"\nfalsche Flächen Id = {face.Substring(0, 1)}, muss sein:\n X, Y or Z");
-                        }
+                            "X" => nodeInitial + faceNode + id1 + id2,
+                            "Y" => nodeInitial + id1 + faceNode + id2,
+                            "Z" => nodeInitial + id1 + id2 + faceNode,
+                            _ => throw new ParseAusnahme(
+                                $"\nfalsche Flächen Id = {face.Substring(0, 1)}, muss sein:\n X, Y or Z")
+                        };
 
                         for (var count = 0; count < type.Length; count++)
                         {
