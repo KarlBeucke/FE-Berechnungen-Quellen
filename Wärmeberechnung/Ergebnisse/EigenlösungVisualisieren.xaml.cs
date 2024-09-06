@@ -42,8 +42,8 @@ public partial class EigenlösungVisualisieren : Window
 
         darstellung = new Darstellung(modell, VisualErgebnisse);
         darstellung.FestlegungAuflösung();
-        maxY = darstellung.maxY;
-        auflösung = darstellung.auflösung;
+        maxY = darstellung.MaxY;
+        auflösung = darstellung.Auflösung;
         darstellung.AlleElementeZeichnen();
     }
 

@@ -53,7 +53,7 @@ public partial class InstationäreModellzuständeVisualisieren
 
         foreach (var item in modell.Knoten) item.Value.Knotenfreiheitsgrade[0] = item.Value.KnotenVariable[0][index];
 
-        darstellung.zeitschritt = index;
+        darstellung.Zeitschritt = index;
         KnotentemperaturenZeichnen();
         darstellung.WärmeflussvektorenZeichnen();
         ElementTemperaturenZeichnen();

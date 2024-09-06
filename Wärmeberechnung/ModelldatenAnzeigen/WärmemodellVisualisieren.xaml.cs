@@ -446,8 +446,8 @@ public partial class WärmemodellVisualisieren
                 Y = { Text = knoten.Koordinaten[1].ToString("N2", CultureInfo.CurrentCulture) }
             };
 
-            mittelpunkt = new Point(knoten.Koordinaten[0] * darstellung.auflösung + Darstellung.RandLinks,
-                (-knoten.Koordinaten[1] + darstellung.maxY) * darstellung.auflösung + Darstellung.RandOben);
+            mittelpunkt = new Point(knoten.Koordinaten[0] * darstellung.Auflösung + Darstellung.RandLinks,
+                (-knoten.Koordinaten[1] + darstellung.MaxY) * darstellung.Auflösung + Darstellung.RandOben);
             Canvas.SetLeft(Knoten, mittelpunkt.X - Knoten.Width / 2);
             Canvas.SetTop(Knoten, mittelpunkt.Y - Knoten.Height / 2);
             VisualWärmeModell.Children.Add(Knoten);

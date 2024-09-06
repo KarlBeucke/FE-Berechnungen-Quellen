@@ -1459,7 +1459,7 @@ public class Darstellung
             var pathGeometry = new PathGeometry();
             var pathFigure = new PathFigure();
 
-            myBrush = new SolidColorBrush(blau);
+            myBrush = new SolidColorBrush(rot);
             if (querkraft1Skaliert < 0) myBrush = new SolidColorBrush(rot);
 
             pathFigure.StartPoint = startPoint;
@@ -1516,13 +1516,12 @@ public class Darstellung
             if (balkenPunktlast && !balkenGleichlast)
             {
                 var pathGeometry = new PathGeometry();
-                var pathFigure = new PathFigure();
+                var pathFigure = new PathFigure { StartPoint = startPoint };
 
                 // Querkraftlinie vom Start- bis zum Lastangriffspunkt
                 myBrush = new SolidColorBrush(blau);
                 if (querkraft1Skaliert < 0) myBrush = new SolidColorBrush(rot);
 
-                pathFigure.StartPoint = startPoint;
                 vec = endPoint - startPoint;
                 vec.Normalize();
                 vec2 = RotateVectorScreen(vec, -90);
@@ -1532,8 +1531,9 @@ public class Darstellung
                 nextPoint += punktLastO * (endPoint - startPoint);
                 pathFigure.Segments.Add(new LineSegment(nextPoint, true));
 
-                startPoint += punktLastO * (endPoint - startPoint);
-                pathFigure.Segments.Add(new LineSegment(startPoint, true));
+                //startPoint += punktLastO * (endPoint - startPoint);
+                nextPoint = startPoint + punktLastO * (endPoint - startPoint);
+                pathFigure.Segments.Add(new LineSegment(nextPoint, true));
                 pathFigure.IsClosed = true;
                 pathGeometry.Figures.Add(pathFigure);
                 Shape path = new Path
@@ -1550,19 +1550,20 @@ public class Darstellung
 
                 // Querkraftlinie vom Lastangriffs- bis zum Endpunkt
                 pathGeometry = new PathGeometry();
-                pathFigure = new PathFigure();
                 myBrush = new SolidColorBrush(blau);
-                if (querkraft1Skaliert + punktLastQ / maxQuerkraft * MaxQuerkraftScreen > 0)
-                    myBrush = new SolidColorBrush(rot);
-                pathFigure.StartPoint = startPoint;
-                nextPoint -= vec2 * punktLastQ / maxQuerkraft * MaxQuerkraftScreen;
-                pathFigure.Segments.Add(new LineSegment(nextPoint, true));
+                if (querkraft2Skaliert < 0) myBrush = new SolidColorBrush(rot);
+                startPoint = startPoint + punktLastO * (endPoint - startPoint);
+                pathFigure = new PathFigure
+                {
+                    StartPoint = startPoint,
+                    IsClosed = true
+                };
 
+                nextPoint = startPoint + vec2 * querkraft2Skaliert;
+                pathFigure.Segments.Add(new LineSegment(nextPoint, true));
                 nextPoint = endPoint + vec2 * querkraft2Skaliert;
                 pathFigure.Segments.Add(new LineSegment(nextPoint, true));
-
                 pathFigure.Segments.Add(new LineSegment(endPoint, true));
-                pathFigure.IsClosed = true;
                 pathGeometry.Figures.Add(pathFigure);
 
                 path = new Path
@@ -1603,32 +1604,44 @@ public class Darstellung
                     const double inkrement = 1 / anzahlProEinheit;
                     var anzahl = (int)(l / inkrement);
                     var polyLinePointArray = new Point[anzahl + 1];
-                    for (var i = 0; i <= anzahl; i++)
+
+                    if (Math.Abs(qb - qa) < double.Epsilon)
                     {
-                        // lokale x-Koordinate 0 <= x <= q0
-                        var x = i * inkrement;
+                        // lokale x-Koordinate 0 <= x <= l
+                        for (var i = 0; i < anzahl; i++)
+                        {
+                            var x = i * inkrement;
+                            var q = element.ElementZustand[1] - qb * x;
+                            var qPoint = new Point(startPoint.X + x * Auflösung, -q * MaxQuerkraftScreen / maxQuerkraft);
+                            polyLinePointArray[i] = qPoint;
+                        }
+                        polyLinePointArray[anzahl] = new Point(endPoint.X, -element.ElementZustand[4] * MaxQuerkraftScreen / maxQuerkraft);
+                    }
+                    else if (Math.Abs(qa) < Math.Abs(qb))
+                    {
                         // Q(x) = Qa - qa*x - (qa-qb)/l/2*x*x
-                        double q;
-                        Point qPoint;
-                        if (Math.Abs(qb - qa) < double.Epsilon)
+                        for (var i = 0; i < anzahl; i++)
                         {
-                            q = element.ElementZustand[1] - qb * x;
-                            qPoint = new Point(startPoint.X + x * Auflösung, -q * MaxQuerkraftScreen / maxQuerkraft);
+                            var x = i * inkrement;
+                            var q = element.ElementZustand[1] - qa * x - (qb - qa) / l / 2 * x * x;
+                            var qPoint = new Point(startPoint.X + x * Auflösung, -q * MaxQuerkraftScreen / maxQuerkraft);
                             polyLinePointArray[i] = qPoint;
                         }
-                        else if (Math.Abs(qa) < Math.Abs(qb))
+                        polyLinePointArray[anzahl] = new Point(endPoint.X, -element.ElementZustand[4] * MaxQuerkraftScreen / maxQuerkraft);
+                    }
+                    else
+                    {
+                        // lokale x-Koordinate von rechts l >= x >= 0
+                        for (var i = 0; i < anzahl; i++)
                         {
-                            q = element.ElementZustand[1] - qa * x - (qb - qa) / l / 2 * x * x;
-                            qPoint = new Point(startPoint.X + x * Auflösung, -q * MaxQuerkraftScreen / maxQuerkraft);
-                            polyLinePointArray[i] = qPoint;
-                        }
-                        else
-                        {
-                            q = element.ElementZustand[4] + qb * x + (qa - qb) / l / 2 * x * x;
-                            qPoint = new Point(endPoint.X - x * Auflösung, -q * MaxQuerkraftScreen / maxQuerkraft);
+                            var x = i * inkrement;
+                            var q = element.ElementZustand[4] + qb * x + (qa - qb) / l / 2 * x * x;
+                            var qPoint = new Point(endPoint.X - x * Auflösung, -q * MaxQuerkraftScreen / maxQuerkraft);
                             polyLinePointArray[anzahl - i] = qPoint;
                         }
+                        polyLinePointArray[0] = new Point(startPoint.X, -element.ElementZustand[1] * MaxQuerkraftScreen / maxQuerkraft);
                     }
+
                     // Nulldurchgang der Querkraft
                     var nullIndex = QuerkraftNullWert(polyLinePointArray);
                     Point q0;
@@ -1651,6 +1664,7 @@ public class Darstellung
                         polyLine0[anzahl + 1] = endPoint;
                     }
 
+                    pathFigure.StartPoint = startPoint;
                     var qSegment = new PolyLineSegment { Points = new PointCollection(polyLine0) };
                     pathFigure.Segments.Add(qSegment);
                     pathFigure.IsClosed = true;
@@ -1709,7 +1723,7 @@ public class Darstellung
                     const double inkrement = 1 / anzahlProEinheit;
                     var anzahl = (int)(l / inkrement);
                     var anzahlPunktlast = (int)(l * punktLastO / inkrement);
-                    var polyLinePointArray = new Point[anzahl + 2];
+                    var polyLinePointArray = new Point[anzahl + 3];
 
                     if (Math.Abs(qa) <= Math.Abs(qb))
                     {
@@ -1723,36 +1737,51 @@ public class Darstellung
                                 -q * MaxQuerkraftScreen / maxQuerkraft);
                             polyLinePointArray[i] = qPoint;
                         }
+                        var xP = punktLastO * l;
+                        var qP = element.ElementZustand[1] - qa * xP - (qb - qa) / l / 2 * xP * xP;
+                        polyLinePointArray[anzahlPunktlast + 1] = new Point((startPoint.X + punktLastO * l) * Auflösung,
+                                -qP * MaxQuerkraftScreen / maxQuerkraft);
+
+
 
                         // Q(x) rechts am und hinter Lastangriffspunkt, Lastangriffspunkt doppelt
-                        for (var i = anzahlPunktlast; i <= anzahl; i++)
+                        polyLinePointArray[anzahlPunktlast + 2] = new Point((startPoint.X + punktLastO * l) * Auflösung,
+                            -(qP - punktLastQ) * MaxQuerkraftScreen / maxQuerkraft);
+                        for (var i = anzahlPunktlast + 2; i <= anzahl; i++)
                         {
-                            var x = i * inkrement;
+                            var x = (i - 1) * inkrement;
                             var q = element.ElementZustand[1] - qa * x - (qb - qa) / l / 2 * x * x - punktLastQ;
-                            var qPoint = new Point(startPoint.X + x * Auflösung,
-                                -q * MaxQuerkraftScreen / maxQuerkraft);
+                            var qPoint = new Point(startPoint.X + x * Auflösung, -q * MaxQuerkraftScreen / maxQuerkraft);
                             polyLinePointArray[i + 1] = qPoint;
                         }
+                        polyLinePointArray[anzahl + 2] = new Point(endPoint.X, -element.ElementZustand[4] * MaxQuerkraftScreen / maxQuerkraft);
                     }
                     else
                     {
                         // lokale Koordinate y vom rechten Rand
                         // Q(y) = Qb + qb*y + (qa-qb)/l/2*y*y
-                        for (var i = 0; i <= anzahl - anzahlPunktlast; i++)
+                        for (var i = 0; i < anzahl - anzahlPunktlast; i++)
                         {
                             var y = i * inkrement;
                             var q = element.ElementZustand[4] + qb * y + (qa - qb) / l / 2 * y * y;
                             var qPoint = new Point(endPoint.X - y * Auflösung, -q * MaxQuerkraftScreen / maxQuerkraft);
-                            polyLinePointArray[anzahl + 1 - i] = qPoint;
+                            polyLinePointArray[anzahl + 2 - i] = qPoint;
                         }
-
-                        for (var i = anzahl - anzahlPunktlast; i <= anzahl; i++)
+                        var yP = (1 - punktLastO) * l;
+                        var qP = element.ElementZustand[4] + qb * yP + (qa - qb) / l / 2 * yP * yP;
+                        polyLinePointArray[anzahlPunktlast + 2] = new Point(endPoint.X - (1 - punktLastO) * l * Auflösung,
+                            -qP * MaxQuerkraftScreen / maxQuerkraft);
+                        // Q(y) links am und vor Lastangriffspunkt, Lastangriffspunkt doppelt
+                        polyLinePointArray[anzahlPunktlast + 1] = new Point(endPoint.X - (1 - punktLastO) * l * Auflösung,
+                            -(qP + punktLastQ) * MaxQuerkraftScreen / maxQuerkraft);
+                        for (var i = anzahl - anzahlPunktlast; i < anzahl; i++)
                         {
                             var y = i * inkrement;
-                            var q = element.ElementZustand[4] + qb * y + (qa - qb) / l / 2 * y * y + punktLastQ;
-                            var qPoint = new Point(endPoint.X - y * Auflösung, -q * MaxQuerkraftScreen / maxQuerkraft);
+                            var q = element.ElementZustand[4] + qb * y + (qa - qb) / l / 2 * y * y;
+                            var qPoint = new Point(endPoint.X - y * Auflösung, -(q + punktLastQ) * MaxQuerkraftScreen / maxQuerkraft);
                             polyLinePointArray[anzahl - i] = qPoint;
                         }
+                        polyLinePointArray[0] = new Point(startPoint.X, -element.ElementZustand[2] * MaxQuerkraftScreen / maxQuerkraft);
                     }
 
                     // Nulldurchgang der Querkraft
@@ -1768,7 +1797,6 @@ public class Darstellung
                         polyLine0 = new Point[nullIndex + 2];
                         Array.ConstrainedCopy(polyLinePointArray, 0, polyLine0, 0, nullIndex + 1);
                         polyLine0[nullIndex + 1] = q0;
-
                     }
                     else
                     {
@@ -1777,11 +1805,14 @@ public class Darstellung
                         Array.ConstrainedCopy(polyLinePointArray, 0, polyLine0, 0, anzahl + 1);
                         polyLine0[anzahl + 1] = endPoint;
                     }
-
+                    // Querkraftlinie auf der linken Seite
                     var qSegment = new PolyLineSegment { Points = new PointCollection(polyLine0) };
+
+                    pathFigure = new PathFigure { StartPoint = startPoint };
                     pathFigure.Segments.Add(qSegment);
                     pathFigure.IsClosed = true;
                     pathGeometry.Figures.Add(pathFigure);
+
                     myBrush = new SolidColorBrush(blau);
                     if (element.ElementZustand[1] < 0) myBrush = new SolidColorBrush(rot);
                     Shape path = new Path
@@ -1798,10 +1829,10 @@ public class Darstellung
 
                     // Querkraftlinie auf der rechten Seite, nur falls Nulldurchgang < Elementlänge
                     if (nullIndex <= 0) return;
-                    var anzahlqb = anzahl - nullIndex;
-                    var polyLine1 = new Point[anzahlqb + 2];
-                    Array.ConstrainedCopy(polyLinePointArray, nullIndex + 1, polyLine1, 0, anzahlqb + 1);
-                    polyLine1[anzahlqb + 1] = endPoint;
+                    var anzahlRechts = polyLinePointArray.Length - (nullIndex + 1);
+                    var polyLine1 = new Point[anzahlRechts + 1];
+                    Array.ConstrainedCopy(polyLinePointArray, nullIndex + 1, polyLine1, 0, anzahlRechts);
+                    polyLine1[anzahlRechts] = endPoint;
                     qSegment = new PolyLineSegment { Points = new PointCollection(polyLine1) };
 
                     pathGeometry = new PathGeometry();
@@ -1989,26 +2020,36 @@ public class Darstellung
 
                 // konstante Last oder linear steigende Dreieckslast
                 if (Math.Abs(qb) >= Math.Abs(qa))
+                {
                     for (var i = 0; i <= anzahl; i++)
                     {
                         // lokale x-Koordinate vom Balkenanfang 0 <= x <= Lastlänge
                         var x = i * inkrement;
                         // M(x) = Ma - Qa*x + qa*x*x/2 + (qb-qa)/l/6 *x*x*x
-                        var m = element.ElementZustand[2] - element.ElementZustand[1] * x + qa / 2 * x * x + (qb - qa) / l / 6 * x * x * x;
+                        var m = element.ElementZustand[2] - element.ElementZustand[1] * x + qa / 2 * x * x
+                                        + (qb - qa) / l / 6 * x * x * x;
                         polyLinePointArray[i] = new Point((element.Knoten[0].Koordinaten[0] + x) * Auflösung,
                             m / skalierungMoment * MaxMomentScreen);
                     }
+                    polyLinePointArray[anzahl] = new Point(element.Knoten[1].Koordinaten[0] * Auflösung,
+                        +element.ElementZustand[5] / skalierungMoment * MaxMomentScreen);
+                }
                 //linear fallende Dreieckslast
                 else
-                    for (var i = 0; i <= anzahl; i++)
+                {
+                    for (var i = 0; i < anzahl; i++)
                     {
                         // lokale x-Koordinate vom Balkenende 0 <= x <= Lastlänge
                         var x = i * inkrement;
                         // M(x) = Mb - Qb*x + qb/2 *x*x + (qa-qb)/l/6 *x*x*x
-                        var m = element.ElementZustand[5] + element.ElementZustand[4] * x + qb / 2 * x * x + (qa - qb) / l / 6 * x * x * x;
+                        var m = element.ElementZustand[5] + element.ElementZustand[4] * x + qb / 2 * x * x +
+                                (qa - qb) / l / 6 * x * x * x;
                         polyLinePointArray[anzahl - i] = new Point((element.Knoten[1].Koordinaten[0] - x) * Auflösung,
                             m / skalierungMoment * MaxMomentScreen);
                     }
+                    polyLinePointArray[0] = new Point(element.Knoten[0].Koordinaten[0] * Auflösung,
+                        element.ElementZustand[2] / skalierungMoment * MaxMomentScreen);
+                }
 
                 // schreib maximalen Momententext, nur Linien-, keine Punktlast
                 if (!elementHatPunktLast)
@@ -2043,7 +2084,7 @@ public class Darstellung
                     double m;
                     var abstandPunktlast = punktLastO * element.BalkenLänge;
                     // Unstetigkeit an Punktlast
-                    // qa ≤ qb   Gleichlast oder Dreieckslast linear steigend
+                    // qa ≤ qb Gleichlast oder Dreieckslast linear steigend
                     if (Math.Abs(qb) >= Math.Abs(qa))
                     {
                         var anzahlPunktlast = (int)(abstandPunktlast / inkrement);
@@ -2057,7 +2098,7 @@ public class Darstellung
                             polyLinePointArray[i] = mPoint;
                         }
 
-                        for (var i = anzahlPunktlast + 1; i <= anzahl; i++)
+                        for (var i = anzahlPunktlast + 1; i < anzahl; i++)
                         {
                             var x = i * inkrement;
                             // M(x) = Ma - Qa*x + qa/2 *x*x + (qb-qa)/l/6 *x*x*x + P * (x-abstandPunktlast)
@@ -2067,7 +2108,7 @@ public class Darstellung
                                 m / skalierungMoment * MaxMomentScreen);
                             polyLinePointArray[i] = mPoint;
                         }
-
+                        polyLinePointArray[anzahl] = new Point((element.Knoten[1].Koordinaten[0]) * Auflösung, element.ElementZustand[5] / skalierungMoment * MaxMomentScreen);
                         polyLinePointArray[anzahl + 1] = endPunkt;
                         var mSegment = new PolyLineSegment { Points = new PointCollection(polyLinePointArray) };
                         pathFigure.Segments.Add(mSegment);
@@ -2098,7 +2139,9 @@ public class Darstellung
                         var anzahlPunktlast = (int)((l - abstandPunktlast) / inkrement);
                         polyLinePointArray = new Point[anzahl + 2];
 
-                        for (var i = 0; i <= anzahlPunktlast; i++)
+                        polyLinePointArray[anzahl + 1] = endPunkt;
+                        polyLinePointArray[anzahl] = new Point((element.Knoten[1].Koordinaten[0]) * Auflösung, element.ElementZustand[5] / skalierungMoment * MaxMomentScreen);
+                        for (var i = 1; i <= anzahlPunktlast; i++)
                         {
                             // lokale x-Koordinate vom Balkenende 0 <= x <= Lastlänge
                             var x = i * inkrement;
@@ -2108,7 +2151,7 @@ public class Darstellung
                                 m / skalierungMoment * MaxMomentScreen);
                         }
 
-                        for (var i = anzahlPunktlast + 1; i <= anzahl; i++)
+                        for (var i = anzahlPunktlast + 1; i < anzahl; i++)
                         {
                             // lokale x-Koordinate vom Balkenende (l-abstandPunktlast) < x <= l
                             var x = i * inkrement;
@@ -2119,8 +2162,9 @@ public class Darstellung
                                 m / skalierungMoment * MaxMomentScreen);
                             polyLinePointArray[anzahl - i] = mPoint;
                         }
+                        polyLinePointArray[0] = new Point((element.Knoten[0].Koordinaten[0]) * Auflösung, element.ElementZustand[2] / skalierungMoment * MaxMomentScreen);
 
-                        polyLinePointArray[anzahl + 1] = endPunkt;
+
                         var mSegment = new PolyLineSegment { Points = new PointCollection(polyLinePointArray) };
                         pathFigure.Segments.Add(mSegment);
 
