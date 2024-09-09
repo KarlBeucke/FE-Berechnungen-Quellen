@@ -1,8 +1,4 @@
-﻿using FEBibliothek.Modell;
-using System;
-using System.Windows;
-
-namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
+﻿namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class ZeitKnotenanfangswerteNeu
 {

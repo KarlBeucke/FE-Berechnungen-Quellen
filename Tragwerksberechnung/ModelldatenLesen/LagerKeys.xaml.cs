@@ -1,5 +1,4 @@
-﻿using FEBibliothek.Modell;
-using System.Linq;
+﻿using System.Linq;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 

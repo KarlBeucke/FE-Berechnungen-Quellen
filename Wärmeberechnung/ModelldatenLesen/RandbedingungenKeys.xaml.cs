@@ -1,6 +1,4 @@
-﻿using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;

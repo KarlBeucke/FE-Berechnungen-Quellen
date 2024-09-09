@@ -1,6 +1,4 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 using System.Linq;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;

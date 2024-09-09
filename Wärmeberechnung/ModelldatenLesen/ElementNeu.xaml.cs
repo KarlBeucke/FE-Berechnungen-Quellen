@@ -1,7 +1,5 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FEBibliothek.Modell;
 using System.Diagnostics;
-using System.Windows;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 

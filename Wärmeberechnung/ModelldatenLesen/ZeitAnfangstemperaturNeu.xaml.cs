@@ -1,7 +1,4 @@
-﻿using FEBibliothek.Modell;
-using System.Windows;
-
-namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
+﻿namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class ZeitAnfangstemperaturNeu
 {

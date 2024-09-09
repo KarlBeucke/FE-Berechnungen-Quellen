@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
-using FEBibliothek.Modell;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 

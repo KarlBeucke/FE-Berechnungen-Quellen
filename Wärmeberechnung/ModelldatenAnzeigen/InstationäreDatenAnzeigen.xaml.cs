@@ -1,8 +1,6 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;

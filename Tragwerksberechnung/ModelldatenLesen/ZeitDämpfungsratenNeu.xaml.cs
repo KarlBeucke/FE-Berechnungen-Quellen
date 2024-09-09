@@ -1,7 +1,4 @@
-﻿using FEBibliothek.Modell;
-using System;
-using System.Globalization;
-using System.Windows;
+﻿using System.Globalization;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 

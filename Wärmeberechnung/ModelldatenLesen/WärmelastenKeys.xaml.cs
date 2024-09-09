@@ -1,6 +1,4 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 using System.Collections.Generic;
 using System.Linq;
 

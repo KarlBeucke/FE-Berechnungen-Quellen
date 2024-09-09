@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+﻿namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
 public partial class DialogLöschTragwerksObjekte
 {

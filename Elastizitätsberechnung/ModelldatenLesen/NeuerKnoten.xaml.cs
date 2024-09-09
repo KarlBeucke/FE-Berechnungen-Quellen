@@ -1,7 +1,4 @@
-﻿using FEBibliothek.Modell;
-using System.Windows;
-
-namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
+﻿namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 public partial class NeuerKnoten
 {

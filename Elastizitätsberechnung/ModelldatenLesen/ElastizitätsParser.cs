@@ -1,6 +1,4 @@
-﻿using FEBibliothek.Modell;
-
-namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
+﻿namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 public class ElastizitätsParser : FeParser
 {

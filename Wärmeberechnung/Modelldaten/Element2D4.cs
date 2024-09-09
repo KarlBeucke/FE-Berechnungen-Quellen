@@ -1,8 +1,4 @@
-﻿using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using FEBibliothek.Werkzeuge;
-using System;
-using System.Windows;
+﻿using FEBibliothek.Werkzeuge;
 
 namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 

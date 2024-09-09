@@ -1,5 +1,4 @@
-﻿using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 

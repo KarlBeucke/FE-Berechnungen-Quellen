@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
+﻿namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
 public partial class DialogLöschWärmemodellobjekt
 {

@@ -1,7 +1,4 @@
-﻿using FEBibliothek.Modell.abstrakte_Klassen;
-using System;
-
-namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
 public class ZeitabhängigeKnotenLast : AbstraktZeitabhängigeKnotenlast
 {

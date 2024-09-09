@@ -1,7 +1,4 @@
-﻿using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using FEBibliothek.Werkzeuge;
-using System;
+﻿using FEBibliothek.Werkzeuge;
 using System.Windows.Media.Media3D;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;

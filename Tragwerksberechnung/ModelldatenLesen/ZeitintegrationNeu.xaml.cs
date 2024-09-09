@@ -1,8 +1,5 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FEBibliothek.Modell;
-using System;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Markup;
 

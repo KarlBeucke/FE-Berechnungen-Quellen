@@ -1,5 +1,4 @@
-﻿using FEBibliothek.Modell.abstrakte_Klassen;
-using FEBibliothek.Werkzeuge;
+﻿using FEBibliothek.Werkzeuge;
 
 namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 

@@ -1,8 +1,4 @@
-﻿using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System.Windows;
-
-namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
 public class FederElement : Abstrakt2D
 {

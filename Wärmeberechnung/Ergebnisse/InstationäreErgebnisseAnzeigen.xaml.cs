@@ -1,11 +1,7 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;

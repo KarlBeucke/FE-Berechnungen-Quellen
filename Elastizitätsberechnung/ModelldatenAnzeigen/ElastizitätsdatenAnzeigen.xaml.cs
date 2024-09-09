@@ -1,10 +1,7 @@
 ﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;

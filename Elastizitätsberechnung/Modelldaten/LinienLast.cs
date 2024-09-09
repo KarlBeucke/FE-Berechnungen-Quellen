@@ -1,7 +1,4 @@
-﻿using FEBibliothek.Modell.abstrakte_Klassen;
-using System;
-
-namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 
 public class LinienLast : AbstraktLinienlast
 {

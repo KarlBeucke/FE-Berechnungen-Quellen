@@ -1,6 +1,4 @@
-﻿using FEBibliothek.Modell.abstrakte_Klassen;
-
-namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 
 public class KnotenLast : AbstraktLast
 {

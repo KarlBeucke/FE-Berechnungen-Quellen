@@ -1,8 +1,5 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
-using System;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Input;
 using Lager = FE_Berechnungen.Tragwerksberechnung.Modelldaten.Lager;
 

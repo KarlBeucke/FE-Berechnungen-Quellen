@@ -1,7 +1,4 @@
-﻿using FEBibliothek.Modell;
-using System;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using static System.Windows.Controls.Canvas;

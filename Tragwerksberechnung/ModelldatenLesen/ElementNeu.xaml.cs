@@ -1,11 +1,7 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.Windows;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 

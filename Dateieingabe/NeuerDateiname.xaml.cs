@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace FE_Berechnungen.Dateieingabe;
+﻿namespace FE_Berechnungen.Dateieingabe;
 
 public partial class NeuerDateiname
 {

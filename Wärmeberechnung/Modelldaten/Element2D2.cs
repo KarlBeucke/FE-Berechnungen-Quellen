@@ -1,9 +1,4 @@
-﻿using FEBibliothek.Modell;
-using FEBibliothek.Modell.abstrakte_Klassen;
-using System;
-using System.Windows;
-
-namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
 public class Element2D2 : AbstraktLinear2D2
 {

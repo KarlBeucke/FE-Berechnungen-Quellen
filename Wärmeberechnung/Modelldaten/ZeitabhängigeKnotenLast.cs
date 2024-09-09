@@ -1,6 +1,4 @@
-﻿using FEBibliothek.Modell.abstrakte_Klassen;
-
-namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
 public class ZeitabhängigeKnotenLast : AbstraktZeitabhängigeKnotenlast
 {

@@ -1,7 +1,4 @@
-﻿using FEBibliothek.Modell.abstrakte_Klassen;
-using System;
-
-namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
 public class ElementLast4 : AbstraktElementLast
 {

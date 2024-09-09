@@ -1,9 +1,7 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
-using FEBibliothek.Modell;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
