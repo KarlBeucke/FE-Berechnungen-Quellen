@@ -19,7 +19,7 @@
                 Name="KnotenverformungenGrid" Margin="5,30,0,0" Grid.Column="0"
                 AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
                 Loaded="Knotenverformungen_Loaded" SelectionChanged="KnotenZeileSelected"
-                LostFocus="KeinKnotenSelected" d:DataContext="{d:DesignInstance }">
+                LostFocus="KeinKnotenSelected">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Knoten" Binding="{Binding Key}" />
                     <DataGridTextColumn Header="ux" Binding="{Binding Value.Knotenfreiheitsgrade[0], StringFormat=N4}" />
@@ -37,7 +37,7 @@
                 Name="ElementendkräfteGrid" Margin="5,30,0,0" AlternatingRowBackground="Aqua"
                 AutoGenerateColumns="False"
                 Loaded="Elementendkräfte_Loaded" SelectionChanged="ElementZeileSelected"
-                LostFocus="KeinElementSelected" d:DataContext="{d:DesignInstance }">
+                LostFocus="KeinElementSelected">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Element" Binding="{Binding ElementId}" />
                     <DataGridTextColumn Header="Na" Binding="{Binding Na, StringFormat=N2}" />
@@ -55,7 +55,7 @@
                    VerticalAlignment="Top" Width="161" />
             <DataGrid
                 Name="LagerreaktionenGrid" Margin="5,30,0,0" AlternatingRowBackground="Aqua"
-                Loaded="Lagerreaktionen_Loaded" AutoGenerateColumns="False" d:DataContext="{d:DesignInstance }">
+                Loaded="Lagerreaktionen_Loaded" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Knoten" Binding="{Binding Key}" />
                     <DataGridTextColumn Header="Rx" Binding="{Binding Value.Reaktionen[0], StringFormat=N2}" />

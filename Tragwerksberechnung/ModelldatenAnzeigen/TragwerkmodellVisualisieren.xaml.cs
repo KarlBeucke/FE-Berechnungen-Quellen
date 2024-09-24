@@ -212,8 +212,8 @@ public partial class TragwerkmodellVisualisieren
 
     private void OnBtnLagerNeu_Click(object sender, RoutedEventArgs e)
     {
-        IsLager = true;
-        _lagerNeu = new LagerNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+       _lagerNeu = new LagerNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+
         LagerKeys = new LagerKeys(_modell) { Owner = this };
         LagerKeys.Show();
         StartFenster.Berechnet = false;
@@ -223,8 +223,7 @@ public partial class TragwerkmodellVisualisieren
     {
         ZeitintegrationNeu = new ZeitintegrationNeu(_modell) { Topmost = true };
     }
-
-
+    
     // KnotenNeu setzt Pilotpunkt
     // MouseDown rechte Taste "fängt" Pilotpunkt, MouseMove folgt ihm, MouseUp setzt ihn neu
     private void Pilot_MouseDown(object sender, MouseButtonEventArgs e)
@@ -481,8 +480,9 @@ public partial class TragwerkmodellVisualisieren
         {
             case FederElement:
                 {
-                    _ = new ElementNeu(_modell)
+                    _elementNeu = new ElementNeu(_modell)
                     {
+                        Topmost = true, Owner = (Window)Parent,
                         FederCheck = { IsChecked = true },
                         ElementId = { Text = element.ElementId },
                         StartknotenId = { Text = element.KnotenIds[0] },
@@ -492,8 +492,9 @@ public partial class TragwerkmodellVisualisieren
                 }
             case Fachwerk:
                 {
-                    _ = new ElementNeu(_modell)
+                    _elementNeu = new ElementNeu(_modell)
                     {
+                        Topmost = true, Owner = (Window)Parent,
                         FachwerkCheck = { IsChecked = true },
                         ElementId = { Text = element.ElementId },
                         StartknotenId = { Text = element.KnotenIds[0] },
@@ -510,8 +511,9 @@ public partial class TragwerkmodellVisualisieren
                 }
             case Biegebalken:
                 {
-                    _ = new ElementNeu(_modell)
+                    _elementNeu = new ElementNeu(_modell)
                     {
+                        Topmost = true, Owner = (Window)Parent,
                         BalkenCheck = { IsChecked = true },
                         ElementId = { Text = element.ElementId },
                         StartknotenId = { Text = element.KnotenIds[0] },
@@ -529,8 +531,9 @@ public partial class TragwerkmodellVisualisieren
                 }
             case BiegebalkenGelenk:
                 {
-                    var neuesElement = new ElementNeu(_modell)
+                    _elementNeu = new ElementNeu(_modell)
                     {
+                        Topmost = true, Owner = (Window)Parent,
                         BalkenCheck = { IsChecked = true },
                         ElementId = { Text = element.ElementId },
                         StartknotenId = { Text = element.KnotenIds[0] },
@@ -546,12 +549,14 @@ public partial class TragwerkmodellVisualisieren
                     {
                         case 1:
                             {
-                                neuesElement.Gelenk1.IsChecked = true;
+                                _elementNeu.Gelenk1.IsChecked = true;
+                                _elementNeu.Gelenk2.IsChecked = false;
                                 break;
                             }
                         case 2:
                             {
-                                neuesElement.Gelenk2.IsChecked = true;
+                                _elementNeu.Gelenk1.IsChecked = false;
+                                _elementNeu.Gelenk2.IsChecked = true;
                                 break;
                             }
                     }

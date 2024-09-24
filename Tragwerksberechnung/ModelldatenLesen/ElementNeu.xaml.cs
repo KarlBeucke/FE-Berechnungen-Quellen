@@ -2,6 +2,7 @@
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -61,98 +62,85 @@ public partial class ElementNeu
         var knotenIds = new string[2];
         knotenIds[0] = StartknotenId.Text;
         if (EndknotenId.Text.Length != 0) knotenIds[1] = EndknotenId.Text;
-
-        if (FachwerkCheck.IsChecked != null && (bool)FachwerkCheck.IsChecked)
+        _modell.Knoten.TryGetValue(knotenIds[0], out var startKnoten);
+        if (startKnoten == null)
         {
-            element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
-        }
-        else if (BalkenCheck.IsChecked != null && (bool)BalkenCheck.IsChecked)
-        {
-            if (_modell.Querschnitt.TryGetValue(QuerschnittId.Text, out var querschnitt))
-            {
-                if (querschnitt.QuerschnittsWerte.Length < 2 && Trägheitsmoment.Text.Length == 0)
-                {
-                    _ = MessageBox.Show("Trägheitsmoment ist nicht definiert", "neues Element");
-                    return;
-                }
-            }
-
-            if (Gelenk1.IsChecked != null && (bool)Gelenk1.IsChecked &&
-                Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked)
-            {
-                element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
-            }
-            // falls Biegebalken angewählt ist und der Biegebalken an Knoten mit <3 Freiheitsgraden angeschlossen ist,
-            // wird Biegebalken automatisch als BiegebalkenGelenk bzw. Fachwerk eingefügt
-            else if (Gelenk1.IsChecked != null && !(bool)Gelenk1.IsChecked &&
-                     Gelenk2.IsChecked != null && !(bool)Gelenk2.IsChecked)
-            {
-                _modell.Knoten.TryGetValue(knotenIds[0], out var startKnoten);
-                _modell.Knoten.TryGetValue(knotenIds[1], out var endKnoten);
-                if (startKnoten == null)
-                {
-                    _ = MessageBox.Show("Startknoten ist nicht definiert", "neues Element");
-                    return;
-                }
-
-                if (endKnoten == null)
-                {
-                    _ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element");
-                    return;
-                }
-
-                element = startKnoten.AnzahlKnotenfreiheitsgrade switch
-                {
-                    3 when endKnoten.AnzahlKnotenfreiheitsgrade == 3 => new Biegebalken(knotenIds, MaterialId.Text,
-                        QuerschnittId.Text, _modell),
-                    < 3 when endKnoten.AnzahlKnotenfreiheitsgrade == 3 => new BiegebalkenGelenk(knotenIds,
-                        MaterialId.Text,
-                        QuerschnittId.Text, _modell, 1),
-                    3 when endKnoten.AnzahlKnotenfreiheitsgrade < 3 => new BiegebalkenGelenk(knotenIds, MaterialId.Text,
-                        QuerschnittId.Text, _modell, 2),
-                    < 3 when endKnoten.AnzahlKnotenfreiheitsgrade < 3 => new Fachwerk(knotenIds, MaterialId.Text,
-                        QuerschnittId.Text, _modell),
-                    _ => null
-                };
-            }
-            else if (Gelenk1.IsChecked != null && (bool)Gelenk1.IsChecked)
-            {
-                _modell.Knoten.TryGetValue(knotenIds[1], out var endKnoten);
-                if (endKnoten == null)
-                {
-                    _ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element");
-                    return;
-                }
-
-                if (endKnoten.AnzahlKnotenfreiheitsgrade == 3)
-                    element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 1);
-                else
-                    element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
-            }
-            else if (Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked)
-            {
-                _modell.Knoten.TryGetValue(knotenIds[0], out var startKnoten);
-                if (startKnoten == null)
-                {
-                    _ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element");
-                    return;
-                }
-
-                if (startKnoten.AnzahlKnotenfreiheitsgrade == 3)
-                    element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 2);
-                else
-                    element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
-            }
-        }
-        else if (FederCheck.IsChecked != null && (bool)FederCheck.IsChecked)
-        {
-            element = new FederElement(knotenIds, MaterialId.Text, _modell);
-        }
-        else
-        {
-            _ = MessageBox.Show("Elementtyp muss definiert sein", "neues Element");
+            _ = MessageBox.Show("Startknoten ist nicht definiert", "neues Element");
             return;
         }
+        _modell.Knoten.TryGetValue(knotenIds[1], out var endKnoten);
+        if (endKnoten == null)
+        {
+            _ = MessageBox.Show("Endknoten ist nicht definiert", "neues Element");
+            return;
+        }
+
+        try
+        {
+            if (FachwerkCheck.IsChecked != null && (bool)FachwerkCheck.IsChecked)
+            {
+                startKnoten.AnzahlKnotenfreiheitsgrade = 2;
+                element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
+                // check, ob ein Knoten des Fachwerkstabs ein eingespannter lagerknoten ist
+                if (Gelenkstab(startKnoten.Id) || (Gelenkstab(endKnoten.Id)))
+                    _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' kann nicht eingespannt werden");
+            }
+            else if (BalkenCheck.IsChecked != null && (bool)BalkenCheck.IsChecked)
+            {
+                if (_modell.Querschnitt.TryGetValue(QuerschnittId.Text, out var querschnitt))
+                {
+                    if (querschnitt.QuerschnittsWerte.Length < 2 && Trägheitsmoment.Text.Length == 0)
+                    {
+                        _ = MessageBox.Show("Trägheitsmoment ist nicht definiert", "neues Element");
+                        return;
+                    }
+                }
+
+                switch (Gelenk1.IsChecked != null && (bool)Gelenk1.IsChecked)
+                {
+                    // falls Biegebalken angewählt ist und der Biegebalken an Knoten mit <3 Freiheitsgraden angeschlossen ist,
+                    // wird Biegebalken automatisch als BiegebalkenGelenk bzw. Fachwerk eingefügt
+                    case false when Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked:
+                        startKnoten.AnzahlKnotenfreiheitsgrade = 3;
+                        element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 2);
+                        break;
+                    case true when Gelenk2.IsChecked != null && !(bool)Gelenk2.IsChecked:
+                        if (Gelenkstab(startKnoten.Id))
+                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' kann nicht eingespannt werden");
+                        endKnoten.AnzahlKnotenfreiheitsgrade = 3;
+                        element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 1);
+                        break;
+                    case false when Gelenk2.IsChecked != null && !(bool)Gelenk2.IsChecked:
+                        if (Gelenkstab(endKnoten.Id))
+                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' kann nicht eingespannt werden");
+                        startKnoten.AnzahlKnotenfreiheitsgrade = 3;
+                        endKnoten.AnzahlKnotenfreiheitsgrade = 3;
+                        element = new Biegebalken(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
+                        break;
+                    case true when Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked:
+                        if (Gelenkstab(startKnoten.Id))
+                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' kann nicht eingespannt werden");
+                        if (Gelenkstab(endKnoten.Id))
+                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' kann nicht eingespannt werden");
+                        element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
+                        break;
+                }
+            }
+            else if (FederCheck.IsChecked != null && (bool)FederCheck.IsChecked)
+            {
+                element = new FederElement(knotenIds, MaterialId.Text, _modell);
+            }
+            else
+            {
+                _ = MessageBox.Show("Elementtyp muss definiert sein", "neues Element");
+                return;
+            }
+        }
+        catch (ModellAusnahme elementNeu)
+        {
+            _ = MessageBox.Show(elementNeu.Message);
+        }
+        
 
         if (element != null)
         {
@@ -280,5 +268,11 @@ public partial class ElementNeu
         Trägheitsmoment.Text = vorhandenesElement.I == 0
             ? string.Empty
             : vorhandenesElement.I.ToString("E2", CultureInfo.CurrentCulture);
+    }
+
+    private bool Gelenkstab(string knotenId)
+    {
+        return _modell.Randbedingungen.Any(lager 
+            => lager.Value.KnotenId == knotenId && lager.Value.Typ == 7);
     }
 }

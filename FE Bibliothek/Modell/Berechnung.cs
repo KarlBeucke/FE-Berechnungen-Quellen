@@ -156,14 +156,14 @@ namespace FEBibliothek.Modell
                 var festgehalten = randbedingung.Festgehalten;
                 for (var i = 0; i < festgehalten.Length; i++)
                 {
-                    if (festgehalten[i])
-                        _systemGleichungen.SetzStatus(true, _knoten.SystemIndizes[i], vordefiniert[i]);
+                    if (festgehalten[2] && _knoten.SystemIndizes.Length < 3)
+                        throw new BerechnungAusnahme("\nKnoten " + _knoten.Id +
+                                                       " muss 3 Knotenfreiheitsgrade für Festeinspannung haben");
+                    if (festgehalten[i]) _systemGleichungen.SetzStatus(true, _knoten.SystemIndizes[i], vordefiniert[i]);
                 }
             }
             else
-            {
                 throw new BerechnungAusnahme("\nEndknoten " + knotenId + " ist nicht im Modell enthalten.");
-            }
         }
         private void NeuberechnungSystemMatrix()
         {
@@ -223,9 +223,7 @@ namespace FEBibliothek.Modell
                     _systemGleichungen.AddVektor(indizes, lastVektor);
                 }
                 else
-                {
                     throw new BerechnungAusnahme("\nElement " + elementId + " für Linienlasten ist nicht im Modell enthalten.");
-                }
             }
         }
         public void LöseGleichungen()
@@ -339,7 +337,7 @@ namespace FEBibliothek.Modell
             _diagonalMatrix = true;
         }
 
-        // Zeitintegration 1er Ordnung
+        // Zeitintegration 1. Ordnung
         public void ZeitintegrationErsterOrdnung()
         {
             // berechne spezifische Wärme Matrix
@@ -468,9 +466,7 @@ namespace FEBibliothek.Modell
                         temperatur[k][lastIndex[0]] = last[k];
                 }
                 else
-                {
                     throw new BerechnungAusnahme("\nKnoten " + item.Value.KnotenId + " für zeitabhängige Knotenlast ist nicht im Modell enthalten.");
-                }
             }
 
             // finde zeitabhängige Elementlasten
@@ -543,13 +539,11 @@ namespace FEBibliothek.Modell
                         temperatur[k][lastIndex[0]] = vordefinierteTemperatur[k];
                 }
                 else
-                {
                     throw new BerechnungAusnahme("\nKnoten " + item.Value.KnotenId + " für zeitabhängige Randbedingung ist nicht im Modell enthalten.");
-                }
             }
         }
 
-        // 2nd order time integration
+        // Zeitintegration 2. Ordnung
         public void ZeitintegrationZweiterOrdnung()
         {
             var dt = _modell.Zeitintegration.Dt;
@@ -654,16 +648,12 @@ namespace FEBibliothek.Modell
             for (var n = 0; n < _modell.Eigenzustand.AnzahlZustände; n++)
             {
                 double phinPhinT = 0;
-                double mn = 0;
                 for (var i = 0; i < _systemGleichungen.DiagonalMatrix.Length; i++)
                 {
                     phinPhinT += _modell.Eigenzustand.Eigenvektoren[n][i] * _modell.Eigenzustand.Eigenvektoren[n][i];
                 }
 
-                for (var i = 0; i < _systemGleichungen.DiagonalMatrix.Length; i++)
-                {
-                    mn += _modell.Eigenzustand.Eigenvektoren[n][i] * _systemGleichungen.DiagonalMatrix[i] * _modell.Eigenzustand.Eigenvektoren[n][i];
-                }
+                var mn = _systemGleichungen.DiagonalMatrix.Select((t, i) => _modell.Eigenzustand.Eigenvektoren[n][i] * t * _modell.Eigenzustand.Eigenvektoren[n][i]).Sum();
 
                 faktor += 2 * modaleDämpfung[n] * Math.Sqrt(_modell.Eigenzustand.Eigenwerte[n]) / 2 / Math.PI * phinPhinT / mn;
             }
@@ -681,9 +671,7 @@ namespace FEBibliothek.Modell
             foreach (Knotenwerte anf in _modell.Zeitintegration.Anfangsbedingungen)
             {
                 if (!_modell.Knoten.TryGetValue(anf.KnotenId, out var anfKnoten))
-                {
                     throw new BerechnungAusnahme("\nKnoten " + anf.KnotenId + " für vordefinierte Anfangsbedingung ist nicht im Modell enthalten.");
-                }
                 for (var i = 0; i < anf.Werte.Length / 2; i += 2)
                 {
                     foreach (var knotenIndex in anfKnoten.SystemIndizes)

@@ -179,6 +179,9 @@ namespace FEBibliothek.Gleichungslöser
             {
                 if (!status[row]) continue;
                 dual[row] = -vector[row];
+                if (row - profil[row] > matrix[row].Length - 1)
+                    throw new BerechnungAusnahme("\nRandbedingung in Zeile '" + row +
+                                                 "' der Steifigkeitsmatrix nicht ermittelbar, falscher Anschluss");
                 for (column = profil[row]; column <= row; column++)
                     dual[row] += matrix[row][column - profil[row]] * primal[column];
             }
@@ -189,7 +192,6 @@ namespace FEBibliothek.Gleichungslöser
                 {
                     if (!status[row]) continue;
                     dual[row] += matrix[column][row - profil[column]] * primal[column];
-
                 }
             }
         }

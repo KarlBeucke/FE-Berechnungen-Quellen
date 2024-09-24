@@ -1,6 +1,7 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using System.Globalization;
 using System.Windows.Input;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using Lager = FE_Berechnungen.Tragwerksberechnung.Modelldaten.Lager;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
@@ -54,7 +55,27 @@ public partial class LagerNeu
             vorhandenesLager.Typ = 0;
             if (vorhandenesLager.Festgehalten[0]) vorhandenesLager.Typ = Lager.XFixed;
             if (vorhandenesLager.Festgehalten[1]) vorhandenesLager.Typ += Lager.Yfixed;
-            if (vorhandenesLager.Festgehalten[2]) vorhandenesLager.Typ += Lager.Rfixed;
+            try
+            {
+                if (vorhandenesLager.Festgehalten[2])
+                {
+                    // eingespanntes Lager (x, y, r fest) erfordert 3 Knotenfreiheitsgrade am Lagerknoten
+                    vorhandenesLager.Typ += Lager.Rfixed;
+                    _modell.Knoten.TryGetValue(vorhandenesLager.KnotenId, out var lagerKnoten);
+                    if (lagerKnoten != null)
+                    {
+                        lagerKnoten.AnzahlKnotenfreiheitsgrade = 3;
+                        _ = MessageBox.Show("\nFesteinspannung von '" + vorhandenesLager.RandbedingungId 
+                                                            + "' erfordert 3 Knotenfreiheitsgrade und "
+                                                            + "ggf. Anpassung von Biegestab ohne Gelenk am Lager");
+                    }
+                }
+            }
+            catch (ModellAusnahme lagerNeu)
+            {
+                _ = MessageBox.Show(lagerNeu.Message);
+            }
+
             try
             {
                 if (VorX.Text.Length > 0) vorhandenesLager.Vordefiniert[0] = double.Parse(VorX.Text);
@@ -133,7 +154,6 @@ public partial class LagerNeu
             _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neues Lager");
             LagerId.Text = "";
             KnotenId.Text = "";
-            return;
         }
         else
         {
@@ -161,5 +181,28 @@ public partial class LagerNeu
         StartFenster.TragwerkVisual.KnotenClick(knoten);
         Close();
         StartFenster.Berechnet = false;
+    }
+
+    private bool Lagergelenk(string knotenId)
+    {
+        var gelenk = true;
+        foreach (var element in _modell.Elemente)
+        {
+            switch (element.Value)
+            {
+                case Fachwerk:
+                    gelenk = true;
+                    break;
+                case Biegebalken when element.Value.KnotenIds[0] == knotenId:
+                case Biegebalken when element.Value.KnotenIds[1] == knotenId:
+                case BiegebalkenGelenk when element.Value.KnotenIds[0] == knotenId
+                                            && element.Value.Typ == 1:
+                case BiegebalkenGelenk when element.Value.KnotenIds[1] == knotenId
+                                            && element.Value.Typ == 2:
+                    gelenk = false;
+                    break;
+            }
+        }
+        return gelenk;
     }
 }
