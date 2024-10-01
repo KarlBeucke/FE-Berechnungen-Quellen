@@ -1,6 +1,5 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Markup;

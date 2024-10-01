@@ -39,6 +39,12 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="FE Bibliothek\Modell\**" />
+    <EmbeddedResource Remove="FE Bibliothek\Modell\**" />
+    <None Remove="FE Bibliothek\Modell\**" />
+    <Page Remove="FE Bibliothek\Modell\**" />
+  </ItemGroup>
+  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.7.2 %28x86 und x64%29</ProductName>
@@ -51,7 +57,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="FE Bibliothek\FE Bibliothek.csproj" />
+    <ProjectReference Include="FE Bibliothek\FEBibliothek.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Ressourcen\Halbraum.jpg" />
@@ -69,36 +75,6 @@
   <ItemGroup>
     <Compile Remove="FE Bibliothek\AssemblyInfo.cs" />
     <Compile Remove="FE Bibliothek\Gleichungslöser\ProfillöserStatus.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\Abstrakt2D.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\Abstrakt3D.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktBalken.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktElement.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktElementLast.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktKnotenlast.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLast.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLinear2D2.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLinear2D3.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLinear2D4.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLinear3D8.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktLinienlast.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktMaterial.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktRandbedingung.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktZeitabhängigeElementlast.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktZeitabhängigeKnotenlast.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktZeitabhängigeRandbedingung.cs" />
-    <Compile Remove="FE Bibliothek\Modell\abstrakte Klassen\AbstraktZeitintegration.cs" />
-    <Compile Remove="FE Bibliothek\Modell\Berechnung.cs" />
-    <Compile Remove="FE Bibliothek\Modell\BerechnungAusnahme.cs" />
-    <Compile Remove="FE Bibliothek\Modell\Eigenzustände.cs" />
-    <Compile Remove="FE Bibliothek\Modell\FeModell.cs" />
-    <Compile Remove="FE Bibliothek\Modell\FEParser.cs" />
-    <Compile Remove="FE Bibliothek\Modell\Gleichungen.cs" />
-    <Compile Remove="FE Bibliothek\Modell\Knoten.cs" />
-    <Compile Remove="FE Bibliothek\Modell\Knotenwerte.cs" />
-    <Compile Remove="FE Bibliothek\Modell\ModaleWerte.cs" />
-    <Compile Remove="FE Bibliothek\Modell\ModellAusnahme.cs" />
-    <Compile Remove="FE Bibliothek\Modell\ParseAusnahme.cs" />
-    <Compile Remove="FE Bibliothek\Modell\Querschnitt.cs" />
     <Compile Remove="FE Bibliothek\obj\Debug\.NETFramework,Version=v4.6.1.AssemblyAttributes.cs" />
     <Compile Remove="FE Bibliothek\obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
     <Compile Remove="FE Bibliothek\obj\Debug\Input\InputFile.g.i.cs" />
@@ -118,5 +94,8 @@
     <Compile Remove="FE Bibliothek\Zeitlöser\Zeitintegration2OrdnungStatus.cs" />
     <Compile Remove="Wärmeberechnung\Ergebnisse\Knotenauswahl.xaml.cs" />
     <Page Remove="Wärmeberechnung\Ergebnisse\Knotenauswahl.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="packages\" />
   </ItemGroup>
 </Project>

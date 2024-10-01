@@ -10,7 +10,6 @@ using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 using Microsoft.Win32;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;

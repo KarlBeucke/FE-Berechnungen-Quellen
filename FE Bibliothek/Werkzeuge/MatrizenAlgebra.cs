@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FEBibliothek.Werkzeuge
+﻿namespace FEBibliothek.Werkzeuge
 {
     // public static class MatrixAlgebra
     //

@@ -1,6 +1,4 @@
-﻿using FEBibliothek.Werkzeuge;
-
-namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
 public class Biegebalken : AbstraktBalken
 {

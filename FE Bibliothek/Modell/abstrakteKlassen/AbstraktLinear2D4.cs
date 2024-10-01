@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows;
-
-namespace FEBibliothek.Modell.abstrakte_Klassen
+﻿namespace FEBibliothek.Modell.abstrakteKlassen
 {
     public abstract class AbstraktLinear2D4 : Abstrakt2D
     {

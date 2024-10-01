@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -199,13 +198,6 @@ public class Darstellung
         //const int rotationÜberhöhung = 1;
         var pathGeometry = new PathGeometry();
 
-        IEnumerable<AbstraktElement> Elements()
-        {
-            foreach (var item in _modell.Elemente)
-                if (item.Value is { } element)
-                    yield return element;
-        }
-
         foreach (var element in Elements())
         {
             //element.ElementState = element.ComputeElementState();
@@ -258,6 +250,14 @@ public class Darstellung
         // zeichne Shape
         _visualErgebnisse.Children.Add(path);
         Verformungen.Add(path);
+        return;
+
+        IEnumerable<AbstraktElement> Elements()
+        {
+            foreach (var item in _modell.Elemente)
+                if (item.Value is { } element)
+                    yield return element;
+        }
     }
 
     public void LastenZeichnen()

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FEBibliothek.Modell
+﻿namespace FEBibliothek.Modell
 {
     [Serializable]
     public class ModellAusnahme : Exception

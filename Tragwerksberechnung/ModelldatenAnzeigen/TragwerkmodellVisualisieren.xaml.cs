@@ -1,6 +1,5 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Controls;
@@ -212,7 +211,7 @@ public partial class TragwerkmodellVisualisieren
 
     private void OnBtnLagerNeu_Click(object sender, RoutedEventArgs e)
     {
-       _lagerNeu = new LagerNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _lagerNeu = new LagerNeu(_modell) { Topmost = true, Owner = (Window)Parent };
 
         LagerKeys = new LagerKeys(_modell) { Owner = this };
         LagerKeys.Show();
@@ -223,7 +222,7 @@ public partial class TragwerkmodellVisualisieren
     {
         ZeitintegrationNeu = new ZeitintegrationNeu(_modell) { Topmost = true };
     }
-    
+
     // KnotenNeu setzt Pilotpunkt
     // MouseDown rechte Taste "fängt" Pilotpunkt, MouseMove folgt ihm, MouseUp setzt ihn neu
     private void Pilot_MouseDown(object sender, MouseButtonEventArgs e)
@@ -482,7 +481,8 @@ public partial class TragwerkmodellVisualisieren
                 {
                     _elementNeu = new ElementNeu(_modell)
                     {
-                        Topmost = true, Owner = (Window)Parent,
+                        Topmost = true,
+                        Owner = (Window)Parent,
                         FederCheck = { IsChecked = true },
                         ElementId = { Text = element.ElementId },
                         StartknotenId = { Text = element.KnotenIds[0] },
@@ -494,7 +494,8 @@ public partial class TragwerkmodellVisualisieren
                 {
                     _elementNeu = new ElementNeu(_modell)
                     {
-                        Topmost = true, Owner = (Window)Parent,
+                        Topmost = true,
+                        Owner = (Window)Parent,
                         FachwerkCheck = { IsChecked = true },
                         ElementId = { Text = element.ElementId },
                         StartknotenId = { Text = element.KnotenIds[0] },
@@ -513,7 +514,8 @@ public partial class TragwerkmodellVisualisieren
                 {
                     _elementNeu = new ElementNeu(_modell)
                     {
-                        Topmost = true, Owner = (Window)Parent,
+                        Topmost = true,
+                        Owner = (Window)Parent,
                         BalkenCheck = { IsChecked = true },
                         ElementId = { Text = element.ElementId },
                         StartknotenId = { Text = element.KnotenIds[0] },
@@ -533,7 +535,8 @@ public partial class TragwerkmodellVisualisieren
                 {
                     _elementNeu = new ElementNeu(_modell)
                     {
-                        Topmost = true, Owner = (Window)Parent,
+                        Topmost = true,
+                        Owner = (Window)Parent,
                         BalkenCheck = { IsChecked = true },
                         ElementId = { Text = element.ElementId },
                         StartknotenId = { Text = element.KnotenIds[0] },

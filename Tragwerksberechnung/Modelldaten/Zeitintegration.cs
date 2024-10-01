@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 
 public class Zeitintegration : AbstraktZeitintegration
 {

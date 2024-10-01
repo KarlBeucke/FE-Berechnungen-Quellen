@@ -17,7 +17,8 @@
                    VerticalAlignment="Top" RenderTransformOrigin="-4.609,-0.052" Width="150" />
             <DataGrid Name="KnotenGrid" HorizontalAlignment="Left" Height="325" Width="170" Margin="10,25,0,0"
                       VerticalAlignment="Top" AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
-                      Loaded="Knoten_Loaded" SelectionChanged="KnotenZeileSelected" LostFocus="KeinKnotenSelected">
+                      Loaded="Knoten_Loaded" SelectionChanged="KnotenZeileSelected" LostFocus="KeinKnotenSelected"
+                      d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Knoten" Binding="{Binding Path=Key}" />
                     <DataGridTextColumn Header="Temperature"
@@ -32,7 +33,7 @@
             <DataGrid Name="WärmeflussVektorGrid" HorizontalAlignment="Left" Height="325" Width="250" Margin="0,25,0,0"
                       VerticalAlignment="Top" AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
                       Loaded="WärmeflussVektoren_Loaded" SelectionChanged="ElementZeileSelected"
-                      LostFocus="KeinElementSelected">
+                      LostFocus="KeinElementSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Element" Binding="{Binding Path=Key}" />
                     <DataGridTextColumn Header="X" Binding="{Binding Path=Value.ElementZustand[0], StringFormat=N2}" />
@@ -45,7 +46,7 @@
                    Margin="5,0,0,0" VerticalAlignment="Top" Width="180" />
             <DataGrid Name="WärmeflussGrid" HorizontalAlignment="Left" Height="325" Width="200" Margin="0,25,0,0"
                       VerticalAlignment="Top" AlternatingRowBackground="Aqua"
-                      Loaded="Wärmefluss_Loaded" AutoGenerateColumns="False">
+                      Loaded="Wärmefluss_Loaded" AutoGenerateColumns="False" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Knoten" Binding="{Binding Path=Value.KnotenId}" />
                     <DataGridTextColumn Header="Wärmefluss"

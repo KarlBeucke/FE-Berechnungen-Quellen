@@ -18,7 +18,7 @@
                    VerticalAlignment="Top" Width="180" />
             <DataGrid
                 Name="KnotenverformungenGrid" Margin="5,0,0,5" AlternatingRowBackground="Aqua"
-                Loaded="Knotenverformungen_Loaded" AutoGenerateColumns="False">
+                Loaded="Knotenverformungen_Loaded" AutoGenerateColumns="False" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Knoten" Binding="{Binding Key}" />
                     <DataGridTextColumn Header="u-x" Binding="{Binding Value.Knotenfreiheitsgrade[0], StringFormat=N4}" />
@@ -33,7 +33,7 @@
                    VerticalAlignment="Top" Width="200" />
             <DataGrid
                 Name="ElementspannungenGrid" Margin="0,0,0,5" AlternatingRowBackground="Aqua"
-                Loaded="ElementspannungenGrid_Loaded" AutoGenerateColumns="False">
+                Loaded="ElementspannungenGrid_Loaded" AutoGenerateColumns="False" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Element" Binding="{Binding Key, StringFormat=N4}" />
                     <DataGridTextColumn Header="sig-xx" Binding="{Binding Value.Spannungen[0], StringFormat=N4}" />
@@ -51,7 +51,7 @@
                    VerticalAlignment="Top" Width="158" />
             <DataGrid
                 Name="ReaktionenGrid" Margin="0,0,0,5" AlternatingRowBackground="Aqua"
-                Loaded="ReaktionenGrid_Loaded" AutoGenerateColumns="False">
+                Loaded="ReaktionenGrid_Loaded" AutoGenerateColumns="False" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Key}" />
                     <DataGridTextColumn Header="Knoten" Binding="{Binding Value.KnotenId}" />

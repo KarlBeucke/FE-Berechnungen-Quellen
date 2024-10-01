@@ -1,5 +1,4 @@
-﻿using FEBibliothek.Werkzeuge;
-using System.Windows.Media.Media3D;
+﻿using System.Windows.Media.Media3D;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 

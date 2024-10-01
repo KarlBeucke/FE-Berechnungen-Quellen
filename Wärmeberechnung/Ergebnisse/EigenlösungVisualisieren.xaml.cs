@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Markup;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.FontWeights;

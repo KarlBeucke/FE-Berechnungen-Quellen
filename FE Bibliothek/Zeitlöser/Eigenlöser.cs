@@ -1,7 +1,4 @@
 ﻿using FEBibliothek.Gleichungslöser;
-using FEBibliothek.Modell;
-using FEBibliothek.Werkzeuge;
-using System;
 
 namespace FEBibliothek.Zeitlöser
 {

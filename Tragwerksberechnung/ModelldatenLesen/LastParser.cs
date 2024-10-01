@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using System.Collections.Generic;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 

@@ -1,8 +1,6 @@
-﻿using FEBibliothek.Werkzeuge;
-using System;
-using System.Windows.Media.Media3D;
+﻿using System.Windows.Media.Media3D;
 
-namespace FEBibliothek.Modell.abstrakte_Klassen
+namespace FEBibliothek.Modell.abstrakteKlassen
 {
     public abstract class AbstraktLinear3D8 : Abstrakt3D
     {

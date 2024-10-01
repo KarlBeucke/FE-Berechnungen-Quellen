@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 
 public class Lager : AbstraktRandbedingung
 {

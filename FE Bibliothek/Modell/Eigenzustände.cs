@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FEBibliothek.Modell
+﻿namespace FEBibliothek.Modell
 {
     public class Eigenzustände(string id, int anzahlZustände)
     {

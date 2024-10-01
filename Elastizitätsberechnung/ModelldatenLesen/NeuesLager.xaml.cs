@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
-using System.Collections.Generic;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
 public class Material : AbstraktMaterial
 {

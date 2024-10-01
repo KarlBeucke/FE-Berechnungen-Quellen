@@ -1,7 +1,7 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using System.Globalization;
 using System.Windows.Input;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using Lager = FE_Berechnungen.Tragwerksberechnung.Modelldaten.Lager;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
@@ -65,7 +65,7 @@ public partial class LagerNeu
                     if (lagerKnoten != null)
                     {
                         lagerKnoten.AnzahlKnotenfreiheitsgrade = 3;
-                        _ = MessageBox.Show("\nFesteinspannung von '" + vorhandenesLager.RandbedingungId 
+                        _ = MessageBox.Show("\nFesteinspannung von '" + vorhandenesLager.RandbedingungId
                                                             + "' erfordert 3 Knotenfreiheitsgrade und "
                                                             + "ggf. Anpassung von Biegestab ohne Gelenk am Lager");
                     }

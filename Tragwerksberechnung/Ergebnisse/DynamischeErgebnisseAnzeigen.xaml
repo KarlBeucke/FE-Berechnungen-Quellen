@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Ergebnisse der zeitabhänigen Berechnung" Height="500" Width="800">
+        Title="Ergebnisse der zeitabhängigen Berechnung" Height="500" Width="800">
     <Grid Margin="0,5,2.4,0.4">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="400" />
@@ -30,7 +30,8 @@
 
         <DataGrid Name="KnotenverformungenGrid" HorizontalAlignment="Left" Width="390" Margin="5,0.2,0,-0.2"
                   AlternatingRowBackground="Aqua"
-                  AutoGenerateColumns="False" Grid.Column="0" Grid.Row="1" Height="396" VerticalAlignment="Top">
+                  AutoGenerateColumns="False" Grid.Column="0" Grid.Row="1" Height="396" VerticalAlignment="Top"
+                  d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Zeit" Binding="{Binding Zeit, StringFormat=N2}" />
                 <DataGridTextColumn Header="DeltaX" Binding="{Binding VerformungX, StringFormat=G4}" />
@@ -57,7 +58,8 @@
 
         <DataGrid Name="ZeitschrittGrid" HorizontalAlignment="Left" Width="390" Margin="5,0.2,0,-0.2"
                   AlternatingRowBackground="Aqua"
-                  AutoGenerateColumns="False" Grid.Column="1" Grid.Row="1" Height="396" VerticalAlignment="Top">
+                  AutoGenerateColumns="False" Grid.Column="1" Grid.Row="1" Height="396" VerticalAlignment="Top"
+                  d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Knoten" Binding="{Binding Knoten}" />
                 <DataGridTextColumn Header="DeltaX" Binding="{Binding VerformungX, StringFormat=G4}" />

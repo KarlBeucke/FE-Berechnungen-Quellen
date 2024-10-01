@@ -25,7 +25,7 @@
                 Name="EigenwerteGrid" Height="240" Margin="-10,0,-10,0" Grid.Column="0"
                 VerticalAlignment="Top" AlternatingRowBackground="Aqua" HeadersVisibility="None"
                 Loaded="EigenwerteGrid_Loaded" AutoGenerateColumns="False" HorizontalAlignment="Right" Width="110"
-                d:DataContext="{d:DesignData }">
+                d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Key}" />
                     <DataGridTextColumn Binding="{Binding Value, StringFormat=N4}" />
@@ -44,7 +44,7 @@
                 HorizontalContentAlignment="Left" VerticalAlignment="Top" AlternatingRowBackground="Aqua"
                 HeadersVisibility="None"
                 Loaded="EigenvektorenGrid_Loaded" AutoGenerateColumns="False"
-                d:DataContext="{d:DesignData }">
+                d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Key}" />
                     <DataGridTextColumn Binding="{Binding Value}" />

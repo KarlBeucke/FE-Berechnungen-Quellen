@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:modell="clr-namespace:FEBibliothek.Modell;assembly=FEBibliothek"
         mc:Ignorable="d"
         Title="Tragwerksdaten anzeigen" Height="535" Width="843">
     <Grid>
@@ -28,9 +29,9 @@
                 MouseDoubleClick="NeuerKnoten" UnloadingRow="KnotenZeileLöschen" SelectionChanged="KnotenZeileSelected"
                 LostFocus="KeinKnotenSelected">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Knoten" Binding="{Binding Id}" />
-                    <DataGridTextColumn Header="X" Binding="{Binding Koordinaten[0]}" />
-                    <DataGridTextColumn Header="Y" Binding="{Binding Koordinaten[1]}" />
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding (modell:Knoten.Id)}" />
+                    <DataGridTextColumn Header="X" Binding="{Binding (modell:Knoten.Koordinaten)[0]}" />
+                    <DataGridTextColumn Header="Y" Binding="{Binding (modell:Knoten.Koordinaten)[1]}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
@@ -44,14 +45,15 @@
                 Loaded="ElementeGrid_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
                 MouseDoubleClick="NeuesElement" UnloadingRow="ElementZeileLöschen"
                 SelectionChanged="ElementZeileSelected"
-                LostFocus="KeinElementSelected">
+                LostFocus="KeinElementSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding  ElementId, StringFormat=N2}" />
-                    <DataGridTextColumn Header="k1" Binding="{Binding KnotenIds[0], StringFormat=N2}" />
-                    <DataGridTextColumn Header="k2" Binding="{Binding KnotenIds[1], StringFormat=N2}" />
-                    <DataGridTextColumn Header="Material" Binding="{Binding ElementMaterialId}" />
-                    <DataGridTextColumn Header="Querschnitt" Binding="{Binding ElementQuerschnittId}" />
+                    <DataGridTextColumn Header="Id" Binding="{Binding ElementId, StringFormat=N2}" />
+                    <DataGridTextColumn Header="start" Binding="{Binding KnotenIds[0], StringFormat=N2}" />
+                    <DataGridTextColumn Header="end" Binding="{Binding KnotenIds[1], StringFormat=N2}" />
+                    <DataGridTextColumn Header="Material" Binding="{Binding ElementMaterialId, StringFormat=N2}" />
+                    <DataGridTextColumn Header="Querschnitt" Binding="{Binding ElementQuerschnittId, StringFormat=N2}" />
                     <DataGridTextColumn Header="Gelenk" Binding="{Binding Typ}" />
+                
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
@@ -64,7 +66,7 @@
                 Name="MaterialGrid" Margin="0,20,0.4,1.4" AlternatingRowBackground="Aqua"
                 Loaded="Material_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
                 MouseDoubleClick="NeuesMaterial" UnloadingRow="MaterialZeileLöschen"
-                SelectionChanged="MaterialZeileSelected">
+                SelectionChanged="MaterialZeileSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Material" Binding="{Binding MaterialId}" />
                     <DataGridTextColumn Header="E-Modul" Binding="{Binding MaterialWerte[0], StringFormat=G3}" />
@@ -81,7 +83,7 @@
                 Name="QuerschnittGrid" Margin="0,20,0,0" AlternatingRowBackground="Aqua"
                 Loaded="Querschnitt_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
                 MouseDoubleClick="NeuerQuerschnitt" UnloadingRow="QuerschnittZeileLöschen"
-                SelectionChanged="QuerschnittZeileSelected">
+                SelectionChanged="QuerschnittZeileSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Querschnitt" Binding="{Binding QuerschnittId}" />
                     <DataGridTextColumn Header="Fläche" Binding="{Binding QuerschnittsWerte[0], StringFormat=N4}" />
@@ -96,7 +98,7 @@
             <DataGrid
                 Name="LagerGrid" Margin="0,20,0,0" AlternatingRowBackground="Aqua"
                 Loaded="Lager_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
-                MouseDoubleClick="NeuesLager" UnloadingRow="LagerZeileLöschen" SelectionChanged="LagerZeileSelected">
+                MouseDoubleClick="NeuesLager" UnloadingRow="LagerZeileLöschen" SelectionChanged="LagerZeileSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Lager" Binding="{Binding RandbedingungId}" />
                     <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
@@ -115,7 +117,7 @@
                 Name="KnotenlastGrid" Margin="0,20,0,0" AlternatingRowBackground="Aqua"
                 Loaded="Knotenlast_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
                 MouseDoubleClick="NeueKnotenlast" UnloadingRow="KnotenlastZeileLöschen"
-                SelectionChanged="KnotenlastZeileSelected">
+                SelectionChanged="KnotenlastZeileSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding LastId}" />
                     <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
@@ -134,7 +136,7 @@
                 Name="PunktlastGrid" Margin="0,20,0,0" AlternatingRowBackground="Aqua"
                 Loaded="Punktlast_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
                 MouseDoubleClick="NeuePunktlast" UnloadingRow="PunktlastZeileLöschen"
-                SelectionChanged="PunktlastZeileSelected">
+                SelectionChanged="PunktlastZeileSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding LastId}" />
                     <DataGridTextColumn Header="Element" Binding="{Binding ElementId}" />
@@ -152,7 +154,7 @@
                 Name="LinienlastGrid" Margin="0,20,0,0" AlternatingRowBackground="Aqua"
                 Loaded="Linienlast_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
                 MouseDoubleClick="NeueLinienlast" UnloadingRow="LinienlastZeileLöschen"
-                SelectionChanged="LinienlastZeileSelected">
+                SelectionChanged="LinienlastZeileSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding LastId}" />
                     <DataGridTextColumn Header="Element" Binding="{Binding ElementId}" />

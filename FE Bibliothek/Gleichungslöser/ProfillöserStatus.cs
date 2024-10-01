@@ -1,7 +1,4 @@
-﻿using FEBibliothek.Modell;
-using System;
-
-namespace FEBibliothek.Gleichungslöser
+﻿namespace FEBibliothek.Gleichungslöser
 {
     //--------------------------------------------------------------------
     //  Class: ProfillöserStatus             lineares Gleichungssystem

@@ -1,6 +1,4 @@
-﻿using FEBibliothek.Werkzeuge;
-
-namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+﻿namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 
 public class Element2D3 : AbstraktLinear2D3
 {

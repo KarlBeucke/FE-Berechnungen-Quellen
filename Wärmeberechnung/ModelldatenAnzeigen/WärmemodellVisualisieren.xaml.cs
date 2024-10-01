@@ -1,6 +1,5 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FEBibliothek.Werkzeuge
+﻿namespace FEBibliothek.Werkzeuge
 {
     [Serializable]
     public class AlgebraischeAusnahme : Exception

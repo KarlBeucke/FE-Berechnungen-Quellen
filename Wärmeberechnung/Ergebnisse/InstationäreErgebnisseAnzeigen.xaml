@@ -32,7 +32,8 @@
         <DataGrid Name="KnotentemperaturGrid" HorizontalAlignment="Center" Height="555" Width="277"
                   Margin="0,5,0,0" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0"
                   VerticalAlignment="Top" AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
-                  VerticalScrollBarVisibility="Visible" VerticalContentAlignment="Stretch">
+                  VerticalScrollBarVisibility="Visible" VerticalContentAlignment="Stretch"
+                  d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Schritt" Binding="{Binding Path=Key}" />
                 <DataGridTextColumn Header="Zeit" Binding="{Binding Path=Value[0], StringFormat=N2}" />
@@ -60,7 +61,8 @@
                   MinHeight="260"
                   AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
                   VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Visible"
-                  SelectionChanged="KnotenwerteZeileSelected" LostFocus="KeineKnotenwerteZeileSelected" Height="197">
+                  SelectionChanged="KnotenwerteZeileSelected" LostFocus="KeineKnotenwerteZeileSelected" Height="197"
+                  d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Knoten" Binding="{Binding Path=Key}" />
                 <DataGridTextColumn Header="Temperatur" Binding="{Binding Path=Value[0], StringFormat=N4}" />
@@ -74,7 +76,8 @@
                   HorizontalAlignment="Left" VerticalAlignment="Top" Width="270" Height="250"
                   AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
                   VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Visible"
-                  SelectionChanged="ElementZeileSelected" LostFocus="KeinElementSelected">
+                  SelectionChanged="ElementZeileSelected" LostFocus="KeinElementSelected"
+                  d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Element" Binding="{Binding Path=Key}" />
                 <DataGridTextColumn Header="Richtung x"

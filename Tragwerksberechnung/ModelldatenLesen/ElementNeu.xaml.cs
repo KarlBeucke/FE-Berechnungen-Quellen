@@ -140,7 +140,7 @@ public partial class ElementNeu
         {
             _ = MessageBox.Show(elementNeu.Message);
         }
-        
+
 
         if (element != null)
         {
@@ -272,7 +272,7 @@ public partial class ElementNeu
 
     private bool Gelenkstab(string knotenId)
     {
-        return _modell.Randbedingungen.Any(lager 
+        return _modell.Randbedingungen.Any(lager
             => lager.Value.KnotenId == knotenId && lager.Value.Typ == 7);
     }
 }

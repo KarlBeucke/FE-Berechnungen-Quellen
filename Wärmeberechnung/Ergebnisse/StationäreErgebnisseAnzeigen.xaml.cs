@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;

@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -1739,7 +1738,7 @@ public class Darstellung
                                 -qP * MaxQuerkraftScreen / maxQuerkraft);
 
                         // Q(x) rechts am und hinter Lastangriffspunkt, Lastangriffspunkt doppelt
-                        polyLinePointArray[anzahlPunktlast +1] = new Point(startPoint.X + punktLastO * l * Auflösung,
+                        polyLinePointArray[anzahlPunktlast + 1] = new Point(startPoint.X + punktLastO * l * Auflösung,
                             -(qP - punktLastQ) * MaxQuerkraftScreen / maxQuerkraft);
                         for (var i = anzahlPunktlast + 1; i < anzahl; i++)
                         {
@@ -1768,12 +1767,12 @@ public class Darstellung
                         // Q(y) links am und vor Lastangriffspunkt, Lastangriffspunkt doppelt
                         polyLinePointArray[anzahlPunktlast] = new Point(endPoint.X - (1 - punktLastO) * l * Auflösung,
                             -(qP + punktLastQ) * MaxQuerkraftScreen / maxQuerkraft);
-                        for (var i = anzahl - anzahlPunktlast; i < anzahl-1; i++)
+                        for (var i = anzahl - anzahlPunktlast; i < anzahl - 1; i++)
                         {
-                            var y = (i+1) * inkrement;
+                            var y = (i + 1) * inkrement;
                             var q = element.ElementZustand[4] + qb * y + (qa - qb) / l / 2 * y * y;
                             var qPoint = new Point(endPoint.X - y * Auflösung, -(q + punktLastQ) * MaxQuerkraftScreen / maxQuerkraft);
-                            polyLinePointArray[anzahl - i-1] = qPoint;
+                            polyLinePointArray[anzahl - i - 1] = qPoint;
                         }
                         polyLinePointArray[0] = new Point(startPoint.X, -element.ElementZustand[1] * MaxQuerkraftScreen / maxQuerkraft);
                     }

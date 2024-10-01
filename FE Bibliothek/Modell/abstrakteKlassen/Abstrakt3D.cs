@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media.Media3D;
 
-namespace FEBibliothek.Modell.abstrakte_Klassen
+namespace FEBibliothek.Modell.abstrakteKlassen
 {
     public abstract class Abstrakt3D : AbstraktElement
     {

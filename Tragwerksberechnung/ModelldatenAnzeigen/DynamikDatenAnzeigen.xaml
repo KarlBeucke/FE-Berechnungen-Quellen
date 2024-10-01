@@ -43,15 +43,15 @@
             <TextBlock Grid.Row="6" Grid.Column="0" Margin="0,0,0,0">Integrationsparameter =</TextBlock>
 
             <TextBox Name="Eigen" Grid.Column="1" Grid.Row="1" Text="{Binding Eigenzustand.AnzahlZustände}"
+                     Margin="0,0,0,0" d:DataContext="{d:DesignData modell}"/>
+            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Zeitintegration.Dt}" Margin="0,0,0,0" d:DataContext="{d:DesignData modell}"/>
+            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Zeitintegration.Tmax}" d:DataContext="{d:DesignData modell}"
                      Margin="0,0,0,0" />
-            <TextBox Name="ZeitintDt" Grid.Column="1" Grid.Row="2" Text="{Binding Zeitintegration.Dt}" Margin="0,0,0,0" />
-            <TextBox Name="ZeitintTmax" Grid.Column="1" Grid.Row="3" Text="{Binding Zeitintegration.Tmax}"
+            <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Zeitintegration.Methode}" d:DataContext="{d:DesignData modell}"
                      Margin="0,0,0,0" />
-            <TextBox Name="ZeitintMethode" Grid.Column="1" Grid.Row="4" Text="{Binding Zeitintegration.Methode}"
+            <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Zeitintegration.Parameter1}" d:DataContext="{d:DesignData modell}"
                      Margin="0,0,0,0" />
-            <TextBox Name="ZeitintParameter1" Grid.Column="1" Grid.Row="5" Text="{Binding Zeitintegration.Parameter1}"
-                     Margin="0,0,0,0" />
-            <TextBox Name="ZeitintParameter2" Grid.Column="1" Grid.Row="6" Text="{Binding Zeitintegration.Parameter2}"
+            <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding Zeitintegration.Parameter2}" d:DataContext="{d:DesignData modell}"
                      Margin="0,0,0,0" />
         </Grid>
 
@@ -62,7 +62,8 @@
             Name="AnfangsbedingungenGrid" Margin="10,25,1,1" AlternatingRowBackground="Aqua"
             Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" AutoGenerateColumns="False"
             MouseDoubleClick="NeueKnotenanfangswerte" CellEditEnding="Model_Changed"
-            SelectionChanged="AnfangswerteZeileSelected" UnloadingRow="AnfangswerteZeileLoeschen">
+            SelectionChanged="AnfangswerteZeileSelected" UnloadingRow="AnfangswerteZeileLoeschen" 
+            d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
                 <DataGridTextColumn Header="1 d0" Binding="{Binding Werte[0]}" />
@@ -88,7 +89,8 @@
                       AutoGenerateColumns="False" HorizontalAlignment="Left" Width="321" Height="93"
                       VerticalAlignment="Top"
                       MouseDoubleClick="NeueKnotenlast" CellEditEnding="Model_Changed"
-                      SelectionChanged="KnotenDateiSelectionChanged" UnloadingRow="KnotenDateiZeileLoeschen">
+                      SelectionChanged="KnotenDateiSelectionChanged" UnloadingRow="KnotenDateiZeileLoeschen" 
+                      d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
                     <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
@@ -112,7 +114,8 @@
                 Name="HarmonischGrid" Margin="1,1,1,1" AlternatingRowBackground="Aqua"
                 AutoGenerateColumns="False" Grid.ColumnSpan="5"
                 MouseDoubleClick="NeueKnotenlast" CellEditEnding="Model_Changed"
-                SelectionChanged="KnotenHarmonischSelectionChanged" UnloadingRow="KnotenHarmonischZeileLoeschen">
+                SelectionChanged="KnotenHarmonischSelectionChanged" UnloadingRow="KnotenHarmonischZeileLoeschen" 
+                d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
                     <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
@@ -134,7 +137,8 @@
                 AutoGenerateColumns="False" Height="127" VerticalAlignment="Top"
                 Margin="1,0,1,0"
                 MouseDoubleClick="NeueKnotenlast" CellEditEnding="Model_Changed"
-                SelectionChanged="KnotenLinearSelectionChanged" UnloadingRow="KnotenLinearZeileLoeschen">
+                SelectionChanged="KnotenLinearSelectionChanged" UnloadingRow="KnotenLinearZeileLoeschen"
+                d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
                     <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
@@ -162,7 +166,8 @@
             Name="DämpfungGrid" Margin="5,27,1,88" AlternatingRowBackground="Aqua"
             Grid.Row="1" Grid.Column="2" AutoGenerateColumns="False"
             MouseDoubleClick="NeueDämpfungsraten" CellEditEnding="Model_Changed"
-            SelectionChanged="DämpfungZeileSelected" UnloadingRow="DämpfungZeileLoeschen">
+            SelectionChanged="DämpfungZeileSelected" UnloadingRow="DämpfungZeileLoeschen"
+            d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Dämpfungsmaße" Binding="{Binding Dämpfung}" />
                 <DataGridTextColumn Binding="{Binding Text}" />

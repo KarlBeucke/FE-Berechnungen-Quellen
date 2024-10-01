@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;

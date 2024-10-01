@@ -1,4 +1,4 @@
-﻿namespace FEBibliothek.Modell.abstrakte_Klassen
+﻿namespace FEBibliothek.Modell.abstrakteKlassen
 {
     public abstract class AbstraktZeitabhängigeElementLast : AbstraktElementLast
     {

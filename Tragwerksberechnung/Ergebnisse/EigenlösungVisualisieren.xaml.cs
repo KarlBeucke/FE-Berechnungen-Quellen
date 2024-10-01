@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Controls;

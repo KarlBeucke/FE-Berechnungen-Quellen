@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
+﻿namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 
 public class Stabendkräfte
 {
