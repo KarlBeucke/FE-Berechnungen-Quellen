@@ -66,6 +66,10 @@ public partial class LinienlastNeu
             var elementId = "";
             double pxa = 0, pxb = 0, pya = 0, pyb = 0;
             if (ElementId.Text.Length > 0) elementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
+            _modell.Elemente.TryGetValue(elementId, out var element);
+            if (element is Fachwerk)
+                throw new ModellAusnahme("Linienlast ungültig für Fachwerk");
+
             if (InElement.IsChecked != null && (bool)InElement.IsChecked) inElement = true;
             try
             {
@@ -119,12 +123,15 @@ public partial class LinienlastNeu
     private void ElementIdLostFocus(object sender, RoutedEventArgs e)
     {
         _modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement);
-        if (vorhandenesElement == null)
+        switch (vorhandenesElement)
         {
-            _ = MessageBox.Show("Element nicht im Modell gefunden", "neue Linienlast");
-            LastId.Text = "";
-            ElementId.Text = "";
-            return;
+            case null:
+                _ = MessageBox.Show("Element nicht im Modell gefunden", "neue Linienlast");
+                LastId.Text = "";
+                ElementId.Text = "";
+                return;
+            case Fachwerk:
+                throw new ModellAusnahme("Linienlast ungültig für Fachwerkstab");
         }
 
         if (LastId.Text == "") LastId.Text = "LL_" + ElementId.Text;
@@ -132,7 +139,7 @@ public partial class LinienlastNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.ElementLasten.Keys.Contains(LastId.Text)) return;
+        if (!_modell.ElementLasten.ContainsKey(LastId.Text)) return;
         _modell.ElementLasten.Remove(LastId.Text);
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         StartFenster.TragwerkVisual.Close();

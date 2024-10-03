@@ -66,6 +66,9 @@ public partial class KnotenlastNeu
             var knotenId = "";
             double px = 0, py = 0, m = 0;
             if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
+            _modell.Knoten.TryGetValue(knotenId, out var knoten);
+            if (knoten == null)
+                throw new ModellAusnahme("Lastknoten im Modell nicht vorhanden");
             try
             {
                 if (Px.Text.Length > 0) px = double.Parse(Px.Text);
@@ -78,10 +81,14 @@ public partial class KnotenlastNeu
                 return;
             }
 
-            var knotenlast = new KnotenLast(knotenId, px, py, m)
+            var knotenlast = knoten.AnzahlKnotenfreiheitsgrade switch
             {
-                LastId = knotenlastId
+                3 => new KnotenLast(knotenId, px, py, m),
+                2 => new KnotenLast(knotenId, px, py),
+                _ => throw new ModellAusnahme("Lastzuweisung an ungültigen Freiheitsgrad")
             };
+
+            knotenlast.LastId = knotenlastId;
             _modell.Lasten.Add(knotenlastId, knotenlast);
         }
 
@@ -109,7 +116,8 @@ public partial class KnotenlastNeu
         KnotenId.Text = vorhandeneKnotenlast.KnotenId;
         Px.Text = vorhandeneKnotenlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
         Py.Text = vorhandeneKnotenlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
-        M.Text = vorhandeneKnotenlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
+        if(vorhandeneKnotenlast.Lastwerte.Length > 2)
+            M.Text = vorhandeneKnotenlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
     }
 
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
@@ -128,7 +136,7 @@ public partial class KnotenlastNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Lasten.Keys.Contains(LastId.Text)) return;
+        if (!_modell.Lasten.ContainsKey(LastId.Text)) return;
         _modell.Lasten.Remove(LastId.Text);
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();

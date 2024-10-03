@@ -63,6 +63,9 @@ public partial class PunktlastNeu
             var elementId = "";
             double px = 0, py = 0, offset = 0;
             if (ElementId.Text.Length > 0) elementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
+            _modell.Elemente.TryGetValue(elementId, out var element);
+            if (element is Fachwerk)
+                throw new ModellAusnahme(" Punktlast ungültig für Fachwerk");
             try
             {
                 if (Px.Text.Length > 0) px = double.Parse(Px.Text);
@@ -123,15 +126,18 @@ public partial class PunktlastNeu
     private void ElementIdLostFocus(object sender, RoutedEventArgs e)
     {
         _modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement);
-        if (vorhandenesElement == null)
+        switch (vorhandenesElement)
         {
-            _ = MessageBox.Show("Element nicht im Modell gefunden", "neue Linienlast");
-            LastId.Text = "";
-            ElementId.Text = "";
-            return;
+            case null:
+                _ = MessageBox.Show("Element nicht im Modell gefunden", "neue Linienlast");
+                LastId.Text = "";
+                ElementId.Text = "";
+                return;
+            case Fachwerk:
+                throw new ModellAusnahme(" Punktlast ungültig für Fachwerkstab");
         }
 
-        if (LastId.Text == "") LastId.Text = "LL_" + ElementId.Text;
+        if (LastId.Text == "") LastId.Text = "PL_" + ElementId.Text;
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)

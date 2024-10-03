@@ -12,10 +12,10 @@ public partial class TragwerkLastenKeys
         Top = Height;
         var lasten = modell.Lasten.Where(item => item.Value is KnotenLast).Select(item => item.Value).ToList();
         var linienlasten = modell.ElementLasten.Where(item => item.Value is LinienLast)
-            .Select(item => (AbstraktLast)item.Value).ToList();
+            .Select(AbstraktLast (item) => item.Value).ToList();
         lasten.AddRange(linienlasten);
         var punktlasten = modell.PunktLasten.Where(item => item.Value is PunktLast)
-            .Select(item => (AbstraktLast)item.Value).ToList();
+            .Select(AbstraktLast (item) => item.Value).ToList();
         lasten.AddRange(punktlasten);
         TragwerklastenKeys.ItemsSource = lasten;
     }

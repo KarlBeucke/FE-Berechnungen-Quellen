@@ -95,6 +95,8 @@
         // addVector()
         public void AddVektor(int[] index, double[] subvektor)
         {
+            if (subvektor.Length > index.Length)
+                throw new BerechnungAusnahme("\"Zuweisung zu nicht vorhandenem Freiheitsgrad");
             for (var k = 0; k < subvektor.Length; k++)
                 Vektor[index[k]] += subvektor[k];
         }
