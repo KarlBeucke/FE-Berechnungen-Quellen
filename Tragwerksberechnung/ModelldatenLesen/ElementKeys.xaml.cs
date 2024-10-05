@@ -12,4 +12,9 @@ public partial class ElementKeys
         var elemente = modell.Elemente.Select(item => item.Value).ToList();
         ElementKey.ItemsSource = elemente;
     }
+
+    private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }

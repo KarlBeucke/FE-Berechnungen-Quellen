@@ -4,9 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="vorhandene Knotendefinitionen" Height="200" Width="300">
+        Title="vorhandene Knotendefinitionen" Height="220" Width="270">
     <Grid>
-        <ListView Margin="10" Name="KnotenKey">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <ListView Grid.Row="0" Margin="10" Name="KnotenKey" d:DataContext="{d:DesignData modell}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Id" Width="30" DisplayMemberBinding="{Binding Id}" />
@@ -18,5 +25,9 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <Button Height="18" Margin="152,0,8,10" VerticalAlignment="Bottom" 
+                Click="BtnDialogCancel_Click" Grid.Row="1">
+            _schließen
+        </Button>
     </Grid>
 </Window>

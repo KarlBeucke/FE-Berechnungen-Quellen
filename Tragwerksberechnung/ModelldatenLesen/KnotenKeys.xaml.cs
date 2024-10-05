@@ -12,4 +12,9 @@ public partial class KnotenKeys
         var knoten = modell.Knoten.Select(item => item.Value).ToList();
         KnotenKey.ItemsSource = knoten;
     }
+
+    private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }

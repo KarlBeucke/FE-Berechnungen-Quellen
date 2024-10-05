@@ -19,4 +19,9 @@ public partial class TragwerkLastenKeys
         lasten.AddRange(punktlasten);
         TragwerklastenKeys.ItemsSource = lasten;
     }
+
+    private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
+    {
+       Close();
+    }
 }

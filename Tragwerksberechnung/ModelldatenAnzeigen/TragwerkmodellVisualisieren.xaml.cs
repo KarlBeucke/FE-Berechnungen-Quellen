@@ -383,7 +383,7 @@ public partial class TragwerkmodellVisualisieren
             else
             {
                 _elementNeu.EndknotenId.Text = knoten.Id;
-                _elementNeu.ElementId.Text = _elementNeu.StartknotenId.Text + knoten.Id;
+                _elementNeu.ElementId.Text = "e"+_elementNeu.StartknotenId.Text + knoten.Id;
             }
 
             _elementNeu.Show();

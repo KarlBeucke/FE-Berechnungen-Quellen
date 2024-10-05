@@ -12,4 +12,9 @@ public partial class LagerKeys
         var lager = modell.Randbedingungen.Select(item => item.Value).ToList();
         LagerKey.ItemsSource = lager;
     }
+
+    private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }

@@ -12,4 +12,9 @@ public partial class QuerschnittKeys
         var querschnitt = modell.Querschnitt.Select(item => item.Value).ToList();
         QuerschnittKey.ItemsSource = querschnitt;
     }
+
+    private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }

@@ -4,9 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="vorhandene Materialdefinitionen" Height="200" Width="310">
+        Title="vorhandene Materialdefinitionen" Height="220" Width="330">
     <Grid>
-        <ListView Margin="10" Name="MaterialKey">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <ListView Grid.Row="0" Width="290" Margin="10,10,0,10" Name="MaterialKey" HorizontalAlignment="Left"
+                  d:DataContext="{d:DesignData modell}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding MaterialId}" />
@@ -19,5 +27,9 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <Button Height="18" Margin="200,0,20,10" VerticalAlignment="Bottom" 
+                Click="BtnDialogCancel_Click" Grid.Row="1">
+            _schließen
+        </Button>
     </Grid>
 </Window>

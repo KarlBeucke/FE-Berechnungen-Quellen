@@ -12,4 +12,9 @@ public partial class MaterialKeys
         var material = modell.Material.Select(item => item.Value).ToList();
         MaterialKey.ItemsSource = material;
     }
+
+    private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }

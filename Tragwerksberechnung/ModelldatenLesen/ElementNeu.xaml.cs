@@ -79,7 +79,6 @@ public partial class ElementNeu
         {
             if (FachwerkCheck.IsChecked != null && (bool)FachwerkCheck.IsChecked)
             {
-                startKnoten.AnzahlKnotenfreiheitsgrade = 2;
                 element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
                 // check, ob ein Knoten des Fachwerkstabs ein eingespannter lagerknoten ist
                 if (Gelenkstab(startKnoten.Id) || (Gelenkstab(endKnoten.Id)))
