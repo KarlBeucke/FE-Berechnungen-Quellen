@@ -383,7 +383,7 @@ public partial class TragwerkmodellVisualisieren
             else
             {
                 _elementNeu.EndknotenId.Text = knoten.Id;
-                _elementNeu.ElementId.Text = "e"+_elementNeu.StartknotenId.Text + knoten.Id;
+                _elementNeu.ElementId.Text = "e" + _elementNeu.StartknotenId.Text + knoten.Id;
             }
 
             _elementNeu.Show();
@@ -445,7 +445,7 @@ public partial class TragwerkmodellVisualisieren
         if (IsElement)
         {
             _elementNeu.MaterialId.Text = element.ElementMaterialId;
-            if(element.E > 0)
+            if (element.E > 0)
                 _elementNeu.EModul.Text = element.E.ToString("E2", CultureInfo.CurrentCulture);
             if (element.M > 0)
                 _elementNeu.Masse.Text = element.M.ToString("E2", CultureInfo.CurrentCulture);
@@ -515,7 +515,7 @@ public partial class TragwerkmodellVisualisieren
                         Masse = { Text = masse },
                         QuerschnittId = { Text = element.ElementQuerschnittId },
                         Fläche = { Text = fläche },
-                        Trägheitsmoment =  { Text = trägheitsmoment},
+                        Trägheitsmoment = { Text = trägheitsmoment },
                         Gelenk1 = { IsChecked = true },
                         Gelenk2 = { IsChecked = true }
                     };

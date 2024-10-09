@@ -116,7 +116,7 @@ public partial class KnotenlastNeu
         KnotenId.Text = vorhandeneKnotenlast.KnotenId;
         Px.Text = vorhandeneKnotenlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
         Py.Text = vorhandeneKnotenlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
-        if(vorhandeneKnotenlast.Lastwerte.Length > 2)
+        if (vorhandeneKnotenlast.Lastwerte.Length > 2)
             M.Text = vorhandeneKnotenlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
     }
 

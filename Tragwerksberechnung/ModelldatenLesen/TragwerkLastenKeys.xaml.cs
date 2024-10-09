@@ -22,6 +22,6 @@ public partial class TragwerkLastenKeys
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-       Close();
+        Close();
     }
 }
