@@ -60,14 +60,14 @@ public partial class LagerNeu
                 if (vorhandenesLager.Festgehalten[2])
                 {
                     // eingespanntes Lager (x, y, r fest) erfordert 3 Knotenfreiheitsgrade am Lagerknoten
-                    vorhandenesLager.Typ += Lager.Rfixed;
+                    vorhandenesLager.Typ = 7;
                     _modell.Knoten.TryGetValue(vorhandenesLager.KnotenId, out var lagerKnoten);
                     if (lagerKnoten != null)
                     {
                         lagerKnoten.AnzahlKnotenfreiheitsgrade = 3;
-                        _ = MessageBox.Show("\nFesteinspannung von '" + vorhandenesLager.RandbedingungId
-                                                            + "' erfordert 3 Knotenfreiheitsgrade und "
-                                                            + "ggf. Anpassung von Biegestab ohne Gelenk am Lager");
+                        //_ = MessageBox.Show("\nFesteinspannung von '" + vorhandenesLager.RandbedingungId
+                        //                                    + "' erfordert 3 Knotenfreiheitsgrade und "
+                        //                                    + "ggf. Anpassung von Biegestab ohne Gelenk am Lager");
                     }
                 }
             }

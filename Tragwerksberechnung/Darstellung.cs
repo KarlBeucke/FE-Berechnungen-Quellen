@@ -1090,6 +1090,8 @@ public class Darstellung
                         pathGeometry.Transform = new RotateTransform(drehWinkel, drehPunkt.X, drehPunkt.Y);
                         break;
                     }
+                default:
+                    throw new ModellAusnahme("\nungültige Lagerbedingung für Lager '" + lager.RandbedingungId);
             }
 
             Shape path = new Path

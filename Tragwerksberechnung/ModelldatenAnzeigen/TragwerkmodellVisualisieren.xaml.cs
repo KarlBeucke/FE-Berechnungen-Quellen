@@ -137,7 +137,7 @@ public partial class TragwerkmodellVisualisieren
     private void MenuBalkenKnotenNeu(object sender, RoutedEventArgs e)
     {
         _knotenNeu = new KnotenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        KnotenKeys = new KnotenKeys(_modell) { Owner = this };
+        KnotenKeys = new KnotenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
         KnotenKeys.Show();
         StartFenster.Berechnet = false;
     }
@@ -213,7 +213,7 @@ public partial class TragwerkmodellVisualisieren
     {
         _lagerNeu = new LagerNeu(_modell) { Topmost = true, Owner = (Window)Parent };
 
-        LagerKeys = new LagerKeys(_modell) { Owner = this };
+        LagerKeys = new LagerKeys(_modell) { Topmost = true, Owner = (Window)Parent };
         LagerKeys.Show();
         StartFenster.Berechnet = false;
     }
@@ -445,7 +445,17 @@ public partial class TragwerkmodellVisualisieren
         if (IsElement)
         {
             _elementNeu.MaterialId.Text = element.ElementMaterialId;
+            if(element.E > 0)
+                _elementNeu.EModul.Text = element.E.ToString("E2", CultureInfo.CurrentCulture);
+            if (element.M > 0)
+                _elementNeu.Masse.Text = element.M.ToString("E2", CultureInfo.CurrentCulture);
+
             _elementNeu.QuerschnittId.Text = element.ElementQuerschnittId;
+            if (element.A > 0)
+                _elementNeu.Fläche.Text = element.A.ToString("E2", CultureInfo.CurrentCulture);
+            if (element.I > 0)
+                _elementNeu.Trägheitsmoment.Text = element.I.ToString("E2", CultureInfo.CurrentCulture);
+
             _elementNeu.Show();
             IsElement = false;
             return;
@@ -505,6 +515,7 @@ public partial class TragwerkmodellVisualisieren
                         Masse = { Text = masse },
                         QuerschnittId = { Text = element.ElementQuerschnittId },
                         Fläche = { Text = fläche },
+                        Trägheitsmoment =  { Text = trägheitsmoment},
                         Gelenk1 = { IsChecked = true },
                         Gelenk2 = { IsChecked = true }
                     };
@@ -573,6 +584,8 @@ public partial class TragwerkmodellVisualisieren
     {
         _knotenlastNeu = new KnotenlastNeu(_modell)
         {
+            Topmost = true,
+            Owner = (Window)Parent,
             LastId = { Text = knotenlast.LastId },
             KnotenId = { Text = knotenlast.KnotenId.ToString(CultureInfo.CurrentCulture) },
             Px = { Text = knotenlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
@@ -588,6 +601,8 @@ public partial class TragwerkmodellVisualisieren
         var punktlast = (PunktLast)punktLast;
         _punktlastNeu = new PunktlastNeu(_modell)
         {
+            Topmost = true,
+            Owner = (Window)Parent,
             LastId = { Text = punktlast.LastId },
             ElementId = { Text = punktlast.ElementId.ToString(CultureInfo.CurrentCulture) },
             Px = { Text = punktlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
@@ -601,6 +616,8 @@ public partial class TragwerkmodellVisualisieren
     {
         _linienlastNeu = new LinienlastNeu(_modell)
         {
+            Topmost = true,
+            Owner = (Window)Parent,
             LastId = { Text = linienlast.LastId },
             ElementId = { Text = linienlast.ElementId.ToString(CultureInfo.CurrentCulture) },
             Pxa = { Text = linienlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
@@ -616,6 +633,8 @@ public partial class TragwerkmodellVisualisieren
     {
         _lagerNeu = new LagerNeu(_modell)
         {
+            Topmost = true,
+            Owner = (Window)Parent,
             LagerId = { Text = lager.RandbedingungId },
             KnotenId = { Text = lager.KnotenId.ToString(CultureInfo.CurrentCulture) },
             Xfest = { IsChecked = (lager.Typ == 1) | (lager.Typ == 3) | (lager.Typ == 7) },

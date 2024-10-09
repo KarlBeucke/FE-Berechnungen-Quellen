@@ -58,7 +58,7 @@ public partial class ElementNeu
         // vorhandenes Element wird komplett entfernt, da Elementdefinition
         // (Fachwerk, Biegebalken, BiegebalkenGelenk) geändert werden kann
         // neues Element wird angelegt und unter vorhandenem Key gespeichert
-        if (_modell.Elemente.ContainsKey(ElementId.Text)) _modell.Elemente.Remove(ElementId.Text);
+        _modell.Elemente.Remove(ElementId.Text);
         var knotenIds = new string[2];
         knotenIds[0] = StartknotenId.Text;
         if (EndknotenId.Text.Length != 0) knotenIds[1] = EndknotenId.Text;
@@ -134,12 +134,19 @@ public partial class ElementNeu
                 _ = MessageBox.Show("Elementtyp muss definiert sein", "neues Element");
                 return;
             }
+
+            if (element != null)
+            {
+                if (EModul.Text.Length > 0) element.E = double.Parse(EModul.Text);
+                if (Masse.Text.Length > 0) element.M = double.Parse(Masse.Text);
+                if (Trägheitsmoment.Text.Length > 0) element.I = double.Parse(Trägheitsmoment.Text);
+                if (Fläche.Text.Length > 0) element.A = double.Parse(Fläche.Text);
+            }
         }
         catch (ModellAusnahme elementNeu)
         {
             _ = MessageBox.Show(elementNeu.Message);
         }
-
 
         if (element != null)
         {
@@ -150,11 +157,13 @@ public partial class ElementNeu
                 if (Masse.Text != string.Empty) element.M = double.Parse(Masse.Text);
                 if (Fläche.Text != string.Empty) element.A = double.Parse(Fläche.Text);
                 if (Trägheitsmoment.Text != string.Empty) element.I = double.Parse(Trägheitsmoment.Text);
+
                 _modell.Elemente.Add(ElementId.Text, element);
             }
             catch (FormatException)
             {
                 _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Element");
+                return;
             }
         }
 
@@ -176,7 +185,7 @@ public partial class ElementNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Elemente.Keys.Contains(ElementId.Text)) return;
+        if (!_modell.Elemente.ContainsKey(ElementId.Text)) return;
         _modell.Elemente.Remove(ElementId.Text);
         Close();
         StartFenster.TragwerkVisual.Close();

@@ -68,9 +68,7 @@
         <TextBox Name="EModul" Grid.Row="7" Grid.Column="1" Margin="10,0,0,0" Height="20" VerticalAlignment="Center" />
 
         <Label Grid.Row="8" Grid.Column="0" Margin="0,0,0,0">spezifische Masse m:</Label>
-        <TextBox Name="Masse" Grid.Row="8" Grid.Column="1" Margin="10,0,0,0" Height="20"
-                 VerticalAlignment="Center" />
-        <TextBox Name="Massen" Grid.Row="8" Grid.Column="1" Margin="10,0,0,0" Height="20" VerticalAlignment="Center" />
+        <TextBox Name="Masse" Grid.Row="8" Grid.Column="1" Margin="10,0,0,0" Height="20" VerticalAlignment="Center" />
 
         <Label Grid.Row="9" Grid.Column="0" Margin="0,0,0,0">Querschnitt ID:</Label>
         <TextBox Name="QuerschnittId" Grid.Row="9" Grid.Column="1" Margin="10,0,0,0" Height="20"
