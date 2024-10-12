@@ -91,7 +91,7 @@ public partial class KnotenGruppeNeu
         Close();
         _knotenKeys.Close();
 
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
     }
 

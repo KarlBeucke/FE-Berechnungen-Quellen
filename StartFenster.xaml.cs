@@ -29,14 +29,16 @@ namespace FE_Berechnungen;
 
 public partial class StartFenster
 {
-    public static Berechnung ModellBerechnung;
-    public static FeModell TragwerksModell;
-    public static TragwerkmodellVisualisieren TragwerkVisual;
-    public static StatikErgebnisseVisualisieren StatikErgebnisse;
-    public static WärmemodellVisualisieren WärmeVisual;
-    public static StationäreErgebnisseVisualisieren StationäreErgebnisse;
-    public static bool ZeitintegrationDaten;
-    public static bool Berechnet, EigenBerechnet, ZeitintegrationBerechnet;
+    private FeModell _tragwerkModell;
+    private Berechnung _modellBerechnung;
+    public static TragwerkmodellVisualisieren TragwerkVisual { get; set; }
+    public static StatikErgebnisseVisualisieren StatikErgebnisse { get; private set; }
+    public static WärmemodellVisualisieren WärmeVisual { get; private set; }
+    public static StationäreErgebnisseVisualisieren StationäreErgebnisse { get; private set; }
+    public static bool ZeitintegrationDaten { get; set; }
+    public static bool Berechnet { get; set; }
+    public static bool EigenBerechnet { get; set; }
+    private static bool ZeitintegrationBerechnet { get; set; }
     private OpenFileDialog _dateiDialog;
     private string _dateiPfad;
 
@@ -436,10 +438,10 @@ public partial class StartFenster
         {
             if (_wärmeModell != null)
             {
-                ModellBerechnung = new Berechnung(_wärmeModell);
-                ModellBerechnung.BerechneSystemMatrix();
-                ModellBerechnung.BerechneSystemVektor();
-                ModellBerechnung.LöseGleichungen();
+                _modellBerechnung = new Berechnung(_wärmeModell);
+                _modellBerechnung.BerechneSystemMatrix();
+                _modellBerechnung.BerechneSystemVektor();
+                _modellBerechnung.LöseGleichungen();
                 Berechnet = true;
                 _ = MessageBox.Show("Systemgleichungen erfolgreich gelöst", "Wärmeberechnung");
             }
@@ -462,10 +464,10 @@ public partial class StartFenster
             {
                 if (!Berechnet)
                 {
-                    ModellBerechnung = new Berechnung(_wärmeModell);
-                    ModellBerechnung.BerechneSystemMatrix();
-                    ModellBerechnung.BerechneSystemVektor();
-                    ModellBerechnung.LöseGleichungen();
+                    _modellBerechnung = new Berechnung(_wärmeModell);
+                    _modellBerechnung.BerechneSystemMatrix();
+                    _modellBerechnung.BerechneSystemVektor();
+                    _modellBerechnung.LöseGleichungen();
                     Berechnet = true;
                 }
 
@@ -491,10 +493,10 @@ public partial class StartFenster
             {
                 if (!Berechnet)
                 {
-                    ModellBerechnung = new Berechnung(_wärmeModell);
-                    ModellBerechnung.BerechneSystemMatrix();
-                    ModellBerechnung.BerechneSystemVektor();
-                    ModellBerechnung.LöseGleichungen();
+                    _modellBerechnung = new Berechnung(_wärmeModell);
+                    _modellBerechnung.BerechneSystemMatrix();
+                    _modellBerechnung.BerechneSystemVektor();
+                    _modellBerechnung.LöseGleichungen();
                     Berechnet = true;
                 }
 
@@ -530,7 +532,7 @@ public partial class StartFenster
     {
         if (_wärmeModell != null)
         {
-            ModellBerechnung ??= new Berechnung(_wärmeModell);
+            _modellBerechnung ??= new Berechnung(_wärmeModell);
             var anregung = new AnregungVisualisieren(_wärmeModell);
             anregung.Show();
         }
@@ -544,17 +546,17 @@ public partial class StartFenster
     {
         if (_wärmeModell != null)
         {
-            ModellBerechnung = new Berechnung(_wärmeModell);
+            _modellBerechnung = new Berechnung(_wärmeModell);
             if (!Berechnet)
             {
-                ModellBerechnung.BerechneSystemMatrix();
+                _modellBerechnung.BerechneSystemMatrix();
                 Berechnet = true;
             }
 
             // default = 2 Eigenstates, falls nicht anders spezifiziert
             _wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
             if (_wärmeModell.Eigenzustand.Eigenwerte != null) return;
-            ModellBerechnung.Eigenzustände();
+            _modellBerechnung.Eigenzustände();
             EigenBerechnet = true;
             _ = MessageBox.Show("Eigenlösung erfolgreich ermittelt", "Wärmeberechnung");
         }
@@ -568,16 +570,16 @@ public partial class StartFenster
     {
         if (_wärmeModell != null)
         {
-            ModellBerechnung ??= new Berechnung(_wärmeModell);
+            _modellBerechnung ??= new Berechnung(_wärmeModell);
             if (!Berechnet)
             {
-                ModellBerechnung.BerechneSystemMatrix();
+                _modellBerechnung.BerechneSystemMatrix();
                 Berechnet = true;
             }
 
             // default = 2 Eigenstates, falls nicht anders spezifiziert
             _wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
-            if (_wärmeModell.Eigenzustand.Eigenwerte == null) ModellBerechnung.Eigenzustände();
+            if (_wärmeModell.Eigenzustand.Eigenwerte == null) _modellBerechnung.Eigenzustände();
             var eigen = new EigenlösungAnzeigen(_wärmeModell); //Eigenlösung.Eigenlösung(modell));
             eigen.Show();
         }
@@ -591,17 +593,17 @@ public partial class StartFenster
     {
         if (_wärmeModell != null)
         {
-            ModellBerechnung ??= new Berechnung(_wärmeModell);
+            _modellBerechnung ??= new Berechnung(_wärmeModell);
             if (!ZeitintegrationBerechnet)
             {
-                ModellBerechnung.BerechneSystemMatrix();
+                _modellBerechnung.BerechneSystemMatrix();
                 // default = 2 Eigenzustände, falls nicht anders spezifiziert
                 _wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
             }
 
             // default = 2 Eigenzustände, falls nicht anders spezifiziert
             _wärmeModell.Eigenzustand ??= new Eigenzustände("default", 2);
-            if (_wärmeModell.Eigenzustand.Eigenwerte == null) ModellBerechnung.Eigenzustände();
+            if (_wärmeModell.Eigenzustand.Eigenwerte == null) _modellBerechnung.Eigenzustände();
             var visual = new EigenlösungVisualisieren(_wärmeModell);
             visual.Show();
         }
@@ -617,14 +619,14 @@ public partial class StartFenster
         {
             if (!Berechnet)
             {
-                ModellBerechnung = new Berechnung(_wärmeModell);
-                ModellBerechnung.BerechneSystemMatrix();
-                ModellBerechnung.BerechneSystemVektor();
-                ModellBerechnung.LöseGleichungen();
+                _modellBerechnung = new Berechnung(_wärmeModell);
+                _modellBerechnung.BerechneSystemMatrix();
+                _modellBerechnung.BerechneSystemVektor();
+                _modellBerechnung.LöseGleichungen();
                 Berechnet = true;
             }
 
-            ModellBerechnung.ZeitintegrationErsterOrdnung();
+            _modellBerechnung.ZeitintegrationErsterOrdnung();
             ZeitintegrationBerechnet = true;
             _ = MessageBox.Show("Zeitintegration erfolgreich durchgeführt", "instationäre Wärmeberechnung");
         }
@@ -723,23 +725,23 @@ public partial class StartFenster
         {
             _parse = new FeParser();
             _parse.ParseModell(_dateiZeilen);
-            TragwerksModell = _parse.FeModell;
+            _tragwerkModell = _parse.FeModell;
             _parse.ParseNodes(_dateiZeilen);
 
             var tragwerksMaterial = new Tragwerksberechnung.ModelldatenLesen.MaterialParser();
-            tragwerksMaterial.ParseMaterials(_dateiZeilen, TragwerksModell);
+            tragwerksMaterial.ParseMaterials(_dateiZeilen, _tragwerkModell);
 
             var tragwerksElemente = new Tragwerksberechnung.ModelldatenLesen.ElementParser();
-            tragwerksElemente.ParseElements(_dateiZeilen, TragwerksModell);
+            tragwerksElemente.ParseElements(_dateiZeilen, _tragwerkModell);
 
             var tragwerksLasten = new Tragwerksberechnung.ModelldatenLesen.LastParser();
-            tragwerksLasten.ParseLasten(_dateiZeilen, TragwerksModell);
+            tragwerksLasten.ParseLasten(_dateiZeilen, _tragwerkModell);
 
             var tragwerksRandbedingungen = new Tragwerksberechnung.ModelldatenLesen.RandbedingungParser();
-            tragwerksRandbedingungen.ParseRandbedingungen(_dateiZeilen, TragwerksModell);
+            tragwerksRandbedingungen.ParseRandbedingungen(_dateiZeilen, _tragwerkModell);
 
             var tragwerksTransient = new Tragwerksberechnung.ModelldatenLesen.TransientParser();
-            tragwerksTransient.ParseZeitintegration(_dateiZeilen, TragwerksModell);
+            tragwerksTransient.ParseZeitintegration(_dateiZeilen, _tragwerkModell);
 
             ZeitintegrationDaten = tragwerksTransient.ZeitintegrationDaten;
             Berechnet = false;
@@ -749,7 +751,7 @@ public partial class StartFenster
             _ = MessageBox.Show(sb.ToString(), "Tragwerksberechnung");
             sb.Clear();
 
-            TragwerkVisual = new TragwerkmodellVisualisieren(TragwerksModell);
+            TragwerkVisual = new TragwerkmodellVisualisieren(_tragwerkModell);
             TragwerkVisual.Show();
         }
         catch (ParseAusnahme e2)
@@ -783,26 +785,26 @@ public partial class StartFenster
         var zeilen = new List<string>
         {
             "ModellName",
-            TragwerksModell.ModellId,
+            _tragwerkModell.ModellId,
             "\nRaumdimension",
-            TragwerksModell.Raumdimension + "\t" + TragwerksModell.AnzahlKnotenfreiheitsgrade,
+            _tragwerkModell.Raumdimension + "\t" + _tragwerkModell.AnzahlKnotenfreiheitsgrade,
             // Knoten
             "\nKnoten"
         };
 
-        switch (TragwerksModell.Raumdimension)
+        switch (_tragwerkModell.Raumdimension)
         {
             case 1:
-                zeilen.AddRange(TragwerksModell.Knoten.Select(knoten => knoten.Key
+                zeilen.AddRange(_tragwerkModell.Knoten.Select(knoten => knoten.Key
                                                                         + "\t" + knoten.Value.Koordinaten[0]));
                 break;
             case 2:
-                zeilen.AddRange(TragwerksModell.Knoten.Select(knoten => knoten.Key
+                zeilen.AddRange(_tragwerkModell.Knoten.Select(knoten => knoten.Key
                                                                         + "\t" + knoten.Value.Koordinaten[0] + "\t" +
                                                                         knoten.Value.Koordinaten[1]));
                 break;
             case 3:
-                zeilen.AddRange(TragwerksModell.Knoten.Select(knoten => knoten.Key
+                zeilen.AddRange(_tragwerkModell.Knoten.Select(knoten => knoten.Key
                                                                         + "\t" + knoten.Value.Koordinaten[0] + "\t" +
                                                                         knoten.Value.Koordinaten[1] + "\t" +
                                                                         knoten.Value.Koordinaten[2]));
@@ -818,7 +820,7 @@ public partial class StartFenster
         var alleBiegebalken = new List<Biegebalken>();
         var alleBiegebalkenGelenk = new List<BiegebalkenGelenk>();
         var alleFederElemente = new List<FederElement>();
-        foreach (var item in TragwerksModell.Elemente)
+        foreach (var item in _tragwerkModell.Elemente)
             switch (item.Value)
             {
                 case Fachwerk fachwerk:
@@ -835,7 +837,7 @@ public partial class StartFenster
                     break;
             }
 
-        var alleQuerschnitte = TragwerksModell.Querschnitt.Select(item => item.Value).ToList();
+        var alleQuerschnitte = _tragwerkModell.Querschnitt.Select(item => item.Value).ToList();
 
         if (alleFachwerkelemente.Count != 0)
         {
@@ -879,7 +881,7 @@ public partial class StartFenster
 
         // Materialien
         zeilen.Add("\nMaterial");
-        foreach (var item in TragwerksModell.Material)
+        foreach (var item in _tragwerkModell.Material)
         {
             sb.Clear();
             sb.Append(item.Value.MaterialId + "\t" + item.Value.MaterialWerte[0]);
@@ -888,7 +890,7 @@ public partial class StartFenster
         }
 
         // Lasten
-        foreach (var item in TragwerksModell.Lasten)
+        foreach (var item in _tragwerkModell.Lasten)
         {
             zeilen.Add("\nKnotenlast");
             sb.Clear();
@@ -897,7 +899,7 @@ public partial class StartFenster
             zeilen.Add(sb.ToString());
         }
 
-        foreach (var item in TragwerksModell.PunktLasten)
+        foreach (var item in _tragwerkModell.PunktLasten)
         {
             var punktlast = (PunktLast)item.Value;
             sb.Clear();
@@ -906,7 +908,7 @@ public partial class StartFenster
                        + "\t" + punktlast.Lastwerte[0] + "\t" + punktlast.Lastwerte[1] + "\t" + punktlast.Offset);
         }
 
-        foreach (var item in TragwerksModell.ElementLasten)
+        foreach (var item in _tragwerkModell.ElementLasten)
         {
             sb.Clear();
             zeilen.Add("\nLinienlast");
@@ -919,7 +921,7 @@ public partial class StartFenster
         // Randbedingungen
         var fest = string.Empty;
         zeilen.Add("\nLager");
-        foreach (var item in TragwerksModell.Randbedingungen)
+        foreach (var item in _tragwerkModell.Randbedingungen)
         {
             if (item.Value.Typ == 1) fest = "x";
             else if (item.Value.Typ == 2) fest = "y";
@@ -939,9 +941,9 @@ public partial class StartFenster
 
     private void TragwerksdatenAnzeigen(object sender, RoutedEventArgs e)
     {
-        if (TragwerksModell != null)
+        if (_tragwerkModell != null)
         {
-            var tragwerk = new TragwerkdatenAnzeigen(TragwerksModell);
+            var tragwerk = new TragwerkdatenAnzeigen(_tragwerkModell);
             tragwerk.Show();
         }
         else
@@ -952,9 +954,9 @@ public partial class StartFenster
 
     private void TragwerksdatenVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (TragwerksModell != null)
+        if (_tragwerkModell != null)
         {
-            TragwerkVisual = new TragwerkmodellVisualisieren(TragwerksModell);
+            TragwerkVisual = new TragwerkmodellVisualisieren(_tragwerkModell);
             TragwerkVisual.Show();
         }
         else
@@ -967,13 +969,13 @@ public partial class StartFenster
     {
         try
         {
-            if (TragwerksModell != null)
+            if (_tragwerkModell != null)
             {
-                if (Berechnet) return;
-                ModellBerechnung = new Berechnung(TragwerksModell);
-                ModellBerechnung.BerechneSystemMatrix();
-                ModellBerechnung.BerechneSystemVektor();
-                ModellBerechnung.LöseGleichungen();
+                //if (Berechnet) return;
+                _modellBerechnung = new Berechnung(_tragwerkModell);
+                _modellBerechnung.BerechneSystemMatrix();
+                _modellBerechnung.BerechneSystemVektor();
+                _modellBerechnung.LöseGleichungen();
                 Berechnet = true;
                 _ = MessageBox.Show("Systemgleichungen erfolgreich gelöst", "statische Tragwerksberechnung");
             }
@@ -992,18 +994,18 @@ public partial class StartFenster
     {
         try
         {
-            if (TragwerksModell != null)
+            if (_tragwerkModell != null)
             {
                 if (!Berechnet)
                 {
-                    ModellBerechnung = new Berechnung(TragwerksModell);
-                    ModellBerechnung.BerechneSystemMatrix();
-                    ModellBerechnung.BerechneSystemVektor();
-                    ModellBerechnung.LöseGleichungen();
+                    _modellBerechnung = new Berechnung(_tragwerkModell);
+                    _modellBerechnung.BerechneSystemMatrix();
+                    _modellBerechnung.BerechneSystemVektor();
+                    _modellBerechnung.LöseGleichungen();
                     Berechnet = true;
                 }
 
-                var ergebnisse = new StatikErgebnisseAnzeigen(TragwerksModell);
+                var ergebnisse = new StatikErgebnisseAnzeigen(_tragwerkModell);
                 ergebnisse.Show();
             }
             else
@@ -1021,18 +1023,18 @@ public partial class StartFenster
     {
         try
         {
-            if (TragwerksModell != null)
+            if (_tragwerkModell != null)
             {
                 if (!Berechnet)
                 {
-                    ModellBerechnung = new Berechnung(TragwerksModell);
-                    ModellBerechnung.BerechneSystemMatrix();
-                    ModellBerechnung.BerechneSystemVektor();
-                    ModellBerechnung.LöseGleichungen();
+                    _modellBerechnung = new Berechnung(_tragwerkModell);
+                    _modellBerechnung.BerechneSystemMatrix();
+                    _modellBerechnung.BerechneSystemVektor();
+                    _modellBerechnung.LöseGleichungen();
                     Berechnet = true;
                 }
 
-                StatikErgebnisse = new StatikErgebnisseVisualisieren(TragwerksModell);
+                StatikErgebnisse = new StatikErgebnisseVisualisieren(_tragwerkModell);
                 StatikErgebnisse.Show();
             }
             else
@@ -1050,19 +1052,19 @@ public partial class StartFenster
     {
         try
         {
-            if (TragwerksModell != null)
+            if (_tragwerkModell != null)
             {
                 if (!Berechnet)
                 {
-                    ModellBerechnung ??= new Berechnung(TragwerksModell);
-                    ModellBerechnung.BerechneSystemMatrix();
+                    _modellBerechnung ??= new Berechnung(_tragwerkModell);
+                    _modellBerechnung.BerechneSystemMatrix();
                     Berechnet = true;
                 }
 
                 // default = 2 Eigenzustände, falls nicht anders spezifiziert
-                TragwerksModell.Eigenzustand ??= new Eigenzustände("default", 2);
-                if (TragwerksModell.Eigenzustand.Eigenwerte != null) return;
-                ModellBerechnung.Eigenzustände();
+                _tragwerkModell.Eigenzustand ??= new Eigenzustände("default", 2);
+                if (_tragwerkModell.Eigenzustand.Eigenwerte != null) return;
+                _modellBerechnung.Eigenzustände();
                 EigenBerechnet = true;
                 _ = MessageBox.Show("Eigenfrequenzen erfolgreich ermittelt", "Tragwerksberechnung");
             }
@@ -1081,19 +1083,19 @@ public partial class StartFenster
     {
         try
         {
-            if (TragwerksModell != null)
+            if (_tragwerkModell != null)
             {
                 if (!Berechnet)
                 {
-                    ModellBerechnung ??= new Berechnung(TragwerksModell);
-                    ModellBerechnung.BerechneSystemMatrix();
+                    _modellBerechnung ??= new Berechnung(_tragwerkModell);
+                    _modellBerechnung.BerechneSystemMatrix();
                     Berechnet = true;
                 }
 
                 // default = 2 Eigenstates, falls nicht anders spezifiziert
-                TragwerksModell.Eigenzustand ??= new Eigenzustände("default", 2);
-                if (TragwerksModell.Eigenzustand.Eigenwerte == null) ModellBerechnung.Eigenzustände();
-                var eigen = new Tragwerksberechnung.Ergebnisse.EigenlösungAnzeigen(TragwerksModell);
+                _tragwerkModell.Eigenzustand ??= new Eigenzustände("default", 2);
+                if (_tragwerkModell.Eigenzustand.Eigenwerte == null) _modellBerechnung.Eigenzustände();
+                var eigen = new Tragwerksberechnung.Ergebnisse.EigenlösungAnzeigen(_tragwerkModell);
                 eigen.Show();
             }
             else
@@ -1111,19 +1113,19 @@ public partial class StartFenster
     {
         try
         {
-            if (TragwerksModell != null)
+            if (_tragwerkModell != null)
             {
                 if (!Berechnet)
                 {
-                    ModellBerechnung ??= new Berechnung(TragwerksModell);
-                    ModellBerechnung.BerechneSystemMatrix();
+                    _modellBerechnung ??= new Berechnung(_tragwerkModell);
+                    _modellBerechnung.BerechneSystemMatrix();
                     Berechnet = true;
                 }
 
                 // default = 2 Eigenstates, falls nicht anders spezifiziert
-                TragwerksModell.Eigenzustand ??= new Eigenzustände("default", 2);
-                if (TragwerksModell.Eigenzustand.Eigenwerte != null) ModellBerechnung.Eigenzustände();
-                var visual = new Tragwerksberechnung.Ergebnisse.EigenlösungVisualisieren(TragwerksModell);
+                _tragwerkModell.Eigenzustand ??= new Eigenzustände("default", 2);
+                if (_tragwerkModell.Eigenzustand.Eigenwerte != null) _modellBerechnung.Eigenzustände();
+                var visual = new Tragwerksberechnung.Ergebnisse.EigenlösungVisualisieren(_tragwerkModell);
                 visual.Show();
             }
             else
@@ -1139,9 +1141,9 @@ public partial class StartFenster
 
     private void DynamischeDaten(object sender, RoutedEventArgs e)
     {
-        if (ZeitintegrationDaten && TragwerksModell != null)
+        if (ZeitintegrationDaten && _tragwerkModell != null)
         {
-            var tragwerk = new DynamikDatenAnzeigen(TragwerksModell);
+            var tragwerk = new DynamikDatenAnzeigen(_tragwerkModell);
             tragwerk.Show();
         }
         else
@@ -1154,10 +1156,10 @@ public partial class StartFenster
     {
         try
         {
-            if (ZeitintegrationDaten && TragwerksModell != null)
+            if (ZeitintegrationDaten && _tragwerkModell != null)
             {
-                ModellBerechnung ??= new Berechnung(TragwerksModell);
-                var anregung = new Tragwerksberechnung.ModelldatenAnzeigen.AnregungVisualisieren(TragwerksModell);
+                _modellBerechnung ??= new Berechnung(_tragwerkModell);
+                var anregung = new Tragwerksberechnung.ModelldatenAnzeigen.AnregungVisualisieren(_tragwerkModell);
                 anregung.Show();
             }
             else
@@ -1175,18 +1177,15 @@ public partial class StartFenster
     {
         try
         {
-            if (ZeitintegrationDaten && TragwerksModell != null)
+            if (ZeitintegrationDaten && _tragwerkModell != null)
             {
-                if (!Berechnet)
-                {
-                    ModellBerechnung ??= new Berechnung(TragwerksModell);
-                    ModellBerechnung.BerechneSystemMatrix();
-                    ModellBerechnung.BerechneSystemVektor();
-                    ModellBerechnung.LöseGleichungen();
-                    Berechnet = true;
-                }
+                _modellBerechnung = new Berechnung(_tragwerkModell);
+                _modellBerechnung.BerechneSystemMatrix();
+                _modellBerechnung.BerechneSystemVektor();
+                _modellBerechnung.LöseGleichungen();
+                Berechnet = true;
 
-                ModellBerechnung.ZeitintegrationZweiterOrdnung();
+                _modellBerechnung.ZeitintegrationZweiterOrdnung();
                 ZeitintegrationBerechnet = true;
             }
             else
@@ -1202,17 +1201,17 @@ public partial class StartFenster
 
     private void DynamischeErgebnisseAnzeigen(object sender, RoutedEventArgs e)
     {
-        if (ZeitintegrationBerechnet && TragwerksModell != null)
-            _ = new DynamischeErgebnisseAnzeigen(TragwerksModell);
+        if (ZeitintegrationBerechnet && _tragwerkModell != null)
+            _ = new DynamischeErgebnisseAnzeigen(_tragwerkModell);
         else
             _ = MessageBox.Show("Zeitintegration noch nicht ausgeführt!!", "dynamische Tragwerksberechnung");
     }
 
     private void DynamischeModellzuständeVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (ZeitintegrationBerechnet && TragwerksModell != null)
+        if (ZeitintegrationBerechnet && _tragwerkModell != null)
         {
-            var dynamikErgebnisse = new DynamischeModellzuständeVisualisieren(TragwerksModell);
+            var dynamikErgebnisse = new DynamischeModellzuständeVisualisieren(_tragwerkModell);
             dynamikErgebnisse.Show();
         }
         else
@@ -1223,10 +1222,10 @@ public partial class StartFenster
 
     private void KnotenzeitverläufeTragwerkVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (ZeitintegrationBerechnet && TragwerksModell != null)
+        if (ZeitintegrationBerechnet && _tragwerkModell != null)
         {
             var knotenzeitverläufe =
-                new Tragwerksberechnung.Ergebnisse.KnotenzeitverläufeVisualisieren(TragwerksModell);
+                new Tragwerksberechnung.Ergebnisse.KnotenzeitverläufeVisualisieren(_tragwerkModell);
             knotenzeitverläufe.Show();
         }
         else
@@ -1512,10 +1511,10 @@ public partial class StartFenster
 
         try
         {
-            ModellBerechnung = new Berechnung(_elastizitätsModell);
-            ModellBerechnung.BerechneSystemMatrix();
-            ModellBerechnung.BerechneSystemVektor();
-            ModellBerechnung.LöseGleichungen();
+            _modellBerechnung = new Berechnung(_elastizitätsModell);
+            _modellBerechnung.BerechneSystemMatrix();
+            _modellBerechnung.BerechneSystemVektor();
+            _modellBerechnung.LöseGleichungen();
             Berechnet = true;
 
             _ = MessageBox.Show("Systemgleichungen erfolgreich gelöst", "Elastizitätsberechnung");
@@ -1539,10 +1538,10 @@ public partial class StartFenster
                     return;
                 }
 
-                ModellBerechnung = new Berechnung(_elastizitätsModell);
-                ModellBerechnung.BerechneSystemMatrix();
-                ModellBerechnung.BerechneSystemVektor();
-                ModellBerechnung.LöseGleichungen();
+                _modellBerechnung = new Berechnung(_elastizitätsModell);
+                _modellBerechnung.BerechneSystemMatrix();
+                _modellBerechnung.BerechneSystemVektor();
+                _modellBerechnung.LöseGleichungen();
                 Berechnet = true;
             }
 
@@ -1569,10 +1568,10 @@ public partial class StartFenster
                     return;
                 }
 
-                ModellBerechnung = new Berechnung(_elastizitätsModell);
-                ModellBerechnung.BerechneSystemMatrix();
-                ModellBerechnung.BerechneSystemVektor();
-                ModellBerechnung.LöseGleichungen();
+                _modellBerechnung = new Berechnung(_elastizitätsModell);
+                _modellBerechnung.BerechneSystemMatrix();
+                _modellBerechnung.BerechneSystemVektor();
+                _modellBerechnung.LöseGleichungen();
                 Berechnet = true;
             }
         }

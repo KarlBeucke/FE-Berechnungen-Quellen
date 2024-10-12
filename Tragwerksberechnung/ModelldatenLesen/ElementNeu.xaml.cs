@@ -171,7 +171,7 @@ public partial class ElementNeu
         StartFenster.TragwerkVisual.ElementKeys?.Close();
         Close();
 
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         StartFenster.Berechnet = false;
     }
@@ -191,7 +191,7 @@ public partial class ElementNeu
         StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual.ElementKeys?.Close();
 
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         StartFenster.Berechnet = false;
     }

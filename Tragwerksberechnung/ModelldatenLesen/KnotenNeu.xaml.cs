@@ -104,7 +104,7 @@ public partial class KnotenNeu
         Close();
         StartFenster.TragwerkVisual.KnotenKeys?.Close();
 
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         StartFenster.Berechnet = false;
     }
@@ -156,7 +156,7 @@ public partial class KnotenNeu
         _modell.Knoten.Remove(KnotenId.Text);
         Close();
         StartFenster.TragwerkVisual.Close();
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         StartFenster.Berechnet = false;
     }

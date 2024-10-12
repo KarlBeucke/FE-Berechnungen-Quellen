@@ -89,7 +89,7 @@ public partial class PunktlastNeu
         Close();
         StartFenster.TragwerkVisual.Close();
 
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         StartFenster.Berechnet = false;
     }
@@ -148,7 +148,7 @@ public partial class PunktlastNeu
         Close();
         StartFenster.TragwerkVisual.Close();
 
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         StartFenster.Berechnet = false;
     }

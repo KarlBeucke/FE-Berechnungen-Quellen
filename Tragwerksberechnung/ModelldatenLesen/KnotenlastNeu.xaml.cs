@@ -95,7 +95,7 @@ public partial class KnotenlastNeu
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         StartFenster.Berechnet = false;
     }
@@ -142,7 +142,7 @@ public partial class KnotenlastNeu
         Close();
         StartFenster.TragwerkVisual.Close();
 
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         StartFenster.Berechnet = false;
     }

@@ -107,21 +107,13 @@ internal class TransientParser
                     _substrings = lines[i + 1].Split(_delimiters);
                     var anfangsKnotenId = _substrings[0];
                     // Anfangsverformungen und Geschwindigkeiten
-                    int nodalDof;
-                    switch (_substrings.Length)
+                    var nodalDof = _substrings.Length switch
                     {
-                        case 3:
-                            nodalDof = 1;
-                            break;
-                        case 5:
-                            nodalDof = 2;
-                            break;
-                        case 7:
-                            nodalDof = 3;
-                            break;
-                        default:
-                            throw new ParseAusnahme((i + 2) + ":\nAnfangsbedingungen, falsche Anzahl Parameter");
-                    }
+                        3 => 1,
+                        5 => 2,
+                        7 => 3,
+                        _ => throw new ParseAusnahme((i + 2) + ":\nAnfangsbedingungen, falsche Anzahl Parameter")
+                    };
 
                     var anfangsWerte = new double[2 * nodalDof];
                     for (var k = 0; k < 2 * nodalDof; k++) anfangsWerte[k] = double.Parse(_substrings[k + 1]);

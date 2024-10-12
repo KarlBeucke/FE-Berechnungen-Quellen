@@ -171,7 +171,7 @@ public partial class KnotenNetzVariabel
         Close();
         _knotenKeys.Close();
 
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
     }
 

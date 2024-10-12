@@ -94,7 +94,7 @@ public partial class LinienlastNeu
         StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         StartFenster.Berechnet = false;
     }
@@ -145,7 +145,7 @@ public partial class LinienlastNeu
         StartFenster.TragwerkVisual.Close();
         Close();
 
-        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(StartFenster.TragwerksModell);
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         StartFenster.Berechnet = false;
     }
