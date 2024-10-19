@@ -27,11 +27,11 @@
                 Name="KnotenGrid" Margin="0,20,0,0" Grid.Column="0" AlternatingRowBackground="Aqua"
                 Loaded="Knoten_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
                 MouseDoubleClick="NeuerKnoten" UnloadingRow="KnotenZeileLöschen" SelectionChanged="KnotenZeileSelected"
-                LostFocus="KeinKnotenSelected">
+                LostFocus="KeinKnotenSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Knoten" Binding="{Binding (modell:Knoten.Id)}" />
-                    <DataGridTextColumn Header="X" Binding="{Binding (modell:Knoten.Koordinaten)[0]}" />
-                    <DataGridTextColumn Header="Y" Binding="{Binding (modell:Knoten.Koordinaten)[1]}" />
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding Knoten.Id}" />
+                    <DataGridTextColumn Header="X" Binding="{Binding Knoten.Koordinaten[0]}" />
+                    <DataGridTextColumn Header="Y" Binding="{Binding Knoten.Koordinaten[1]}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

@@ -37,7 +37,7 @@ public partial class TragwerkdatenAnzeigen
     private void NeuerKnoten(object sender, MouseButtonEventArgs e)
     {
         _ = new KnotenNeu(_modell);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
     }
 
@@ -46,7 +46,7 @@ public partial class TragwerkdatenAnzeigen
     {
         if (_removeKey == null) return;
         _modell.Knoten.Remove(_removeKey);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
 
         var tragwerk = new TragwerkdatenAnzeigen(_modell);
@@ -83,7 +83,7 @@ public partial class TragwerkdatenAnzeigen
     private void NeuesElement(object sender, MouseButtonEventArgs e)
     {
         _ = new ElementNeu(_modell);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
     }
 
@@ -92,7 +92,7 @@ public partial class TragwerkdatenAnzeigen
     {
         if (_removeKey == null) return;
         _modell.Elemente.Remove(_removeKey);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
 
         var tragwerk = new TragwerkdatenAnzeigen(_modell);
@@ -136,7 +136,7 @@ public partial class TragwerkdatenAnzeigen
     {
         if (_removeKey == null) return;
         _modell.Material.Remove(_removeKey);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
 
         var tragwerk = new TragwerkdatenAnzeigen(_modell);
@@ -172,7 +172,7 @@ public partial class TragwerkdatenAnzeigen
     {
         if (_removeKey == null) return;
         _modell.Querschnitt.Remove(_removeKey);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
 
         var tragwerk = new TragwerkdatenAnzeigen(_modell);
@@ -209,7 +209,7 @@ public partial class TragwerkdatenAnzeigen
     {
         const double vorX = 0, vorY = 0, vorRot = 0;
         _ = new LagerNeu(_modell, vorX, vorY, vorRot);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
     }
 
@@ -218,7 +218,7 @@ public partial class TragwerkdatenAnzeigen
     {
         if (_removeKey == null) return;
         _modell.Randbedingungen.Remove(_removeKey);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
 
         var tragwerk = new TragwerkdatenAnzeigen(_modell);
@@ -246,7 +246,7 @@ public partial class TragwerkdatenAnzeigen
     private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
     {
         _ = new KnotenlastNeu(_modell, string.Empty, string.Empty, 0, 0, 0);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
     }
 
@@ -255,7 +255,7 @@ public partial class TragwerkdatenAnzeigen
     {
         if (_removeKey == null) return;
         _modell.Lasten.Remove(_removeKey);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
 
         var tragwerk = new TragwerkdatenAnzeigen(_modell);
@@ -283,7 +283,7 @@ public partial class TragwerkdatenAnzeigen
     private void NeuePunktlast(object sender, MouseButtonEventArgs e)
     {
         _ = new PunktlastNeu(_modell, string.Empty, string.Empty, 0, 0, 0);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
     }
 
@@ -292,7 +292,7 @@ public partial class TragwerkdatenAnzeigen
     {
         if (_removeKey == null) return;
         _modell.PunktLasten.Remove(_removeKey);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
 
         var tragwerk = new TragwerkdatenAnzeigen(_modell);
@@ -320,7 +320,7 @@ public partial class TragwerkdatenAnzeigen
     private void NeueLinienlast(object sender, MouseButtonEventArgs e)
     {
         _ = new LinienlastNeu(_modell, string.Empty, string.Empty, 0, 0, 0, 0, true);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
     }
 
@@ -329,7 +329,7 @@ public partial class TragwerkdatenAnzeigen
     {
         if (_removeKey == null) return;
         _modell.ElementLasten.Remove(_removeKey);
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
         Close();
 
         var tragwerk = new TragwerkdatenAnzeigen(_modell);
@@ -347,6 +347,6 @@ public partial class TragwerkdatenAnzeigen
 
     private void Model_Changed(object sender, DataGridCellEditEndingEventArgs e)
     {
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
     }
 }

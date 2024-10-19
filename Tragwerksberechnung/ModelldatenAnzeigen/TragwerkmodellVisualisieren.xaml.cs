@@ -1,4 +1,5 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 using System.Globalization;
 using System.Linq;
@@ -66,7 +67,186 @@ public partial class TragwerkmodellVisualisieren
             _ = MessageBox.Show(e.Message);
         }
     }
+    private void OnBtnBerechnen_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (_modell != null)
+            {
+                if (!_modell.Berechnet)
+                {
+                    var modellBerechnung = new Berechnung(_modell);
+                    modellBerechnung.BerechneSystemMatrix();
+                    modellBerechnung.BerechneSystemVektor();
+                    modellBerechnung.LöseGleichungen();
+                    _modell.Berechnet = true;
+                }
 
+                var statikErgebnisse = new StatikErgebnisseVisualisieren(_modell);
+                statikErgebnisse.Show();
+            }
+            else
+            {
+                _ = MessageBox.Show("Tragwerksdaten müssen zuerst eingelesen werden", "statische Tragwerksberechnung");
+            }
+        }
+        catch (BerechnungAusnahme e2)
+        {
+            _ = MessageBox.Show(e2.Message);
+        }
+    }
+
+    private void DynamischeDaten(object sender, RoutedEventArgs e)
+    {
+        if (_modell.ZeitintegrationDaten && _modell != null)
+        {
+            var tragwerk = new DynamikDatenAnzeigen(_modell);
+            tragwerk.Show();
+        }
+        else
+        {
+            _ = MessageBox.Show("Daten für Zeitintegration sind noch nicht spezifiziert", "Tragwerksberechnung");
+        }
+    }
+
+    private void DynamischeBerechnung(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (_modell.ZeitintegrationDaten && _modell != null)
+            {
+                var modellBerechnung = new Berechnung(_modell);
+                modellBerechnung.BerechneSystemMatrix();
+                modellBerechnung.BerechneSystemVektor();
+                modellBerechnung.LöseGleichungen();
+                _modell.Berechnet = true;
+
+                modellBerechnung.ZeitintegrationZweiterOrdnung();
+                _modell.ZeitintegrationBerechnet = true;
+            }
+            else
+            {
+                _ = MessageBox.Show("Daten für Zeitintegration sind noch nicht spezifiziert", "Tragwerksberechnung");
+            }
+        }
+        catch (BerechnungAusnahme e2)
+        {
+            _ = MessageBox.Show(e2.Message);
+        }
+    }
+    private void DynamischeModellzuständeVisualisieren(object sender, RoutedEventArgs e)
+    {
+        if (_modell.ZeitintegrationBerechnet && _modell != null)
+        {
+            var dynamikErgebnisse = new DynamischeModellzuständeVisualisieren(_modell);
+            dynamikErgebnisse.Show();
+        }
+        else
+        {
+            _ = MessageBox.Show("Zeitintegration noch nicht ausgeführt!!", "dynamische Tragwerksberechnung");
+        }
+    }
+
+    private void KnotenzeitverläufeTragwerkVisualisieren(object sender, RoutedEventArgs e)
+    {
+        if (_modell.ZeitintegrationBerechnet && _modell != null)
+        {
+            var knotenzeitverläufe = new KnotenzeitverläufeVisualisieren(_modell);
+            knotenzeitverläufe.Show();
+        }
+        else
+        {
+            _ = MessageBox.Show("Zeitintegration noch nicht ausgeführt!!", "dynamische Tragwerksberechnung");
+        }
+    }
+
+
+    // Modelldefinitionen neu definieren und vorhandene editieren
+    private void MenuBalkenKnotenNeu(object sender, RoutedEventArgs e)
+    {
+        _knotenNeu = new KnotenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        KnotenKeys = new KnotenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        KnotenKeys.Show();
+        _modell.Berechnet = false;
+    }
+
+    private void MenuBalkenKnotenGruppeNeu(object sender, RoutedEventArgs e)
+    {
+        _ = new KnotenGruppeNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+    }
+
+    private void MenuBalkenKnotenNetzÄquidistant(object sender, RoutedEventArgs e)
+    {
+        _ = new KnotenNetzÄquidistant(_modell) { Topmost = true, Owner = (Window)Parent };
+    }
+
+    private void MenuBalkenKnotenNetzVariabel(object sender, RoutedEventArgs e)
+    {
+        _ = new KnotenNetzVariabel(_modell) { Topmost = true, Owner = (Window)Parent };
+    }
+
+    private void MenuBalkenElementNeu(object sender, RoutedEventArgs e)
+    {
+        IsElement = true;
+        _elementNeu = new ElementNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        ElementKeys = new ElementKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        ElementKeys.Show();
+        _modell.Berechnet = false;
+    }
+
+    private void MenuQuerschnittNeu(object sender, RoutedEventArgs e)
+    {
+        _ = new QuerschnittNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        QuerschnittKeys = new QuerschnittKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        QuerschnittKeys.Show();
+        _modell.Berechnet = false;
+    }
+
+    private void MenuMaterialNeu(object sender, RoutedEventArgs e)
+    {
+        _ = new MaterialNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        MaterialKeys = new MaterialKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        MaterialKeys.Show();
+        _modell.Berechnet = false;
+    }
+
+    private void MenuKnotenlastNeu(object sender, RoutedEventArgs e)
+    {
+        IsKnotenlast = true;
+        _knotenlastNeu = new KnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        TragwerkLastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        TragwerkLastenKeys.Show();
+        _modell.Berechnet = false;
+    }
+
+    private void MenuLinienlastNeu(object sender, RoutedEventArgs e)
+    {
+        IsLinienlast = true;
+        _linienlastNeu = new LinienlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        TragwerkLastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        TragwerkLastenKeys.Show();
+        _modell.Berechnet = false;
+    }
+
+    private void MenuPunktlastNeu(object sender, RoutedEventArgs e)
+    {
+        IsPunktlast = true;
+        _punktlastNeu = new PunktlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        TragwerkLastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        TragwerkLastenKeys.Show();
+        _modell.Berechnet = false;
+    }
+
+    private void OnBtnLagerNeu_Click(object sender, RoutedEventArgs e)
+    {
+        _lagerNeu = new LagerNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+
+        LagerKeys = new LagerKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        LagerKeys.Show();
+        _modell.Berechnet = false;
+    }
+
+    // Modelldefinitionen darstellen
     private void OnBtnKnotenIDs_Click(object sender, RoutedEventArgs e)
     {
         if (!_knotenTexteAn)
@@ -132,95 +312,6 @@ public partial class TragwerkmodellVisualisieren
             }
             _lagerAn = false;
         }
-    }
-
-    private void MenuBalkenKnotenNeu(object sender, RoutedEventArgs e)
-    {
-        _knotenNeu = new KnotenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        KnotenKeys = new KnotenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
-        KnotenKeys.Show();
-        StartFenster.Berechnet = false;
-    }
-
-    private void MenuBalkenKnotenGruppeNeu(object sender, RoutedEventArgs e)
-    {
-        _ = new KnotenGruppeNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-    }
-
-    private void MenuBalkenKnotenNetzÄquidistant(object sender, RoutedEventArgs e)
-    {
-        _ = new KnotenNetzÄquidistant(_modell) { Topmost = true, Owner = (Window)Parent };
-    }
-
-    private void MenuBalkenKnotenNetzVariabel(object sender, RoutedEventArgs e)
-    {
-        _ = new KnotenNetzVariabel(_modell) { Topmost = true, Owner = (Window)Parent };
-    }
-
-    private void MenuBalkenElementNeu(object sender, RoutedEventArgs e)
-    {
-        IsElement = true;
-        _elementNeu = new ElementNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        ElementKeys = new ElementKeys(_modell) { Topmost = true, Owner = (Window)Parent };
-        ElementKeys.Show();
-        StartFenster.Berechnet = false;
-    }
-
-    private void MenuQuerschnittNeu(object sender, RoutedEventArgs e)
-    {
-        _ = new QuerschnittNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        QuerschnittKeys = new QuerschnittKeys(_modell) { Topmost = true, Owner = (Window)Parent };
-        QuerschnittKeys.Show();
-        StartFenster.Berechnet = false;
-    }
-
-    private void MenuMaterialNeu(object sender, RoutedEventArgs e)
-    {
-        _ = new MaterialNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        MaterialKeys = new MaterialKeys(_modell) { Topmost = true, Owner = (Window)Parent };
-        MaterialKeys.Show();
-        StartFenster.Berechnet = false;
-    }
-
-    private void MenuKnotenlastNeu(object sender, RoutedEventArgs e)
-    {
-        IsKnotenlast = true;
-        _knotenlastNeu = new KnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        TragwerkLastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
-        TragwerkLastenKeys.Show();
-        StartFenster.Berechnet = false;
-    }
-
-    private void MenuLinienlastNeu(object sender, RoutedEventArgs e)
-    {
-        IsLinienlast = true;
-        _linienlastNeu = new LinienlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        TragwerkLastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
-        TragwerkLastenKeys.Show();
-        StartFenster.Berechnet = false;
-    }
-
-    private void MenuPunktlastNeu(object sender, RoutedEventArgs e)
-    {
-        IsPunktlast = true;
-        _punktlastNeu = new PunktlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        TragwerkLastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
-        TragwerkLastenKeys.Show();
-        StartFenster.Berechnet = false;
-    }
-
-    private void OnBtnLagerNeu_Click(object sender, RoutedEventArgs e)
-    {
-        _lagerNeu = new LagerNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-
-        LagerKeys = new LagerKeys(_modell) { Topmost = true, Owner = (Window)Parent };
-        LagerKeys.Show();
-        StartFenster.Berechnet = false;
-    }
-
-    private void OnBtnZeitintegrationNew_Click(object sender, RoutedEventArgs e)
-    {
-        ZeitintegrationNeu = new ZeitintegrationNeu(_modell) { Topmost = true };
     }
 
     // KnotenNeu setzt Pilotpunkt

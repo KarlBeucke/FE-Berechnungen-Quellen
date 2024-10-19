@@ -97,7 +97,7 @@ public partial class KnotenlastNeu
         StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -144,7 +144,7 @@ public partial class KnotenlastNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
     }
 
     private void KnotenPositionNeu(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -153,6 +153,6 @@ public partial class KnotenlastNeu
         if (knoten == null) { _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue Knotenlast"); return; }
         StartFenster.TragwerkVisual.KnotenClick(knoten);
         Close();
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
     }
 }

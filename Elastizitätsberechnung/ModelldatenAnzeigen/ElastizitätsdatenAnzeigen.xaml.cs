@@ -113,18 +113,18 @@ public partial class ElastizitätsdatenAnzeigen
     // Knoten
     private void NeuerKnoten(object sender, MouseButtonEventArgs e)
     {
-        const int anzahlKnotenfreitsgrade = 3;
-        _ = new NeuerKnoten(modell, anzahlKnotenfreitsgrade);
-        StartFenster.Berechnet = false;
+        const int anzahlKnotenfreiheitsgrade = 3;
+        _ = new NeuerKnoten(modell, anzahlKnotenfreiheitsgrade);
+        modell.Berechnet = false;
         Close();
     }
 
     //UnloadingRow
-    private void KnotenZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenZeileLöschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
         modell.Knoten.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var tragwerk = new ElastizitätsdatenAnzeigen(modell);
@@ -144,7 +144,7 @@ public partial class ElastizitätsdatenAnzeigen
     private void NeuesElement(object sender, MouseButtonEventArgs e)
     {
         _ = new NeuesElement(modell);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
     }
 
@@ -153,7 +153,7 @@ public partial class ElastizitätsdatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Elemente.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var tragwerk = new ElastizitätsdatenAnzeigen(modell);
@@ -181,7 +181,7 @@ public partial class ElastizitätsdatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Material.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var tragwerk = new ElastizitätsdatenAnzeigen(modell);
@@ -209,7 +209,7 @@ public partial class ElastizitätsdatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Querschnitt.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var tragwerk = new ElastizitätsdatenAnzeigen(modell);
@@ -229,7 +229,7 @@ public partial class ElastizitätsdatenAnzeigen
     private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
     {
         _ = new NeueKnotenlast(modell, string.Empty, string.Empty, 0, 0, 0);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
     }
 
@@ -238,7 +238,7 @@ public partial class ElastizitätsdatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Lasten.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var tragwerk = new ElastizitätsdatenAnzeigen(modell);
@@ -258,7 +258,7 @@ public partial class ElastizitätsdatenAnzeigen
     private void NeueRandbedingung(object sender, MouseButtonEventArgs e)
     {
         _ = new NeuesLager(modell);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
     }
 
@@ -267,7 +267,7 @@ public partial class ElastizitätsdatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Randbedingungen.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var tragwerk = new ElastizitätsdatenAnzeigen(modell);
@@ -284,6 +284,6 @@ public partial class ElastizitätsdatenAnzeigen
 
     private void Model_Changed(object sender, DataGridCellEditEndingEventArgs e)
     {
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
     }
 }

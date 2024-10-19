@@ -189,13 +189,13 @@ public class Darstellung
 
     public void VerformteGeometrie()
     {
-        if (!StartFenster.Berechnet)
+        if (!_modell.Berechnet)
         {
             var analysis = new Berechnung(_modell);
             analysis.BerechneSystemMatrix();
             analysis.BerechneSystemVektor();
             analysis.LöseGleichungen();
-            StartFenster.Berechnet = true;
+            _modell.Berechnet = true;
         }
 
         var pathGeometry = new PathGeometry();
@@ -992,7 +992,7 @@ public class Darstellung
         foreach (var item in _modell.Randbedingungen)
         {
             var lager = item.Value;
-            var pathGeometry = new PathGeometry();
+            PathGeometry pathGeometry;
 
             if (!_modell.Knoten.TryGetValue(lager.KnotenId, out var lagerKnoten))
             {

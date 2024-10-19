@@ -1,10 +1,10 @@
-﻿<Window x:Class="FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenNeu"
+﻿<Window x:Class="FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenGruppeNeu"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-                Title="Knoten definieren oder editieren" Height="420" Width="400">
+                Title="Knotengruppe definieren oder editieren" Height="420" Width="400">
     <Grid Height="403" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80" />
@@ -21,14 +21,16 @@
             <RowDefinition Height="230" />
             <RowDefinition Height="770" />
         </Grid.RowDefinitions>
-        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="5" Margin="0,0,0,37" Grid.RowSpan="2">
-            Neue Knotenwerte eingeben, vorhandene editieren
+        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="6" Margin="0,0,-40,37" Grid.RowSpan="2">
+            Präfix für alle Ids eingeben, Knoten Ids werden generiert
         </Label>
 
-        <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knoten ID</Label>
-        <TextBox Name="KnotenId" Grid.Row="1" Grid.Column="1" Height="20"
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knoten Präfix</Label>
+        <TextBox Name="Präfix" Grid.Row="1" Grid.Column="1" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" LostFocus="KnotenIdLostFocus" />
-
+        <Label Grid.Row="1" Grid.Column="2" Margin="0,5,75,0" Grid.ColumnSpan="3">Anzahl Freiheitsgrade</Label>
+        <TextBox Name="AnzahlDof" Grid.Row="1" Grid.Column="4" Margin="5,0,0,0" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="33" />
 
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,10">x Koordinate</Label>
         <TextBox Name="X" Grid.Row="2" Grid.Column="1" Height="20"
@@ -41,24 +43,21 @@
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
 
         <DataGrid Name="KnotenGrid" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="6" Margin="0,0,-39,0"
-                  AlternatingRowBackground="Aqua" AutoGenerateColumns="False" d:DataContext="{d:DesignData modell}">
+                  AlternatingRowBackground="Aqua" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header=" Knoten Id" Binding="{Binding Id}" />
+                <DataGridTextColumn Header=" Anzahl DoF" Binding="{Binding AnzahlKnotenfreiheitsgrade}" />
                 <DataGridTextColumn Header=" x-Koordinate" Binding="{Binding Koordinaten[0]}" />
                 <DataGridTextColumn Header=" y-Koordinate" Binding="{Binding Koordinaten[1]}" />
                 <DataGridTextColumn Header=" z-Koordinate" Binding="{Binding Koordinaten[2]}" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="8,14,5,730" Width="100"
-                Click="BtnLöschen_Click">
-            _löschen
-        </Button>
-        <Button Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Margin="7,14,13,730" Width="100"
+        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="12,14,40,730"
                 Click="BtnTabelleneintrag">
-            _Eintrag Tabelle
+            _in Tabelle eintragen
         </Button>
-        <Button IsDefault="True" Grid.Row="4" Grid.Column="5" Margin="0,14,2,731"
+        <Button Grid.Row="4" Grid.Column="5" Margin="0,14,2,731"
                 Click="BtnDialogOk_Click">
             _Ok
         </Button>

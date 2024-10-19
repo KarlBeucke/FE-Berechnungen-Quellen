@@ -86,7 +86,7 @@ public partial class InstationäreErgebnisseAnzeigen
         KnotentemperaturGrid.ItemsSource = knotentemperaturen;
 
         if (letzterKnoten != null) wärmeModell.VisualWärmeModell.Children.Remove(letzterKnoten);
-        letzterKnoten = wärmeModell.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        letzterKnoten = wärmeModell.Darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
 
     //KontenwerteGrid
@@ -133,7 +133,7 @@ public partial class InstationäreErgebnisseAnzeigen
         }
 
         if (letzterKnoten != null) wärmeModell.VisualWärmeModell.Children.Remove(letzterKnoten);
-        letzterKnoten = wärmeModell.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        letzterKnoten = wärmeModell.Darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
 
     //LostFocus
@@ -172,7 +172,7 @@ public partial class InstationäreErgebnisseAnzeigen
         var cell = (KeyValuePair<string, AbstraktElement>)cellInfo.Item;
         var element = cell.Value;
         if (letztesElement != null) wärmeModell.VisualWärmeModell.Children.Remove(letztesElement);
-        letztesElement = wärmeModell.darstellung.ElementFillZeichnen((Abstrakt2D)element,
+        letztesElement = wärmeModell.Darstellung.ElementFillZeichnen((Abstrakt2D)element,
             Brushes.Black, Colors.Green, .2, 2);
     }
 

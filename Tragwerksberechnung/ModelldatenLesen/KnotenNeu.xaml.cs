@@ -106,7 +106,7 @@ public partial class KnotenNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
     }
 
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
@@ -158,7 +158,7 @@ public partial class KnotenNeu
         StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
     }
 
     private bool KnotenReferenziert()

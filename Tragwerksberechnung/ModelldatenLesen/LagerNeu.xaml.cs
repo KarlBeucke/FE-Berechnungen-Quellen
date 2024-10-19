@@ -117,7 +117,7 @@ public partial class LagerNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -171,7 +171,7 @@ public partial class LagerNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
     }
 
     private void KnotenPositionNeu(object sender, MouseButtonEventArgs e)
@@ -180,7 +180,7 @@ public partial class LagerNeu
         if (knoten == null) { _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neues Lager"); return; }
         StartFenster.TragwerkVisual.KnotenClick(knoten);
         Close();
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
     }
 
     private bool Lagergelenk(string knotenId)

@@ -43,7 +43,7 @@
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
 
         <DataGrid Name="KnotenGrid" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="6" Margin="0,0,-39,0"
-                  AlternatingRowBackground="Aqua" AutoGenerateColumns="False">
+                  AlternatingRowBackground="Aqua" AutoGenerateColumns="False" d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header=" Knoten Id" Binding="{Binding Id}" />
                 <DataGridTextColumn Header=" Anzahl DoF" Binding="{Binding AnzahlKnotenfreiheitsgrade}" />

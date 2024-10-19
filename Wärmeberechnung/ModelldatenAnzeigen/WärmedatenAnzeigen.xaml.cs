@@ -34,7 +34,7 @@ public partial class WärmedatenAnzeigen
     private void NeuerKnoten(object sender, MouseButtonEventArgs e)
     {
         _ = new KnotenNeu(modell);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
     }
 
@@ -43,7 +43,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Knoten.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -58,7 +58,7 @@ public partial class WärmedatenAnzeigen
         var knoten = (Knoten)cellInfo.Item;
         removeKey = knoten.Id;
         if (letzterKnoten != null) StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letzterKnoten);
-        letzterKnoten = StartFenster.WärmeVisual.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        letzterKnoten = StartFenster.WärmeVisual.Darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
 
     //LostFocus
@@ -79,7 +79,7 @@ public partial class WärmedatenAnzeigen
     private void NeuesElement(object sender, MouseButtonEventArgs e)
     {
         _ = new ElementNeu(modell);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
     }
 
@@ -88,7 +88,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Elemente.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -103,7 +103,7 @@ public partial class WärmedatenAnzeigen
         var element = (AbstraktElement)cellInfo.Item;
         removeKey = element.ElementId;
         if (letztesElement != null) StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
-        letztesElement = StartFenster.WärmeVisual.darstellung.ElementFillZeichnen((Abstrakt2D)element,
+        letztesElement = StartFenster.WärmeVisual.Darstellung.ElementFillZeichnen((Abstrakt2D)element,
             Brushes.Black, Colors.Green, .2, 2);
     }
 
@@ -132,7 +132,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Material.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -158,7 +158,7 @@ public partial class WärmedatenAnzeigen
     private void NeueRandbedingung(object sender, MouseButtonEventArgs e)
     {
         _ = new RandbdingungNeu(modell);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
     }
 
@@ -167,7 +167,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Randbedingungen.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -193,7 +193,7 @@ public partial class WärmedatenAnzeigen
     private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
     {
         _ = new KnotenlastNeu(modell);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
     }
 
@@ -202,7 +202,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.Lasten.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -228,7 +228,7 @@ public partial class WärmedatenAnzeigen
     private void NeueLinienlast(object sender, MouseButtonEventArgs e)
     {
         _ = new LinienlastNeu(modell);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
     }
 
@@ -237,7 +237,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.LinienLasten.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -263,7 +263,7 @@ public partial class WärmedatenAnzeigen
     private void NeueElementlast(object sender, MouseButtonEventArgs e)
     {
         _ = new ElementlastNeu(modell);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
     }
 
@@ -272,7 +272,7 @@ public partial class WärmedatenAnzeigen
     {
         if (removeKey == null) return;
         modell.ElementLasten.Remove(removeKey);
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
         Close();
 
         var wärme = new WärmedatenAnzeigen(modell);
@@ -290,7 +290,7 @@ public partial class WärmedatenAnzeigen
 
     private void Model_Changed(object sender, DataGridCellEditEndingEventArgs e)
     {
-        StartFenster.Berechnet = false;
+        modell.Berechnet = false;
     }
 
     //private void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)

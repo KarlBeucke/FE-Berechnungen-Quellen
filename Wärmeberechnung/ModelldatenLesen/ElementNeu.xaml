@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="NeuesElement" Height="322.64" Width="300">
+        Title="NeuesElement" Height="340" Width="320">
     <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
@@ -25,8 +25,8 @@
         <Label Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,-44,0">
             Eingabe für die Definition eines neuen Elementes
         </Label>
-        <CheckBox Name="Element2D2Check" Grid.Row="1" Grid.Column="0" Margin="10,3.2,0,0">Element2D2</CheckBox>
-        <CheckBox Name="Element2D3Check" Grid.Row="1" Grid.Column="1" Margin="10,3.2,0,0">Element2D3</CheckBox>
+        <CheckBox Name="Element2D2Check" Grid.Row="1" Grid.Column="0" Margin="10,3,0,29">Element2D2</CheckBox>
+        <CheckBox Name="Element2D3Check" Grid.Row="1" Grid.Column="1" Margin="10,3,0,29">Element2D3</CheckBox>
         <CheckBox Name="Element2D4Check" Grid.Row="1" Grid.Column="0" Margin="10,25.6,0,0">Element2D4</CheckBox>
         <CheckBox Name="Element3D8Check" Grid.Row="1" Grid.Column="1" Margin="10,25.6,0,0">Element3D8</CheckBox>
 
@@ -73,8 +73,8 @@
                 Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
             _Ok
         </Button>
-        <Button Grid.Row="8" Width="71" Height="26" Margin="64.8,0,-35,2.6"
-                Click="BtnDialogCancel_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1">
+        <Button Grid.Row="8" Height="26" Margin="65,0,-40,0"
+                Click="BtnDialogCancel_Click" VerticalAlignment="Center" Grid.Column="1" RenderTransformOrigin="0.653,0.463">
             _Abbrechen
         </Button>
     </Grid>

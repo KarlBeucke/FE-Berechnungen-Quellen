@@ -107,7 +107,6 @@ public partial class ZeitintegrationNeu
     private void BerechneZeitintervall(object sender, MouseButtonEventArgs e)
     {
         var anzahl = 0;
-        Berechnung modellBerechnung = null;
 
         try
         {
@@ -118,19 +117,19 @@ public partial class ZeitintegrationNeu
             _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration");
         }
 
-        modellBerechnung = new Berechnung(_modell);
+        var modellBerechnung = new Berechnung(_modell);
         _modell.Eigenzustand ??= new Eigenzustände("Tmin", anzahl);
 
         if (_modell.Eigenzustand.Eigenwerte == null)
         {
-            if (!StartFenster.Berechnet)
+            if (!_modell.Berechnet)
             {
-                modellBerechnung?.BerechneSystemMatrix();
-                StartFenster.Berechnet = true;
+                modellBerechnung.BerechneSystemMatrix();
+                _modell.Berechnet = true;
             }
 
             _modell.Eigenzustand = new Eigenzustände("Tmin", anzahl);
-            modellBerechnung?.Eigenzustände();
+            modellBerechnung.Eigenzustände();
         }
 
         var omegaMax = _modell.Eigenzustand.Eigenwerte[anzahl - 1];
@@ -319,7 +318,7 @@ public partial class ZeitintegrationNeu
                 _modell.Zeitintegration = new Zeitintegration(tmax, dt, methode, alfa);
             }
 
-            StartFenster.ZeitintegrationDaten = true;
+            _modell.ZeitintegrationDaten = true;
         }
         else
         {

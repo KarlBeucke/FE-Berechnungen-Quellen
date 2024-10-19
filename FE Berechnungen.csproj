@@ -64,6 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Ressourcen\Durchlaufträger.jpg" />
+    <Resource Include="Ressourcen\Tragwerk.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Ressourcen\Wandecke.jpg" />
@@ -93,6 +96,7 @@
     <Compile Remove="FE Bibliothek\Zeitlöser\Zeitintegration1OrdnungStatus.cs" />
     <Compile Remove="FE Bibliothek\Zeitlöser\Zeitintegration2OrdnungStatus.cs" />
     <Compile Remove="Wärmeberechnung\Ergebnisse\Knotenauswahl.xaml.cs" />
+    <None Remove="Ressourcen\Tragwerk.jpg" />
     <Page Remove="Wärmeberechnung\Ergebnisse\Knotenauswahl.xaml" />
   </ItemGroup>
   <ItemGroup>

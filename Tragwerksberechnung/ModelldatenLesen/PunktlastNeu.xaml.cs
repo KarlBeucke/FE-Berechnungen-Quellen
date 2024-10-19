@@ -91,7 +91,7 @@ public partial class PunktlastNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -150,6 +150,6 @@ public partial class PunktlastNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
-        StartFenster.Berechnet = false;
+        _modell.Berechnet = false;
     }
 }

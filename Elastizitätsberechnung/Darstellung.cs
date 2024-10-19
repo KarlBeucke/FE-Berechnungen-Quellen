@@ -180,13 +180,13 @@ public class Darstellung
     {
         try
         {
-            if (!StartFenster.Berechnet)
+            if (!_modell.Berechnet)
             {
                 var berechnung = new Berechnung(_modell);
                 berechnung.BerechneSystemMatrix();
                 berechnung.BerechneSystemVektor();
                 berechnung.LöseGleichungen();
-                StartFenster.Berechnet = true;
+                _modell.Berechnet = true;
             }
         }
         catch (BerechnungAusnahme e2)
