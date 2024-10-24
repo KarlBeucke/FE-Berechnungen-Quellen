@@ -21,7 +21,7 @@ public partial class WärmemodellVisualisieren
     private readonly List<TextBlock> hitTextBlock = [];
     private bool isDragging;
     private Point mittelpunkt;
-    
+
     private readonly FeModell _modell;
     public readonly Darstellung Darstellung;
     private bool knotenAn = true, elementeAn = true, lastenAn = true, randbedingungAn = true;
@@ -104,7 +104,7 @@ public partial class WärmemodellVisualisieren
     {
         if (_modell.ZeitintegrationDaten && _modell != null)
         {
-            Berechnung modellBerechnung=null;
+            Berechnung modellBerechnung = null;
             if (!_modell.Berechnet)
             {
                 modellBerechnung = new Berechnung(_modell);
@@ -511,7 +511,7 @@ public partial class WärmemodellVisualisieren
         foreach (var item in hitTextBlock)
         {
             if (!_modell.Knoten.TryGetValue(item.Text, out var knoten)) continue;
-            
+
             if (item.Text != knoten.Id) _ = MessageBox.Show("Knoten Id kann hier nicht verändert werden", "Knotentext");
             _knotenNeu = new KnotenNeu(_modell)
             {
@@ -563,7 +563,7 @@ public partial class WärmemodellVisualisieren
                     case Element2D4:
                         _ = new ElementNeu(_modell)
                         {
-                            Element2D4= { IsChecked = true },
+                            Element2D4 = { IsChecked = true },
                             ElementId = { Text = element.ElementId },
                             Knoten1Id = { Text = element.KnotenIds[0] },
                             Knoten2Id = { Text = element.KnotenIds[1] },
@@ -710,7 +710,7 @@ public partial class WärmemodellVisualisieren
             // Textdarstellung ist Randtemperatur
             else if (_modell.Randbedingungen.TryGetValue(item.Uid, out var randbedingung))
             {
-               _ = new RandbdingungNeu(_modell)
+                _ = new RandbdingungNeu(_modell)
                 {
                     RandbedingungId = { Text = randbedingung.RandbedingungId },
                     KnotenId = { Text = randbedingung.KnotenId },

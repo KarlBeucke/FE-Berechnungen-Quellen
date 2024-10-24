@@ -59,14 +59,14 @@ public partial class KnotenlastNeu
                 return;
             }
         }
-        
+
         // neue Knotenlast
         else
         {
             var knotenId = "";
             double px = 0, py = 0, m = 0;
             if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
-            if(!_modell.Knoten.TryGetValue(knotenId, out var knoten))
+            if (!_modell.Knoten.TryGetValue(knotenId, out var knoten))
                 throw new ModellAusnahme("Lastknoten im Modell nicht vorhanden");
 
             try
@@ -115,8 +115,8 @@ public partial class KnotenlastNeu
 
         // vorhandene Knotenlastdefinition
         if (!_modell.Lasten.TryGetValue(LastId.Text, out var vorhandeneKnotenlast))
-           throw new ModellAusnahme("\nKnotenlast '" + LastId.Text + "' nicht im Modell gefunden");
-       
+            throw new ModellAusnahme("\nKnotenlast '" + LastId.Text + "' nicht im Modell gefunden");
+
         LastId.Text = vorhandeneKnotenlast.LastId;
         KnotenId.Text = vorhandeneKnotenlast.KnotenId;
         Px.Text = vorhandeneKnotenlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);

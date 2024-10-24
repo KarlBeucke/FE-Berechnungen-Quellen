@@ -162,7 +162,7 @@ public partial class ElementNeu
         }
 
         // vorhandene element definitionen
-        if(!_modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement))
+        if (!_modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement))
         {
             throw new ModellAusnahme("\nElement '" + ElementId.Text + "' nicht im Modell gefunden");
         }

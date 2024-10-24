@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
@@ -32,7 +31,7 @@ public partial class MaterialNeu
         // vorhandenes Material
         if (_modell.Material.ContainsKey(MaterialId.Text))
         {
-            if(!_modell.Material.TryGetValue(materialId, out vorhandenesMaterial))
+            if (!_modell.Material.TryGetValue(materialId, out vorhandenesMaterial))
                 throw new ModellAusnahme("\nMaterial '" + materialId + "' nicht im Modell gefunden");
             try
             {

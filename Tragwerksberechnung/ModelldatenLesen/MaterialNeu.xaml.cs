@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
@@ -121,7 +120,7 @@ public partial class MaterialNeu
         }
 
         // vorhandene Materialdefinition
-        if(!_modell.Material.TryGetValue(MaterialId.Text, out _vorhandenesMaterial))
+        if (!_modell.Material.TryGetValue(MaterialId.Text, out _vorhandenesMaterial))
             throw new ModellAusnahme("\nMaterial '" + MaterialId.Text + "' nicht im Modell gefunden");
         MaterialId.Text = "";
 
