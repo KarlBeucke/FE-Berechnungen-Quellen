@@ -43,8 +43,7 @@ public partial class KnotenlastNeu
         }
 
         // vorhandene Knotenlast
-        _modell.Lasten.TryGetValue(knotenlastId, out var vorhandeneKnotenlast);
-        if (vorhandeneKnotenlast != null)
+        if (_modell.Lasten.TryGetValue(knotenlastId, out var vorhandeneKnotenlast))
         {
             if (KnotenId.Text.Length > 0)
                 vorhandeneKnotenlast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
@@ -60,15 +59,16 @@ public partial class KnotenlastNeu
                 return;
             }
         }
+        
         // neue Knotenlast
         else
         {
             var knotenId = "";
             double px = 0, py = 0, m = 0;
             if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
-            _modell.Knoten.TryGetValue(knotenId, out var knoten);
-            if (knoten == null)
+            if(!_modell.Knoten.TryGetValue(knotenId, out var knoten))
                 throw new ModellAusnahme("Lastknoten im Modell nicht vorhanden");
+
             try
             {
                 if (Px.Text.Length > 0) px = double.Parse(Px.Text);
@@ -92,7 +92,6 @@ public partial class KnotenlastNeu
             _modell.Lasten.Add(knotenlastId, knotenlast);
         }
 
-        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
@@ -102,16 +101,22 @@ public partial class KnotenlastNeu
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.IsKnotenlast = false;
     }
 
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
     {
+        if (!_modell.Lasten.ContainsKey(LastId.Text))
+        {
+            KnotenId.Text = "";
+            return;
+        }
+
         // vorhandene Knotenlastdefinition
-        _modell.Lasten.TryGetValue(LastId.Text, out var vorhandeneKnotenlast);
-        if (vorhandeneKnotenlast == null) return;
+        if (!_modell.Lasten.TryGetValue(LastId.Text, out var vorhandeneKnotenlast))
+           throw new ModellAusnahme("\nKnotenlast '" + LastId.Text + "' nicht im Modell gefunden");
+       
         LastId.Text = vorhandeneKnotenlast.LastId;
         KnotenId.Text = vorhandeneKnotenlast.KnotenId;
         Px.Text = vorhandeneKnotenlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);

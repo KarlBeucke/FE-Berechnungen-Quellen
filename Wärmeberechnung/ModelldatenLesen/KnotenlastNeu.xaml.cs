@@ -1,14 +1,12 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using System.Diagnostics;
 using System.Globalization;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class KnotenlastNeu
 {
-    private readonly WärmelastenKeys lastenKeys;
-    private readonly FeModell modell;
-    private AbstraktLast vorhandeneLast;
+    private readonly FeModell _modell;
 
     public KnotenlastNeu()
     {
@@ -18,17 +16,15 @@ public partial class KnotenlastNeu
 
     public KnotenlastNeu(FeModell modell)
     {
-        this.modell = modell;
+        _modell = modell;
         InitializeComponent();
-        lastenKeys = new WärmelastenKeys(modell);
-        lastenKeys.Show();
         Show();
     }
 
     public KnotenlastNeu(FeModell modell, string last, string knoten, double t)
     {
         InitializeComponent();
-        this.modell = modell;
+        this._modell = modell;
         KnotenlastId.Text = last;
         KnotenId.Text = knoten;
         Temperatur.Text = t.ToString("0.00");
@@ -45,39 +41,57 @@ public partial class KnotenlastNeu
         }
 
         // vorhandene Knotenlast
-        if (modell.Lasten.Keys.Contains(KnotenlastId.Text))
+        if (_modell.Lasten.TryGetValue(knotenlastId, out var vorhandeneLast))
         {
-            modell.Lasten.TryGetValue(knotenlastId, out vorhandeneLast);
-            Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null");
-
-            if (KnotenId.Text.Length > 0) vorhandeneLast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Temperatur.Text.Length > 0) vorhandeneLast.Lastwerte[0] = double.Parse(Temperatur.Text);
+            try
+            {
+                if (KnotenId.Text.Length > 0)
+                    vorhandeneLast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
+                if (Temperatur.Text.Length > 0) vorhandeneLast.Lastwerte[0] = double.Parse(Temperatur.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Knotenlast");
+                return;
+            }
         }
+
         // neue Knotenlast
         else
         {
             var knotenId = "";
             var t = new double[1];
-            if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Temperatur.Text.Length > 0) t[0] = double.Parse(Temperatur.Text);
+            try
+            {
+                if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
+                if (Temperatur.Text.Length > 0) t[0] = double.Parse(Temperatur.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Knotenlast");
+                return;
+            }
+
             var knotenlast = new KnotenLast(knotenlastId, knotenId, t);
-            modell.Lasten.Add(knotenlastId, knotenlast);
+            _modell.Lasten.Add(knotenlastId, knotenlast);
         }
 
-        lastenKeys?.Close();
         Close();
         StartFenster.WärmeVisual.Close();
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        lastenKeys?.Close();
         Close();
+        StartFenster.WärmeVisual.IsKnotenlast = false;
     }
 
     private void KnotenlastIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!modell.Lasten.ContainsKey(KnotenlastId.Text))
+        if (!_modell.Lasten.ContainsKey(KnotenlastId.Text))
         {
             KnotenId.Text = "";
             Temperatur.Text = "";
@@ -85,22 +99,23 @@ public partial class KnotenlastNeu
         }
 
         // vorhandene Knotenlastdefinition
-        modell.Lasten.TryGetValue(KnotenlastId.Text, out vorhandeneLast);
-        Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null");
-        KnotenlastId.Text = "";
+        if (!_modell.Lasten.TryGetValue(KnotenlastId.Text, out var vorhandeneLast))
+            throw new ModellAusnahme("\nKnotenlast '" + KnotenlastId.Text + "' nicht im Modell gefunden");
 
         KnotenlastId.Text = vorhandeneLast.LastId;
-
         KnotenId.Text = vorhandeneLast.KnotenId;
         Temperatur.Text = vorhandeneLast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!modell.Lasten.Keys.Contains(KnotenlastId.Text)) return;
-        modell.Lasten.Remove(KnotenlastId.Text);
-        lastenKeys?.Close();
+        if (!_modell.Lasten.ContainsKey(KnotenlastId.Text)) return;
+        _modell.Lasten.Remove(KnotenlastId.Text);
         Close();
         StartFenster.WärmeVisual.Close();
+
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 }

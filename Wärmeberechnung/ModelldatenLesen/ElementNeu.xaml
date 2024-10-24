@@ -25,11 +25,22 @@
         <Label Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,-44,0">
             Eingabe für die Definition eines neuen Elementes
         </Label>
-        <CheckBox Name="Element2D2Check" Grid.Row="1" Grid.Column="0" Margin="10,3,0,29">Element2D2</CheckBox>
-        <CheckBox Name="Element2D3Check" Grid.Row="1" Grid.Column="1" Margin="10,3,0,29">Element2D3</CheckBox>
-        <CheckBox Name="Element2D4Check" Grid.Row="1" Grid.Column="0" Margin="10,25.6,0,0">Element2D4</CheckBox>
-        <CheckBox Name="Element3D8Check" Grid.Row="1" Grid.Column="1" Margin="10,25.6,0,0">Element3D8</CheckBox>
-
+        <CheckBox Name="Element2D2" Grid.Row="1" Grid.Column="0" Margin="10,3,41,29"
+                  Checked="Element2D2Checked">
+            Element2D2
+        </CheckBox>
+        <CheckBox Name="Element2D3" Grid.Row="1" Grid.Column="1" Margin="10,3,0,29"
+                  Checked="Element2D3Checked">
+            Element2D3
+        </CheckBox>
+        <CheckBox Name="Element2D4" Grid.Row="1" Grid.Column="0" Margin="10,26,53,9"
+                  Checked="Element2D4Checked">
+            Element2D4
+        </CheckBox>
+        <CheckBox Name="Element3D8" Grid.Row="1" Grid.Column="1" Margin="10,26,-2,11"
+                  Checked="Element3D8Checked">
+            Element3D8
+        </CheckBox>
 
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Element ID:</Label>
         <TextBox Name="ElementId" Grid.Row="2" Grid.Column="0" Margin="110,0,0,0" Height="15"
@@ -69,12 +80,12 @@
                 Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
             löschen
         </Button>
-        <Button IsDefault="True" Grid.Row="8" Grid.Column="1" Width="35" Height="26" Margin="22.8,0,0,2.6"
+        <Button IsDefault="True" Grid.Row="8" Grid.Column="1" Width="35" Height="26" Margin="22.8,0,0,0"
                 Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
             _Ok
         </Button>
-        <Button Grid.Row="8" Height="26" Margin="65,0,-40,0"
-                Click="BtnDialogCancel_Click" VerticalAlignment="Center" Grid.Column="1" RenderTransformOrigin="0.653,0.463">
+        <Button Grid.Row="8" Height="26" Margin="65,0,-40,0" VerticalAlignment="Bottom"
+                Click="BtnDialogCancel_Click" Grid.Column="1">
             _Abbrechen
         </Button>
     </Grid>

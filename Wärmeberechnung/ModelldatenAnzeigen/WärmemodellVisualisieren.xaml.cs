@@ -1,4 +1,5 @@
-﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+﻿using FE_Berechnungen.Wärmeberechnung.Ergebnisse;
+using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 using System.Globalization;
 using System.Linq;
@@ -8,18 +9,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using ElementKeys = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.ElementKeys;
-using ElementNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.ElementNeu;
-using KnotenGruppeNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenGruppeNeu;
-using KnotenKeys = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenKeys;
-using KnotenlastNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenlastNeu;
-using KnotenNetzÄquidistant = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenNetzÄquidistant;
-using KnotenNetzVariabel = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenNetzVariabel;
-using KnotenNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenNeu;
-using LinienlastNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.LinienlastNeu;
-using MaterialKeys = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.MaterialKeys;
-using MaterialNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.MaterialNeu;
-using ZeitintegrationNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.ZeitintegrationNeu;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
@@ -35,8 +24,7 @@ public partial class WärmemodellVisualisieren
     
     private readonly FeModell _modell;
     public readonly Darstellung Darstellung;
-    private bool knotenAn = true, elementeAn = true;
-    private bool lastenAn = true, randbedingungAn = true;
+    private bool knotenAn = true, elementeAn = true, lastenAn = true, randbedingungAn = true;
     private KnotenNeu _knotenNeu;
     private ElementNeu _elementNeu;
     private KnotenlastNeu _knotenlastNeu;
@@ -54,7 +42,7 @@ public partial class WärmemodellVisualisieren
     {
         Language = XmlLanguage.GetLanguage("de-DE");
         InitializeComponent();
-        VisualWärmeModell.Children.Remove(Knoten);
+        VisualWärmeModell.Children.Remove(Pilot);
         Show();
         VisualWärmeModell.Background = Brushes.Transparent;
         _modell = feModell;
@@ -78,66 +66,104 @@ public partial class WärmemodellVisualisieren
         }
     }
 
-    private void OnBtnKnotenIDs_Click(object sender, RoutedEventArgs e)
+    // Modell berechnen
+    private void OnBtnBerechnen_Click(object sender, RoutedEventArgs e)
     {
-        if (!knotenAn)
+        if (_modell != null)
         {
-            Darstellung.KnotenTexte();
-            knotenAn = true;
+            var modellBerechnung = new Berechnung(_modell);
+            modellBerechnung.BerechneSystemMatrix();
+            modellBerechnung.BerechneSystemVektor();
+            modellBerechnung.LöseGleichungen();
+            _modell.Berechnet = true;
+
+            var stationäreErgebnisse = new StationäreErgebnisseVisualisieren(_modell);
+            stationäreErgebnisse.Show();
         }
         else
         {
-            foreach (var id in Darstellung.KnotenIDs) VisualWärmeModell.Children.Remove(id);
-            knotenAn = false;
+            _ = MessageBox.Show("WärmeModelldaten müssen zuerst eingelesen werden", "Wärmeberechnung");
         }
     }
 
-    private void OnBtnElementIDs_Click(object sender, RoutedEventArgs e)
+    private void InstationäreDaten(object sender, RoutedEventArgs e)
     {
-        if (!elementeAn)
+        if (_modell != null)
         {
-            Darstellung.ElementTexte();
-            elementeAn = true;
+            var wärme = new InstationäreDatenAnzeigen(_modell);
+            wärme.Show();
+            _modell.ZeitintegrationBerechnet = false;
         }
         else
         {
-            foreach (var id in Darstellung.ElementIDs) VisualWärmeModell.Children.Remove(id);
-            elementeAn = false;
+            _ = MessageBox.Show("Modelldaten für Wärmeberechnung sind noch nicht spezifiziert", "Wärmeberechnung");
         }
     }
 
-    private void OnBtnLasten_Click(object sender, RoutedEventArgs e)
+    private void InstationäreBerechnung(object sender, RoutedEventArgs e)
     {
-        if (!lastenAn)
+        if (_modell.ZeitintegrationDaten && _modell != null)
         {
-            Darstellung.KnotenlastenZeichnen();
-            Darstellung.LinienlastenZeichnen();
-            Darstellung.ElementlastenZeichnen();
-            lastenAn = true;
+            Berechnung modellBerechnung=null;
+            if (!_modell.Berechnet)
+            {
+                modellBerechnung = new Berechnung(_modell);
+                modellBerechnung.BerechneSystemMatrix();
+                modellBerechnung.BerechneSystemVektor();
+                modellBerechnung.LöseGleichungen();
+                _modell.Berechnet = true;
+            }
+
+            modellBerechnung?.ZeitintegrationErsterOrdnung();
+            _modell.ZeitintegrationBerechnet = true;
+            _ = MessageBox.Show("Zeitintegration erfolgreich durchgeführt", "instationäre Wärmeberechnung");
         }
         else
         {
-            foreach (var lastKnoten in Darstellung.LastKnoten) VisualWärmeModell.Children.Remove(lastKnoten);
-            foreach (var lastLinie in Darstellung.LastLinien) VisualWärmeModell.Children.Remove(lastLinie);
-            foreach (var lastElement in Darstellung.LastElemente) VisualWärmeModell.Children.Remove(lastElement);
-            lastenAn = false;
+            _ = MessageBox.Show("Daten für Zeitintegration sind noch nicht spezifiziert", "Wärmeberechnung");
+            const double tmax = 0;
+            const double dt = 0;
+            const double alfa = 0;
+            if (_modell != null)
+            {
+                _modell.Zeitintegration = new Wärmeberechnung.Modelldaten.Zeitintegration(tmax, dt, alfa) { VonStationär = false };
+                _modell.ZeitintegrationDaten = true;
+                var wärme = new InstationäreDatenAnzeigen(_modell);
+                wärme.Show();
+            }
+
+            _modell.ZeitintegrationBerechnet = false;
         }
     }
 
-    private void OnBtnRandbedingung_Click(object sender, RoutedEventArgs e)
+    private void InstationäreModellzuständeVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (!randbedingungAn)
+        if (_modell.ZeitintegrationBerechnet && _modell != null)
         {
-            Darstellung.RandbedingungenZeichnen();
-            randbedingungAn = true;
+            var modellzuständeVisualisieren = new InstationäreModellzuständeVisualisieren(_modell);
+            modellzuständeVisualisieren.Show();
         }
         else
         {
-            foreach (var randbedingung in Darstellung.RandKnoten)
-                VisualWärmeModell.Children.Remove(randbedingung);
-            randbedingungAn = false;
+            _ = MessageBox.Show("Zeitintegration noch nicht ausgeführt!!", "Wärmeberechnung");
         }
     }
+
+    private void TemperaturzeitverläufeVisualisieren(object sender, RoutedEventArgs e)
+    {
+        if (_modell.ZeitintegrationBerechnet && _modell != null)
+        {
+            var knotenzeitverläufeVisualisieren =
+                new KnotenzeitverläufeVisualisieren(_modell);
+            knotenzeitverläufeVisualisieren.Show();
+        }
+        else
+        {
+            _ = MessageBox.Show("Zeitintegration noch nicht ausgeführt!!", "Wärmeberechnung");
+        }
+    }
+
+    // Modelldefinitionen neu definieren und vorhandene editieren
     private void MenuKnotenNeu(object sender, RoutedEventArgs e)
     {
         _knotenNeu = new KnotenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
@@ -161,7 +187,7 @@ public partial class WärmemodellVisualisieren
         _ = new KnotenNetzVariabel(_modell) { Topmost = true, Owner = (Window)Parent };
     }
 
-    
+
     private void MenuElementNeu(object sender, RoutedEventArgs e)
     {
         IsElement = true;
@@ -230,26 +256,89 @@ public partial class WärmemodellVisualisieren
         _modell.Berechnet = false;
     }
 
+    private void OnBtnRandbedingungNeu_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
     private void MenuZeitRandbedingungNeu(object sender, RoutedEventArgs e)
     {
         _ = new ZeitRandtemperaturNeu(_modell);
         _modell.Berechnet = false;
     }
 
-    private void OnBtnZeitintegrationNeu_Click(object sender, RoutedEventArgs e)
+    // Modelldefinitionen darstellen
+    private void OnBtnKnotenIDs_Click(object sender, RoutedEventArgs e)
     {
-        ZeitintegrationNeu = new ZeitintegrationNeu(_modell);
+        if (!knotenAn)
+        {
+            Darstellung.KnotenTexte();
+            knotenAn = true;
+        }
+        else
+        {
+            foreach (var id in Darstellung.KnotenIDs) VisualWärmeModell.Children.Remove(id);
+            knotenAn = false;
+        }
     }
+
+    private void OnBtnElementIDs_Click(object sender, RoutedEventArgs e)
+    {
+        if (!elementeAn)
+        {
+            Darstellung.ElementTexte();
+            elementeAn = true;
+        }
+        else
+        {
+            foreach (var id in Darstellung.ElementIDs) VisualWärmeModell.Children.Remove(id);
+            elementeAn = false;
+        }
+    }
+
+    private void OnBtnLasten_Click(object sender, RoutedEventArgs e)
+    {
+        if (!lastenAn)
+        {
+            Darstellung.KnotenlastenZeichnen();
+            Darstellung.LinienlastenZeichnen();
+            Darstellung.ElementlastenZeichnen();
+            lastenAn = true;
+        }
+        else
+        {
+            foreach (var lastKnoten in Darstellung.LastKnoten) VisualWärmeModell.Children.Remove(lastKnoten);
+            foreach (var lastLinie in Darstellung.LastLinien) VisualWärmeModell.Children.Remove(lastLinie);
+            foreach (var lastElement in Darstellung.LastElemente) VisualWärmeModell.Children.Remove(lastElement);
+            lastenAn = false;
+        }
+    }
+
+    private void OnBtnRandbedingung_Click(object sender, RoutedEventArgs e)
+    {
+        if (!randbedingungAn)
+        {
+            Darstellung.RandbedingungenZeichnen();
+            randbedingungAn = true;
+        }
+        else
+        {
+            foreach (var randbedingung in Darstellung.RandKnoten)
+                VisualWärmeModell.Children.Remove(randbedingung);
+            randbedingungAn = false;
+        }
+    }
+
 
     // KnotenNeu setzt Pilotpunkt
     // MouseDown rechte Taste "fängt" Pilotknoten, MouseMove folgt ihm, MouseUp setzt ihn neu
-    private void Knoten_MouseDown(object sender, MouseButtonEventArgs e)
+    private void Pilot_MouseDown(object sender, MouseButtonEventArgs e)
     {
-        Knoten.CaptureMouse();
+        Pilot.CaptureMouse();
         isDragging = true;
     }
 
-    private void Knoten_MouseMove(object sender, MouseEventArgs e)
+    private void Pilot_MouseMove(object sender, MouseEventArgs e)
     {
         if (!isDragging) return;
         var canvPosToWindow = VisualWärmeModell.TransformToAncestor(this).Transform(new Point(0, 0));
@@ -270,17 +359,17 @@ public partial class WärmemodellVisualisieren
 
         mittelpunkt = new Point(e.GetPosition(VisualWärmeModell).X, e.GetPosition(VisualWärmeModell).Y);
 
-        Canvas.SetLeft(knoten, mittelpunkt.X - Knoten.Width / 2);
-        Canvas.SetTop(knoten, mittelpunkt.Y - Knoten.Height / 2);
+        Canvas.SetLeft(knoten, mittelpunkt.X - Pilot.Width / 2);
+        Canvas.SetTop(knoten, mittelpunkt.Y - Pilot.Height / 2);
 
         var koordinaten = Darstellung.TransformBildPunkt(mittelpunkt);
         _knotenNeu.X.Text = koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
         _knotenNeu.Y.Text = koordinaten[1].ToString("N2", CultureInfo.CurrentCulture);
     }
 
-    private void Knoten_MouseUp(object sender, MouseButtonEventArgs e)
+    private void Pilot_MouseUp(object sender, MouseButtonEventArgs e)
     {
-        Knoten.ReleaseMouseCapture();
+        Pilot.ReleaseMouseCapture();
         isDragging = false;
     }
 
@@ -299,9 +388,9 @@ public partial class WärmemodellVisualisieren
         {
             if (_knotenNeu == null) return;
             mittelpunkt = new Point(e.GetPosition(VisualWärmeModell).X, e.GetPosition(VisualWärmeModell).Y);
-            Canvas.SetLeft(Knoten, mittelpunkt.X - Knoten.Width / 2);
-            Canvas.SetTop(Knoten, mittelpunkt.Y - Knoten.Height / 2);
-            VisualWärmeModell.Children.Add(Knoten);
+            Canvas.SetLeft(Pilot, mittelpunkt.X - Pilot.Width / 2);
+            Canvas.SetTop(Pilot, mittelpunkt.Y - Pilot.Height / 2);
+            VisualWärmeModell.Children.Add(Pilot);
             IsKnoten = true;
             var koordinaten = Darstellung.TransformBildPunkt(mittelpunkt);
             _knotenNeu.X.Text = koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
@@ -433,9 +522,9 @@ public partial class WärmemodellVisualisieren
 
             mittelpunkt = new Point(knoten.Koordinaten[0] * Darstellung.Auflösung + Darstellung.RandLinks,
                 (-knoten.Koordinaten[1] + Darstellung.MaxY) * Darstellung.Auflösung + Darstellung.RandOben);
-            Canvas.SetLeft(Knoten, mittelpunkt.X - Knoten.Width / 2);
-            Canvas.SetTop(Knoten, mittelpunkt.Y - Knoten.Height / 2);
-            VisualWärmeModell.Children.Add(Knoten);
+            Canvas.SetLeft(Pilot, mittelpunkt.X - Pilot.Width / 2);
+            Canvas.SetTop(Pilot, mittelpunkt.Y - Pilot.Height / 2);
+            VisualWärmeModell.Children.Add(Pilot);
             IsKnoten = true;
             MyPopup.IsOpen = false;
         }
@@ -453,7 +542,7 @@ public partial class WärmemodellVisualisieren
                     case Element2D2:
                         _ = new ElementNeu(_modell)
                         {
-                            Element2D2Check = { IsChecked = true },
+                            Element2D2 = { IsChecked = true },
                             ElementId = { Text = element.ElementId },
                             Knoten1Id = { Text = element.KnotenIds[0] },
                             Knoten2Id = { Text = element.KnotenIds[1] },
@@ -463,7 +552,7 @@ public partial class WärmemodellVisualisieren
                     case Element2D3:
                         _ = new ElementNeu(_modell)
                         {
-                            Element2D3Check = { IsChecked = true },
+                            Element2D3 = { IsChecked = true },
                             ElementId = { Text = element.ElementId },
                             Knoten1Id = { Text = element.KnotenIds[0] },
                             Knoten2Id = { Text = element.KnotenIds[1] },
@@ -474,7 +563,7 @@ public partial class WärmemodellVisualisieren
                     case Element2D4:
                         _ = new ElementNeu(_modell)
                         {
-                            Element2D4Check = { IsChecked = true },
+                            Element2D4= { IsChecked = true },
                             ElementId = { Text = element.ElementId },
                             Knoten1Id = { Text = element.KnotenIds[0] },
                             Knoten2Id = { Text = element.KnotenIds[1] },
@@ -486,7 +575,7 @@ public partial class WärmemodellVisualisieren
                     case Element3D8:
                         _ = new ElementNeu(_modell)
                         {
-                            Element3D8Check = { IsChecked = true },
+                            Element3D8 = { IsChecked = true },
                             ElementId = { Text = element.ElementId },
                             Knoten1Id = { Text = element.KnotenIds[0] },
                             Knoten2Id = { Text = element.KnotenIds[1] },

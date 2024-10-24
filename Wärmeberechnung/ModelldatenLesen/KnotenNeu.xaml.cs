@@ -27,7 +27,7 @@ public partial class KnotenNeu
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         // entferne Steuerungsknoten und deaktiviere Ereignishandler für Canvas
-        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(StartFenster.WärmeVisual.Knoten);
+        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(StartFenster.WärmeVisual.Pilot);
         StartFenster.WärmeVisual.VisualWärmeModell.Background = null;
         StartFenster.WärmeVisual.KnotenKeys?.Close();
         Close();
@@ -91,7 +91,7 @@ public partial class KnotenNeu
         }
 
         // entferne Steuerungsknoten und deaktiviere Ereignishandler für Canvas
-        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(StartFenster.WärmeVisual.Knoten);
+        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(StartFenster.WärmeVisual.Pilot);
         StartFenster.WärmeVisual.VisualWärmeModell.Background = null;
         StartFenster.WärmeVisual.Close();
         Close();

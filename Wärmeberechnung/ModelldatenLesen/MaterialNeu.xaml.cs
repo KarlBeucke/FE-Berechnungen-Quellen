@@ -1,26 +1,25 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class MaterialNeu
 {
-    private readonly MaterialKeys materialKeys;
-    private readonly FeModell modell;
+    private readonly FeModell _modell;
     private AbstraktMaterial material, vorhandenesMaterial;
 
     public MaterialNeu(FeModell modell)
     {
-        this.modell = modell;
+        _modell = modell;
         InitializeComponent();
-        materialKeys = new MaterialKeys(modell);
-        materialKeys.Show();
         Show();
     }
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
+        if (_modell == null) return;
         var materialId = MaterialId.Text;
         if (materialId == "")
         {
@@ -31,48 +30,58 @@ public partial class MaterialNeu
         var leitfähigkeit = new double[3];
         double dichteLeitfähigkeit = 0;
         // vorhandenes Material
-        if (modell.Material.Keys.Contains(MaterialId.Text))
+        if (_modell.Material.ContainsKey(MaterialId.Text))
         {
-            modell.Material.TryGetValue(materialId, out vorhandenesMaterial);
-            Debug.Assert(vorhandenesMaterial != null, nameof(vorhandenesMaterial) + " != null");
-
-            if (LeitfähigkeitX.Text.Length > 0)
-                vorhandenesMaterial.MaterialWerte[0] = double.Parse(LeitfähigkeitX.Text);
-            if (LeitfähigkeitY.Text.Length > 0)
-                vorhandenesMaterial.MaterialWerte[1] = double.Parse(LeitfähigkeitY.Text);
-            if (LeitfähigkeitZ.Text.Length > 0)
-                vorhandenesMaterial.MaterialWerte[2] = double.Parse(LeitfähigkeitZ.Text);
-            if (DichteLeitfähigkeit.Text.Length > 0)
-                vorhandenesMaterial.MaterialWerte[3] = double.Parse(DichteLeitfähigkeit.Text);
+            if(!_modell.Material.TryGetValue(materialId, out vorhandenesMaterial))
+                throw new ModellAusnahme("\nMaterial '" + materialId + "' nicht im Modell gefunden");
+            try
+            {
+                if (LeitfähigkeitX.Text.Length > 0)
+                    vorhandenesMaterial.MaterialWerte[0] = double.Parse(LeitfähigkeitX.Text);
+                if (LeitfähigkeitY.Text.Length > 0)
+                    vorhandenesMaterial.MaterialWerte[1] = double.Parse(LeitfähigkeitY.Text);
+                if (LeitfähigkeitZ.Text.Length > 0)
+                    vorhandenesMaterial.MaterialWerte[2] = double.Parse(LeitfähigkeitZ.Text);
+                if (DichteLeitfähigkeit.Text.Length > 0)
+                    vorhandenesMaterial.MaterialWerte[3] = double.Parse(DichteLeitfähigkeit.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
+            }
         }
         // neues Material
         else
         {
-            if (LeitfähigkeitX.Text.Length > 0)
-                leitfähigkeit[0] = double.Parse(LeitfähigkeitX.Text);
-            if (LeitfähigkeitY.Text.Length > 0)
-                leitfähigkeit[1] = double.Parse(LeitfähigkeitY.Text);
-            if (LeitfähigkeitZ.Text.Length > 0)
-                leitfähigkeit[2] = double.Parse(LeitfähigkeitZ.Text);
-            if (DichteLeitfähigkeit.Text.Length > 0)
-                dichteLeitfähigkeit = double.Parse(DichteLeitfähigkeit.Text);
+            try
+            {
+                if (LeitfähigkeitX.Text.Length > 0)
+                    leitfähigkeit[0] = double.Parse(LeitfähigkeitX.Text);
+                if (LeitfähigkeitY.Text.Length > 0)
+                    leitfähigkeit[1] = double.Parse(LeitfähigkeitY.Text);
+                if (LeitfähigkeitZ.Text.Length > 0)
+                    leitfähigkeit[2] = double.Parse(LeitfähigkeitZ.Text);
+                if (DichteLeitfähigkeit.Text.Length > 0)
+                    dichteLeitfähigkeit = double.Parse(DichteLeitfähigkeit.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
+            }
             material = new Material(materialId, leitfähigkeit, dichteLeitfähigkeit);
-            modell.Material.Add(materialId, material);
+            _modell.Material.Add(materialId, material);
         }
-
-        materialKeys?.Close();
         Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        materialKeys?.Close();
         Close();
     }
 
     private void MaterialIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!modell.Material.ContainsKey(MaterialId.Text))
+        if (!_modell.Material.ContainsKey(MaterialId.Text))
         {
             LeitfähigkeitX.Text = "";
             LeitfähigkeitY.Text = "";
@@ -82,8 +91,8 @@ public partial class MaterialNeu
         }
 
         // vorhandene Materialdefinition
-        modell.Material.TryGetValue(MaterialId.Text, out vorhandenesMaterial);
-        Debug.Assert(vorhandenesMaterial != null, nameof(vorhandenesMaterial) + " != null");
+        if (!_modell.Material.TryGetValue(MaterialId.Text, out vorhandenesMaterial))
+            throw new ModellAusnahme("\nMaterial '" + MaterialId.Text + "' nicht im Modell gefunden");
         MaterialId.Text = "";
 
         MaterialId.Text = vorhandenesMaterial.MaterialId;
@@ -96,8 +105,21 @@ public partial class MaterialNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (vorhandenesMaterial != null) modell.Material.Remove(vorhandenesMaterial.MaterialId);
-        materialKeys.Close();
+        if (!_modell.Material.ContainsKey(MaterialId.Text)) return;
+        if (MaterialReferenziert()) return;
+        _modell.Material.Remove(vorhandenesMaterial.MaterialId);
         Close();
+    }
+    private bool MaterialReferenziert()
+    {
+        var id = MaterialId.Text;
+        foreach (var element in _modell.Elemente.Where(element => element.Value.ElementMaterialId == id))
+        {
+            _ = MessageBox.Show(
+                "Material referenziert durch Element " + element.Value.ElementId + ", kann nicht gelöscht werden",
+                "neues Material");
+            return true;
+        }
+        return false;
     }
 }

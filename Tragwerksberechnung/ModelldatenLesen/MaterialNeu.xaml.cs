@@ -27,24 +27,23 @@ public partial class MaterialNeu
         }
 
         // vorhandenes Material
-        if (_modell.Material.Keys.Contains(MaterialId.Text))
+        if (_modell.Material.ContainsKey(MaterialId.Text))
         {
-            _modell.Material.TryGetValue(materialId, out _vorhandenesMaterial);
-            if (_vorhandenesMaterial != null)
+            if (!_modell.Material.TryGetValue(materialId, out _vorhandenesMaterial))
+                throw new ModellAusnahme("\nMaterial '" + materialId + "' nicht im Modell gefunden");
+
+            try
             {
-                try
-                {
-                    if (EModul.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[0] = double.Parse(EModul.Text);
-                    if (Poisson.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[1] = double.Parse(Poisson.Text);
-                    if (Masse.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[2] = double.Parse(Masse.Text);
-                    if (FederX.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[3] = double.Parse(FederX.Text);
-                    if (FederY.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[4] = double.Parse(FederY.Text);
-                    if (FederPhi.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[5] = double.Parse(FederPhi.Text);
-                }
-                catch (FormatException)
-                {
-                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
-                }
+                if (EModul.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[0] = double.Parse(EModul.Text);
+                if (Poisson.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[1] = double.Parse(Poisson.Text);
+                if (Masse.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[2] = double.Parse(Masse.Text);
+                if (FederX.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[3] = double.Parse(FederX.Text);
+                if (FederY.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[4] = double.Parse(FederY.Text);
+                if (FederPhi.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[5] = double.Parse(FederPhi.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
             }
         }
         // neues Material
@@ -100,14 +99,11 @@ public partial class MaterialNeu
                 return;
             }
         }
-
-        StartFenster.TragwerkVisual.MaterialKeys?.Close();
         Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        StartFenster.TragwerkVisual.MaterialKeys?.Close();
         Close();
     }
 
@@ -125,8 +121,8 @@ public partial class MaterialNeu
         }
 
         // vorhandene Materialdefinition
-        _modell.Material.TryGetValue(MaterialId.Text, out _vorhandenesMaterial);
-        Debug.Assert(_vorhandenesMaterial != null, nameof(_vorhandenesMaterial) + " != null");
+        if(!_modell.Material.TryGetValue(MaterialId.Text, out _vorhandenesMaterial))
+            throw new ModellAusnahme("\nMaterial '" + MaterialId.Text + "' nicht im Modell gefunden");
         MaterialId.Text = "";
 
         MaterialId.Text = _vorhandenesMaterial.MaterialId;
@@ -153,10 +149,9 @@ public partial class MaterialNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Material.Keys.Contains(MaterialId.Text)) return;
+        if (!_modell.Material.ContainsKey(MaterialId.Text)) return;
         if (MaterialReferenziert()) return;
-        if (_vorhandenesMaterial != null) _modell.Material.Remove(_vorhandenesMaterial.MaterialId);
-        StartFenster.TragwerkVisual.MaterialKeys?.Close();
+        _modell.Material.Remove(_vorhandenesMaterial.MaterialId);
         Close();
     }
 

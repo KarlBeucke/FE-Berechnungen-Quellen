@@ -557,9 +557,11 @@ public class Darstellung
             //    => modell.Knoten.TryGetValue(knotenId, out knoten)).Sum(knotenId => knoten.Knotenfreiheitsgrade[0]);
             double elementTemperatur = 0;
             for (var i = 0; i < aktElement.KnotenProElement; i++)
+            {
                 if (!modell.Knoten.TryGetValue(aktElement.KnotenIds[i], out knoten))
                     throw new ModellAusnahme("\nElementknoten '" + aktElement.KnotenIds[i] + "' nicht im Modell gefunden");
-            elementTemperatur += knoten.Knotenfreiheitsgrade[0];
+                elementTemperatur += knoten.Knotenfreiheitsgrade[0];
+            }
             elementTemperatur /= aktElement.KnotenProElement;
 
             var intens = (byte)(255 * (elementTemperatur - minTemp) / (maxTemp - minTemp));
