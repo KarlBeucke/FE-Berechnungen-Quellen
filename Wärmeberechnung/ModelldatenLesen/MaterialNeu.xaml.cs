@@ -29,10 +29,8 @@ public partial class MaterialNeu
         var leitfähigkeit = new double[3];
         double dichteLeitfähigkeit = 0;
         // vorhandenes Material
-        if (_modell.Material.ContainsKey(MaterialId.Text))
+        if (_modell.Material.TryGetValue(materialId, out vorhandenesMaterial))
         {
-            if (!_modell.Material.TryGetValue(materialId, out vorhandenesMaterial))
-                throw new ModellAusnahme("\nMaterial '" + materialId + "' nicht im Modell gefunden");
             try
             {
                 if (LeitfähigkeitX.Text.Length > 0)
@@ -49,6 +47,7 @@ public partial class MaterialNeu
                 _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
             }
         }
+            
         // neues Material
         else
         {
@@ -82,10 +81,10 @@ public partial class MaterialNeu
     {
         if (!_modell.Material.ContainsKey(MaterialId.Text))
         {
-            LeitfähigkeitX.Text = "";
-            LeitfähigkeitY.Text = "";
-            LeitfähigkeitZ.Text = "";
-            DichteLeitfähigkeit.Text = "";
+            //LeitfähigkeitX.Text = "";
+            //LeitfähigkeitY.Text = "";
+            //LeitfähigkeitZ.Text = "";
+            //DichteLeitfähigkeit.Text = "";
             return;
         }
 

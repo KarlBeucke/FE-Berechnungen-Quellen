@@ -110,6 +110,9 @@ public partial class KnotenlastNeu
         if (!_modell.Lasten.ContainsKey(LastId.Text))
         {
             KnotenId.Text = "";
+			Px.Text = "";
+			Py.Text = "";
+			M.Text = "";
             return;
         }
 
@@ -143,7 +146,7 @@ public partial class KnotenlastNeu
     {
         if (!_modell.Lasten.ContainsKey(LastId.Text)) return;
         _modell.Lasten.Remove(LastId.Text);
-        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
+        //StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
 

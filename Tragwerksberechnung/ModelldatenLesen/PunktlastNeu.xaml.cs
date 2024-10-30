@@ -37,26 +37,23 @@ public partial class PunktlastNeu
         }
 
         // vorhandene Punktlast
-        if (_modell.PunktLasten.Keys.Contains(LastId.Text))
+        if (_modell.PunktLasten.TryGetValue(punktlastId, out var vorhandenePunktlast))
         {
-            _modell.PunktLasten.TryGetValue(punktlastId, out var vorhandenePunktlast);
-            if (vorhandenePunktlast != null)
+            if (ElementId.Text.Length > 0)
+                vorhandenePunktlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
+            try
             {
-                if (ElementId.Text.Length > 0)
-                    vorhandenePunktlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
-                try
-                {
-                    if (Px.Text.Length > 0) vorhandenePunktlast.Lastwerte[0] = double.Parse(Px.Text);
-                    if (Py.Text.Length > 0) vorhandenePunktlast.Lastwerte[1] = double.Parse(Py.Text);
-                    if (Offset.Text.Length > 0) vorhandenePunktlast.Offset = double.Parse(Offset.Text);
-                }
-                catch (FormatException)
-                {
-                    _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Punktlast");
-                    return;
-                }
+                if (Px.Text.Length > 0) vorhandenePunktlast.Lastwerte[0] = double.Parse(Px.Text);
+                if (Py.Text.Length > 0) vorhandenePunktlast.Lastwerte[1] = double.Parse(Py.Text);
+                if (Offset.Text.Length > 0) vorhandenePunktlast.Offset = double.Parse(Offset.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Punktlast");
+                return;
             }
         }
+
         // neue Punktlast
         else
         {

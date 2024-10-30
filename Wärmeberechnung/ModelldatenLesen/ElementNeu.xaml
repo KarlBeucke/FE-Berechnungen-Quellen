@@ -42,39 +42,42 @@
             Element3D8
         </CheckBox>
 
-        <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Element ID:</Label>
-        <TextBox Name="ElementId" Grid.Row="2" Grid.Column="0" Margin="110,0,0,0" Height="15"
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="100"
+        <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Margin="0,47,0,0" Height="23" Grid.RowSpan="2">Element ID:</Label>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,11,0,28" FontSize="8" Grid.RowSpan="2">(ggf. generiert aus "E"+KnotenIDs)</Label>
+        <TextBox Name="ElementId" Grid.Row="2" Grid.Column="0" Margin="138,1,-8,0" Height="20"
+                 VerticalAlignment="Top"
                  LostFocus="ElementIdLostFocus" Grid.ColumnSpan="2" />
 
-        <Label Grid.Row="3" Grid.Column="0" Margin="0,5,0,0">Knoten 1 ID:</Label>
-        <TextBox Name="Knoten1Id" Grid.Row="3" Grid.Column="0" Margin="110,7.6,0,0" Height="15"
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="25" />
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,26,0,2" Grid.RowSpan="2">Knoten 1 ID:</Label>
+        <Label Grid.Row="3" Grid.Column="0" Margin="0,11,0,29" FontSize="8" Grid.RowSpan="2">(click vorhandene Knoten IDs)</Label>
+        <TextBox Name="Knoten1Id" Grid.Row="3" Grid.Column="0" Margin="110,7,0,0" Height="15"
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="25"/>
         <Label Grid.Row="3" Grid.Column="1" Margin="0,5,0,0">Knoten 2 ID:</Label>
         <TextBox Name="Knoten2Id" Grid.Row="3" Grid.Column="1" Margin="109,0,-34,0" Height="15"
                  VerticalAlignment="Center" />
-        <Label Grid.Row="4" Grid.Column="0" Margin="0,5,0,0">Knoten 3 ID:</Label>
+        <Label Grid.Row="4" Grid.Column="0" Margin="0,2,0,0">Knoten 3 ID:</Label>
         <TextBox Name="Knoten3Id" Grid.Row="4" Grid.Column="0" Margin="110,7.6,0,0" Height="15"
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="25" />
-        <Label Grid.Row="4" Grid.Column="1" Margin="0,5,0,0">Knoten 4 ID:</Label>
+        <Label Grid.Row="4" Grid.Column="1">Knoten 4 ID:</Label>
         <TextBox Name="Knoten4Id" Grid.Row="4" Grid.Column="1" Margin="109,0,-34,0" Height="15"
                  VerticalAlignment="Center" />
-        <Label Grid.Row="5" Grid.Column="0" Margin="0,5,0,0">Knoten 5 ID:</Label>
+        <Label Grid.Row="5" Grid.Column="0" Margin="0,2,0,0">Knoten 5 ID:</Label>
         <TextBox Name="Knoten5Id" Grid.Row="5" Grid.Column="0" Margin="110,7.6,0,0" Height="15"
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="25" />
-        <Label Grid.Row="5" Grid.Column="1" Margin="0,5,0,0">Knoten 6 ID:</Label>
+        <Label Grid.Row="5" Grid.Column="1" Margin="0,2,0,0">Knoten 6 ID:</Label>
         <TextBox Name="Knoten6Id" Grid.Row="5" Grid.Column="1" Margin="109,0,-34,0" Height="15"
                  VerticalAlignment="Center" />
-        <Label Grid.Row="6" Grid.Column="0" Margin="0,5,0,0">Knoten 7 ID:</Label>
+        <Label Grid.Row="6" Grid.Column="0" Height="28" VerticalAlignment="Center">Knoten 7 ID:</Label>
         <TextBox Name="Knoten7Id" Grid.Row="6" Grid.Column="0" Margin="110,7.6,0,0" Height="15"
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="25" />
-        <Label Grid.Row="6" Grid.Column="1" Margin="0,5,0,0">Knoten 8 ID:</Label>
+        <Label Grid.Row="6" Grid.Column="1" Margin="0,1,0,0">Knoten 8 ID:</Label>
         <TextBox Name="Knoten8Id" Grid.Row="6" Grid.Column="1" Margin="109,0,-34,0" Height="15"
                  VerticalAlignment="Center" />
 
-        <Label Grid.Row="7" Grid.Column="0" Margin="0,5,0,0">Material ID:</Label>
+        <Label Grid.Row="7" Grid.Column="0" Height="24" VerticalAlignment="Top">Material ID:</Label>
+        <Label Grid.Row="7" Grid.Column="0" Margin="0,12,0,27" FontSize="8" Grid.RowSpan="2">(edit mit Doppelclick)</Label>
         <TextBox Name="MaterialId" Grid.Row="7" Grid.Column="0" Margin="110,7.6,0,0" Height="15"
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="25" />
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="25" MouseDoubleClick="MouseDoubleClickEditMaterial" />
 
         <Button Grid.Row="8" Grid.Column="0" Width="50" Height="26" Margin="5,0,0,0"
                 Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">

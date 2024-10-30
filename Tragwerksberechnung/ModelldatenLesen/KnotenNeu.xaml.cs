@@ -111,7 +111,10 @@ public partial class KnotenNeu
 
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
     {
-        _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
+        if (!_modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten))
+        {
+
+        }
         if (vorhandenerKnoten == null) return;
         AnzahlDof.Text = vorhandenerKnoten.AnzahlKnotenfreiheitsgrade.ToString();
         X.Text = vorhandenerKnoten.Koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
@@ -151,7 +154,6 @@ public partial class KnotenNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Knoten.ContainsKey(KnotenId.Text)) return;
         if (KnotenReferenziert()) return;
         _modell.Knoten.Remove(KnotenId.Text);
         Close();

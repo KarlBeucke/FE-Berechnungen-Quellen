@@ -1,20 +1,16 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using System.Diagnostics;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
-public partial class RandbdingungNeu
+public partial class RandbedingungNeu
 {
-    private readonly FeModell modell;
-    private readonly RandbedingungenKeys randbedingungenKeys;
-    private AbstraktRandbedingung vorhandeneRandbedingung;
+    private readonly FeModell _modell;
 
-    public RandbdingungNeu(FeModell modell)
+    public RandbedingungNeu(FeModell modell)
     {
-        this.modell = modell;
+        _modell = modell;
         InitializeComponent();
-        randbedingungenKeys = new RandbedingungenKeys(modell);
-        randbedingungenKeys.Show();
         Show();
     }
 
@@ -30,49 +26,54 @@ public partial class RandbdingungNeu
         }
 
         // vorhandene Randbedingung
-        if (modell.Randbedingungen.Keys.Contains(randbedingungId))
+        if(_modell.Randbedingungen.TryGetValue(randbedingungId, out var vorhandeneRandbedingung))
         {
-            modell.Randbedingungen.TryGetValue(randbedingungId, out vorhandeneRandbedingung);
-            Debug.Assert(vorhandeneRandbedingung != null, nameof(vorhandeneRandbedingung) + " != null");
-
-            if (Temperatur.Text.Length > 0) vorhandeneRandbedingung.Vordefiniert[0] = double.Parse(Temperatur.Text);
+            try
+            {
+                if (Temperatur.Text.Length > 0) vorhandeneRandbedingung.Vordefiniert[0] = double.Parse(Temperatur.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Linienlast");
+                return;
+            }
         }
+
         // neues Randbedingung
         else
         {
-            if (Temperatur.Text.Length > 0)
-                temperatur = double.Parse(Temperatur.Text);
+            try
+            {
+                if (Temperatur.Text.Length > 0) temperatur = double.Parse(Temperatur.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Linienlast");
+                return;
+            }
 
             var randbedingung = new Randbedingung(randbedingungId, knotenId, temperatur)
             {
                 RandbedingungId = randbedingungId
             };
-            modell.Randbedingungen.Add(randbedingungId, randbedingung);
+            _modell.Randbedingungen.Add(randbedingungId, randbedingung);
         }
-
-        randbedingungenKeys?.Close();
-        Close();
         StartFenster.WärmeVisual.Close();
-    }
+        Close();
 
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
+    }
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        randbedingungenKeys?.Close();
         Close();
-    }
-
-    private void BtnLöschen_Click(object sender, RoutedEventArgs e)
-    {
-        if (!modell.Randbedingungen.Keys.Contains(RandbedingungId.Text)) return;
-        modell.Randbedingungen.Remove(RandbedingungId.Text);
-        randbedingungenKeys?.Close();
-        Close();
-        StartFenster.WärmeVisual.Close();
+        StartFenster.WärmeVisual.IsRandbedingung = false;
     }
 
     private void RandbedingungIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!modell.Randbedingungen.ContainsKey(RandbedingungId.Text))
+        if (!_modell.Randbedingungen.ContainsKey(RandbedingungId.Text))
         {
             KnotenId.Text = "";
             Temperatur.Text = "";
@@ -80,9 +81,27 @@ public partial class RandbdingungNeu
         }
 
         // vorhandene Randbedingungsdefinitionen
-        modell.Randbedingungen.TryGetValue(RandbedingungId.Text, out vorhandeneRandbedingung);
-        Debug.Assert(vorhandeneRandbedingung != null, nameof(vorhandeneRandbedingung) + " != null");
+        if (!_modell.Randbedingungen.TryGetValue(RandbedingungId.Text, out var vorhandeneRandbedingung))
+        {
+            _ = MessageBox.Show("Randbedingung Id muss definiert sein", "neue Randbedingung");
+            return;
+        }
+
         KnotenId.Text = vorhandeneRandbedingung.KnotenId;
         Temperatur.Text = vorhandeneRandbedingung.Vordefiniert[0].ToString("G3");
+
+        if (RandbedingungId.Text == "") RandbedingungId.Text = "LL_" + KnotenId.Text;
+    }
+
+    private void BtnLöschen_Click(object sender, RoutedEventArgs e)
+    {
+        if (!_modell.Randbedingungen.ContainsKey(RandbedingungId.Text)) return;
+        _modell.Randbedingungen.Remove(RandbedingungId.Text);
+        StartFenster.WärmeVisual.Close();
+        Close();
+
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 }

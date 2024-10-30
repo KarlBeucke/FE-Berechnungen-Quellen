@@ -40,8 +40,7 @@ public partial class LagerNeu
         }
 
         // vorhandenes Lager
-        _modell.Randbedingungen.TryGetValue(lagerId, out var vorhandenesLager);
-        if (vorhandenesLager != null)
+        if (_modell.Randbedingungen.TryGetValue(lagerId, out var vorhandenesLager))
         {
             if (KnotenId.Text.Length > 0)
                 vorhandenesLager.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
@@ -88,6 +87,7 @@ public partial class LagerNeu
                 return;
             }
         }
+        
         // neues Lager
         else
         {

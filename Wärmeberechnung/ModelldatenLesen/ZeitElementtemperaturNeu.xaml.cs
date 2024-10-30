@@ -5,16 +5,13 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class ZeitElementtemperaturNeu
 {
-    private readonly WärmelastenKeys lastenKeys;
-    private readonly FeModell modell;
+    private readonly FeModell _modell;
     private AbstraktZeitabhängigeElementLast vorhandeneLast;
 
     public ZeitElementtemperaturNeu(FeModell modell)
     {
-        this.modell = modell;
+        _modell = modell;
         InitializeComponent();
-        lastenKeys = new WärmelastenKeys(modell);
-        lastenKeys.Show();
         Show();
     }
 
@@ -28,57 +25,68 @@ public partial class ZeitElementtemperaturNeu
         }
 
         // vorhandene zeitabhängige Elementlast
-        if (modell.ZeitabhängigeElementLasten.Keys.Contains(elementlastId))
+        if (_modell.ZeitabhängigeElementLasten.TryGetValue(elementlastId, out vorhandeneLast))
         {
-            modell.ZeitabhängigeElementLasten.TryGetValue(elementlastId, out vorhandeneLast);
-            Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null");
-
             if (ElementId.Text.Length > 0) vorhandeneLast.ElementId = ElementId.Text;
-            if (P0.Text.Length > 0) vorhandeneLast.P[0] = double.Parse(P0.Text);
-            if (P1.Text.Length > 0) vorhandeneLast.P[1] = double.Parse(P1.Text);
-            if (P2.Text.Length > 0) vorhandeneLast.P[2] = double.Parse(P2.Text);
-            if (P3.Text.Length > 0) vorhandeneLast.P[3] = double.Parse(P3.Text);
+            try
+            {
+                if (P0.Text.Length > 0) vorhandeneLast.P[0] = double.Parse(P0.Text);
+                if (P1.Text.Length > 0) vorhandeneLast.P[1] = double.Parse(P1.Text);
+                if (P2.Text.Length > 0) vorhandeneLast.P[2] = double.Parse(P2.Text);
+                if (P3.Text.Length > 0) vorhandeneLast.P[3] = double.Parse(P3.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neue Elementtemperaturen");
+                return;
+            }
         }
+
         // neue zeitabhängige Elementlast
         else
         {
             var elementId = "";
             var p = new double[4];
             if (ElementId.Text.Length > 0) elementId = ElementId.Text;
-            if (P0.Text.Length > 0) p[0] = double.Parse(P0.Text);
-            if (P1.Text.Length > 0) p[1] = double.Parse(P1.Text);
-            if (P2.Text.Length > 0) p[2] = double.Parse(P2.Text);
-            if (P3.Text.Length > 0) p[3] = double.Parse(P3.Text);
+            try
+            {
+                if (P0.Text.Length > 0) p[0] = double.Parse(P0.Text);
+                if (P1.Text.Length > 0) p[1] = double.Parse(P1.Text);
+                if (P2.Text.Length > 0) p[2] = double.Parse(P2.Text);
+                if (P3.Text.Length > 0) p[3] = double.Parse(P3.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neue Elementtemperaturen");
+                return;
+            }
+
             var zeitabhängigeElementlast = new ZeitabhängigeElementLast(elementId, p)
             {
                 LastId = elementlastId
             };
-            modell.ZeitabhängigeElementLasten.Add(elementlastId, zeitabhängigeElementlast);
+            _modell.ZeitabhängigeElementLasten.Add(elementlastId, zeitabhängigeElementlast);
         }
 
-        lastenKeys?.Close();
         Close();
         StartFenster.WärmeVisual.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        lastenKeys?.Close();
         Close();
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!modell.ZeitabhängigeElementLasten.Keys.Contains(LastId.Text)) return;
-        modell.ZeitabhängigeElementLasten.Remove(LastId.Text);
-        lastenKeys?.Close();
+        _modell.ZeitabhängigeElementLasten.Remove(LastId.Text);
         Close();
         StartFenster.WärmeVisual.Close();
     }
 
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!modell.ZeitabhängigeElementLasten.ContainsKey(LastId.Text))
+        if (!_modell.ZeitabhängigeElementLasten.ContainsKey(LastId.Text))
         {
             ElementId.Text = "";
             P0.Text = "";
@@ -89,9 +97,7 @@ public partial class ZeitElementtemperaturNeu
         }
 
         // vorhandene zeitabhängige Elementlastdefinition
-        modell.ZeitabhängigeElementLasten.TryGetValue(LastId.Text, out vorhandeneLast);
-        Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null");
-
+        if (!_modell.ZeitabhängigeElementLasten.TryGetValue(LastId.Text, out vorhandeneLast)) return;
         LastId.Text = vorhandeneLast.LastId;
 
         ElementId.Text = vorhandeneLast.ElementId;

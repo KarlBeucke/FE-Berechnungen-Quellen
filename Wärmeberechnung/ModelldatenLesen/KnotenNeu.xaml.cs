@@ -20,6 +20,8 @@ public partial class KnotenNeu
         Show();
 
         //KnotenId.Focus();
+        var ndof = _modell.AnzahlKnotenfreiheitsgrade;
+        AnzahlDof.Text = ndof.ToString("N0", CultureInfo.CurrentCulture);
         _knotenListe = [];
         KnotenGrid.Items.Clear();
     }

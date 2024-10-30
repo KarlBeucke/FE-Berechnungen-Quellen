@@ -95,8 +95,7 @@ public partial class QuerschnittNeu
         }
 
         // vorhandene Querschnittdefinition
-        _modell.Querschnitt.TryGetValue(QuerschnittId.Text, out _vorhandenerQuerschnitt);
-        Debug.Assert(_vorhandenerQuerschnitt != null, nameof(_vorhandenerQuerschnitt) + " != null");
+        if (!_modell.Querschnitt.TryGetValue(QuerschnittId.Text, out _vorhandenerQuerschnitt)) return;
         QuerschnittId.Text = "";
 
         QuerschnittId.Text = _vorhandenerQuerschnitt.QuerschnittId;
@@ -108,10 +107,9 @@ public partial class QuerschnittNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Querschnitt.Keys.Contains(QuerschnittId.Text)) return;
         if (QuerschnittReferenziert()) return;
 
-        if (_vorhandenerQuerschnitt != null) _modell.Querschnitt.Remove(_vorhandenerQuerschnitt.QuerschnittId);
+        _modell.Querschnitt.Remove(_vorhandenerQuerschnitt.QuerschnittId);
         StartFenster.TragwerkVisual.QuerschnittKeys?.Close();
         Close();
     }

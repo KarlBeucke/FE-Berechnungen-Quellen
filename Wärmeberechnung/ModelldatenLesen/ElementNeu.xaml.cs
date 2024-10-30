@@ -62,6 +62,19 @@ public partial class ElementNeu
             return;
         }
 
+        if ((Element2D2.IsChecked != null && !(bool)Element2D2.IsChecked) && (Element2D3.IsChecked != null && !(bool)Element2D3.IsChecked) &&
+            (Element2D4.IsChecked != null && !(bool)Element2D4.IsChecked) && (Element3D8.IsChecked != null && !(bool)Element3D8.IsChecked))
+        {
+            _ = MessageBox.Show("Elementtyp muss ausgewählt sein", "neues Element");
+            return;
+        }
+
+        if (MaterialId.Text == "")
+        {
+            _ = MessageBox.Show("Material muss definiert sein", "neues Element");
+            return;
+        }
+
         // vorhandenes Element wird komplett entfernt, da Elementdefinition
         // (Element2D2, Element2D3, Element2D4, Element3D8) geändert werden kann
         // neues Element wird angelegt und unter vorhandenem Key gespeichert
@@ -121,6 +134,8 @@ public partial class ElementNeu
 
         StartFenster.WärmeVisual.Close();
         Close();
+        StartFenster.WärmeVisual.ElementKeys?.Close();
+        StartFenster.WärmeVisual.MaterialNeu?.Close();
 
         StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
         StartFenster.WärmeVisual.Show();
@@ -131,13 +146,16 @@ public partial class ElementNeu
     {
         StartFenster.WärmeVisual.IsElement = false;
         Close();
+        StartFenster.WärmeVisual.ElementKeys?.Close();
+        StartFenster.WärmeVisual.MaterialNeu?.Close();
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Elemente.Keys.Contains(ElementId.Text)) return;
         _modell.Elemente.Remove(ElementId.Text);
         Close();
+        StartFenster.WärmeVisual.ElementKeys?.Close();
+        StartFenster.WärmeVisual.MaterialNeu?.Close();
         StartFenster.WärmeVisual.Close();
 
         StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
@@ -161,7 +179,7 @@ public partial class ElementNeu
             return;
         }
 
-        // vorhandene element definitionen
+        // vorhandene Elementdefinitionen
         if (!_modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement))
         {
             throw new ModellAusnahme("\nElement '" + ElementId.Text + "' nicht im Modell gefunden");
@@ -214,5 +232,23 @@ public partial class ElementNeu
         MaterialId.Text = vorhandenesElement.ElementMaterialId;
     }
 
+    private void MouseDoubleClickEditMaterial(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (MaterialId.Text == "")
+        {
+            _ = MessageBox.Show("Material Id noch nicht definiert", "neues Element");
+            return;
+        }
 
+        if (!_modell.Material.TryGetValue(MaterialId.Text, out var material)) return;
+        _ = new MaterialNeu(_modell)
+        {
+            Topmost = true, Owner = (Window)Parent,
+            MaterialId = { Text = material.MaterialId },
+            LeitfähigkeitX = { Text = material.MaterialWerte[0].ToString("g3") },
+            LeitfähigkeitY = { Text = material.MaterialWerte[1].ToString("g3") },
+            LeitfähigkeitZ = { Text = material.MaterialWerte[2].ToString("g3") },
+            DichteLeitfähigkeit = { Text = material.MaterialWerte[3].ToString("g3") }
+        };
+    }
 }

@@ -1,22 +1,18 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using System.Diagnostics;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 using System.Globalization;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class ElementlastNeu
 {
-    private readonly WärmelastenKeys lastenKeys;
-    private readonly FeModell modell;
+    private readonly FeModell _modell;
     private AbstraktElementLast vorhandeneElementlast;
 
     public ElementlastNeu(FeModell modell)
     {
-        this.modell = modell;
+        _modell = modell;
         InitializeComponent();
-        ElementlastId.Text = string.Empty;
-        lastenKeys = new WärmelastenKeys(modell);
-        lastenKeys.Show();
         Show();
     }
 
@@ -30,50 +26,66 @@ public partial class ElementlastNeu
         }
 
         // vorhandene Elementlast
-        if (modell.ElementLasten.Keys.Contains(elementlastId))
+        if (_modell.ElementLasten.TryGetValue(elementlastId, out vorhandeneElementlast))
         {
-            modell.ElementLasten.TryGetValue(elementlastId, out vorhandeneElementlast);
-            Debug.Assert(vorhandeneElementlast != null, nameof(vorhandeneElementlast) + " != null");
-
             vorhandeneElementlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
-            modell.Elemente.TryGetValue(vorhandeneElementlast.ElementId, out var element);
-            switch (element)
+
+            if (!_modell.Elemente.TryGetValue(vorhandeneElementlast.ElementId, out var element))
             {
-                case Element2D3:
-                    {
-                        if (Knoten1.Text.Length > 0) vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
-                        if (Knoten2.Text.Length > 0) vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
-                        if (Knoten3.Text.Length > 0) vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
-                        break;
-                    }
-                case Element2D4:
-                    {
-                        if (Knoten1.Text.Length > 0) vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
-                        if (Knoten2.Text.Length > 0) vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
-                        if (Knoten3.Text.Length > 0) vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
-                        if (Knoten4.Text.Length > 0) vorhandeneElementlast.Lastwerte[3] = double.Parse(Knoten4.Text);
-                        break;
-                    }
-                case Element3D8:
-                    {
-                        if (Knoten1.Text.Length > 0) vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
-                        if (Knoten2.Text.Length > 0) vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
-                        if (Knoten3.Text.Length > 0) vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
-                        if (Knoten4.Text.Length > 0) vorhandeneElementlast.Lastwerte[3] = double.Parse(Knoten4.Text);
-                        if (Knoten5.Text.Length > 0) vorhandeneElementlast.Lastwerte[4] = double.Parse(Knoten5.Text);
-                        if (Knoten6.Text.Length > 0) vorhandeneElementlast.Lastwerte[5] = double.Parse(Knoten6.Text);
-                        if (Knoten7.Text.Length > 0) vorhandeneElementlast.Lastwerte[6] = double.Parse(Knoten7.Text);
-                        if (Knoten8.Text.Length > 0) vorhandeneElementlast.Lastwerte[7] = double.Parse(Knoten8.Text);
-                        break;
-                    }
+                _ = MessageBox.Show("Element '" + vorhandeneElementlast.ElementId + "' nicht im Modell gefunden", "neue Elementlast");
+                return;
+            }
+
+            try
+            {
+                switch (element)
+                {
+                    case Element2D3:
+                        {
+                            if (Knoten1.Text.Length > 0) vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
+                            if (Knoten2.Text.Length > 0) vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
+                            if (Knoten3.Text.Length > 0) vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
+                            break;
+                        }
+                    case Element2D4:
+                        {
+                            if (Knoten1.Text.Length > 0) vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
+                            if (Knoten2.Text.Length > 0) vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
+                            if (Knoten3.Text.Length > 0) vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
+                            if (Knoten4.Text.Length > 0) vorhandeneElementlast.Lastwerte[3] = double.Parse(Knoten4.Text);
+                            break;
+                        }
+                    case Element3D8:
+                        {
+                            if (Knoten1.Text.Length > 0) vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
+                            if (Knoten2.Text.Length > 0) vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
+                            if (Knoten3.Text.Length > 0) vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
+                            if (Knoten4.Text.Length > 0) vorhandeneElementlast.Lastwerte[3] = double.Parse(Knoten4.Text);
+                            if (Knoten5.Text.Length > 0) vorhandeneElementlast.Lastwerte[4] = double.Parse(Knoten5.Text);
+                            if (Knoten6.Text.Length > 0) vorhandeneElementlast.Lastwerte[5] = double.Parse(Knoten6.Text);
+                            if (Knoten7.Text.Length > 0) vorhandeneElementlast.Lastwerte[6] = double.Parse(Knoten7.Text);
+                            if (Knoten8.Text.Length > 0) vorhandeneElementlast.Lastwerte[7] = double.Parse(Knoten8.Text);
+                            break;
+                        }
+                }
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Linienlast");
             }
         }
+
         // neue Elementlast
         else
         {
             var elementId = "";
             if (ElementId.Text.Length > 0) elementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
-            modell.Elemente.TryGetValue(vorhandeneElementlast.ElementId, out var element);
+            if (!_modell.Elemente.TryGetValue(elementId, out var element))
+            {
+                _ = MessageBox.Show("Element '" + elementId + "' nicht im Modell gefunden", "neue Elementlast");
+                return;
+            }
+
             switch (element)
             {
                 case Element2D3:
@@ -83,7 +95,7 @@ public partial class ElementlastNeu
                         if (Knoten2.Text.Length > 0) T[1] = double.Parse(Knoten2.Text);
                         if (Knoten3.Text.Length > 0) T[2] = double.Parse(Knoten3.Text);
                         var elementlast = new ElementLast3(elementlastId, elementId, T);
-                        modell.ElementLasten.Add(elementlastId, elementlast);
+                        _modell.ElementLasten.Add(elementlastId, elementlast);
                         break;
                     }
                 case Element2D4:
@@ -94,7 +106,7 @@ public partial class ElementlastNeu
                         if (Knoten3.Text.Length > 0) T[2] = double.Parse(Knoten3.Text);
                         if (Knoten4.Text.Length > 0) T[3] = double.Parse(Knoten4.Text);
                         var elementlast = new ElementLast4(elementlastId, elementId, T);
-                        modell.ElementLasten.Add(elementlastId, elementlast);
+                        _modell.ElementLasten.Add(elementlastId, elementlast);
                         break;
                     }
                 case Element3D8:
@@ -109,26 +121,28 @@ public partial class ElementlastNeu
                         if (Knoten7.Text.Length > 0) T[6] = double.Parse(Knoten7.Text);
                         if (Knoten8.Text.Length > 0) T[7] = double.Parse(Knoten8.Text);
                         //var elementlast = new ElementLast8(elementlastId, elementId, T);
-                        //modell.ElementLasten.Add(elementlastId, elementlast);
+                        //_modell.ElementLasten.Add(elementlastId, elementlast);
                         break;
                     }
             }
 
-            lastenKeys?.Close();
             Close();
             StartFenster.WärmeVisual.Close();
+            StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+            StartFenster.WärmeVisual.Show();
+            _modell.Berechnet = false;
         }
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        lastenKeys?.Close();
         Close();
+        StartFenster.WärmeVisual.IsElementlast = false;
     }
 
     private void ElementlastIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!modell.ElementLasten.ContainsKey(ElementlastId.Text))
+        if (!_modell.ElementLasten.ContainsKey(ElementlastId.Text))
         {
             ElementId.Text = "";
             Knoten1.Text = "";
@@ -143,8 +157,12 @@ public partial class ElementlastNeu
         }
 
         // vorhandene Elementlastdefinition
-        modell.ElementLasten.TryGetValue(ElementlastId.Text, out vorhandeneElementlast);
-        Debug.Assert(vorhandeneElementlast != null, nameof(vorhandeneElementlast) + " != null");
+        if (!_modell.ElementLasten.TryGetValue(ElementlastId.Text, out vorhandeneElementlast))
+        {
+            _ = MessageBox.Show("Elementlast '" + ElementlastId.Text + "' nicht im Modell gefunden", "neue Elementlast");
+            return;
+        }
+           
         ElementlastId.Text = vorhandeneElementlast.LastId;
         ElementId.Text = vorhandeneElementlast.ElementId;
         Knoten1.Text = vorhandeneElementlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
@@ -171,10 +189,13 @@ public partial class ElementlastNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!modell.ElementLasten.Keys.Contains(ElementlastId.Text)) return;
-        modell.ElementLasten.Remove(ElementlastId.Text);
-        lastenKeys?.Close();
+        if (!_modell.ElementLasten.ContainsKey(ElementlastId.Text)) return;
+        _modell.ElementLasten.Remove(ElementlastId.Text);
+        StartFenster.WärmeVisual.Close(); 
         Close();
-        StartFenster.WärmeVisual.Close();
+
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 }

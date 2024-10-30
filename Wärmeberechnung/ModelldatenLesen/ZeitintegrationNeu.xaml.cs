@@ -33,7 +33,6 @@ public partial class ZeitintegrationNeu
     private void ZeitintervallBerechnen(object sender, MouseButtonEventArgs e)
     {
         var anzahl = int.Parse(Eigenlösung.Text);
-        string betaM;
         var modellBerechnung = new Berechnung(modell);
         modell.Eigenzustand ??= new Eigenzustände("neu", anzahl);
 
@@ -55,13 +54,13 @@ public partial class ZeitintegrationNeu
         {
             var deltatkrit = 2 / (betaMax * (1 - 2 * alfa));
             Zeitintervall.Text = deltatkrit.ToString(CultureInfo.CurrentCulture);
-            betaM = betaMax.ToString(CultureInfo.CurrentCulture);
         }
         else
         {
             Zeitintervall.Text = "";
-            betaM = betaMax.ToString(CultureInfo.CurrentCulture);
         }
+
+        var betaM = betaMax.ToString(CultureInfo.CurrentCulture);
 
         _ = MessageBox.Show("kritischer Zeitschritt für β max = " + betaM
                                                                   + " ist frei für Stabilität und muss gewählt werden für Genauigkeit",
@@ -104,7 +103,7 @@ public partial class ZeitintegrationNeu
             }
             catch (FormatException)
             {
-                _ = MessageBox.Show("Zeitinterval der Integration hat falsches Format", "neue Zeitintegration");
+                _ = MessageBox.Show("Zeitintervall der Integration hat falsches Format", "neue Zeitintegration");
                 return;
             }
 
@@ -142,7 +141,7 @@ public partial class ZeitintegrationNeu
             }
             catch (FormatException)
             {
-                _ = MessageBox.Show("number of eigensolutions has wrong format", "neue Zeitintegration");
+                _ = MessageBox.Show("Anzahl der Eigenlösungen hat falsches Eingabeformat", "neue Zeitintegration");
                 return;
             }
 
@@ -152,7 +151,7 @@ public partial class ZeitintegrationNeu
             }
             catch (FormatException)
             {
-                _ = MessageBox.Show("time interval of integration has wrong format", "neue Zeitintegration");
+                _ = MessageBox.Show("Zeitintervall hat falsches Eingabeformat", "neue Zeitintegration");
                 return;
             }
 
@@ -162,7 +161,7 @@ public partial class ZeitintegrationNeu
             }
             catch (FormatException)
             {
-                _ = MessageBox.Show("maximum integration time has wrong format", "neue Zeitintegration");
+                _ = MessageBox.Show("maximale Integrationszeit hat falsches Eingabeformat", "neue Zeitintegration");
                 return;
             }
 
@@ -172,7 +171,7 @@ public partial class ZeitintegrationNeu
             }
             catch (FormatException)
             {
-                _ = MessageBox.Show("parameter alfa has wrong format", "neue Zeitintegration");
+                _ = MessageBox.Show("Parameter alfa hat falsches Eingabeformat", "neue Zeitintegration");
                 return;
             }
         }

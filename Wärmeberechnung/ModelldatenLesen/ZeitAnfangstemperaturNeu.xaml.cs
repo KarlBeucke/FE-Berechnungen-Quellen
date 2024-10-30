@@ -2,13 +2,13 @@
 
 public partial class ZeitAnfangstemperaturNeu
 {
-    private readonly FeModell modell;
+    private readonly FeModell _modell;
     private int aktuell;
 
     public ZeitAnfangstemperaturNeu(FeModell modell)
     {
         InitializeComponent();
-        this.modell = modell;
+        _modell = modell;
         aktuell = StartFenster.WärmeVisual.ZeitintegrationNeu.aktuell;
         if (modell.Zeitintegration.VonStationär)
         {
@@ -38,28 +38,44 @@ public partial class ZeitAnfangstemperaturNeu
         if (KnotenId.Text.Length == 0) Close();
         if (StationäreLösung.IsChecked == true)
         {
-            modell.Zeitintegration.VonStationär = true;
-            modell.Zeitintegration.Anfangsbedingungen.Clear();
+            _modell.Zeitintegration.VonStationär = true;
+            _modell.Zeitintegration.Anfangsbedingungen.Clear();
             Close();
             return;
         }
 
         // neue Anfangsbedingung hinzufügen
-        if (StartFenster.WärmeVisual.ZeitintegrationNeu.aktuell > modell.Zeitintegration.Anfangsbedingungen.Count)
+        if (StartFenster.WärmeVisual.ZeitintegrationNeu.aktuell > _modell.Zeitintegration.Anfangsbedingungen.Count)
         {
             if (KnotenId.Text == "") return;
             var werte = new double[1];
-            werte[0] = double.Parse(Anfangstemperatur.Text);
+            try
+            {
+                werte[0] = double.Parse(Anfangstemperatur.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neue Anfangstemperatur");
+            }
+
             var knotenwerte = new Knotenwerte(KnotenId.Text, werte);
-            modell.Zeitintegration.Anfangsbedingungen.Add(knotenwerte);
-            modell.Zeitintegration.VonStationär = false;
+            _modell.Zeitintegration.Anfangsbedingungen.Add(knotenwerte);
+            _modell.Zeitintegration.VonStationär = false;
         }
+
         // vorhandene Anfangsbedingung ändern
         else
         {
-            var anfang = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell];
+            var anfang = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[aktuell];
             anfang.KnotenId = KnotenId.Text;
-            anfang.Werte[0] = double.Parse(Anfangstemperatur.Text);
+            try
+            {
+                anfang.Werte[0] = double.Parse(Anfangstemperatur.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neue Anfangstemperatur");
+            }
         }
 
         Close();
@@ -73,19 +89,20 @@ public partial class ZeitAnfangstemperaturNeu
 
     private void BtnDelete_Click(object sender, RoutedEventArgs e)
     {
-        modell.Zeitintegration.Anfangsbedingungen.RemoveAt(aktuell + 1);
+        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(aktuell + 1);
         aktuell = 0;
-        if (modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
+        if (_modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
         {
             Close();
             StartFenster.WärmeVisual.ZeitintegrationNeu.Close();
             return;
         }
 
-        var anfang = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell];
+        var anfang = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[aktuell];
         KnotenId.Text = anfang.KnotenId;
         Anfangstemperatur.Text = anfang.Werte[0].ToString("G2");
-        StationäreLösung.IsChecked = modell.Zeitintegration.VonStationär;
+        StationäreLösung.IsChecked = _modell.Zeitintegration.VonStationär;
+
         Close();
         StartFenster.WärmeVisual.ZeitintegrationNeu.Close();
     }

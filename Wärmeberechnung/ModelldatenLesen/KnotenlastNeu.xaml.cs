@@ -24,7 +24,7 @@ public partial class KnotenlastNeu
     public KnotenlastNeu(FeModell modell, string last, string knoten, double t)
     {
         InitializeComponent();
-        this._modell = modell;
+        _modell = modell;
         KnotenlastId.Text = last;
         KnotenId.Text = knoten;
         Temperatur.Text = t.ToString("0.00");
@@ -43,10 +43,10 @@ public partial class KnotenlastNeu
         // vorhandene Knotenlast
         if (_modell.Lasten.TryGetValue(knotenlastId, out var vorhandeneLast))
         {
+            if (KnotenId.Text.Length > 0)
+                vorhandeneLast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
             try
             {
-                if (KnotenId.Text.Length > 0)
-                    vorhandeneLast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
                 if (Temperatur.Text.Length > 0) vorhandeneLast.Lastwerte[0] = double.Parse(Temperatur.Text);
             }
             catch (FormatException)
@@ -61,9 +61,10 @@ public partial class KnotenlastNeu
         {
             var knotenId = "";
             var t = new double[1];
+            if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
+
             try
             {
-                if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
                 if (Temperatur.Text.Length > 0) t[0] = double.Parse(Temperatur.Text);
             }
             catch (FormatException)
@@ -89,22 +90,19 @@ public partial class KnotenlastNeu
         StartFenster.WärmeVisual.IsKnotenlast = false;
     }
 
-    private void KnotenlastIdLostFocus(object sender, RoutedEventArgs e)
+    private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Lasten.ContainsKey(KnotenlastId.Text))
+        _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
+        if (vorhandenerKnoten == null)
         {
+            _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue Knotenlast");
             KnotenId.Text = "";
-            Temperatur.Text = "";
+            KnotenlastId.Text = "";
             return;
         }
 
         // vorhandene Knotenlastdefinition
-        if (!_modell.Lasten.TryGetValue(KnotenlastId.Text, out var vorhandeneLast))
-            throw new ModellAusnahme("\nKnotenlast '" + KnotenlastId.Text + "' nicht im Modell gefunden");
-
-        KnotenlastId.Text = vorhandeneLast.LastId;
-        KnotenId.Text = vorhandeneLast.KnotenId;
-        Temperatur.Text = vorhandeneLast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
+        if (KnotenlastId.Text == "") KnotenlastId.Text = "KL_" + KnotenId.Text;
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
@@ -116,6 +114,15 @@ public partial class KnotenlastNeu
 
         StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
         StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
+    }
+
+    private void KnotenPositionNeu(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
+        if (knoten == null) { _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue Knotenlast"); return; }
+        StartFenster.TragwerkVisual.KnotenClick(knoten);
+        Close();
         _modell.Berechnet = false;
     }
 }

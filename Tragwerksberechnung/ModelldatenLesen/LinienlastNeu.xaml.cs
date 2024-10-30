@@ -40,8 +40,7 @@ public partial class LinienlastNeu
         }
 
         // vorhandene Linienlast
-        _modell.ElementLasten.TryGetValue(linienlastId, out var vorhandeneLinienlast);
-        if (vorhandeneLinienlast != null)
+        if (_modell.ElementLasten.TryGetValue(linienlastId, out var vorhandeneLinienlast))
         {
             if (ElementId.Text.Length > 0)
                 vorhandeneLinienlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
@@ -59,6 +58,7 @@ public partial class LinienlastNeu
                 return;
             }
         }
+        
         // neue Linienlast
         else
         {
@@ -92,7 +92,6 @@ public partial class LinienlastNeu
         }
 
         StartFenster.TragwerkVisual.Close();
-        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
@@ -101,7 +100,6 @@ public partial class LinienlastNeu
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.IsLinienlast = false;
     }
@@ -109,8 +107,7 @@ public partial class LinienlastNeu
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
     {
         // vorhandene Linienlastdefinition
-        _modell.ElementLasten.TryGetValue(LastId.Text, out var vorhandeneLinienlast);
-        if (vorhandeneLinienlast == null) return;
+        if (!_modell.ElementLasten.TryGetValue(LastId.Text, out var vorhandeneLinienlast)) return;
         LastId.Text = vorhandeneLinienlast.LastId;
         ElementId.Text = vorhandeneLinienlast.ElementId;
         Pxa.Text = vorhandeneLinienlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);

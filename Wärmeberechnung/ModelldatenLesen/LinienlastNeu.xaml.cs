@@ -1,21 +1,17 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using System.Diagnostics;
 using System.Globalization;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class LinienlastNeu
 {
-    private readonly WärmelastenKeys lastenKeys;
-    private readonly FeModell modell;
-    private AbstraktLinienlast vorhandeneLast;
+    private readonly FeModell _modell;
 
     public LinienlastNeu(FeModell modell)
     {
-        this.modell = modell;
+        _modell = modell;
         InitializeComponent();
-        lastenKeys = new WärmelastenKeys(modell);
-        lastenKeys.Show();
         Show();
     }
 
@@ -29,17 +25,22 @@ public partial class LinienlastNeu
         }
 
         // vorhandene Linienlast
-        if (modell.LinienLasten.Keys.Contains(linienlastId))
+        if (_modell.LinienLasten.TryGetValue(linienlastId, out var vorhandeneLinienlast))
         {
-            modell.LinienLasten.TryGetValue(linienlastId, out vorhandeneLast);
-            Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null");
-
-            if (StartknotenId.Text.Length > 0)
-                vorhandeneLast.StartKnotenId = StartknotenId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Start.Text.Length > 0) vorhandeneLast.Lastwerte[0] = double.Parse(Start.Text);
-            if (EndknotenId.Text.Length > 0)
-                vorhandeneLast.EndKnotenId = EndknotenId.Text.ToString(CultureInfo.CurrentCulture);
-            if (End.Text.Length > 0) vorhandeneLast.Lastwerte[1] = double.Parse(End.Text);
+            try
+            {
+                if (StartknotenId.Text.Length > 0)
+                    vorhandeneLinienlast.StartKnotenId = StartknotenId.Text.ToString(CultureInfo.CurrentCulture);
+                if (Start.Text.Length > 0) vorhandeneLinienlast.Lastwerte[0] = double.Parse(Start.Text);
+                if (EndknotenId.Text.Length > 0)
+                    vorhandeneLinienlast.EndKnotenId = EndknotenId.Text.ToString(CultureInfo.CurrentCulture);
+                if (End.Text.Length > 0) vorhandeneLinienlast.Lastwerte[1] = double.Parse(End.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Linienlast");
+                return;
+            }
         }
         // neue Linienlast
         else
@@ -48,55 +49,70 @@ public partial class LinienlastNeu
             var endknotenId = "";
             var t = new double[2];
             if (StartknotenId.Text.Length > 0) startknotenId = StartknotenId.Text.ToString(CultureInfo.CurrentCulture);
-            if (Start.Text.Length > 0) t[0] = double.Parse(Start.Text);
             if (EndknotenId.Text.Length > 0) endknotenId = EndknotenId.Text.ToString(CultureInfo.CurrentCulture);
-            if (End.Text.Length > 0) t[1] = double.Parse(End.Text);
+            try
+            {
+                if (Start.Text.Length > 0) t[0] = double.Parse(Start.Text);
+                if (End.Text.Length > 0) t[1] = double.Parse(End.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Linienlast");
+                return;
+            }
+            
             var linienlast = new LinienLast(startknotenId, endknotenId, t)
             {
                 LastId = linienlastId
             };
-            modell.LinienLasten.Add(linienlastId, linienlast);
+            _modell.LinienLasten.Add(linienlastId, linienlast);
         }
 
-        lastenKeys?.Close();
         Close();
         StartFenster.WärmeVisual.Close();
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        lastenKeys?.Close();
         Close();
+        StartFenster.WärmeVisual.IsLinienlast = false;
+    }
+    
+    private void LinienlastIdLostFocus(object sender, RoutedEventArgs e)
+    {
+        // vorhandene Linienlastdefinition
+        if(!_modell.LinienLasten.TryGetValue(LinienlastId.Text, out var vorhandeneLinienlast))
+        {
+            _ = MessageBox.Show("Linienlast '" + LinienlastId.Text + "' nicht im Modell gefunden", "neue Linienlast");
+            return;
+        }
+            
+        LinienlastId.Text = vorhandeneLinienlast.LastId;
+        StartknotenId.Text = vorhandeneLinienlast.StartKnotenId;
+        EndknotenId.Text = vorhandeneLinienlast.EndKnotenId;
+        try
+        {
+            Start.Text = vorhandeneLinienlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
+            End.Text = vorhandeneLinienlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
+        }
+        catch (FormatException)
+        {
+            _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Linienlast");
+            return;
+        }
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!modell.LinienLasten.Keys.Contains(LinienlastId.Text)) return;
-        modell.LinienLasten.Remove(LinienlastId.Text);
-        lastenKeys?.Close();
-        Close();
+        _modell.LinienLasten.Remove(LinienlastId.Text);
         StartFenster.WärmeVisual.Close();
-    }
+        Close();
 
-    private void LinienlastIdLostFocus(object sender, RoutedEventArgs e)
-    {
-        if (!modell.LinienLasten.ContainsKey(LinienlastId.Text))
-        {
-            StartknotenId.Text = "";
-            Start.Text = "";
-            EndknotenId.Text = "";
-            End.Text = "";
-            return;
-        }
-
-        // vorhandene Linienlastdefinition
-        modell.LinienLasten.TryGetValue(LinienlastId.Text, out vorhandeneLast);
-        Debug.Assert(vorhandeneLast != null, nameof(vorhandeneLast) + " != null");
-
-        LinienlastId.Text = vorhandeneLast.LastId;
-        StartknotenId.Text = vorhandeneLast.StartKnotenId;
-        Start.Text = vorhandeneLast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
-        EndknotenId.Text = vorhandeneLast.EndKnotenId;
-        End.Text = vorhandeneLast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 }

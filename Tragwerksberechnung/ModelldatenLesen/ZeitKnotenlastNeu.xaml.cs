@@ -37,7 +37,7 @@ public partial class ZeitKnotenlastNeu
             Linear.Text = string.Empty;
             zeitabhängigeKnotenlast.Datei = true;
             zeitabhängigeKnotenlast.VariationsTyp = 0;
-            var last = (AbstraktZeitabhängigeKnotenlast)zeitabhängigeKnotenlast;
+            AbstraktZeitabhängigeKnotenlast last = zeitabhängigeKnotenlast;
             _modell.ZeitabhängigeKnotenLasten.Add(loadId, last);
         }
         else if ((Amplitude.Text.Length & Frequenz.Text.Length & Winkel.Text.Length) != 0)
