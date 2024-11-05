@@ -1,4 +1,6 @@
-﻿namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
+﻿using FEBibliothek.Modell;
+
+namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class ZeitAnfangstemperaturNeu
 {
@@ -7,10 +9,36 @@ public partial class ZeitAnfangstemperaturNeu
 
     public ZeitAnfangstemperaturNeu(FeModell modell)
     {
+        _modell = modell;
+        if (_modell.Zeitintegration == null)
+        {
+            _ = MessageBox.Show("Zeitintegration noch nicht definiert", "neue Anfangstemperatur");
+            return;
+        }
         InitializeComponent();
         _modell = modell;
-        aktuell = StartFenster.WärmeVisual.ZeitintegrationNeu.aktuell;
-        if (modell.Zeitintegration.VonStationär)
+        
+        if (_modell.Zeitintegration.VonStationär)
+        {
+            StationäreLösung.IsChecked = true;
+            KnotenId.Text = "";
+            Anfangstemperatur.Text = "";
+        }
+        Show();
+    }
+
+    public ZeitAnfangstemperaturNeu(FeModell modell, string knotenId)
+    {
+        _modell = modell;
+        if (_modell.Zeitintegration == null)
+        {
+            _ = MessageBox.Show("Zeitintegration noch nicht definiert", "neue Anfangstemperatur");
+            return;
+        }
+        InitializeComponent();
+        aktuell = _modell.Zeitintegration.Anfangsbedingungen.FindIndex((a => a.KnotenId == knotenId));
+
+        if (_modell.Zeitintegration.VonStationär)
         {
             StationäreLösung.IsChecked = true;
             KnotenId.Text = "";
@@ -18,7 +46,7 @@ public partial class ZeitAnfangstemperaturNeu
         }
         else
         {
-            var anfang = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell];
+            var anfang = modell.Zeitintegration.Anfangsbedingungen[aktuell];
             KnotenId.Text = anfang.KnotenId;
             Anfangstemperatur.Text = anfang.Werte[0].ToString("G2");
         }
@@ -44,8 +72,9 @@ public partial class ZeitAnfangstemperaturNeu
             return;
         }
 
+        aktuell = _modell.Zeitintegration.Anfangsbedingungen.FindIndex((a => a.KnotenId == KnotenId.Text));
         // neue Anfangsbedingung hinzufügen
-        if (StartFenster.WärmeVisual.ZeitintegrationNeu.aktuell > _modell.Zeitintegration.Anfangsbedingungen.Count)
+        if (aktuell < 0)
         {
             if (KnotenId.Text == "") return;
             var werte = new double[1];
@@ -66,11 +95,12 @@ public partial class ZeitAnfangstemperaturNeu
         // vorhandene Anfangsbedingung ändern
         else
         {
-            var anfang = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[aktuell];
+            var anfang = _modell.Zeitintegration.Anfangsbedingungen[aktuell];
             anfang.KnotenId = KnotenId.Text;
             try
             {
                 anfang.Werte[0] = double.Parse(Anfangstemperatur.Text);
+                _modell.Zeitintegration.Anfangsbedingungen[aktuell] = anfang;
             }
             catch (FormatException)
             {
@@ -84,26 +114,27 @@ public partial class ZeitAnfangstemperaturNeu
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();
-        StartFenster.WärmeVisual.ZeitintegrationNeu.Close();
+        StartFenster.WärmeVisual.ZeitintegrationNeu?.Close();
     }
 
     private void BtnDelete_Click(object sender, RoutedEventArgs e)
     {
-        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(aktuell + 1);
-        aktuell = 0;
-        if (_modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
+        if (aktuell >= 0)
         {
-            Close();
-            StartFenster.WärmeVisual.ZeitintegrationNeu.Close();
-            return;
+            _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(aktuell);
+            if (_modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
+            {
+                Close();
+                StartFenster.WärmeVisual.ZeitintegrationNeu.Close();
+                return;
+            }
+
+            var anfang = _modell.Zeitintegration.Anfangsbedingungen[aktuell];
+            KnotenId.Text = anfang.KnotenId;
+            Anfangstemperatur.Text = anfang.Werte[0].ToString("G2");
+            StationäreLösung.IsChecked = _modell.Zeitintegration.VonStationär;
         }
 
-        var anfang = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[aktuell];
-        KnotenId.Text = anfang.KnotenId;
-        Anfangstemperatur.Text = anfang.Werte[0].ToString("G2");
-        StationäreLösung.IsChecked = _modell.Zeitintegration.VonStationär;
-
         Close();
-        StartFenster.WärmeVisual.ZeitintegrationNeu.Close();
     }
 }

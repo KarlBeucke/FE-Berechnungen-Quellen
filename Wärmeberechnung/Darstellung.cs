@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using FEBibliothek.Modell;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -14,8 +15,8 @@ public class Darstellung
     public const int RandOben = 60;
     public const int RandLinks = 60;
     private const double MaxScreenLength = 40;
-    private readonly FeModell modell;
-    private readonly Canvas visual;
+    private readonly FeModell _modell;
+    private readonly Canvas _visual;
     private AbstraktElement aktElement;
     public double Auflösung;
     private double auflösungH, auflösungV;
@@ -30,8 +31,8 @@ public class Darstellung
 
     public Darstellung(FeModell feModell, Canvas visual)
     {
-        modell = feModell;
-        this.visual = visual;
+        _modell = feModell;
+        _visual = visual;
         KnotenIDs = [];
         ElementIDs = [];
         //LastIDs = new List<TextBlock>();
@@ -62,10 +63,10 @@ public class Darstellung
     public void FestlegungAuflösung()
     {
         const int rand = 100;
-        screenH = visual.ActualWidth;
-        screenV = visual.ActualHeight;
+        screenH = _visual.ActualWidth;
+        screenV = _visual.ActualHeight;
 
-        foreach (var item in modell.Knoten)
+        foreach (var item in _modell.Knoten)
         {
             knoten = item.Value;
             if (knoten.Koordinaten[0] > maxX) maxX = knoten.Koordinaten[0];
@@ -78,7 +79,7 @@ public class Darstellung
 
     public void KnotenTexte()
     {
-        foreach (var item in modell.Knoten)
+        foreach (var item in _modell.Knoten)
         {
             var id = new TextBlock
             {
@@ -89,7 +90,7 @@ public class Darstellung
             };
             SetTop(id, (-item.Value.Koordinaten[1] + MaxY) * Auflösung + RandOben);
             SetLeft(id, item.Value.Koordinaten[0] * Auflösung + RandLinks);
-            visual.Children.Add(id);
+            _visual.Children.Add(id);
             KnotenIDs.Add(id);
         }
     }
@@ -110,13 +111,13 @@ public class Darstellung
         };
         SetLeft(knotenPath, RandLinks);
         SetTop(knotenPath, RandOben);
-        visual.Children.Add(knotenPath);
+        _visual.Children.Add(knotenPath);
         return knotenPath;
     }
 
     public void ElementTexte()
     {
-        foreach (var item in modell.Elemente)
+        foreach (var item in _modell.Elemente)
         {
             var abstract2D = (Abstrakt2D)item.Value;
             var cg = abstract2D.BerechneSchwerpunkt();
@@ -129,14 +130,14 @@ public class Darstellung
             };
             SetTop(id, (-cg.Y + MaxY) * Auflösung + RandOben);
             SetLeft(id, cg.X * Auflösung + RandLinks);
-            visual.Children.Add(id);
+            _visual.Children.Add(id);
             ElementIDs.Add(id);
         }
     }
 
     public void AlleElementeZeichnen()
     {
-        foreach (var item in modell.Elemente) ElementZeichnen(item.Value, Black, 2);
+        foreach (var item in _modell.Elemente) ElementZeichnen(item.Value, Black, 2);
     }
 
     private void ElementZeichnen(AbstraktElement element, Brush farbe, double wichte)
@@ -151,7 +152,7 @@ public class Darstellung
         };
         SetLeft(elementPath, RandLinks);
         SetTop(elementPath, RandOben);
-        visual.Children.Add(elementPath);
+        _visual.Children.Add(elementPath);
     }
 
     public Shape ElementFillZeichnen(AbstraktElement element, Brush umrissFarbe, Color füllFarbe, double transparenz,
@@ -170,7 +171,7 @@ public class Darstellung
         };
         SetLeft(elementPath, RandLinks);
         SetTop(elementPath, RandOben);
-        visual.Children.Add(elementPath);
+        _visual.Children.Add(elementPath);
         return elementPath;
     }
 
@@ -179,7 +180,7 @@ public class Darstellung
         var pathFigure = new PathFigure();
         var pathGeometry = new PathGeometry();
 
-        if (!modell.Knoten.TryGetValue(element.KnotenIds[0], out knoten))
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out knoten))
         {
             throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
         }
@@ -188,7 +189,7 @@ public class Darstellung
         pathFigure.StartPoint = startPoint;
         for (var i = 1; i < element.KnotenProElement; i++)
         {
-            if (!modell.Knoten.TryGetValue(element.KnotenIds[i], out knoten))
+            if (!_modell.Knoten.TryGetValue(element.KnotenIds[i], out knoten))
             {
                 throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[i] + "' nicht im Modell gefunden");
             }
@@ -205,11 +206,11 @@ public class Darstellung
     public void KnotenlastenZeichnen()
     {
         const int lastOffset = 10;
-        foreach (var item in modell.Lasten)
+        foreach (var item in _modell.Lasten)
         {
             var knotenId = item.Value.KnotenId;
             var lastWert = item.Value.Lastwerte[0];
-            if (!modell.Knoten.TryGetValue(knotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(knotenId, out knoten))
             {
                 throw new ModellAusnahme("\nElementlast Knoten '" + item.Value.KnotenId + "' nicht im Modell gefunden");
             }
@@ -226,12 +227,12 @@ public class Darstellung
 
 
             LastKnoten.Add(knotenLast);
-            visual.Children.Add(knotenLast);
+            _visual.Children.Add(knotenLast);
         }
 
         // zeitabhängige Knotenlasten
         foreach (var zeitKnotenlast in from item
-                     in modell.ZeitabhängigeKnotenLasten
+                     in _modell.ZeitabhängigeKnotenLasten
                                        let zeitKnotenlast = new TextBlock
                                        {
                                            Name = "ZeitKnotenLast",
@@ -240,7 +241,7 @@ public class Darstellung
                                            Text = item.Key,
                                            Foreground = DarkViolet
                                        }
-                                       where modell.Knoten.TryGetValue(item.Value.KnotenId, out knoten)
+                                       where _modell.Knoten.TryGetValue(item.Value.KnotenId, out knoten)
                                        where knoten != null
                                        select zeitKnotenlast)
         {
@@ -250,16 +251,16 @@ public class Darstellung
             }
             SetTop(zeitKnotenlast, (-knoten.Koordinaten[1] + MaxY) * Auflösung + RandOben + lastOffset);
             SetLeft(zeitKnotenlast, knoten.Koordinaten[0] * Auflösung + RandLinks);
-            visual.Children.Add(zeitKnotenlast);
+            _visual.Children.Add(zeitKnotenlast);
             LastKnoten.Add(zeitKnotenlast);
         }
     }
 
     public void ElementlastenZeichnen()
     {
-        foreach (var item in modell.ElementLasten)
+        foreach (var item in _modell.ElementLasten)
         {
-            if (!modell.Elemente.TryGetValue(item.Value.ElementId, out var element))
+            if (!_modell.Elemente.TryGetValue(item.Value.ElementId, out var element))
             {
                 throw new ModellAusnahme("\nElement '" + item.Value.ElementId + "' für Elementlast nicht im Modell gefunden");
             }
@@ -277,7 +278,7 @@ public class Darstellung
             };
             SetLeft(elementPath, RandLinks);
             SetTop(elementPath, RandOben);
-            visual.Children.Add(elementPath);
+            _visual.Children.Add(elementPath);
 
             var abstrakt2D = (Abstrakt2D)element;
             const int lastOffset = -15;
@@ -294,7 +295,7 @@ public class Darstellung
                 };
                 SetTop(id, (-cg.Y + MaxY) * Auflösung + RandOben + lastOffset);
                 SetLeft(id, cg.X * Auflösung + RandLinks);
-                visual.Children.Add(id);
+                _visual.Children.Add(id);
                 LastKnoten.Add(id);
             }
 
@@ -302,9 +303,9 @@ public class Darstellung
         }
 
         // zeitabhängige Elementlasten
-        foreach (var item in modell.ZeitabhängigeElementLasten)
+        foreach (var item in _modell.ZeitabhängigeElementLasten)
         {
-            if (!modell.Elemente.TryGetValue(item.Value.ElementId, out var element))
+            if (!_modell.Elemente.TryGetValue(item.Value.ElementId, out var element))
             {
                 throw new ModellAusnahme("\nElement '" + item.Value.ElementId + "' für Elementlast nicht im Modell gefunden");
             }
@@ -322,7 +323,7 @@ public class Darstellung
             };
             SetLeft(elementPath, RandLinks);
             SetTop(elementPath, RandOben);
-            visual.Children.Add(elementPath);
+            _visual.Children.Add(elementPath);
 
             var abstrakt2D = (Abstrakt2D)element;
             const int lastOffset = -15;
@@ -339,7 +340,7 @@ public class Darstellung
                 };
                 SetTop(id, (-cg.Y + MaxY) * Auflösung + RandOben + lastOffset);
                 SetLeft(id, cg.X * Auflösung + RandLinks);
-                visual.Children.Add(id);
+                _visual.Children.Add(id);
                 LastKnoten.Add(id);
             }
 
@@ -349,20 +350,20 @@ public class Darstellung
 
     public void LinienlastenZeichnen()
     {
-        foreach (var item in modell.LinienLasten)
+        foreach (var item in _modell.LinienLasten)
         {
             var linienlast = item.Value;
             var pathFigure = new PathFigure();
             var pathGeometry = new PathGeometry();
 
-            if (!modell.Knoten.TryGetValue(linienlast.StartKnotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(linienlast.StartKnotenId, out knoten))
             {
                 throw new ModellAusnahme("\nStartknoten '" + linienlast.StartKnotenId + "' für Linienlast nicht im Modell gefunden");
             }
 
             var startPoint = TransformKnoten(knoten, Auflösung, MaxY);
             pathFigure.StartPoint = startPoint;
-            if (!modell.Knoten.TryGetValue(linienlast.EndKnotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(linienlast.EndKnotenId, out knoten))
             {
                 throw new ModellAusnahme("\nEndknoten '" + linienlast.EndKnotenId + "' für Linienlast nicht im Modell gefunden");
             }
@@ -382,7 +383,7 @@ public class Darstellung
             };
             SetLeft(linienPath, RandLinks);
             SetTop(linienPath, RandOben);
-            visual.Children.Add(linienPath);
+            _visual.Children.Add(linienPath);
             LastLinien.Add(linienPath);
         }
     }
@@ -391,10 +392,10 @@ public class Darstellung
     {
         const int randOffset = 15;
         // zeichne den Wert einer jeden Randbedingung als Text an Randknoten
-        foreach (var item in modell.Randbedingungen)
+        foreach (var item in _modell.Randbedingungen)
         {
             var knotenId = item.Value.KnotenId;
-            if (!modell.Knoten.TryGetValue(knotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(knotenId, out knoten))
             {
                 throw new ModellAusnahme("\nKnoten '" + item.Value.KnotenId + "' für Randbedingung nicht im Modell gefunden");
             }
@@ -414,14 +415,14 @@ public class Darstellung
             RandKnoten.Add(randbedingung);
             SetTop(randbedingung, fensterKnoten.Y + RandOben + randOffset);
             SetLeft(randbedingung, fensterKnoten.X + RandLinks);
-            visual.Children.Add(randbedingung);
+            _visual.Children.Add(randbedingung);
         }
 
         // zeitabhängige Randknoten
-        foreach (var item in modell.ZeitabhängigeRandbedingung)
+        foreach (var item in _modell.ZeitabhängigeRandbedingung)
         {
             var knotenId = item.Value.KnotenId;
-            if (!modell.Knoten.TryGetValue(knotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(knotenId, out knoten))
             {
                 throw new ModellAusnahme("\nRandknoten '" + item.Value.KnotenId + "' nicht im Modell gefunden");
             }
@@ -440,13 +441,13 @@ public class Darstellung
             RandKnoten.Add(randbedingung);
             SetTop(randbedingung, fensterKnoten.Y + RandOben + 15);
             SetLeft(randbedingung, fensterKnoten.X + RandLinks);
-            visual.Children.Add(randbedingung);
+            _visual.Children.Add(randbedingung);
         }
     }
 
     public void KnotentemperaturZeichnen()
     {
-        foreach (var item in modell.Knoten)
+        foreach (var item in _modell.Knoten)
         {
             knoten = item.Value;
             var temperatur = knoten.Knotenfreiheitsgrade[0].ToString("N2");
@@ -466,22 +467,24 @@ public class Darstellung
             Knotentemperaturen.Add(id);
             SetTop(id, fensterKnoten.Y + RandOben);
             SetLeft(id, fensterKnoten.X + RandLinks);
-            visual.Children.Add(id);
+            _visual.Children.Add(id);
         }
     }
 
     public void AnfangsbedingungenZeichnen()
     {
+        if (_modell.Zeitintegration == null) return;
+ 
         const int anfangOffset = 15;
         // zeichne Wert einer jeden Anfangsbedingung als Text an Knoten
 
-        foreach (var item in modell.Zeitintegration.Anfangsbedingungen)
+        foreach (var item in _modell.Zeitintegration.Anfangsbedingungen)
         {
             var knotenwerte = (Knotenwerte)item;
             var knotenId = knotenwerte.KnotenId;
             if (knotenId == "alle") continue;
 
-            if (!modell.Knoten.TryGetValue(knotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(knotenId, out knoten))
             {
                 throw new ModellAusnahme("\nKnoten '" + knotenId + "' für Anfangsbedingung nicht im Modell gefunden");
             }
@@ -490,8 +493,8 @@ public class Darstellung
 
             var anfangsbedingung = new TextBlock
             {
-                Name = "Anfangsbedingung",
-                //Uid = "",
+                Name = knotenId,
+                Uid = "A",
                 FontSize = 12,
                 Text = knotenwerte.Werte[0].ToString("N2"),
                 Foreground = Black,
@@ -499,7 +502,7 @@ public class Darstellung
             };
             SetTop(anfangsbedingung, fensterKnoten.Y + RandOben + anfangOffset);
             SetLeft(anfangsbedingung, fensterKnoten.X + RandLinks);
-            visual.Children.Add(anfangsbedingung);
+            _visual.Children.Add(anfangsbedingung);
             Anfangsbedingungen.Add(anfangsbedingung);
         }
     }
@@ -509,7 +512,7 @@ public class Darstellung
         const int randOffset = 15;
         // zeichne den Wert einer Anfangsbedingung als Text an Knoten
 
-        if (!modell.Knoten.TryGetValue(knotenId, out knoten))
+        if (!_modell.Knoten.TryGetValue(knotenId, out knoten))
         {
             throw new ModellAusnahme("\nKnoten '" + knotenId + "' für Anfangsbedingung nicht im Modell gefunden");
         }
@@ -527,21 +530,21 @@ public class Darstellung
         };
         SetTop(anfangsbedingung, fensterKnoten.Y + RandOben + randOffset);
         SetLeft(anfangsbedingung, fensterKnoten.X + RandLinks);
-        visual.Children.Add(anfangsbedingung);
+        _visual.Children.Add(anfangsbedingung);
         Anfangsbedingungen.Add(anfangsbedingung);
     }
 
     public void AnfangsbedingungenEntfernen()
     {
-        foreach (var item in Anfangsbedingungen) visual.Children.Remove(item);
+        foreach (var item in Anfangsbedingungen) _visual.Children.Remove(item);
         Anfangsbedingungen.Clear();
     }
 
     public void ElementTemperaturZeichnen()
     {
-        foreach (var path in TemperaturElemente) visual.Children.Remove(path);
+        foreach (var path in TemperaturElemente) _visual.Children.Remove(path);
         TemperaturElemente.Clear();
-        foreach (var item in modell.Knoten)
+        foreach (var item in _modell.Knoten)
         {
             knoten = item.Value;
             temp = knoten.Knotenfreiheitsgrade[0];
@@ -549,16 +552,16 @@ public class Darstellung
             if (temp < minTemp) minTemp = temp;
         }
 
-        foreach (var item in modell.Elemente)
+        foreach (var item in _modell.Elemente)
         {
             aktElement = item.Value;
             var pathGeometry = ElementUmrisse((Abstrakt2D)aktElement);
             //var elementTemperature = aktElement.KnotenIds.Where(knotenId
-            //    => modell.Knoten.TryGetValue(knotenId, out knoten)).Sum(knotenId => knoten.Knotenfreiheitsgrade[0]);
+            //    => _modell.Knoten.TryGetValue(knotenId, out knoten)).Sum(knotenId => knoten.Knotenfreiheitsgrade[0]);
             double elementTemperatur = 0;
             for (var i = 0; i < aktElement.KnotenProElement; i++)
             {
-                if (!modell.Knoten.TryGetValue(aktElement.KnotenIds[i], out knoten))
+                if (!_modell.Knoten.TryGetValue(aktElement.KnotenIds[i], out knoten))
                     throw new ModellAusnahme("\nElementknoten '" + aktElement.KnotenIds[i] + "' nicht im Modell gefunden");
                 elementTemperatur += knoten.Knotenfreiheitsgrade[0];
             }
@@ -582,13 +585,13 @@ public class Darstellung
             SetLeft(path, RandLinks);
             SetTop(path, RandOben);
             // zeichne Shape
-            visual.Children.Add(path);
+            _visual.Children.Add(path);
         }
     }
 
     public void KnotengradientenZeichnen(int index)
     {
-        foreach (var item in modell.Knoten)
+        foreach (var item in _modell.Knoten)
         {
             knoten = item.Value;
             var gradient = knoten.KnotenAbleitungen[0][index].ToString("N2");
@@ -607,16 +610,16 @@ public class Darstellung
             Knotengradienten.Add(id);
             SetTop(id, fensterKnoten.Y + RandOben + 15);
             SetLeft(id, fensterKnoten.X + RandLinks);
-            visual.Children.Add(id);
+            _visual.Children.Add(id);
         }
     }
 
     public void WärmeflussvektorenZeichnen()
     {
-        foreach (var path in WärmeVektoren) visual.Children.Remove(path);
+        foreach (var path in WärmeVektoren) _visual.Children.Remove(path);
         WärmeVektoren.Clear();
         double maxVektor = 0;
-        foreach (var abstract2D in modell.Elemente.Select(item => (Abstrakt2D)item.Value))
+        foreach (var abstract2D in _modell.Elemente.Select(item => (Abstrakt2D)item.Value))
         {
             abstract2D.ElementZustand = abstract2D.BerechneElementZustand(0, 0);
             var vektor = Math.Sqrt(abstract2D.ElementZustand[0] * abstract2D.ElementZustand[0] +
@@ -626,7 +629,7 @@ public class Darstellung
 
         var vektorskalierung = MaxScreenLength / maxVektor;
 
-        foreach (var abstrakt2D in modell.Elemente.Select(item => (Abstrakt2D)item.Value))
+        foreach (var abstrakt2D in _modell.Elemente.Select(item => (Abstrakt2D)item.Value))
         {
             abstrakt2D.ElementZustand = abstrakt2D.BerechneElementZustand(0, 0);
             var vektorLänge = Math.Sqrt(abstrakt2D.ElementZustand[0] * abstrakt2D.ElementZustand[0] +
@@ -658,7 +661,7 @@ public class Darstellung
             SetLeft(path, RandLinks);
             SetTop(path, RandOben);
             // zeichne Shape
-            visual.Children.Add(path);
+            _visual.Children.Add(path);
         }
     }
 
@@ -703,15 +706,15 @@ public class Darstellung
         SetLeft(zeitverlauf, RandLinks);
         SetTop(zeitverlauf, mY * auflösungV + RandOben);
         // zeichne Shape
-        visual.Children.Add(zeitverlauf);
+        _visual.Children.Add(zeitverlauf);
     }
 
     public void Koordinatensystem(double tmin, double tmax, double max, double min)
     {
         const int rand = 20;
         const int maxOrdinateAnzeigen = 100;
-        screenH = visual.ActualWidth;
-        screenV = visual.ActualHeight;
+        screenH = _visual.ActualWidth;
+        screenV = _visual.ActualHeight;
         if (double.IsNaN(max))
         {
             max = maxOrdinateAnzeigen;
@@ -730,7 +733,7 @@ public class Darstellung
             Y2 = max * auflösungV + RandOben,
             StrokeThickness = 2
         };
-        _ = visual.Children.Add(xAchse);
+        _ = _visual.Children.Add(xAchse);
         var yAchse = new Line
         {
             Stroke = Black,
@@ -740,7 +743,7 @@ public class Darstellung
             Y2 = RandOben,
             StrokeThickness = 2
         };
-        visual.Children.Add(yAchse);
+        _visual.Children.Add(yAchse);
     }
 
     private static Point TransformKnoten(Knoten knoten, double auflösung, double maxY)

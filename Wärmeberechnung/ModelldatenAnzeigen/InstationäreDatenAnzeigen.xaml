@@ -58,14 +58,14 @@
         <TextBox Grid.Column="0" Grid.Row="1" Height="19" Text="alle" Background="#FFF0EEEE"
                  Margin="6,45.2,167,0" VerticalAlignment="Top" />
         <CheckBox Name="Alle" Grid.Column="0" Grid.Row="1" Margin="64,48.2,141,0" Height="14" VerticalAlignment="Top"
-                  Click="ToggleStationaer" />
+                  Click="ToggleStationär" />
 
         <Grid Margin="5,4.2,5,7.8" Grid.Row="1" Grid.Column="0">
             <DataGrid
                 Name="AnfangstemperaturenGrid" HorizontalAlignment="Left" Width="200" AlternatingRowBackground="Aqua"
                 AutoGenerateColumns="False" Grid.ColumnSpan="2" Margin="0,76,0,1.4"
                 MouseDoubleClick="NeueAnfangstemperatur" CellEditEnding="Model_Changed"
-                UnloadingRow="AnfangstemperaturZeileLoeschen" SelectionChanged="AnfangstemperaturZeileSelected"
+                UnloadingRow="AnfangstemperaturZeileLöschen" SelectionChanged="AnfangstemperaturZeileSelected"
                 d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
@@ -86,7 +86,7 @@
             <DataGrid Grid.Column="0" VerticalAlignment="Top"
                       Name="RandDateiGrid" Height="50" Margin="5,29,-170,0" AlternatingRowBackground="Aqua"
                       AutoGenerateColumns="False" MouseDoubleClick="NeueRandtemperatur" CellEditEnding="Model_Changed"
-                      SelectionChanged="RandDateiSelectionChanged" UnloadingRow="RandDateiZeileLoeschen"
+                      SelectionChanged="RandDateiSelectionChanged" UnloadingRow="RandDateiZeileLöschen"
                       d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding RandbedingungId}" />
@@ -107,7 +107,7 @@
                       Name="RandKonstantGrid" Height="50" Margin="5,20,-114,0" AlternatingRowBackground="Aqua"
                       AutoGenerateColumns="False" Grid.ColumnSpan="2"
                       MouseDoubleClick="NeueRandtemperatur" CellEditEnding="Model_Changed"
-                      SelectionChanged="RandKonstantSelectionChanged" UnloadingRow="RandKonstantZeileLoeschen"
+                      SelectionChanged="RandKonstantSelectionChanged" UnloadingRow="RandKonstantZeileLöschen"
                       d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding RandbedingungId}" />
@@ -131,7 +131,7 @@
                       Name="RandHarmonischGrid" Height="124" Margin="5,8,-4,0" AlternatingRowBackground="Aqua"
                       AutoGenerateColumns="False" Grid.ColumnSpan="4"
                       MouseDoubleClick="NeueRandtemperatur" CellEditEnding="Model_Changed"
-                      SelectionChanged="RandHarmonischSelectionChanged" UnloadingRow="RandHarmonischZeileLoeschen"
+                      SelectionChanged="RandHarmonischSelectionChanged" UnloadingRow="RandHarmonischZeileLöschen"
                       d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding RandbedingungId}" />
@@ -152,7 +152,7 @@
                 Name="RandLinearGrid" Margin="1,31,0,2" AlternatingRowBackground="Aqua"
                 AutoGenerateColumns="False"
                 MouseDoubleClick="NeueRandtemperatur" CellEditEnding="Model_Changed"
-                SelectionChanged="RandLinearSelectionChanged" UnloadingRow="RandLinearZeileLoeschen"
+                SelectionChanged="RandLinearSelectionChanged" UnloadingRow="RandLinearZeileLöschen"
                 d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding RandbedingungId}" />
@@ -187,7 +187,7 @@
                       Name="KnotenDateiGrid" Height="50" Margin="5,29,-170,0" AlternatingRowBackground="Aqua"
                       AutoGenerateColumns="False" MouseDoubleClick="NeueKnotentemperatur"
                       CellEditEnding="Model_Changed"
-                      SelectionChanged="KnotenDateiSelectionChanged" UnloadingRow="KnotenDateiZeileLoeschen"
+                      SelectionChanged="KnotenDateiSelectionChanged" UnloadingRow="KnotenDateiZeileLöschen"
                       d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
@@ -210,7 +210,7 @@
                 Name="KnotenHarmonischGrid" Margin="1,23,-12.2,-2" AlternatingRowBackground="Aqua"
                 AutoGenerateColumns="False" Grid.ColumnSpan="5"
                 MouseDoubleClick="NeueKnotentemperatur" CellEditEnding="Model_Changed"
-                SelectionChanged="KnotenHarmonischSelectionChanged" UnloadingRow="KnotenHarmonischZeileLoeschen"
+                SelectionChanged="KnotenHarmonischSelectionChanged" UnloadingRow="KnotenHarmonischZeileLöschen"
                 d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
@@ -232,7 +232,7 @@
                 Name="KnotenLinearGrid" AlternatingRowBackground="Aqua"
                 AutoGenerateColumns="False" Height="165" VerticalAlignment="Top"
                 MouseDoubleClick="NeueKnotentemperatur" CellEditEnding="Model_Changed"
-                SelectionChanged="KnotenLinearSelectionChanged" UnloadingRow="KnotenLinearZeileLoeschen"
+                SelectionChanged="KnotenLinearSelectionChanged" UnloadingRow="KnotenLinearZeileLöschen"
                 d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
@@ -264,7 +264,7 @@
                 Name="ElementLastenGrid" Margin="0,27,0,0" AlternatingRowBackground="Aqua"
                 HorizontalAlignment="Left" VerticalAlignment="Top" Height="271" Width="226" AutoGenerateColumns="False"
                 MouseDoubleClick="NeueElementtemperatur" CellEditEnding="Model_Changed"
-                SelectionChanged="ElementtemperaturSelectionChanged" UnloadingRow="ElementtemperaturZeileLoeschen"
+                SelectionChanged="ElementtemperaturSelectionChanged" UnloadingRow="ElementtemperaturZeileLöschen"
                 d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />

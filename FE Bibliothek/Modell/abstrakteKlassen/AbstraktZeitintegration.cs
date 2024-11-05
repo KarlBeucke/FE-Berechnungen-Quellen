@@ -9,6 +9,7 @@
         public bool VonStationär { get; set; }
         public double Parameter1 { get; set; }
         public double Parameter2 { get; set; }
-        public List<object> Anfangsbedingungen { get; set; }
+        public List<Knotenwerte> Anfangsbedingungen { get; set; }
+        //public Dictionary<string, double> Anfangsbedingungen { get; set; } = [];
     }
 }

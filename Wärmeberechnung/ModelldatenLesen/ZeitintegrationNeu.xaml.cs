@@ -7,24 +7,21 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class ZeitintegrationNeu
 {
-    private readonly FeModell modell;
-    public int aktuell;
+    private readonly FeModell _modell;
     private ZeitAnfangstemperaturNeu anfangstemperaturenNeu;
 
     public ZeitintegrationNeu(FeModell modell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
         InitializeComponent();
-        this.modell = modell;
-        if (modell.Eigenzustand != null)
+        _modell = modell;
+        if (_modell.Eigenzustand != null)
             Eigenlösung.Text = modell.Eigenzustand.AnzahlZustände.ToString(CultureInfo.CurrentCulture);
-        if (modell.Zeitintegration != null)
+        if (_modell.Zeitintegration != null)
         {
-            Zeitintervall.Text = modell.Zeitintegration.Dt.ToString(CultureInfo.CurrentCulture);
-            Maximalzeit.Text = modell.Zeitintegration.Tmax.ToString(CultureInfo.CurrentCulture);
-            Parameter.Text = modell.Zeitintegration.Parameter1.ToString(CultureInfo.CurrentCulture);
-            Gesamt.Text = modell.Zeitintegration.Anfangsbedingungen.Count.ToString(CultureInfo.CurrentCulture);
-            Anfangsbedingungen.Text = modell.Zeitintegration.VonStationär ? "stationäre Lösung" : "";
+            Zeitintervall.Text = _modell.Zeitintegration.Dt.ToString(CultureInfo.CurrentCulture);
+            Maximalzeit.Text = _modell.Zeitintegration.Tmax.ToString(CultureInfo.CurrentCulture);
+            Parameter.Text = _modell.Zeitintegration.Parameter1.ToString(CultureInfo.CurrentCulture);
         }
 
         Show();
@@ -33,23 +30,23 @@ public partial class ZeitintegrationNeu
     private void ZeitintervallBerechnen(object sender, MouseButtonEventArgs e)
     {
         var anzahl = int.Parse(Eigenlösung.Text);
-        var modellBerechnung = new Berechnung(modell);
-        modell.Eigenzustand ??= new Eigenzustände("neu", anzahl);
+        var modellBerechnung = new Berechnung(_modell);
+        _modell.Eigenzustand ??= new Eigenzustände("neu", anzahl);
 
-        if (modell.Eigenzustand.Eigenwerte == null)
+        if (_modell.Eigenzustand.Eigenwerte == null)
         {
-            if (!modell.Berechnet)
+            if (!_modell.Berechnet)
             {
                 modellBerechnung.BerechneSystemMatrix();
-                modell.Berechnet = true;
+                _modell.Berechnet = true;
             }
 
-            modell.Eigenzustand = new Eigenzustände("neu", anzahl);
+            _modell.Eigenzustand = new Eigenzustände("neu", anzahl);
             modellBerechnung.Eigenzustände();
         }
 
         var alfa = double.Parse(Parameter.Text);
-        var betaMax = modell.Eigenzustand.Eigenwerte[anzahl - 1];
+        var betaMax = _modell.Eigenzustand.Eigenwerte[anzahl - 1];
         if (alfa < 0.5)
         {
             var deltatkrit = 2 / (betaMax * (1 - 2 * alfa));
@@ -69,7 +66,7 @@ public partial class ZeitintegrationNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        modell.Zeitintegration = null;
+        _modell.Zeitintegration = null;
         Close();
     }
 
@@ -83,97 +80,59 @@ public partial class ZeitintegrationNeu
             return;
         }
 
-        if (modell.Zeitintegration == null)
+        int anzahlEigenlösungen;
+        double dt, tmax, alfa;
+        try
         {
-            int anzahlEigenlösungen;
-            try
-            {
-                anzahlEigenlösungen = int.Parse(Eigenlösung.Text, CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-                _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration");
-                return;
-            }
+            tmax = double.Parse(Maximalzeit.Text, CultureInfo.CurrentCulture);
+        }
+        catch (FormatException)
+        {
+            _ = MessageBox.Show("maximale Integrationszeit tmax hat falsches Format", "neue Zeitintegration");
+            return;
+        }
+        try
+        {
+            anzahlEigenlösungen = int.Parse(Eigenlösung.Text, CultureInfo.CurrentCulture);
+        }
+        catch (FormatException)
+        {
+            _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration");
+            return;
+        }
+        try
+        {
+            alfa = double.Parse(Parameter.Text, CultureInfo.CurrentCulture);
+        }
+        catch (FormatException)
+        {
+            _ = MessageBox.Show("Parameter alfa hat falsches Format", "neue Zeitintegration");
+            return;
+        }
+        try
+        {
+            dt = double.Parse(Zeitintervall.Text, CultureInfo.CurrentCulture);
+        }
+        catch (FormatException)
+        {
+            _ = MessageBox.Show("Zeitintervall der Integration Δt hat falsches Format", "neue Zeitintegration");
+            return;
+        }
+        
+        
 
-            double dt;
-            try
-            {
-                dt = double.Parse(Zeitintervall.Text, CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-                _ = MessageBox.Show("Zeitintervall der Integration hat falsches Format", "neue Zeitintegration");
-                return;
-            }
-
-            double tmax;
-            try
-            {
-                tmax = double.Parse(Maximalzeit.Text, CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-                _ = MessageBox.Show("maximale Integrationszeit tmax hat falsches Format", "neue Zeitintegration");
-                return;
-            }
-
-            double alfa;
-            try
-            {
-                alfa = double.Parse(Parameter.Text, CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-                _ = MessageBox.Show("Parameter alfa hat falsches Format", "neue Zeitintegration");
-                return;
-            }
-
-            modell.Eigenzustand = new Eigenzustände("eigen", anzahlEigenlösungen);
-            modell.Zeitintegration = new Zeitintegration(tmax, dt, alfa) { VonStationär = false };
-            modell.ZeitintegrationDaten = true;
+        if (_modell.Zeitintegration == null)
+        {
+            _modell.Eigenzustand = new Eigenzustände("eigen", anzahlEigenlösungen);
+            _modell.Zeitintegration = new Zeitintegration(tmax, dt, alfa) { VonStationär = false };
+            _modell.ZeitintegrationDaten = true;
         }
         else
         {
-            try
-            {
-                modell.Eigenzustand.AnzahlZustände = int.Parse(Eigenlösung.Text, CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-                _ = MessageBox.Show("Anzahl der Eigenlösungen hat falsches Eingabeformat", "neue Zeitintegration");
-                return;
-            }
-
-            try
-            {
-                modell.Zeitintegration.Dt = double.Parse(Zeitintervall.Text, CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-                _ = MessageBox.Show("Zeitintervall hat falsches Eingabeformat", "neue Zeitintegration");
-                return;
-            }
-
-            try
-            {
-                modell.Zeitintegration.Tmax = double.Parse(Maximalzeit.Text, CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-                _ = MessageBox.Show("maximale Integrationszeit hat falsches Eingabeformat", "neue Zeitintegration");
-                return;
-            }
-
-            try
-            {
-                modell.Zeitintegration.Parameter1 = double.Parse(Parameter.Text, CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-                _ = MessageBox.Show("Parameter alfa hat falsches Eingabeformat", "neue Zeitintegration");
-                return;
-            }
+            _modell.Eigenzustand.AnzahlZustände = anzahlEigenlösungen;
+            _modell.Zeitintegration.Dt = dt;
+            _modell.Zeitintegration.Tmax = tmax;
+            _modell.Zeitintegration.Parameter1 = alfa;
         }
 
         StartFenster.WärmeVisual.Darstellung.AnfangsbedingungenEntfernen();
@@ -187,44 +146,44 @@ public partial class ZeitintegrationNeu
         Close();
     }
 
-    private void AnfangsbedingungNext(object sender, MouseButtonEventArgs e)
-    {
-        aktuell++;
-        anfangstemperaturenNeu ??= new ZeitAnfangstemperaturNeu(modell);
-        if (modell.Zeitintegration.Anfangsbedingungen.Count < aktuell)
-        {
-            anfangstemperaturenNeu.KnotenId.Text = "";
-            anfangstemperaturenNeu.Anfangstemperatur.Text = "";
-            StartFenster.WärmeVisual.ZeitintegrationNeu.Anfangsbedingungen.Text =
-                aktuell.ToString(CultureInfo.CurrentCulture);
-        }
-        else
-        {
-            var knotenwerte = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[aktuell - 1];
-            StartFenster.WärmeVisual.ZeitintegrationNeu.Anfangsbedingungen.Text =
-                aktuell.ToString(CultureInfo.CurrentCulture);
-            StartFenster.WärmeVisual.ZeitintegrationNeu.Show();
-            if (modell.Zeitintegration.VonStationär)
-            {
-                anfangstemperaturenNeu.StationäreLösung.IsChecked = true;
-            }
+    //private void AnfangsbedingungNext(object sender, MouseButtonEventArgs e)
+    //{
+    //    aktuell++;
+    //    anfangstemperaturenNeu ??= new ZeitAnfangstemperaturNeu(_modell);
+    //    if (_modell.Zeitintegration.Anfangsbedingungen.Count < aktuell)
+    //    {
+    //        anfangstemperaturenNeu.KnotenId.Text = "";
+    //        anfangstemperaturenNeu.Anfangstemperatur.Text = "";
+    //        StartFenster.WärmeVisual.ZeitintegrationNeu.Anfangsbedingungen.Text =
+    //            aktuell.ToString(CultureInfo.CurrentCulture);
+    //    }
+    //    else
+    //    {
+    //        var knotenwerte = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[aktuell - 1];
+    //        StartFenster.WärmeVisual.ZeitintegrationNeu.Anfangsbedingungen.Text =
+    //            aktuell.ToString(CultureInfo.CurrentCulture);
+    //        StartFenster.WärmeVisual.ZeitintegrationNeu.Show();
+    //        if (_modell.Zeitintegration.VonStationär)
+    //        {
+    //            anfangstemperaturenNeu.StationäreLösung.IsChecked = true;
+    //        }
 
-            else if (knotenwerte.KnotenId == "alle")
-            {
-                anfangstemperaturenNeu.KnotenId.Text = "alle";
-                anfangstemperaturenNeu.Anfangstemperatur.Text =
-                    knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
-            }
-            else
-            {
-                anfangstemperaturenNeu.KnotenId.Text = knotenwerte.KnotenId;
-                anfangstemperaturenNeu.Anfangstemperatur.Text =
-                    knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
-                var anf = aktuell.ToString("D");
-                StartFenster.WärmeVisual.ZeitintegrationNeu.Anfangsbedingungen.Text = anf;
-                StartFenster.WärmeVisual.Darstellung.AnfangsbedingungenZeichnen(knotenwerte.KnotenId,
-                    knotenwerte.Werte[0], anf);
-            }
-        }
-    }
+    //        else if (knotenwerte.KnotenId == "alle")
+    //        {
+    //            anfangstemperaturenNeu.KnotenId.Text = "alle";
+    //            anfangstemperaturenNeu.Anfangstemperatur.Text =
+    //                knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
+    //        }
+    //        else
+    //        {
+    //            anfangstemperaturenNeu.KnotenId.Text = knotenwerte.KnotenId;
+    //            anfangstemperaturenNeu.Anfangstemperatur.Text =
+    //                knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
+    //            var anf = aktuell.ToString("D");
+    //            StartFenster.WärmeVisual.ZeitintegrationNeu.Anfangsbedingungen.Text = anf;
+    //            StartFenster.WärmeVisual.Darstellung.AnfangsbedingungenZeichnen(knotenwerte.KnotenId,
+    //                knotenwerte.Werte[0], anf);
+    //        }
+    //    }
+    //}
 }

@@ -122,7 +122,7 @@ public partial class DynamikDatenAnzeigen
     {
         if (AnfangsbedingungenGrid.SelectedCells.Count <= 0) return;
         var cellInfo = AnfangsbedingungenGrid.SelectedCells[0];
-        removeIndex = modell.Zeitintegration.Anfangsbedingungen.IndexOf(cellInfo.Item);
+        removeIndex = modell.Zeitintegration.Anfangsbedingungen.IndexOf((Knotenwerte)cellInfo.Item);
     }
 
     // ************************* Knotenlasten *********************************

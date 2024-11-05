@@ -16,6 +16,6 @@ public class Zeitintegration : AbstraktZeitintegration
         Tmax = tmax;
         Dt = dt;
         Parameter1 = alfa;
-        Anfangsbedingungen = new List<object>();
+        Anfangsbedingungen = [];
     }
 }

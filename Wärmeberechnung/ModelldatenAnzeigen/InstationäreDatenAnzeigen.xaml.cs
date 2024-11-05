@@ -94,7 +94,7 @@ public partial class InstationäreDatenAnzeigen
     }
 
     // ************************* Anfangsbedingungen *********************************
-    private void ToggleStationaer(object sender, RoutedEventArgs e)
+    private void ToggleStationär(object sender, RoutedEventArgs e)
     {
         if (Alle.IsChecked != null && (bool)Alle.IsChecked)
         {
@@ -116,7 +116,7 @@ public partial class InstationäreDatenAnzeigen
     }
 
     //UnloadingRow
-    private void AnfangstemperaturZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void AnfangstemperaturZeileLöschen(object sender, DataGridRowEventArgs e)
     {
         modell.Zeitintegration.Anfangsbedingungen.RemoveAt(removeIndex);
         modell.Berechnet = false;
@@ -131,7 +131,7 @@ public partial class InstationäreDatenAnzeigen
     {
         if (AnfangstemperaturenGrid.SelectedCells.Count <= 0) return;
         var cellInfo = AnfangstemperaturenGrid.SelectedCells[0];
-        removeIndex = modell.Zeitintegration.Anfangsbedingungen.IndexOf(cellInfo.Item);
+        removeIndex = modell.Zeitintegration.Anfangsbedingungen.IndexOf((Knotenwerte)cellInfo.Item);
     }
 
     // ************************* Zeitabhängige Randbedingungen ***********************
@@ -176,7 +176,7 @@ public partial class InstationäreDatenAnzeigen
     }
 
     //UnloadingRow
-    private void RandDateiZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void RandDateiZeileLöschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeRandbedingung.Remove(removeKey);
@@ -186,7 +186,7 @@ public partial class InstationäreDatenAnzeigen
         wärme.Show();
     }
 
-    private void RandKonstantZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void RandKonstantZeileLöschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeRandbedingung.Remove(removeKey);
@@ -196,7 +196,7 @@ public partial class InstationäreDatenAnzeigen
         wärme.Show();
     }
 
-    private void RandHarmonischZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void RandHarmonischZeileLöschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeRandbedingung.Remove(removeKey);
@@ -206,7 +206,7 @@ public partial class InstationäreDatenAnzeigen
         wärme.Show();
     }
 
-    private void RandLinearZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void RandLinearZeileLöschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeRandbedingung.Remove(removeKey);
@@ -250,7 +250,7 @@ public partial class InstationäreDatenAnzeigen
     }
 
     //UnloadingRow
-    private void KnotenDateiZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenDateiZeileLöschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
@@ -260,7 +260,7 @@ public partial class InstationäreDatenAnzeigen
         wärme.Show();
     }
 
-    private void KnotenHarmonischZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenHarmonischZeileLöschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
@@ -270,7 +270,7 @@ public partial class InstationäreDatenAnzeigen
         wärme.Show();
     }
 
-    private void KnotenLinearZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenLinearZeileLöschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
@@ -301,7 +301,7 @@ public partial class InstationäreDatenAnzeigen
     }
 
     //UnloadingRow
-    private void ElementtemperaturZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void ElementtemperaturZeileLöschen(object sender, DataGridRowEventArgs e)
     {
         if (removeKey == null) return;
         modell.ZeitabhängigeElementLasten.Remove(removeKey);

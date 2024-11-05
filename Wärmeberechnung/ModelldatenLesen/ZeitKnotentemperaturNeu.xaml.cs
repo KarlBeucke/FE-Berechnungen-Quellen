@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
