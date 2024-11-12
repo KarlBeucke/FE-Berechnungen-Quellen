@@ -1,5 +1,4 @@
-﻿using FEBibliothek.Modell;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -58,7 +57,7 @@ public class Darstellung
     public List<Shape> TemperaturElemente { get; }
     public List<Shape> WärmeVektoren { get; }
     public List<TextBlock> RandKnoten { get; }
-    public List<TextBlock> Anfangsbedingungen { get; }
+    private List<TextBlock> Anfangsbedingungen { get; }
 
     public void FestlegungAuflösung()
     {
@@ -95,17 +94,25 @@ public class Darstellung
         }
     }
 
+    public void AlleKnotenZeichnen()
+    {
+        foreach (var item in _modell.Knoten)
+        {
+            KnotenZeigen(item.Value, Brushes.Black, 1);
+        }
+    }
     public Shape KnotenZeigen(Knoten feKnoten, Brush farbe, double wichte)
     {
         var punkt = TransformKnoten(feKnoten, Auflösung, MaxY);
 
+        // Geometrie wird einer GeometryGroup hinzugefügt, Daten der GeometryGroup einem Path übergeben
+        // der Path wird auf einem Canvas dargestellt
         var knotenZeigen = new GeometryGroup();
-        knotenZeigen.Children.Add(
-            new EllipseGeometry(new Point(punkt.X, punkt.Y), 20, 20)
-        );
+        knotenZeigen.Children.Add(new EllipseGeometry(new Point(punkt.X, punkt.Y), 3, 3));
         Shape knotenPath = new Path
         {
             Stroke = farbe,
+            Fill = farbe,
             StrokeThickness = wichte,
             Data = knotenZeigen
         };
@@ -137,28 +144,21 @@ public class Darstellung
 
     public void AlleElementeZeichnen()
     {
-        foreach (var item in _modell.Elemente) ElementZeichnen(item.Value, Black, 2);
+        foreach (var item in _modell.Elemente) ElementZeichnen(item.Value);
+        //for (var i = 0; i < _modell.Elemente.Count; i++)
+        //{
+        //    ElementZeichnen(_modell.Elemente.ElementAt(i).Value, Black, 2);
+        //}
     }
 
-    private void ElementZeichnen(AbstraktElement element, Brush farbe, double wichte)
+    private void ElementZeichnen(AbstraktElement element)
     {
-        var pathGeometry = ElementUmrisse(element);
-        Shape elementPath = new Path
-        {
-            Name = element.ElementId,
-            Stroke = farbe,
-            StrokeThickness = wichte,
-            Data = pathGeometry
-        };
-        SetLeft(elementPath, RandLinks);
-        SetTop(elementPath, RandOben);
-        _visual.Children.Add(elementPath);
+        _ = ElementUmrandung(element);
     }
 
-    public Shape ElementFillZeichnen(AbstraktElement element, Brush umrissFarbe, Color füllFarbe, double transparenz,
-        double wichte)
+    public Shape ElementFillZeichnen(AbstraktElement element, Brush umrissFarbe, Color füllFarbe, double transparenz, double wichte)
     {
-        var pathGeometry = ElementUmrisse(element);
+        var pathGeometry = ElementUmrandung(element);
         var füllung = new SolidColorBrush(füllFarbe) { Opacity = .2 };
 
         Shape elementPath = new Path
@@ -175,31 +175,50 @@ public class Darstellung
         return elementPath;
     }
 
-    private PathGeometry ElementUmrisse(AbstraktElement element)
+    private PathGeometry ElementUmrandung(AbstraktElement element)
     {
         var pathFigure = new PathFigure();
         var pathGeometry = new PathGeometry();
 
+        // Elementkanten werden in einer pathfigure gesammelt
         if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out knoten))
         {
             throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
         }
-
         var startPoint = TransformKnoten(knoten, Auflösung, MaxY);
         pathFigure.StartPoint = startPoint;
-        for (var i = 1; i < element.KnotenProElement; i++)
+
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[1], out knoten))
+        {
+            throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
+        }
+        var nextPoint = TransformKnoten(knoten, Auflösung, MaxY);
+        pathFigure.Segments.Add(new LineSegment(nextPoint, true));
+
+        // Elemente mit mehr als 2 Knoten werden geschlossen
+        for (var i = 2; i < element.KnotenProElement; i++)
         {
             if (!_modell.Knoten.TryGetValue(element.KnotenIds[i], out knoten))
             {
                 throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[i] + "' nicht im Modell gefunden");
             }
-
-            var nextPoint = TransformKnoten(knoten, Auflösung, MaxY);
+            nextPoint = TransformKnoten(knoten, Auflösung, MaxY);
             pathFigure.Segments.Add(new LineSegment(nextPoint, true));
         }
+        if(element.KnotenProElement >2) pathFigure.IsClosed = true;
 
-        pathFigure.IsClosed = true;
+        // komplette Elementumrandung pathFigure wird einer pathGeometry hinzugefügt
+        // pathGeometry wird auf Canvas dargestellt
         pathGeometry.Figures.Add(pathFigure);
+        Shape elementPath = new Path
+        {
+            Stroke = Brushes.Black,
+            StrokeThickness = 1,
+            Data = pathGeometry
+        };
+        SetLeft(elementPath, RandLinks);
+        SetTop(elementPath, RandOben);
+        _visual.Children.Add(elementPath);
         return pathGeometry;
     }
 
@@ -265,7 +284,7 @@ public class Darstellung
                 throw new ModellAusnahme("\nElement '" + item.Value.ElementId + "' für Elementlast nicht im Modell gefunden");
             }
 
-            var pathGeometry = ElementUmrisse(element);
+            var pathGeometry = ElementUmrandung(element);
             var füllung = new SolidColorBrush(Colors.Red) { Opacity = .2 };
 
             Shape elementPath = new Path
@@ -310,7 +329,7 @@ public class Darstellung
                 throw new ModellAusnahme("\nElement '" + item.Value.ElementId + "' für Elementlast nicht im Modell gefunden");
             }
 
-            var pathGeometry = ElementUmrisse(element);
+            var pathGeometry = ElementUmrandung(element);
             var füllung = new SolidColorBrush(Colors.Violet) { Opacity = .2 };
 
             Shape elementPath = new Path
@@ -416,6 +435,8 @@ public class Darstellung
             SetTop(randbedingung, fensterKnoten.Y + RandOben + randOffset);
             SetLeft(randbedingung, fensterKnoten.X + RandLinks);
             _visual.Children.Add(randbedingung);
+
+            randbedingung.Text = string.Empty;
         }
 
         // zeitabhängige Randknoten
@@ -475,13 +496,12 @@ public class Darstellung
     {
         if (_modell.Zeitintegration == null) return;
  
-        const int anfangOffset = 15;
+        const int anfangOffset = 30;
         // zeichne Wert einer jeden Anfangsbedingung als Text an Knoten
 
         foreach (var item in _modell.Zeitintegration.Anfangsbedingungen)
         {
-            var knotenwerte = (Knotenwerte)item;
-            var knotenId = knotenwerte.KnotenId;
+            var knotenId = item.KnotenId;
             if (knotenId == "alle") continue;
 
             if (!_modell.Knoten.TryGetValue(knotenId, out knoten))
@@ -496,7 +516,7 @@ public class Darstellung
                 Name = knotenId,
                 Uid = "A",
                 FontSize = 12,
-                Text = knotenwerte.Werte[0].ToString("N2"),
+                Text = "A"+item.Werte[0].ToString("N2"),
                 Foreground = Black,
                 Background = Turquoise
             };
@@ -555,7 +575,7 @@ public class Darstellung
         foreach (var item in _modell.Elemente)
         {
             aktElement = item.Value;
-            var pathGeometry = ElementUmrisse((Abstrakt2D)aktElement);
+            var pathGeometry = ElementUmrandung((Abstrakt2D)aktElement);
             //var elementTemperature = aktElement.KnotenIds.Where(knotenId
             //    => _modell.Knoten.TryGetValue(knotenId, out knoten)).Sum(knotenId => knoten.Knotenfreiheitsgrade[0]);
             double elementTemperatur = 0;

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Wärmemodell visualisieren" Height="800" Width="1200">
+        Title="Wärmemodell visualisieren" Height="900" Width="1300">
     <ScrollViewer HorizontalScrollBarVisibility="Auto" Margin="0,0,0,0">
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid Row="0" Width="1200" Height="40">
@@ -174,9 +174,9 @@
             </Grid>
 
             <Grid Row="1">
-                <Canvas x:Name="VisualWärmeModell" Height="740" Width="1200" Grid.ColumnSpan="4"
+                <Canvas x:Name="VisualWärmeModell"
                         ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                        MouseLeftButtonDown="OnMouseLeftButtonDown">
+                        MouseLeftButtonDown="OnMouseLeftButtonDown" Margin="0,0,-50,-800">
                     <Popup x:Name="MyPopup" Placement="MousePoint">
                         <TextBlock x:Name="MyPopupText" Background="LightBlue" Foreground="Blue" Padding="10" />
                     </Popup>

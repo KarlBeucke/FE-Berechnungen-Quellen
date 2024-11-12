@@ -20,7 +20,7 @@
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,-62,37" Grid.RowSpan="2">
-            definier Werte einer neuen / edit Werte einer vorhandenen Last
+            definiere Werte einer neuen / edit Werte einer vorhandenen Last
         </Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Linienlast ID:</Label>

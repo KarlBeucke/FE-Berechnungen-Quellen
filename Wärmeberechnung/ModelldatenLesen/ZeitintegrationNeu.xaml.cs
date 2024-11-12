@@ -8,13 +8,29 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 public partial class ZeitintegrationNeu
 {
     private readonly FeModell _modell;
-    private ZeitAnfangstemperaturNeu anfangstemperaturenNeu;
+    private readonly ZeitAnfangstemperaturNeu _anfangstemperaturenNeu;
 
     public ZeitintegrationNeu(FeModell modell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
         InitializeComponent();
         _modell = modell;
+        if (_modell.Eigenzustand != null)
+            Eigenlösung.Text = modell.Eigenzustand.AnzahlZustände.ToString(CultureInfo.CurrentCulture);
+        if (_modell.Zeitintegration != null)
+        {
+            Zeitintervall.Text = _modell.Zeitintegration.Dt.ToString(CultureInfo.CurrentCulture);
+            Maximalzeit.Text = _modell.Zeitintegration.Tmax.ToString(CultureInfo.CurrentCulture);
+            Parameter.Text = _modell.Zeitintegration.Parameter1.ToString(CultureInfo.CurrentCulture);
+        }
+        Show();
+    }
+    public ZeitintegrationNeu(FeModell modell, ZeitAnfangstemperaturNeu anfangstemperaturenNeu)
+    {
+        Language = XmlLanguage.GetLanguage("de-DE");
+        InitializeComponent();
+        _modell = modell;
+        _anfangstemperaturenNeu = anfangstemperaturenNeu;
         if (_modell.Eigenzustand != null)
             Eigenlösung.Text = modell.Eigenzustand.AnzahlZustände.ToString(CultureInfo.CurrentCulture);
         if (_modell.Zeitintegration != null)
@@ -136,24 +152,24 @@ public partial class ZeitintegrationNeu
         }
 
         StartFenster.WärmeVisual.Darstellung.AnfangsbedingungenEntfernen();
-        anfangstemperaturenNeu?.Close();
+        _anfangstemperaturenNeu?.Close();
         Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        anfangstemperaturenNeu?.Close();
+        _anfangstemperaturenNeu?.Close();
         Close();
     }
 
     //private void AnfangsbedingungNext(object sender, MouseButtonEventArgs e)
     //{
     //    aktuell++;
-    //    anfangstemperaturenNeu ??= new ZeitAnfangstemperaturNeu(_modell);
+    //    _anfangstemperaturenNeu ??= new ZeitAnfangstemperaturNeu(_modell);
     //    if (_modell.Zeitintegration.Anfangsbedingungen.Count < aktuell)
     //    {
-    //        anfangstemperaturenNeu.KnotenId.Text = "";
-    //        anfangstemperaturenNeu.Anfangstemperatur.Text = "";
+    //        _anfangstemperaturenNeu.KnotenId.Text = "";
+    //        _anfangstemperaturenNeu.Anfangstemperatur.Text = "";
     //        StartFenster.WärmeVisual.ZeitintegrationNeu.Anfangsbedingungen.Text =
     //            aktuell.ToString(CultureInfo.CurrentCulture);
     //    }
@@ -165,19 +181,19 @@ public partial class ZeitintegrationNeu
     //        StartFenster.WärmeVisual.ZeitintegrationNeu.Show();
     //        if (_modell.Zeitintegration.VonStationär)
     //        {
-    //            anfangstemperaturenNeu.StationäreLösung.IsChecked = true;
+    //            _anfangstemperaturenNeu.StationäreLösung.IsChecked = true;
     //        }
 
     //        else if (knotenwerte.KnotenId == "alle")
     //        {
-    //            anfangstemperaturenNeu.KnotenId.Text = "alle";
-    //            anfangstemperaturenNeu.Anfangstemperatur.Text =
+    //            _anfangstemperaturenNeu.KnotenId.Text = "alle";
+    //            _anfangstemperaturenNeu.Anfangstemperatur.Text =
     //                knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
     //        }
     //        else
     //        {
-    //            anfangstemperaturenNeu.KnotenId.Text = knotenwerte.KnotenId;
-    //            anfangstemperaturenNeu.Anfangstemperatur.Text =
+    //            _anfangstemperaturenNeu.KnotenId.Text = knotenwerte.KnotenId;
+    //            _anfangstemperaturenNeu.Anfangstemperatur.Text =
     //                knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
     //            var anf = aktuell.ToString("D");
     //            StartFenster.WärmeVisual.ZeitintegrationNeu.Anfangsbedingungen.Text = anf;
