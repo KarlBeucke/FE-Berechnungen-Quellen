@@ -1,16 +1,17 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 using System.Globalization;
 using System.Text;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
-public partial class ZeitKnotentemperaturNeu
+public partial class ZeitKnotenlastNeu
 {
     private readonly FeModell _modell;
-    private string lastId;
-    private AbstraktZeitabhängigeKnotenlast vorhandeneKnotenlast;
+    private string _lastId;
+    private AbstraktZeitabhängigeKnotenlast _vorhandeneKnotenlast;
 
-    public ZeitKnotentemperaturNeu(FeModell modell)
+    public ZeitKnotenlastNeu(FeModell modell)
     {
         InitializeComponent();
         _modell = modell;
@@ -19,40 +20,40 @@ public partial class ZeitKnotentemperaturNeu
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
-        lastId = LastId.Text;
-        if (lastId == "")
+        _lastId = LastId.Text;
+        if (_lastId == "")
         {
             _ = MessageBox.Show("zeitabhängige Knotenlast Id muss definiert sein", "neue zeitabhängige Knotenlast");
             return;
         }
 
         // vorhandene Knotenlast
-        if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(lastId, out vorhandeneKnotenlast))
+        if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(_lastId, out _vorhandeneKnotenlast))
         {
             if (KnotenId.Text.Length > 0)
-                vorhandeneKnotenlast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
+                _vorhandeneKnotenlast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
 
             try
             {
                 if (Datei.IsChecked == true)
                 {
-                    vorhandeneKnotenlast.VariationsTyp = 0;
+                    _vorhandeneKnotenlast.VariationsTyp = 0;
                 }
                 else if (Konstant.Text.Length > 0)
                 {
-                    vorhandeneKnotenlast.VariationsTyp = 1;
-                    vorhandeneKnotenlast.KonstanteTemperatur = double.Parse(Konstant.Text);
+                    _vorhandeneKnotenlast.VariationsTyp = 1;
+                    _vorhandeneKnotenlast.KonstanteTemperatur = double.Parse(Konstant.Text);
                 }
                 else if (Amplitude.Text.Length > 0 && Frequenz.Text.Length > 0 && Winkel.Text.Length > 0)
                 {
-                    vorhandeneKnotenlast.VariationsTyp = 2;
-                    vorhandeneKnotenlast.Amplitude = double.Parse(Amplitude.Text);
-                    vorhandeneKnotenlast.Frequenz = double.Parse(Frequenz.Text);
-                    vorhandeneKnotenlast.PhasenWinkel = double.Parse(Winkel.Text);
+                    _vorhandeneKnotenlast.VariationsTyp = 2;
+                    _vorhandeneKnotenlast.Amplitude = double.Parse(Amplitude.Text);
+                    _vorhandeneKnotenlast.Frequenz = double.Parse(Frequenz.Text);
+                    _vorhandeneKnotenlast.PhasenWinkel = double.Parse(Winkel.Text);
                 }
                 else if (Linear.Text.Length > 0)
                 {
-                    vorhandeneKnotenlast.VariationsTyp = 3;
+                    _vorhandeneKnotenlast.VariationsTyp = 3;
                     var delimiters = new[] { '\t' };
                     var teilStrings = Linear.Text.Split(delimiters);
                     var k = 0;
@@ -66,7 +67,7 @@ public partial class ZeitKnotentemperaturNeu
                         k++;
                     }
 
-                    vorhandeneKnotenlast.Intervall = intervall;
+                    _vorhandeneKnotenlast.Intervall = intervall;
                 }
             }
             catch (FormatException)
@@ -79,32 +80,32 @@ public partial class ZeitKnotentemperaturNeu
         else
         {
             var knotenId = "";
-            ZeitabhängigeKnotenLast knotenlast = null;
+            ZeitabhängigeKnotenLast zeitKnotenlast = null;
             if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
             if (Datei.IsChecked == true)
             {
-                knotenlast = new ZeitabhängigeKnotenLast(knotenId, true)
+                zeitKnotenlast = new ZeitabhängigeKnotenLast(knotenId, true)
                 {
-                    LastId = lastId,
+                    LastId = _lastId,
                     VariationsTyp = 0
                 };
             }
             else if (Konstant.Text.Length > 0)
             {
-                knotenlast = new ZeitabhängigeKnotenLast(knotenId, double.Parse(Konstant.Text))
+                zeitKnotenlast = new ZeitabhängigeKnotenLast(knotenId, double.Parse(Konstant.Text))
                 {
-                    LastId = lastId,
+                    LastId = _lastId,
                     VariationsTyp = 1
                 };
             }
             else if (Amplitude.Text.Length > 0 && Frequenz.Text.Length > 0 && Winkel.Text.Length > 0)
             {
                 var amplitude = double.Parse(Amplitude.Text);
-                var frequenz = 2 * Math.PI * double.Parse(Frequenz.Text);
-                var winkel = Math.PI / 180 * double.Parse(Winkel.Text);
-                knotenlast = new ZeitabhängigeKnotenLast(knotenId, amplitude, frequenz, winkel)
+                var frequenz = double.Parse(Frequenz.Text);
+                var winkel = double.Parse(Winkel.Text);
+                zeitKnotenlast = new ZeitabhängigeKnotenLast(knotenId, amplitude, frequenz, winkel)
                 {
-                    LastId = lastId,
+                    LastId = _lastId,
                     VariationsTyp = 2
                 };
             }
@@ -123,14 +124,17 @@ public partial class ZeitKnotentemperaturNeu
                     k++;
                 }
 
-                knotenlast = new ZeitabhängigeKnotenLast(knotenId, intervall) { LastId = lastId, VariationsTyp = 3 };
+                zeitKnotenlast = new ZeitabhängigeKnotenLast(knotenId, intervall) { LastId = _lastId, VariationsTyp = 3 };
             }
 
-            _modell.ZeitabhängigeKnotenLasten.Add(lastId, knotenlast);
+            _modell.ZeitabhängigeKnotenLasten.Add(_lastId, zeitKnotenlast);
+            StartFenster.WärmeVisual.IsZeitKnotenlast = true;
         }
 
         Close();
         StartFenster.WärmeVisual.Close();
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -144,11 +148,8 @@ public partial class ZeitKnotentemperaturNeu
         _modell.ZeitabhängigeKnotenLasten.Remove(LastId.Text);
         Close();
         StartFenster.WärmeVisual.Close();
-
-        if (!_modell.ZeitabhängigeKnotenLasten.Keys.Contains(LastId.Text)) return;
-        _modell.ZeitabhängigeKnotenLasten.Remove(LastId.Text);
-        Close();
-        StartFenster.WärmeVisual.Close();
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
     }
 
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
@@ -167,25 +168,25 @@ public partial class ZeitKnotentemperaturNeu
         }
 
         // vorhandene zeitabhängige Knotenlastdefinitionen
-        if (!_modell.ZeitabhängigeKnotenLasten.TryGetValue(LastId.Text, out vorhandeneKnotenlast)) return;
-        lastId = vorhandeneKnotenlast.LastId;
-        KnotenId.Text = vorhandeneKnotenlast.KnotenId;
-        switch (vorhandeneKnotenlast.VariationsTyp)
+        if (!_modell.ZeitabhängigeKnotenLasten.TryGetValue(LastId.Text, out _vorhandeneKnotenlast)) return;
+        _lastId = _vorhandeneKnotenlast.LastId;
+        KnotenId.Text = _vorhandeneKnotenlast.KnotenId;
+        switch (_vorhandeneKnotenlast.VariationsTyp)
         {
             case 0:
                 Datei.IsChecked = true;
                 break;
             case 1:
-                Konstant.Text = vorhandeneKnotenlast.KonstanteTemperatur.ToString("G2");
+                Konstant.Text = _vorhandeneKnotenlast.KonstanteTemperatur.ToString("G2");
                 break;
             case 2:
-                Amplitude.Text = vorhandeneKnotenlast.Amplitude.ToString("G2");
-                Frequenz.Text = vorhandeneKnotenlast.Frequenz.ToString("G2");
-                Winkel.Text = vorhandeneKnotenlast.PhasenWinkel.ToString("G2");
+                Amplitude.Text = _vorhandeneKnotenlast.Amplitude.ToString("G2");
+                Frequenz.Text = _vorhandeneKnotenlast.Frequenz.ToString("G2");
+                Winkel.Text = _vorhandeneKnotenlast.PhasenWinkel.ToString("G2");
                 break;
             case 3:
             {
-                var intervall = vorhandeneKnotenlast.Intervall;
+                var intervall = _vorhandeneKnotenlast.Intervall;
                 var sb = new StringBuilder();
                 sb.Append(intervall[0].ToString("G2") + ";");
                 sb.Append(intervall[1].ToString("G2"));

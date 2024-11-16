@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using static System.Globalization.CultureInfo;
@@ -16,16 +15,16 @@ public class Darstellung
     private const double MaxScreenLength = 40;
     private readonly FeModell _modell;
     private readonly Canvas _visual;
-    private AbstraktElement aktElement;
+    private AbstraktElement _aktElement;
     public double Auflösung;
-    private double auflösungH, auflösungV;
-    private Knoten knoten;
-    private double maxTemp;
-    private double maxX;
+    private double _auflösungH, _auflösungV;
+    private Knoten _knoten;
+    private double _maxTemp;
+    private double _maxX;
     public double MaxY;
-    private double minTemp = 100;
-    private double screenH, screenV;
-    private double temp;
+    private double _minTemp = 100;
+    private double _screenH, _screenV;
+    private double _temp;
     public int Zeitschritt;
 
     public Darstellung(FeModell feModell, Canvas visual)
@@ -62,18 +61,18 @@ public class Darstellung
     public void FestlegungAuflösung()
     {
         const int rand = 100;
-        screenH = _visual.ActualWidth;
-        screenV = _visual.ActualHeight;
+        _screenH = _visual.ActualWidth;
+        _screenV = _visual.ActualHeight;
 
         foreach (var item in _modell.Knoten)
         {
-            knoten = item.Value;
-            if (knoten.Koordinaten[0] > maxX) maxX = knoten.Koordinaten[0];
-            if (knoten.Koordinaten[1] > MaxY) MaxY = knoten.Koordinaten[1];
+            _knoten = item.Value;
+            if (_knoten.Koordinaten[0] > _maxX) _maxX = _knoten.Koordinaten[0];
+            if (_knoten.Koordinaten[1] > MaxY) MaxY = _knoten.Koordinaten[1];
         }
 
-        if (screenH / maxX < screenV / MaxY) Auflösung = (screenH - rand) / maxX;
-        else Auflösung = (screenV - rand) / MaxY;
+        if (_screenH / _maxX < _screenV / MaxY) Auflösung = (_screenH - rand) / _maxX;
+        else Auflösung = (_screenV - rand) / MaxY;
     }
 
     public void KnotenTexte()
@@ -181,28 +180,28 @@ public class Darstellung
         var pathGeometry = new PathGeometry();
 
         // Elementkanten werden in einer pathfigure gesammelt
-        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out knoten))
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[0], out _knoten))
         {
             throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[0] + "' nicht im Modell gefunden");
         }
-        var startPoint = TransformKnoten(knoten, Auflösung, MaxY);
+        var startPoint = TransformKnoten(_knoten, Auflösung, MaxY);
         pathFigure.StartPoint = startPoint;
 
-        if (!_modell.Knoten.TryGetValue(element.KnotenIds[1], out knoten))
+        if (!_modell.Knoten.TryGetValue(element.KnotenIds[1], out _knoten))
         {
             throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[1] + "' nicht im Modell gefunden");
         }
-        var nextPoint = TransformKnoten(knoten, Auflösung, MaxY);
+        var nextPoint = TransformKnoten(_knoten, Auflösung, MaxY);
         pathFigure.Segments.Add(new LineSegment(nextPoint, true));
 
         // Elemente mit mehr als 2 Knoten werden geschlossen
         for (var i = 2; i < element.KnotenProElement; i++)
         {
-            if (!_modell.Knoten.TryGetValue(element.KnotenIds[i], out knoten))
+            if (!_modell.Knoten.TryGetValue(element.KnotenIds[i], out _knoten))
             {
                 throw new ModellAusnahme("\nElement Knoten '" + element.KnotenIds[i] + "' nicht im Modell gefunden");
             }
-            nextPoint = TransformKnoten(knoten, Auflösung, MaxY);
+            nextPoint = TransformKnoten(_knoten, Auflösung, MaxY);
             pathFigure.Segments.Add(new LineSegment(nextPoint, true));
         }
         if(element.KnotenProElement >2) pathFigure.IsClosed = true;
@@ -229,12 +228,12 @@ public class Darstellung
         {
             var knotenId = item.Value.KnotenId;
             var lastWert = item.Value.Lastwerte[0];
-            if (!_modell.Knoten.TryGetValue(knotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(knotenId, out _knoten))
             {
                 throw new ModellAusnahme("\nElementlast Knoten '" + item.Value.KnotenId + "' nicht im Modell gefunden");
             }
 
-            var lastPunkt = TransformKnoten(knoten, Auflösung, MaxY);
+            var lastPunkt = TransformKnoten(_knoten, Auflösung, MaxY);
             var knotenLast = new TextBlock
             {
                 FontSize = 12,
@@ -260,16 +259,16 @@ public class Darstellung
                                            Text = item.Key,
                                            Foreground = DarkViolet
                                        }
-                                       where _modell.Knoten.TryGetValue(item.Value.KnotenId, out knoten)
-                                       where knoten != null
+                                       where _modell.Knoten.TryGetValue(item.Value.KnotenId, out _knoten)
+                                       where _knoten != null
                                        select zeitKnotenlast)
         {
-            if (knoten == null)
+            if (_knoten == null)
             {
                 throw new ModellAusnahme("\nKnoten für zeitabhängige Knotenlast nicht im Modell gefunden");
             }
-            SetTop(zeitKnotenlast, (-knoten.Koordinaten[1] + MaxY) * Auflösung + RandOben + lastOffset);
-            SetLeft(zeitKnotenlast, knoten.Koordinaten[0] * Auflösung + RandLinks);
+            SetTop(zeitKnotenlast, (-_knoten.Koordinaten[1] + MaxY) * Auflösung + RandOben + lastOffset);
+            SetLeft(zeitKnotenlast, _knoten.Koordinaten[0] * Auflösung + RandLinks);
             _visual.Children.Add(zeitKnotenlast);
             LastKnoten.Add(zeitKnotenlast);
         }
@@ -375,19 +374,19 @@ public class Darstellung
             var pathFigure = new PathFigure();
             var pathGeometry = new PathGeometry();
 
-            if (!_modell.Knoten.TryGetValue(linienlast.StartKnotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(linienlast.StartKnotenId, out _knoten))
             {
                 throw new ModellAusnahme("\nStartknoten '" + linienlast.StartKnotenId + "' für Linienlast nicht im Modell gefunden");
             }
 
-            var startPoint = TransformKnoten(knoten, Auflösung, MaxY);
+            var startPoint = TransformKnoten(_knoten, Auflösung, MaxY);
             pathFigure.StartPoint = startPoint;
-            if (!_modell.Knoten.TryGetValue(linienlast.EndKnotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(linienlast.EndKnotenId, out _knoten))
             {
                 throw new ModellAusnahme("\nEndknoten '" + linienlast.EndKnotenId + "' für Linienlast nicht im Modell gefunden");
             }
 
-            var endPoint = TransformKnoten(knoten, Auflösung, MaxY);
+            var endPoint = TransformKnoten(_knoten, Auflösung, MaxY);
             pathFigure.StartPoint = startPoint;
             pathFigure.Segments.Add(new LineSegment(endPoint, true));
 
@@ -414,12 +413,12 @@ public class Darstellung
         foreach (var item in _modell.Randbedingungen)
         {
             var knotenId = item.Value.KnotenId;
-            if (!_modell.Knoten.TryGetValue(knotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(knotenId, out _knoten))
             {
                 throw new ModellAusnahme("\nKnoten '" + item.Value.KnotenId + "' für Randbedingung nicht im Modell gefunden");
             }
 
-            var fensterKnoten = TransformKnoten(knoten, Auflösung, MaxY);
+            var fensterKnoten = TransformKnoten(_knoten, Auflösung, MaxY);
 
             var randWert = item.Value.Vordefiniert[0];
             var randbedingung = new TextBlock
@@ -443,19 +442,19 @@ public class Darstellung
         foreach (var item in _modell.ZeitabhängigeRandbedingung)
         {
             var knotenId = item.Value.KnotenId;
-            if (!_modell.Knoten.TryGetValue(knotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(knotenId, out _knoten))
             {
                 throw new ModellAusnahme("\nRandknoten '" + item.Value.KnotenId + "' nicht im Modell gefunden");
             }
 
-            var fensterKnoten = TransformKnoten(knoten, Auflösung, MaxY);
+            var fensterKnoten = TransformKnoten(_knoten, Auflösung, MaxY);
 
             var randbedingung = new TextBlock
             {
                 Name = "ZeitRandbedingung",
                 Uid = item.Value.RandbedingungId,
                 FontSize = 12,
-                Text = item.Value.RandbedingungId,
+                Text = item.Key,
                 Foreground = DarkGreen,
                 Background = LawnGreen
             };
@@ -470,12 +469,12 @@ public class Darstellung
     {
         foreach (var item in _modell.Knoten)
         {
-            knoten = item.Value;
-            var temperatur = knoten.Knotenfreiheitsgrade[0].ToString("N2");
-            temp = knoten.Knotenfreiheitsgrade[0];
-            if (temp > maxTemp) maxTemp = temp;
-            if (temp < minTemp) minTemp = temp;
-            var fensterKnoten = TransformKnoten(knoten, Auflösung, MaxY);
+            _knoten = item.Value;
+            var temperatur = _knoten.Knotenfreiheitsgrade[0].ToString("N2");
+            _temp = _knoten.Knotenfreiheitsgrade[0];
+            if (_temp > _maxTemp) _maxTemp = _temp;
+            if (_temp < _minTemp) _minTemp = _temp;
+            var fensterKnoten = TransformKnoten(_knoten, Auflösung, MaxY);
 
             var id = new TextBlock
             {
@@ -504,12 +503,12 @@ public class Darstellung
             var knotenId = item.KnotenId;
             if (knotenId == "alle") continue;
 
-            if (!_modell.Knoten.TryGetValue(knotenId, out knoten))
+            if (!_modell.Knoten.TryGetValue(knotenId, out _knoten))
             {
                 throw new ModellAusnahme("\nKnoten '" + knotenId + "' für Anfangsbedingung nicht im Modell gefunden");
             }
 
-            var fensterKnoten = TransformKnoten(knoten, Auflösung, MaxY);
+            var fensterKnoten = TransformKnoten(_knoten, Auflösung, MaxY);
 
             var anfangsbedingung = new TextBlock
             {
@@ -532,12 +531,12 @@ public class Darstellung
         const int randOffset = 15;
         // zeichne den Wert einer Anfangsbedingung als Text an Knoten
 
-        if (!_modell.Knoten.TryGetValue(knotenId, out knoten))
+        if (!_modell.Knoten.TryGetValue(knotenId, out _knoten))
         {
             throw new ModellAusnahme("\nKnoten '" + knotenId + "' für Anfangsbedingung nicht im Modell gefunden");
         }
 
-        var fensterKnoten = TransformKnoten(knoten, Auflösung, MaxY);
+        var fensterKnoten = TransformKnoten(_knoten, Auflösung, MaxY);
 
         var anfangsbedingung = new TextBlock
         {
@@ -566,28 +565,28 @@ public class Darstellung
         TemperaturElemente.Clear();
         foreach (var item in _modell.Knoten)
         {
-            knoten = item.Value;
-            temp = knoten.Knotenfreiheitsgrade[0];
-            if (temp > maxTemp) maxTemp = temp;
-            if (temp < minTemp) minTemp = temp;
+            _knoten = item.Value;
+            _temp = _knoten.Knotenfreiheitsgrade[0];
+            if (_temp > _maxTemp) _maxTemp = _temp;
+            if (_temp < _minTemp) _minTemp = _temp;
         }
 
         foreach (var item in _modell.Elemente)
         {
-            aktElement = item.Value;
-            var pathGeometry = ElementUmrandung((Abstrakt2D)aktElement);
+            _aktElement = item.Value;
+            var pathGeometry = ElementUmrandung((Abstrakt2D)_aktElement);
             //var elementTemperature = aktElement.KnotenIds.Where(knotenId
             //    => _modell.Knoten.TryGetValue(knotenId, out knoten)).Sum(knotenId => knoten.Knotenfreiheitsgrade[0]);
             double elementTemperatur = 0;
-            for (var i = 0; i < aktElement.KnotenProElement; i++)
+            for (var i = 0; i < _aktElement.KnotenProElement; i++)
             {
-                if (!_modell.Knoten.TryGetValue(aktElement.KnotenIds[i], out knoten))
-                    throw new ModellAusnahme("\nElementknoten '" + aktElement.KnotenIds[i] + "' nicht im Modell gefunden");
-                elementTemperatur += knoten.Knotenfreiheitsgrade[0];
+                if (!_modell.Knoten.TryGetValue(_aktElement.KnotenIds[i], out _knoten))
+                    throw new ModellAusnahme("\nElementknoten '" + _aktElement.KnotenIds[i] + "' nicht im Modell gefunden");
+                elementTemperatur += _knoten.Knotenfreiheitsgrade[0];
             }
-            elementTemperatur /= aktElement.KnotenProElement;
+            elementTemperatur /= _aktElement.KnotenProElement;
 
-            var intens = (byte)(255 * (elementTemperatur - minTemp) / (maxTemp - minTemp));
+            var intens = (byte)(255 * (elementTemperatur - _minTemp) / (_maxTemp - _minTemp));
             var rot = FromArgb(intens, 255, 0, 0);
             var myBrush = new SolidColorBrush(rot);
 
@@ -595,7 +594,7 @@ public class Darstellung
             {
                 Stroke = Blue,
                 StrokeThickness = 1,
-                Name = aktElement.ElementId,
+                Name = _aktElement.ElementId,
                 Opacity = 0.5,
                 Fill = myBrush,
                 Data = pathGeometry
@@ -613,12 +612,12 @@ public class Darstellung
     {
         foreach (var item in _modell.Knoten)
         {
-            knoten = item.Value;
-            var gradient = knoten.KnotenAbleitungen[0][index].ToString("N2");
-            temp = knoten.Knotenfreiheitsgrade[0];
-            if (temp > maxTemp) maxTemp = temp;
-            if (temp < minTemp) minTemp = temp;
-            var fensterKnoten = TransformKnoten(knoten, Auflösung, MaxY);
+            _knoten = item.Value;
+            var gradient = _knoten.KnotenAbleitungen[0][index].ToString("N2");
+            _temp = _knoten.Knotenfreiheitsgrade[0];
+            if (_temp > _maxTemp) _maxTemp = _temp;
+            if (_temp < _minTemp) _minTemp = _temp;
+            var fensterKnoten = TransformKnoten(_knoten, Auflösung, MaxY);
 
             var id = new TextBlock
             {
@@ -716,7 +715,7 @@ public class Darstellung
         var start = (int)Math.Round(tmin / dt);
         for (var i = 0; i < ordinaten.Length - start; i++)
         {
-            var point = new Point(dt * i * auflösungH, -ordinaten[i + start] * auflösungV);
+            var point = new Point(dt * i * _auflösungH, -ordinaten[i + start] * _auflösungV);
             stützpunkte.Add(point);
         }
 
@@ -724,7 +723,7 @@ public class Darstellung
 
         // setz oben/links Position zum Zeichnen auf dem Canvas
         SetLeft(zeitverlauf, RandLinks);
-        SetTop(zeitverlauf, mY * auflösungV + RandOben);
+        SetTop(zeitverlauf, mY * _auflösungV + RandOben);
         // zeichne Shape
         _visual.Children.Add(zeitverlauf);
     }
@@ -733,24 +732,24 @@ public class Darstellung
     {
         const int rand = 20;
         const int maxOrdinateAnzeigen = 100;
-        screenH = _visual.ActualWidth;
-        screenV = _visual.ActualHeight;
+        _screenH = _visual.ActualWidth;
+        _screenV = _visual.ActualHeight;
         if (double.IsNaN(max))
         {
             max = maxOrdinateAnzeigen;
             min = -max;
         }
 
-        if (max - min < double.Epsilon) auflösungV = screenV - rand;
-        else auflösungV = (screenV - rand) / (max - min);
-        auflösungH = (screenH - rand) / (tmax - tmin);
+        if (max - min < double.Epsilon) _auflösungV = _screenV - rand;
+        else _auflösungV = (_screenV - rand) / (max - min);
+        _auflösungH = (_screenH - rand) / (tmax - tmin);
         var xAchse = new Line
         {
             Stroke = Black,
             X1 = 0,
-            Y1 = max * auflösungV + RandOben,
-            X2 = (tmax - tmin) * auflösungH + RandLinks,
-            Y2 = max * auflösungV + RandOben,
+            Y1 = max * _auflösungV + RandOben,
+            X2 = (tmax - tmin) * _auflösungH + RandLinks,
+            Y2 = max * _auflösungV + RandOben,
             StrokeThickness = 2
         };
         _ = _visual.Children.Add(xAchse);
@@ -758,7 +757,7 @@ public class Darstellung
         {
             Stroke = Black,
             X1 = RandLinks,
-            Y1 = max * auflösungV - min * auflösungV + 2 * RandOben,
+            Y1 = max * _auflösungV - min * _auflösungV + 2 * RandOben,
             X2 = RandLinks,
             Y2 = RandOben,
             StrokeThickness = 2

@@ -1,5 +1,5 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using System.Diagnostics;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 using System.Globalization;
 using System.Text;
 
@@ -8,15 +8,12 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 public partial class ZeitRandtemperaturNeu
 {
     private readonly FeModell _modell;
-    private readonly RandbedingungenKeys randbedingungenKeys;
     private AbstraktZeitabhängigeRandbedingung vorhandeneRandbedingung;
 
     public ZeitRandtemperaturNeu(FeModell modell)
     {
         _modell = modell;
         InitializeComponent();
-        randbedingungenKeys = new RandbedingungenKeys(modell);
-        randbedingungenKeys.Show();
         Show();
     }
 
@@ -55,11 +52,13 @@ public partial class ZeitRandtemperaturNeu
                 else if (Linear.Text.Length > 0)
                 {
                     vorhandeneRandbedingung.VariationsTyp = 3;
-                    var delimiters = new[] { '\t' };
+                    char[] delimiters = [' ','\t'];
                     var teilStrings = Linear.Text.Split(delimiters);
+
                     var k = 0;
-                    char[] paarDelimiter = { ';' };
-                    var intervall = new double[2 * teilStrings.Length];
+                    char[] paarDelimiter = [';'];
+                    // split teilStrings zählt auch delimiter HINTER text mit
+                    var intervall = new double[2 * teilStrings.Length-2];
                     for (var i = 0; i < intervall.Length; i += 2)
                     {
                         var wertePaar = teilStrings[k].Split(paarDelimiter);
@@ -110,11 +109,12 @@ public partial class ZeitRandtemperaturNeu
             }
             else if (Linear.Text.Length > 0)
             {
-                var delimiters = new[] { '\t' };
+                char[] delimiters = [' ', '\t'];
                 var teilStrings = Linear.Text.Split(delimiters);
                 var k = 0;
-                char[] paarDelimiter = { ';' };
-                var intervall = new double[2 * teilStrings.Length];
+                char[] paarDelimiter = [';'];
+                // split teilStrings zählt auch delimiter HINTER text mit
+                var intervall = new double[2 * teilStrings.Length-2];
                 for (var i = 0; i < intervall.Length; i += 2)
                 {
                     var wertePaar = teilStrings[k].Split(paarDelimiter);
@@ -128,18 +128,17 @@ public partial class ZeitRandtemperaturNeu
                     Typ = 3
                 };
             }
-
             _modell.ZeitabhängigeRandbedingung.Add(randbedingungId, randbedingung);
+            StartFenster.WärmeVisual.IsZeitRandtemperatur = true;
         }
-
-        randbedingungenKeys?.Close();
         Close();
         StartFenster.WärmeVisual.Close();
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        randbedingungenKeys?.Close();
         Close();
     }
 
@@ -147,7 +146,6 @@ public partial class ZeitRandtemperaturNeu
     {
         if (!_modell.ZeitabhängigeRandbedingung.ContainsKey(RandbedingungId.Text)) return;
         _modell.ZeitabhängigeRandbedingung.Remove(RandbedingungId.Text);
-        randbedingungenKeys?.Close();
         Close();
         StartFenster.WärmeVisual.Close();
     }
@@ -181,9 +179,9 @@ public partial class ZeitRandtemperaturNeu
                 Konstant.Text = vorhandeneRandbedingung.KonstanteTemperatur.ToString("G2");
                 break;
             case 2:
-                Amplitude.Text = vorhandeneRandbedingung.Amplitude.ToString("G2");
-                Frequenz.Text = vorhandeneRandbedingung.Frequenz.ToString("G2");
-                Winkel.Text = vorhandeneRandbedingung.PhasenWinkel.ToString("G2");
+                Amplitude.Text = vorhandeneRandbedingung.Amplitude.ToString("G4");
+                Frequenz.Text = (vorhandeneRandbedingung.Frequenz/2/Math.PI).ToString("G4");
+                Winkel.Text = (vorhandeneRandbedingung.PhasenWinkel*180/Math.PI).ToString("G4");
                 break;
             case 3:
             {
@@ -193,7 +191,7 @@ public partial class ZeitRandtemperaturNeu
                 sb.Append(intervall[1].ToString("G2"));
                 for (var i = 2; i < intervall.Length; i += 2)
                 {
-                    sb.Append("\t");
+                    sb.Append('\t');
                     sb.Append(intervall[i].ToString("G2") + ";");
                     sb.Append(intervall[i + 1].ToString("G2"));
                 }

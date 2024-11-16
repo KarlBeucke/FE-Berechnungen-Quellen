@@ -1,14 +1,14 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using System.Diagnostics;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
-public partial class ZeitElementtemperaturNeu
+public partial class ZeitElementlastNeu
 {
     private readonly FeModell _modell;
     private AbstraktZeitabhängigeElementLast vorhandeneLast;
 
-    public ZeitElementtemperaturNeu(FeModell modell)
+    public ZeitElementlastNeu(FeModell modell)
     {
         _modell = modell;
         InitializeComponent();
@@ -66,10 +66,13 @@ public partial class ZeitElementtemperaturNeu
                 LastId = elementlastId
             };
             _modell.ZeitabhängigeElementLasten.Add(elementlastId, zeitabhängigeElementlast);
+            StartFenster.WärmeVisual.IsZeitElementlast = true;
         }
 
         Close();
         StartFenster.WärmeVisual.Close();
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -82,6 +85,8 @@ public partial class ZeitElementtemperaturNeu
         _modell.ZeitabhängigeElementLasten.Remove(LastId.Text);
         Close();
         StartFenster.WärmeVisual.Close();
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
     }
 
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
