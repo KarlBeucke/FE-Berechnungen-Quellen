@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
-using System.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 

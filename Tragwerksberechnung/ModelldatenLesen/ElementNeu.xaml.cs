@@ -2,7 +2,6 @@
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 

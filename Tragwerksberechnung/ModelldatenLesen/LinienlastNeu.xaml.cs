@@ -58,7 +58,7 @@ public partial class LinienlastNeu
                 return;
             }
         }
-        
+
         // neue Linienlast
         else
         {

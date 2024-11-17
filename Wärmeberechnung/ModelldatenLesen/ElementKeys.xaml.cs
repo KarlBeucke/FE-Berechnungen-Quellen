@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
+﻿namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public partial class ElementKeys
 {

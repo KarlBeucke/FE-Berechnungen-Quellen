@@ -18,7 +18,7 @@ public partial class ZeitAnfangstemperaturNeu
         }
         InitializeComponent();
         _modell = modell;
-        
+
         if (_modell.Zeitintegration.VonStationär)
         {
             StationäreLösung.IsChecked = true;
@@ -110,7 +110,7 @@ public partial class ZeitAnfangstemperaturNeu
             _modell.Zeitintegration.Anfangsbedingungen.Clear();
             StartFenster.WärmeVisual.Darstellung.AnfangsbedingungenEntfernen();
         }
-        else if(_aktuell >= 0)
+        else if (_aktuell >= 0)
         {
             _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell);
             if (_modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
@@ -134,7 +134,7 @@ public partial class ZeitAnfangstemperaturNeu
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
     {
         _aktuell = _modell.Zeitintegration.Anfangsbedingungen.FindIndex((a => a.KnotenId == KnotenId.Text));
-        if (_aktuell < 0 )
+        if (_aktuell < 0)
         {
             KnotenId.Text = "";
             Anfangstemperatur.Text = "";

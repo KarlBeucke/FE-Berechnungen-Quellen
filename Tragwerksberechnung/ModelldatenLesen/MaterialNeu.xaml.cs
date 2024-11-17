@@ -1,6 +1,5 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using System.Globalization;
-using System.Linq;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 

@@ -63,7 +63,7 @@ public partial class WärmemodellVisualisieren
         VisualWärmeModell.Children.Remove(Pilot);
         Show();
         VisualWärmeModell.Background = Brushes.Transparent;
-        if(feModell == null)
+        if (feModell == null)
         {
             _ = MessageBox.Show("WärmeModell nicht gefunden", "Wärmeberechnung");
             return;
@@ -472,7 +472,7 @@ public partial class WärmemodellVisualisieren
                     ElementNeu(element);
                 }
             }
-            
+
             // Textdarstellung ist eine Knotenlast
             else if (_modell.Lasten.TryGetValue(item.Text, out var knotenlast))
             {
@@ -494,7 +494,11 @@ public partial class WärmemodellVisualisieren
             {
                 if (IsZeitKnotenlast)
                 {
-                    if (zeitKnotenlast.Datei) _zeitKnotenlastNeu.Datei.IsChecked = true;
+                    if (zeitKnotenlast.Datei)
+                    {
+                        _zeitKnotenlastNeu.Datei.IsChecked = true;
+                        return;
+                    }
                     else switch (zeitKnotenlast.VariationsTyp)
                     {
                         case 1:
@@ -505,12 +509,12 @@ public partial class WärmemodellVisualisieren
                             _zeitKnotenlastNeu.Frequenz.Text = zeitKnotenlast.Frequenz.ToString("G4", CultureInfo.CurrentCulture);
                             _zeitKnotenlastNeu.Winkel.Text = zeitKnotenlast.PhasenWinkel.ToString("G4", CultureInfo.CurrentCulture);
                             return;
-                            case 3:
+                        case 3:
                         {
                             var sb = new StringBuilder();
                             sb.Append(zeitKnotenlast.Intervall[0].ToString("G2") + ";");
                             sb.Append(zeitKnotenlast.Intervall[1].ToString("G2"));
-                            for (var i = 2; i < zeitKnotenlast.Intervall.Length; i+=2)
+                            for (var i = 2; i < zeitKnotenlast.Intervall.Length; i += 2)
                             {
                                 sb.Append('\t');
                                 sb.Append(zeitKnotenlast.Intervall[i].ToString("G2") + ";");
@@ -564,15 +568,24 @@ public partial class WärmemodellVisualisieren
             {
                 if (IsZeitRandtemperatur)
                 {
-                    switch (zeitRandtemperatur.VariationsTyp)
+                    if (zeitRandtemperatur.Datei)
+                    {
+                        _zeitRandtemperaturNeu.Datei.IsChecked = true;
+                        return;
+                    }
+                    else switch (zeitRandtemperatur.VariationsTyp)
                     {
                         case 1:
-                            _zeitRandtemperaturNeu.Konstant.Text = zeitRandtemperatur.KonstanteTemperatur.ToString("N2", CultureInfo.CurrentCulture);
+                            _zeitRandtemperaturNeu.Konstant.Text =
+                                zeitRandtemperatur.KonstanteTemperatur.ToString("N2", CultureInfo.CurrentCulture);
                             return;
                         case 2:
-                            _zeitRandtemperaturNeu.Amplitude.Text = zeitRandtemperatur.Amplitude.ToString("G4", CultureInfo.CurrentCulture);
-                            _zeitRandtemperaturNeu.Frequenz.Text = zeitRandtemperatur.Frequenz.ToString("G4", CultureInfo.CurrentCulture);
-                            _zeitRandtemperaturNeu.Winkel.Text = zeitRandtemperatur.PhasenWinkel.ToString("G4", CultureInfo.CurrentCulture);
+                            _zeitRandtemperaturNeu.Amplitude.Text =
+                                zeitRandtemperatur.Amplitude.ToString("G4", CultureInfo.CurrentCulture);
+                            _zeitRandtemperaturNeu.Frequenz.Text =
+                                zeitRandtemperatur.Frequenz.ToString("G4", CultureInfo.CurrentCulture);
+                            _zeitRandtemperaturNeu.Winkel.Text =
+                                zeitRandtemperatur.PhasenWinkel.ToString("G4", CultureInfo.CurrentCulture);
                             return;
                         case 3:
                         {
@@ -743,7 +756,7 @@ public partial class WärmemodellVisualisieren
         if (IsElementlast)
         {
             _elementlastNeu.ElementId.Text = element.ElementId;
-            _elementlastNeu.ElementlastId.Text = "El"+element.ElementId;
+            _elementlastNeu.ElementlastId.Text = "El" + element.ElementId;
             _elementlastNeu.Show();
             return;
         }
@@ -994,7 +1007,7 @@ public partial class WärmemodellVisualisieren
         }
         IsZeitRandtemperatur = true;
     }
-    
+
     private HitTestResultBehavior HitTestCallBack(HitTestResult result)
     {
         var intersectionDetail = ((GeometryHitTestResult)result).IntersectionDetail;

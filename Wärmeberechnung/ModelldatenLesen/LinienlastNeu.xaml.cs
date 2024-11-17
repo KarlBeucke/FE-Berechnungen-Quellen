@@ -1,6 +1,6 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
-using System.Globalization;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
+using System.Globalization;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
@@ -60,7 +60,7 @@ public partial class LinienlastNeu
                 _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Linienlast");
                 return;
             }
-            
+
             var linienlast = new LinienLast(startknotenId, endknotenId, t)
             {
                 LastId = linienlastId
@@ -80,16 +80,16 @@ public partial class LinienlastNeu
         Close();
         StartFenster.WärmeVisual.IsLinienlast = false;
     }
-    
+
     private void LinienlastIdLostFocus(object sender, RoutedEventArgs e)
     {
         // vorhandene Linienlastdefinition
-        if(!_modell.LinienLasten.TryGetValue(LinienlastId.Text, out var vorhandeneLinienlast))
+        if (!_modell.LinienLasten.TryGetValue(LinienlastId.Text, out var vorhandeneLinienlast))
         {
             _ = MessageBox.Show("Linienlast '" + LinienlastId.Text + "' nicht im Modell gefunden", "neue Linienlast");
             return;
         }
-            
+
         LinienlastId.Text = vorhandeneLinienlast.LastId;
         StartknotenId.Text = vorhandeneLinienlast.StartKnotenId;
         EndknotenId.Text = vorhandeneLinienlast.EndKnotenId;

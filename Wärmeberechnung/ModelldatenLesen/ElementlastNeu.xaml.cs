@@ -162,7 +162,7 @@ public partial class ElementlastNeu
             _ = MessageBox.Show("Elementlast '" + ElementlastId.Text + "' nicht im Modell gefunden", "neue Elementlast");
             return;
         }
-           
+
         ElementlastId.Text = vorhandeneElementlast.LastId;
         ElementId.Text = vorhandeneElementlast.ElementId;
         Knoten1.Text = vorhandeneElementlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
@@ -191,7 +191,7 @@ public partial class ElementlastNeu
     {
         if (!_modell.ElementLasten.ContainsKey(ElementlastId.Text)) return;
         _modell.ElementLasten.Remove(ElementlastId.Text);
-        StartFenster.WärmeVisual.Close(); 
+        StartFenster.WärmeVisual.Close();
         Close();
 
         StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);

@@ -87,7 +87,7 @@ public partial class LagerNeu
                 return;
             }
         }
-        
+
         // neues Lager
         else
         {

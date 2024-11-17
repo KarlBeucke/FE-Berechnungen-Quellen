@@ -110,9 +110,9 @@ public partial class KnotenlastNeu
         if (!_modell.Lasten.ContainsKey(LastId.Text))
         {
             KnotenId.Text = "";
-			Px.Text = "";
-			Py.Text = "";
-			M.Text = "";
+            Px.Text = "";
+            Py.Text = "";
+            M.Text = "";
             return;
         }
 

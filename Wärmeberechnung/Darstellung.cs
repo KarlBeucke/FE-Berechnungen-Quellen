@@ -204,7 +204,7 @@ public class Darstellung
             nextPoint = TransformKnoten(_knoten, Auflösung, MaxY);
             pathFigure.Segments.Add(new LineSegment(nextPoint, true));
         }
-        if(element.KnotenProElement >2) pathFigure.IsClosed = true;
+        if (element.KnotenProElement > 2) pathFigure.IsClosed = true;
 
         // komplette Elementumrandung pathFigure wird einer pathGeometry hinzugefügt
         // pathGeometry wird auf Canvas dargestellt
@@ -494,7 +494,7 @@ public class Darstellung
     public void AnfangsbedingungenZeichnen()
     {
         if (_modell.Zeitintegration == null) return;
- 
+
         const int anfangOffset = 30;
         // zeichne Wert einer jeden Anfangsbedingung als Text an Knoten
 
@@ -515,7 +515,7 @@ public class Darstellung
                 Name = knotenId,
                 Uid = "A",
                 FontSize = 12,
-                Text = "A"+item.Werte[0].ToString("N2"),
+                Text = "A" + item.Werte[0].ToString("N2"),
                 Foreground = Black,
                 Background = Turquoise
             };

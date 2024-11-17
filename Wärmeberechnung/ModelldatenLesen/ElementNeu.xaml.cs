@@ -243,7 +243,8 @@ public partial class ElementNeu
         if (!_modell.Material.TryGetValue(MaterialId.Text, out var material)) return;
         _ = new MaterialNeu(_modell)
         {
-            Topmost = true, Owner = (Window)Parent,
+            Topmost = true,
+            Owner = (Window)Parent,
             MaterialId = { Text = material.MaterialId },
             LeitfähigkeitX = { Text = material.MaterialWerte[0].ToString("g3") },
             LeitfähigkeitY = { Text = material.MaterialWerte[1].ToString("g3") },

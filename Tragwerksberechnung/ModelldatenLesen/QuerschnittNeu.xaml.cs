@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 

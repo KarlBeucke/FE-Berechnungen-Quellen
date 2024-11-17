@@ -185,21 +185,21 @@ public partial class ZeitKnotenlastNeu
                 Winkel.Text = _vorhandeneKnotenlast.PhasenWinkel.ToString("G2");
                 break;
             case 3:
-            {
-                var intervall = _vorhandeneKnotenlast.Intervall;
-                var sb = new StringBuilder();
-                sb.Append(intervall[0].ToString("G2") + ";");
-                sb.Append(intervall[1].ToString("G2"));
-                for (var i = 2; i < intervall.Length; i += 2)
                 {
-                    sb.Append("\t");
-                    sb.Append(intervall[i].ToString("G2") + ";");
-                    sb.Append(intervall[i + 1].ToString("G2"));
-                }
+                    var intervall = _vorhandeneKnotenlast.Intervall;
+                    var sb = new StringBuilder();
+                    sb.Append(intervall[0].ToString("G2") + ";");
+                    sb.Append(intervall[1].ToString("G2"));
+                    for (var i = 2; i < intervall.Length; i += 2)
+                    {
+                        sb.Append("\t");
+                        sb.Append(intervall[i].ToString("G2") + ";");
+                        sb.Append(intervall[i + 1].ToString("G2"));
+                    }
 
-                Linear.Text = sb.ToString();
-                break;
-            }
+                    Linear.Text = sb.ToString();
+                    break;
+                }
         }
     }
 }

@@ -134,8 +134,8 @@ public partial class ZeitintegrationNeu
             _ = MessageBox.Show("Zeitintervall der Integration Δt hat falsches Format", "neue Zeitintegration");
             return;
         }
-        
-        
+
+
 
         if (_modell.Zeitintegration == null)
         {

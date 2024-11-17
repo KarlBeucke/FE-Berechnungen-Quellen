@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;

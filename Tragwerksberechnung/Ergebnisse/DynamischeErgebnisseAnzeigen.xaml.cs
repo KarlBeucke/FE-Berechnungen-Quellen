@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows.Markup;
+﻿using System.Windows.Markup;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 

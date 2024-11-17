@@ -26,7 +26,7 @@ public partial class RandbedingungNeu
         }
 
         // vorhandene Randbedingung
-        if(_modell.Randbedingungen.TryGetValue(randbedingungId, out var vorhandeneRandbedingung))
+        if (_modell.Randbedingungen.TryGetValue(randbedingungId, out var vorhandeneRandbedingung))
         {
             try
             {

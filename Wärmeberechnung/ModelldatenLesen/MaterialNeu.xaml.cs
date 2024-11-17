@@ -1,6 +1,5 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using System.Globalization;
-using System.Linq;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
@@ -47,7 +46,7 @@ public partial class MaterialNeu
                 _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
             }
         }
-            
+
         // neues Material
         else
         {

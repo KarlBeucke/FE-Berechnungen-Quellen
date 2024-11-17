@@ -1,6 +1,5 @@
 ﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
-using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;

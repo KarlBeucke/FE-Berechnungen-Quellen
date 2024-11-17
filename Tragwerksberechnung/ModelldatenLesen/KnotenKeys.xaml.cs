@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
+﻿namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class KnotenKeys
 {

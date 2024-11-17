@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
 using static System.Windows.Media.Brushes;

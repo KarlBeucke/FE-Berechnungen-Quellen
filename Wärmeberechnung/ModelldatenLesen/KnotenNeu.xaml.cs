@@ -1,7 +1,6 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Media;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;

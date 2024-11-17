@@ -8,7 +8,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 public partial class ZeitRandtemperaturNeu
 {
     private readonly FeModell _modell;
-    private AbstraktZeitabhängigeRandbedingung vorhandeneRandbedingung;
+    private AbstraktZeitabhängigeRandbedingung _vorhandeneRandbedingung;
 
     public ZeitRandtemperaturNeu(FeModell modell)
     {
@@ -27,38 +27,38 @@ public partial class ZeitRandtemperaturNeu
         }
 
         // vorhandene Randbedingung
-        if (_modell.ZeitabhängigeRandbedingung.TryGetValue(randbedingungId, out vorhandeneRandbedingung))
+        if (_modell.ZeitabhängigeRandbedingung.TryGetValue(randbedingungId, out _vorhandeneRandbedingung))
         {
             if (KnotenId.Text.Length > 0)
-                vorhandeneRandbedingung.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
+                _vorhandeneRandbedingung.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
             try
             {
                 if (Datei.IsChecked == true)
                 {
-                    vorhandeneRandbedingung.VariationsTyp = 0;
+                    _vorhandeneRandbedingung.VariationsTyp = 0;
                 }
                 else if (Konstant.Text.Length > 0)
                 {
-                    vorhandeneRandbedingung.VariationsTyp = 1;
-                    vorhandeneRandbedingung.KonstanteTemperatur = double.Parse(Konstant.Text);
+                    _vorhandeneRandbedingung.VariationsTyp = 1;
+                    _vorhandeneRandbedingung.KonstanteTemperatur = double.Parse(Konstant.Text);
                 }
                 else if (Amplitude.Text.Length > 0 && Frequenz.Text.Length > 0 && Winkel.Text.Length > 0)
                 {
-                    vorhandeneRandbedingung.VariationsTyp = 2;
-                    vorhandeneRandbedingung.Amplitude = double.Parse(Amplitude.Text);
-                    vorhandeneRandbedingung.Frequenz = double.Parse(Frequenz.Text);
-                    vorhandeneRandbedingung.PhasenWinkel = double.Parse(Winkel.Text);
+                    _vorhandeneRandbedingung.VariationsTyp = 2;
+                    _vorhandeneRandbedingung.Amplitude = double.Parse(Amplitude.Text);
+                    _vorhandeneRandbedingung.Frequenz = double.Parse(Frequenz.Text);
+                    _vorhandeneRandbedingung.PhasenWinkel = double.Parse(Winkel.Text);
                 }
                 else if (Linear.Text.Length > 0)
                 {
-                    vorhandeneRandbedingung.VariationsTyp = 3;
-                    char[] delimiters = [' ','\t'];
+                    _vorhandeneRandbedingung.VariationsTyp = 3;
+                    char[] delimiters = [' ', '\t'];
                     var teilStrings = Linear.Text.Split(delimiters);
 
                     var k = 0;
                     char[] paarDelimiter = [';'];
                     // split teilStrings zählt auch delimiter HINTER text mit
-                    var intervall = new double[2 * teilStrings.Length-2];
+                    var intervall = new double[2 * teilStrings.Length - 2];
                     for (var i = 0; i < intervall.Length; i += 2)
                     {
                         var wertePaar = teilStrings[k].Split(paarDelimiter);
@@ -67,7 +67,7 @@ public partial class ZeitRandtemperaturNeu
                         k++;
                     }
 
-                    vorhandeneRandbedingung.Intervall = intervall;
+                    _vorhandeneRandbedingung.Intervall = intervall;
                 }
             }
             catch (FormatException)
@@ -76,7 +76,7 @@ public partial class ZeitRandtemperaturNeu
                 return;
             }
         }
-        
+
         // neue Randbedingung
         else
         {
@@ -114,7 +114,7 @@ public partial class ZeitRandtemperaturNeu
                 var k = 0;
                 char[] paarDelimiter = [';'];
                 // split teilStrings zählt auch delimiter HINTER text mit
-                var intervall = new double[2 * teilStrings.Length-2];
+                var intervall = new double[2 * teilStrings.Length - 2];
                 for (var i = 0; i < intervall.Length; i += 2)
                 {
                     var wertePaar = teilStrings[k].Split(paarDelimiter);
@@ -148,6 +148,8 @@ public partial class ZeitRandtemperaturNeu
         _modell.ZeitabhängigeRandbedingung.Remove(RandbedingungId.Text);
         Close();
         StartFenster.WärmeVisual.Close();
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
     }
 
     private void RandbedingungIdLostFocus(object sender, RoutedEventArgs e)
@@ -166,39 +168,39 @@ public partial class ZeitRandtemperaturNeu
         }
 
         // vorhandene zeitabhängige Randbedingungsdefinitionen
-        if (!_modell.ZeitabhängigeRandbedingung.TryGetValue(RandbedingungId.Text, out vorhandeneRandbedingung)) return;
-        RandbedingungId.Text = vorhandeneRandbedingung.RandbedingungId;
-        KnotenId.Text = vorhandeneRandbedingung.KnotenId;
-        vorhandeneRandbedingung.Vordefiniert = new double[1];
-        switch (vorhandeneRandbedingung.VariationsTyp)
+        if (!_modell.ZeitabhängigeRandbedingung.TryGetValue(RandbedingungId.Text, out _vorhandeneRandbedingung)) return;
+        RandbedingungId.Text = _vorhandeneRandbedingung.RandbedingungId;
+        KnotenId.Text = _vorhandeneRandbedingung.KnotenId;
+        _vorhandeneRandbedingung.Vordefiniert = new double[1];
+        switch (_vorhandeneRandbedingung.VariationsTyp)
         {
             case 0:
                 Datei.IsChecked = true;
                 break;
             case 1:
-                Konstant.Text = vorhandeneRandbedingung.KonstanteTemperatur.ToString("G2");
+                Konstant.Text = _vorhandeneRandbedingung.KonstanteTemperatur.ToString("G2");
                 break;
             case 2:
-                Amplitude.Text = vorhandeneRandbedingung.Amplitude.ToString("G4");
-                Frequenz.Text = (vorhandeneRandbedingung.Frequenz/2/Math.PI).ToString("G4");
-                Winkel.Text = (vorhandeneRandbedingung.PhasenWinkel*180/Math.PI).ToString("G4");
+                Amplitude.Text = _vorhandeneRandbedingung.Amplitude.ToString("G4");
+                Frequenz.Text = (_vorhandeneRandbedingung.Frequenz / 2 / Math.PI).ToString("G4");
+                Winkel.Text = (_vorhandeneRandbedingung.PhasenWinkel * 180 / Math.PI).ToString("G4");
                 break;
             case 3:
-            {
-                var intervall = vorhandeneRandbedingung.Intervall;
-                var sb = new StringBuilder();
-                sb.Append(intervall[0].ToString("G2") + ";");
-                sb.Append(intervall[1].ToString("G2"));
-                for (var i = 2; i < intervall.Length; i += 2)
                 {
-                    sb.Append('\t');
-                    sb.Append(intervall[i].ToString("G2") + ";");
-                    sb.Append(intervall[i + 1].ToString("G2"));
-                }
+                    var intervall = _vorhandeneRandbedingung.Intervall;
+                    var sb = new StringBuilder();
+                    sb.Append(intervall[0].ToString("G2") + ";");
+                    sb.Append(intervall[1].ToString("G2"));
+                    for (var i = 2; i < intervall.Length; i += 2)
+                    {
+                        sb.Append('\t');
+                        sb.Append(intervall[i].ToString("G2") + ";");
+                        sb.Append(intervall[i + 1].ToString("G2"));
+                    }
 
-                Linear.Text = sb.ToString();
-                break;
-            }
+                    Linear.Text = sb.ToString();
+                    break;
+                }
         }
     }
 }
