@@ -29,7 +29,7 @@ public partial class AnregungVisualisieren
     private void BtnAnregung_Click(object sender, RoutedEventArgs e)
     {
         const string inputDirectory = "\\FE-Berechnungen\\input\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
-        // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(tmax/dt)+1
+        // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
         werte = Berechnung.AusDatei(inputDirectory);
         anregungMax = werte.Max();
         anregungMin = -anregungMax;

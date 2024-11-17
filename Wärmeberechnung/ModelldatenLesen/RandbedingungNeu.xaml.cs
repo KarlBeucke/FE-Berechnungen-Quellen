@@ -39,7 +39,7 @@ public partial class RandbedingungNeu
             }
         }
 
-        // neues Randbedingung
+        // neue Randbedingung
         else
         {
             try

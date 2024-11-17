@@ -6,7 +6,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 public partial class MaterialNeu
 {
     private readonly FeModell _modell;
-    private AbstraktMaterial material, vorhandenesMaterial;
+    private AbstraktMaterial _material, _vorhandenesMaterial;
 
     public MaterialNeu(FeModell modell)
     {
@@ -28,18 +28,18 @@ public partial class MaterialNeu
         var leitfähigkeit = new double[3];
         double dichteLeitfähigkeit = 0;
         // vorhandenes Material
-        if (_modell.Material.TryGetValue(materialId, out vorhandenesMaterial))
+        if (_modell.Material.TryGetValue(materialId, out _vorhandenesMaterial))
         {
             try
             {
                 if (LeitfähigkeitX.Text.Length > 0)
-                    vorhandenesMaterial.MaterialWerte[0] = double.Parse(LeitfähigkeitX.Text);
+                    _vorhandenesMaterial.MaterialWerte[0] = double.Parse(LeitfähigkeitX.Text);
                 if (LeitfähigkeitY.Text.Length > 0)
-                    vorhandenesMaterial.MaterialWerte[1] = double.Parse(LeitfähigkeitY.Text);
+                    _vorhandenesMaterial.MaterialWerte[1] = double.Parse(LeitfähigkeitY.Text);
                 if (LeitfähigkeitZ.Text.Length > 0)
-                    vorhandenesMaterial.MaterialWerte[2] = double.Parse(LeitfähigkeitZ.Text);
+                    _vorhandenesMaterial.MaterialWerte[2] = double.Parse(LeitfähigkeitZ.Text);
                 if (DichteLeitfähigkeit.Text.Length > 0)
-                    vorhandenesMaterial.MaterialWerte[3] = double.Parse(DichteLeitfähigkeit.Text);
+                    _vorhandenesMaterial.MaterialWerte[3] = double.Parse(DichteLeitfähigkeit.Text);
             }
             catch (FormatException)
             {
@@ -65,8 +65,8 @@ public partial class MaterialNeu
             {
                 _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
             }
-            material = new Material(materialId, leitfähigkeit, dichteLeitfähigkeit);
-            _modell.Material.Add(materialId, material);
+            _material = new Material(materialId, leitfähigkeit, dichteLeitfähigkeit);
+            _modell.Material.Add(materialId, _material);
         }
         Close();
     }
@@ -88,23 +88,23 @@ public partial class MaterialNeu
         }
 
         // vorhandene Materialdefinition
-        if (!_modell.Material.TryGetValue(MaterialId.Text, out vorhandenesMaterial))
+        if (!_modell.Material.TryGetValue(MaterialId.Text, out _vorhandenesMaterial))
             throw new ModellAusnahme("\nMaterial '" + MaterialId.Text + "' nicht im Modell gefunden");
         MaterialId.Text = "";
 
-        MaterialId.Text = vorhandenesMaterial.MaterialId;
+        MaterialId.Text = _vorhandenesMaterial.MaterialId;
 
-        LeitfähigkeitX.Text = vorhandenesMaterial.MaterialWerte[0].ToString("G3", CultureInfo.CurrentCulture);
-        LeitfähigkeitY.Text = vorhandenesMaterial.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
-        LeitfähigkeitZ.Text = vorhandenesMaterial.MaterialWerte[2].ToString("G3", CultureInfo.CurrentCulture);
-        DichteLeitfähigkeit.Text = vorhandenesMaterial.MaterialWerte[3].ToString("G3", CultureInfo.CurrentCulture);
+        LeitfähigkeitX.Text = _vorhandenesMaterial.MaterialWerte[0].ToString("G3", CultureInfo.CurrentCulture);
+        LeitfähigkeitY.Text = _vorhandenesMaterial.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
+        LeitfähigkeitZ.Text = _vorhandenesMaterial.MaterialWerte[2].ToString("G3", CultureInfo.CurrentCulture);
+        DichteLeitfähigkeit.Text = _vorhandenesMaterial.MaterialWerte[3].ToString("G3", CultureInfo.CurrentCulture);
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
         if (!_modell.Material.ContainsKey(MaterialId.Text)) return;
         if (MaterialReferenziert()) return;
-        _modell.Material.Remove(vorhandenesMaterial.MaterialId);
+        _modell.Material.Remove(_vorhandenesMaterial.MaterialId);
         Close();
     }
     private bool MaterialReferenziert()

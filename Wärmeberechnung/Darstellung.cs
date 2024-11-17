@@ -408,7 +408,7 @@ public class Darstellung
 
     public void RandbedingungenZeichnen()
     {
-        const int randOffset = 15;
+        var randOffset = 15;
         // zeichne den Wert einer jeden Randbedingung als Text an Randknoten
         foreach (var item in _modell.Randbedingungen)
         {
@@ -426,7 +426,7 @@ public class Darstellung
                 Name = "Support",
                 Uid = item.Value.RandbedingungId,
                 FontSize = 12,
-                Text = randWert.ToString("N2"),
+                Text = randWert.ToString("N0"),
                 Foreground = DarkOliveGreen,
                 Background = LightGreen
             };
@@ -435,10 +435,11 @@ public class Darstellung
             SetLeft(randbedingung, fensterKnoten.X + RandLinks);
             _visual.Children.Add(randbedingung);
 
-            randbedingung.Text = string.Empty;
+            //randbedingung.Text = string.Empty;
         }
 
         // zeitabhängige Randknoten
+        randOffset = 30;
         foreach (var item in _modell.ZeitabhängigeRandbedingung)
         {
             var knotenId = item.Value.KnotenId;
@@ -459,7 +460,7 @@ public class Darstellung
                 Background = LawnGreen
             };
             RandKnoten.Add(randbedingung);
-            SetTop(randbedingung, fensterKnoten.Y + RandOben + 15);
+            SetTop(randbedingung, fensterKnoten.Y + RandOben + randOffset);
             SetLeft(randbedingung, fensterKnoten.X + RandLinks);
             _visual.Children.Add(randbedingung);
         }

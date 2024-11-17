@@ -20,50 +20,46 @@ public class Element2D4 : AbstraktLinear2D4
         Knoten = new Knoten[KnotenProElement];
         for (var i = 0; i < KnotenProElement; i++)
         {
-            if (Modell.Knoten.TryGetValue(KnotenIds[i], out var node))
-            {
-            }
+            if (Modell.Knoten.TryGetValue(KnotenIds[i], out var node)) { }
 
             Knoten[i] = node ?? throw new ArgumentNullException(nameof(node));
         }
 
         ElementMaterialId = materialId ?? throw new ArgumentNullException(nameof(materialId));
-        SpecificHeatMatrix = new double[4];
     }
 
     public Element2D4(string id, string[] eNodes, string materialId, FeModell feModell)
     {
-        if (eNodes == null) throw new ArgumentNullException(nameof(eNodes));
-        Modell = feModell ?? throw new ArgumentNullException(nameof(feModell));
-        ElementId = id ?? throw new ArgumentNullException(nameof(id));
-        ElementFreiheitsgrade = 1;
-        KnotenProElement = 4;
-        KnotenIds = eNodes ?? throw new ArgumentNullException(nameof(eNodes));
-        Knoten = new Knoten[KnotenProElement];
-        for (var i = 0; i < KnotenProElement; i++)
+        if (eNodes != null)
         {
-            if (Modell.Knoten.TryGetValue(KnotenIds[i], out var node))
+            Modell = feModell ?? throw new ArgumentNullException(nameof(feModell));
+            ElementId = id ?? throw new ArgumentNullException(nameof(id));
+            ElementFreiheitsgrade = 1;
+            KnotenProElement = 4;
+            KnotenIds = eNodes;
+            Knoten = new Knoten[KnotenProElement];
+            for (var i = 0; i < KnotenProElement; i++)
             {
+                if (Modell.Knoten.TryGetValue(KnotenIds[i], out var node)) { }
+
+                if (node != null) Knoten[i] = node;
             }
 
-            if (node != null) Knoten[i] = node ?? throw new ArgumentNullException(nameof(node));
+            ElementMaterialId = materialId ?? throw new ArgumentNullException(nameof(materialId));
         }
-
-        ElementMaterialId = materialId ?? throw new ArgumentNullException(nameof(materialId));
-        SpecificHeatMatrix = new double[4];
+        else
+        {
+            throw new ArgumentNullException(nameof(eNodes));
+        }
     }
 
-    public double[] SpecificHeatMatrix { get; }
-
-    public FeModell Modell { get; set; }
+    private FeModell Modell { get; set; }
 
     // ....Compute element Matrix.....................................
     public override double[,] BerechneElementMatrix()
     {
-        double[] gaussCoord = { -1 / Math.Sqrt(3), 1 / Math.Sqrt(3) };
-        if (Modell.Material.TryGetValue(ElementMaterialId, out var abstractMaterial))
-        {
-        }
+        double[] gaussCoord = [-1 / Math.Sqrt(3), 1 / Math.Sqrt(3)];
+        if (Modell.Material.TryGetValue(ElementMaterialId, out var abstractMaterial)) { }
 
         material = (Material)abstractMaterial;
         ElementMaterial = material ?? throw new ArgumentNullException(nameof(material));
@@ -73,10 +69,8 @@ public class Element2D4 : AbstraktLinear2D4
         foreach (var coor1 in gaussCoord)
             foreach (var coor2 in gaussCoord)
             {
-                var z0 = coor1;
-                var z1 = coor2;
-                BerechneGeometrie(z0, z1);
-                Sx = BerechneSx(z0, z1);
+                BerechneGeometrie(coor1, coor2);
+                Sx = BerechneSx(coor1, coor2);
                 // Ke = C*Sx*SxT*determinant
                 MatrizenAlgebra.MultAddMatrixTransposed(elementMatrix, Determinant * conductivity, Sx, Sx);
             }
@@ -87,7 +81,7 @@ public class Element2D4 : AbstraktLinear2D4
     // ....Compute diagonal Specific Heat Matrix.................................
     public override double[] BerechneDiagonalMatrix()
     {
-        throw new ModellAusnahme("\n*** specifische Wärmematrix noch nicht implementiert in Heat2D4");
+        throw new ModellAusnahme("\n*** spezifische Wärmematrix noch nicht implementiert in Heat2D4");
     }
 
     // ....Compute the heat state at the (z0,z1) of the element......

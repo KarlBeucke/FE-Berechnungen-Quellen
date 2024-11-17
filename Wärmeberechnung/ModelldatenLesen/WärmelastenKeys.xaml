@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Title="vorhandene Wärmelastdefinitionen" Height="200" Width="300">
     <Grid>
-        <ListView Margin="10" Name="WärmelastenKey">
+        <ListView Margin="10" Name="WärmelastenKey" d:DataContext="{d:DesignData modell}">>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding LastId}" />

@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Title="vorhandene Materialdefinitionen" Height="200" Width="300">
     <Grid>
-        <ListView Margin="10" Name="MaterialKey">
+        <ListView Margin="10" Name="MaterialKey" d:DataContext="{d:DesignData modell}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding MaterialId}" />

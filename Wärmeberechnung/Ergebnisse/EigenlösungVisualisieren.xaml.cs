@@ -6,63 +6,63 @@ using static System.Windows.Media.Brushes;
 
 namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
-public partial class EigenlösungVisualisieren : Window
+public partial class EigenlösungVisualisieren
 {
     private const int RandLinks = 40;
-    private readonly FeModell modell;
-    private double auflösung, maxY;
-    public Darstellung darstellung;
-    private int index;
-    private bool knotentemperaturenAn;
-    public double screenH, screenV;
+    private readonly FeModell _modell;
+    private double _auflösung, _maxY;
+    private Darstellung _darstellung;
+    private int _index;
+    private bool _knotentemperaturenAn;
+    public double ScreenH, ScreenV;
 
     public EigenlösungVisualisieren(FeModell modell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
-        this.modell = modell;
+        this._modell = modell;
         InitializeComponent();
         Knotentemperaturen = new List<object>();
         Eigenwerte = new List<object>();
     }
 
-    public List<object> Knotentemperaturen { get; set; }
-    public List<object> Eigenwerte { get; set; }
+    private List<object> Knotentemperaturen { get; set; }
+    private List<object> Eigenwerte { get; set; }
 
     private void ModelGrid_Loaded(object sender, RoutedEventArgs e)
     {
         // Auswahl der Eigenlösung
-        var anzahlEigenformen = modell.Eigenzustand.AnzahlZustände;
+        var anzahlEigenformen = _modell.Eigenzustand.AnzahlZustände;
         var eigenformNr = new int[anzahlEigenformen];
         for (var i = 0; i < anzahlEigenformen; i++) eigenformNr[i] = i + 1;
         Eigenlösungauswahl.ItemsSource = eigenformNr;
 
-        darstellung = new Darstellung(modell, VisualErgebnisse);
-        darstellung.FestlegungAuflösung();
-        maxY = darstellung.MaxY;
-        auflösung = darstellung.Auflösung;
-        darstellung.AlleElementeZeichnen();
+        _darstellung = new Darstellung(_modell, VisualErgebnisse);
+        _darstellung.FestlegungAuflösung();
+        _maxY = _darstellung.MaxY;
+        _auflösung = _darstellung.Auflösung;
+        _darstellung.AlleElementeZeichnen();
     }
 
     // Combobox event
     private void DropDownEigenformauswahlClosed(object sender, EventArgs e)
     {
-        index = Eigenlösungauswahl.SelectedIndex;
+        _index = Eigenlösungauswahl.SelectedIndex;
     }
 
     // Button event
     private void BtnEigenlösung_Click(object sender, RoutedEventArgs e)
     {
         //Toggle KnotenTemperaturen
-        if (!knotentemperaturenAn)
+        if (!_knotentemperaturenAn)
         {
             // zeichne den Wert einer jeden Randbedingung als Text an Randknoten
-            Eigenzustand_Zeichnen(modell.Eigenzustand.Eigenvektoren[index]);
-            knotentemperaturenAn = true;
+            Eigenzustand_Zeichnen(_modell.Eigenzustand.Eigenvektoren[_index]);
+            _knotentemperaturenAn = true;
 
             var eigenwert = new TextBlock
             {
                 FontSize = 14,
-                Text = "Eigenwert Nr. " + (index + 1) + " = " + modell.Eigenzustand.Eigenwerte[index].ToString("N2"),
+                Text = "Eigenwert Nr. " + (_index + 1) + " = " + _modell.Eigenzustand.Eigenwerte[_index].ToString("N2"),
                 Foreground = Blue
             };
             SetTop(eigenwert, -10);
@@ -75,21 +75,21 @@ public partial class EigenlösungVisualisieren : Window
             // entferne ALLE Textdarstellungen der Knotentemperaturen
             foreach (var knotenTemp in Knotentemperaturen) VisualErgebnisse.Children.Remove(knotenTemp as TextBlock);
             foreach (TextBlock eigenwert in Eigenwerte) VisualErgebnisse.Children.Remove(eigenwert);
-            knotentemperaturenAn = false;
+            _knotentemperaturenAn = false;
         }
     }
 
     public void Eigenzustand_Zeichnen(double[] zustand)
     {
         double maxTemp = 0, minTemp = 100;
-        foreach (var item in modell.Knoten)
+        foreach (var item in _modell.Knoten)
         {
             var knoten = item.Value;
             var temperatur = zustand[knoten.SystemIndizes[0]].ToString("N2");
             var temp = zustand[knoten.SystemIndizes[0]];
             if (temp > maxTemp) maxTemp = temp;
             if (temp < minTemp) minTemp = temp;
-            var fensterKnoten = TransformKnoten(knoten, auflösung, maxY);
+            var fensterKnoten = TransformKnoten(knoten, _auflösung, _maxY);
 
             var id = new TextBlock
             {
@@ -107,11 +107,11 @@ public partial class EigenlösungVisualisieren : Window
 
     private int[] TransformKnoten(Knoten knoten, double aufl, double mY)
     {
-        auflösung = aufl;
-        maxY = mY;
+        _auflösung = aufl;
+        _maxY = mY;
         var fensterKnoten = new int[2];
-        fensterKnoten[0] = (int)(knoten.Koordinaten[0] * auflösung);
-        fensterKnoten[1] = (int)(-knoten.Koordinaten[1] * auflösung + maxY);
+        fensterKnoten[0] = (int)(knoten.Koordinaten[0] * _auflösung);
+        fensterKnoten[1] = (int)(-knoten.Koordinaten[1] * _auflösung + _maxY);
         return fensterKnoten;
     }
 }

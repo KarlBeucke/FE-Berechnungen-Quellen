@@ -8,23 +8,23 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
 public partial class InstationäreModellzuständeVisualisieren
 {
-    private readonly Darstellung darstellung;
-    private readonly List<Shape> hitList = new();
-    private readonly FeModell modell;
-    private EllipseGeometry hitArea;
-    private int index;
-    private bool knotenTemperaturAn, knotenGradientenAn, elementTemperaturAn;
+    private readonly Darstellung _darstellung;
+    private readonly List<Shape> _hitList = [];
+    private readonly FeModell _modell;
+    private EllipseGeometry _hitArea;
+    private int _index;
+    private bool _knotenTemperaturAn, _knotenGradientenAn, _elementTemperaturAn;
 
     public InstationäreModellzuständeVisualisieren(FeModell modell)
     {
-        this.modell = modell;
+        _modell = modell;
         Language = XmlLanguage.GetLanguage("de-DE");
         InitializeComponent();
         Show();
 
-        darstellung = new Darstellung(modell, VisualErgebnisse);
-        darstellung.FestlegungAuflösung();
-        darstellung.AlleElementeZeichnen();
+        _darstellung = new Darstellung(modell, VisualErgebnisse);
+        _darstellung.FestlegungAuflösung();
+        _darstellung.AlleElementeZeichnen();
 
         // Auswahl des Zeitschritts
         var dt = modell.Zeitintegration.Dt;
@@ -43,57 +43,57 @@ public partial class InstationäreModellzuständeVisualisieren
             return;
         }
 
-        index = Zeitschrittauswahl.SelectedIndex;
+        _index = Zeitschrittauswahl.SelectedIndex;
 
-        foreach (var item in modell.Knoten) item.Value.Knotenfreiheitsgrade[0] = item.Value.KnotenVariable[0][index];
+        foreach (var item in _modell.Knoten) item.Value.Knotenfreiheitsgrade[0] = item.Value.KnotenVariable[0][_index];
 
-        darstellung.Zeitschritt = index;
+        _darstellung.Zeitschritt = _index;
         KnotentemperaturenZeichnen();
-        darstellung.WärmeflussvektorenZeichnen();
+        _darstellung.WärmeflussvektorenZeichnen();
         ElementTemperaturenZeichnen();
     }
 
     private void KnotentemperaturenZeichnen()
     {
-        if (!knotenTemperaturAn)
+        if (!_knotenTemperaturAn)
         {
-            if (index == 0)
+            if (_index == 0)
             {
                 _ = MessageBox.Show("Zeitschritt muss erst ausgewählt werden", "instationäre Wärmeberechnung");
             }
             else
             {
-                darstellung.KnotentemperaturZeichnen();
-                knotenTemperaturAn = true;
+                _darstellung.KnotentemperaturZeichnen();
+                _knotenTemperaturAn = true;
             }
         }
         else
         {
             // entferne ALLE Textdarstellungen der Knotentemperaturen
-            foreach (var knotenTemp in darstellung.Knotentemperaturen) VisualErgebnisse.Children.Remove(knotenTemp);
-            knotenTemperaturAn = false;
+            foreach (var knotenTemp in _darstellung.Knotentemperaturen) VisualErgebnisse.Children.Remove(knotenTemp);
+            _knotenTemperaturAn = false;
         }
     }
 
     private void ElementTemperaturenZeichnen()
     {
-        if (!elementTemperaturAn)
+        if (!_elementTemperaturAn)
         {
-            if (index == 0)
+            if (_index == 0)
             {
                 _ = MessageBox.Show("Zeitschritt muss erst ausgewählt werden", "instationäre Wärmeberechnung");
             }
             else
             {
-                darstellung.ElementTemperaturZeichnen();
-                darstellung.WärmeflussvektorenZeichnen();
-                elementTemperaturAn = true;
+                _darstellung.ElementTemperaturZeichnen();
+                _darstellung.WärmeflussvektorenZeichnen();
+                _elementTemperaturAn = true;
             }
         }
         else
         {
-            foreach (var path in darstellung.TemperaturElemente) VisualErgebnisse.Children.Remove(path);
-            elementTemperaturAn = false;
+            foreach (var path in _darstellung.TemperaturElemente) VisualErgebnisse.Children.Remove(path);
+            _elementTemperaturAn = false;
         }
     }
 
@@ -104,23 +104,23 @@ public partial class InstationäreModellzuständeVisualisieren
 
     private void BtnKnotenGradienten_Click(object sender, RoutedEventArgs e)
     {
-        if (!knotenGradientenAn)
+        if (!_knotenGradientenAn)
         {
-            if (index == 0)
+            if (_index == 0)
             {
                 _ = MessageBox.Show("Zeitschritt muss erst ausgewählt werden", "instationäre Wärmeberechnung");
             }
             else
             {
-                darstellung.KnotengradientenZeichnen(index);
-                knotenGradientenAn = true;
+                _darstellung.KnotengradientenZeichnen(_index);
+                _knotenGradientenAn = true;
             }
         }
         else
         {
             // entferne ALLE Textdarstellungen der Knotentemperaturen
-            foreach (var knotenGrad in darstellung.Knotengradienten) VisualErgebnisse.Children.Remove(knotenGrad);
-            knotenGradientenAn = false;
+            foreach (var knotenGrad in _darstellung.Knotengradienten) VisualErgebnisse.Children.Remove(knotenGrad);
+            _knotenGradientenAn = false;
         }
     }
 
@@ -131,21 +131,21 @@ public partial class InstationäreModellzuständeVisualisieren
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        hitList.Clear();
+        _hitList.Clear();
         var hitPoint = e.GetPosition(VisualErgebnisse);
-        hitArea = new EllipseGeometry(hitPoint, 0.2, 0.2);
+        _hitArea = new EllipseGeometry(hitPoint, 0.2, 0.2);
         VisualTreeHelper.HitTest(VisualErgebnisse, null, HitTestCallBack,
-            new GeometryHitTestParameters(hitArea));
+            new GeometryHitTestParameters(_hitArea));
 
         MyPopup.IsOpen = false;
 
         var sb = new StringBuilder();
-        foreach (var item in hitList.Where(item => !((item == null) | (item?.Name == string.Empty))))
+        foreach (var item in _hitList.Where(item => !((item == null) | (item?.Name == string.Empty))))
         {
             sb.Clear();
             MyPopup.IsOpen = true;
 
-            if (!modell.Elemente.TryGetValue(item.Name, out var element2D)) continue;
+            if (!_modell.Elemente.TryGetValue(item.Name, out var element2D)) continue;
             sb.Clear();
             var wärmeElement = (Abstrakt2D)element2D;
             var wärmeFluss = wärmeElement.BerechneElementZustand(0, 0);
@@ -170,7 +170,7 @@ public partial class InstationäreModellzuständeVisualisieren
                 switch (result.VisualHit)
                 {
                     case Shape hit:
-                        hitList.Add(hit);
+                        _hitList.Add(hit);
                         break;
                         //case TextBlock hit:
                         //    hitTextBlock.Add(hit);
@@ -184,7 +184,7 @@ public partial class InstationäreModellzuständeVisualisieren
                 switch (result.VisualHit)
                 {
                     case Shape hit:
-                        hitList.Add(hit);
+                        _hitList.Add(hit);
                         break;
                 }
 

@@ -4,7 +4,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public class TransientParser
 {
-    private string[] substrings;
+    private string[] _substrings;
     public bool ZeitintegrationDaten;
 
     public void ParseZeitintegration(string[] lines, FeModell feModell)
@@ -18,13 +18,13 @@ public class TransientParser
             FeParser.EingabeGefunden += "\nEigenlösungen";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                switch (substrings.Length)
+                _substrings = lines[i + 1].Split(delimiters);
+                switch (_substrings.Length)
                 {
                     case 2:
                         {
-                            var id = substrings[0];
-                            int numberOfStates = short.Parse(substrings[1]);
+                            var id = _substrings[0];
+                            int numberOfStates = short.Parse(_substrings[1]);
                             feModell.Eigenzustand = new Eigenzustände(id, numberOfStates);
                             i++;
                             break;
@@ -82,8 +82,8 @@ public class TransientParser
         }
 
         // suche zeitabhängige Randtemperaturen, eingeprägte Temperatur am Rand
-        //  5:Name,NodeId,Amplitude,Frequenz,Phase 
-        // >7:Name,NodeId,Wertepaare für stückweise linearen Verlauf
+        //  5: Name, NodeId, Amplitude, Frequenz, Phase 
+        // >7: Name, NodeId, Wertepaare für stückweise linearen Verlauf
         for (var i = 0; i < lines.Length; i++)
         {
             if (lines[i] != "Zeitabhängige Randbedingungen") continue;
@@ -162,8 +162,8 @@ public class TransientParser
         }
 
         // suche zeitabhängige Knotenlast (Temperaturen) Knotentemperaturen
-        //  5:Name,NodeId,Amplitude,Frequenz,Phase 
-        // >7:Name,NodeId,Wertepaare für stückweise linearen Verlauf
+        //  5: Name, NodeId, Amplitude, Frequenz, Phase 
+        // >7: Name, NodeId, Wertepaare für stückweise linearen Verlauf
         for (var i = 0; i < lines.Length; i++)
         {
             if (lines[i] != "Zeitabhängige Knotenlasten") continue;
@@ -230,7 +230,7 @@ public class TransientParser
         }
 
         // suche zeitabhängigeElementLast auf Dreieckselementen
-        //  5:Name,ElementId,Knotenwert1, Knotenwert2, Knotenwert3 
+        //  5: Name, ElementId, Knotenwert1, Knotenwert2, Knotenwert3 
         for (var i = 0; i < lines.Length; i++)
         {
             if (lines[i] != "Zeitabhängige Elementlasten") continue;

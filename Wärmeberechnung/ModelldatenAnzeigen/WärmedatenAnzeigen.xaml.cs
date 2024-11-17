@@ -11,9 +11,9 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 public partial class WärmedatenAnzeigen
 {
     private readonly FeModell _modell;
-    private Shape letzterKnoten;
-    private Shape letztesElement;
-    private string removeKey;
+    private Shape _letzterKnoten;
+    private Shape _letztesElement;
+    private string _removeKey;
 
     public WärmedatenAnzeigen(FeModell modell)
     {
@@ -40,8 +40,8 @@ public partial class WärmedatenAnzeigen
     //UnloadingRow
     private void KnotenZeileLoeschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        _modell.Knoten.Remove(removeKey);
+        if (_removeKey == null) return;
+        _modell.Knoten.Remove(_removeKey);
         _modell.Berechnet = false;
         Close();
 
@@ -55,15 +55,15 @@ public partial class WärmedatenAnzeigen
         if (KnotenGrid.SelectedCells.Count <= 0) return;
         var cellInfo = KnotenGrid.SelectedCells[0];
         var knoten = (Knoten)cellInfo.Item;
-        removeKey = knoten.Id;
-        if (letzterKnoten != null) StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letzterKnoten);
-        letzterKnoten = StartFenster.WärmeVisual.Darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        _removeKey = knoten.Id;
+        if (_letzterKnoten != null) StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(_letzterKnoten);
+        _letzterKnoten = StartFenster.WärmeVisual.Darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
 
     //LostFocus
     private void KeinKnotenSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letzterKnoten);
+        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(_letzterKnoten);
     }
 
     private void Elemente_Loaded(object sender, RoutedEventArgs e)
@@ -83,10 +83,10 @@ public partial class WärmedatenAnzeigen
     }
 
     //UnloadingRow
-    private void ElementZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void ElementZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        _modell.Elemente.Remove(removeKey);
+        if (_removeKey == null) return;
+        _modell.Elemente.Remove(_removeKey);
         _modell.Berechnet = false;
         Close();
 
@@ -100,15 +100,15 @@ public partial class WärmedatenAnzeigen
         if (ElementGrid.SelectedCells.Count <= 0) return;
         var cellInfo = ElementGrid.SelectedCells[0];
         var element = (AbstraktElement)cellInfo.Item;
-        removeKey = element.ElementId;
-        if (letztesElement != null) StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
-        letztesElement = StartFenster.WärmeVisual.Darstellung.ElementFillZeichnen((Abstrakt2D)element,
+        _removeKey = element.ElementId;
+        if (_letztesElement != null) StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(_letztesElement);
+        _letztesElement = StartFenster.WärmeVisual.Darstellung.ElementFillZeichnen((Abstrakt2D)element,
             Brushes.Black, Colors.Green, .2, 2);
     }
 
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(letztesElement);
+        StartFenster.WärmeVisual.VisualWärmeModell.Children.Remove(_letztesElement);
     }
 
     private void Material_Loaded(object sender, RoutedEventArgs e)
@@ -129,8 +129,8 @@ public partial class WärmedatenAnzeigen
     //UnloadingRow
     private void MaterialZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        _modell.Material.Remove(removeKey);
+        if (_removeKey == null) return;
+        _modell.Material.Remove(_removeKey);
         _modell.Berechnet = false;
         Close();
 
@@ -144,7 +144,7 @@ public partial class WärmedatenAnzeigen
         if (MaterialGrid.SelectedCells.Count <= 0) return;
         var cellInfo = MaterialGrid.SelectedCells[0];
         var material = (Material)cellInfo.Item;
-        removeKey = material.MaterialId;
+        _removeKey = material.MaterialId;
     }
 
     private void Randbedingung_Loaded(object sender, RoutedEventArgs e)
@@ -164,8 +164,8 @@ public partial class WärmedatenAnzeigen
     //UnloadingRow
     private void RandbedingungZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        _modell.Randbedingungen.Remove(removeKey);
+        if (_removeKey == null) return;
+        _modell.Randbedingungen.Remove(_removeKey);
         _modell.Berechnet = false;
         Close();
 
@@ -179,7 +179,7 @@ public partial class WärmedatenAnzeigen
         if (RandbedingungGrid.SelectedCells.Count <= 0) return;
         var cellInfo = RandbedingungGrid.SelectedCells[0];
         var lager = (Randbedingung)cellInfo.Item;
-        removeKey = lager.RandbedingungId;
+        _removeKey = lager.RandbedingungId;
     }
 
     private void KnotenEinwirkungen_Loaded(object sender, RoutedEventArgs e)
@@ -197,10 +197,10 @@ public partial class WärmedatenAnzeigen
     }
 
     //UnloadingRow
-    private void KnotenlastZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenlastZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        _modell.Lasten.Remove(removeKey);
+        if (_removeKey == null) return;
+        _modell.Lasten.Remove(_removeKey);
         _modell.Berechnet = false;
         Close();
 
@@ -214,7 +214,7 @@ public partial class WärmedatenAnzeigen
         if (KnotenEinwirkungenGrid.SelectedCells.Count <= 0) return;
         var cellInfo = KnotenEinwirkungenGrid.SelectedCells[0];
         var last = (KnotenLast)cellInfo.Item;
-        removeKey = last.LastId;
+        _removeKey = last.LastId;
     }
 
     private void LinienEinwirkungen_Loaded(object sender, RoutedEventArgs e)
@@ -232,10 +232,10 @@ public partial class WärmedatenAnzeigen
     }
 
     //UnloadingRow
-    private void LinienlastZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void LinienlastZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        _modell.LinienLasten.Remove(removeKey);
+        if (_removeKey == null) return;
+        _modell.LinienLasten.Remove(_removeKey);
         _modell.Berechnet = false;
         Close();
 
@@ -249,7 +249,7 @@ public partial class WärmedatenAnzeigen
         if (LinienEinwirkungenGrid.SelectedCells.Count <= 0) return;
         var cellInfo = LinienEinwirkungenGrid.SelectedCells[0];
         var last = (LinienLast)cellInfo.Item;
-        removeKey = last.LastId;
+        _removeKey = last.LastId;
     }
 
     private void ElementEinwirkungen_Loaded(object sender, RoutedEventArgs e)
@@ -267,10 +267,10 @@ public partial class WärmedatenAnzeigen
     }
 
     //UnloadingRow
-    private void ElementlastZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void ElementlastZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        _modell.ElementLasten.Remove(removeKey);
+        if (_removeKey == null) return;
+        _modell.ElementLasten.Remove(_removeKey);
         _modell.Berechnet = false;
         Close();
 
@@ -284,7 +284,7 @@ public partial class WärmedatenAnzeigen
         if (ElementEinwirkungenGrid.SelectedCells.Count <= 0) return;
         var cellInfo = ElementEinwirkungenGrid.SelectedCells[0];
         var last = (AbstraktLast)cellInfo.Item;
-        removeKey = last.LastId;
+        _removeKey = last.LastId;
     }
 
     private void Model_Changed(object sender, DataGridCellEditEndingEventArgs e)
@@ -298,8 +298,8 @@ public partial class WärmedatenAnzeigen
     //    var element = e.EditingElement as TextBox;
     //    var text = element.Text;
 
-    //    // ... pruef, ob die Textveraenderung abgelehnt werden soll
-    //    // ... Ablehnung, falls der Nutzer ein ? eingibt
+    //    // ... prüf, ob die Textveränderung abgelehnt werden soll
+    //    // ... Ablehnung, falls der Nutzer ein "?" eingibt
     //    if (text == "?")
     //    {
     //        Title = "Invalid";

@@ -7,6 +7,7 @@ public class ZeitabhängigeRandbedingung : AbstraktZeitabhängigeRandbedingung
         KnotenId = knotenId;
         Festgehalten = new bool[1];
         Festgehalten[0] = true;
+        Vordefiniert = new double[1];
         Datei = datei;
         VariationsTyp = 0;
     }
@@ -16,6 +17,7 @@ public class ZeitabhängigeRandbedingung : AbstraktZeitabhängigeRandbedingung
         KnotenId = knotenId;
         Festgehalten = new bool[1];
         Festgehalten[0] = true;
+        Vordefiniert = new double[1];
         KonstanteTemperatur = konstanteTemperatur;
         VariationsTyp = 3;
     }
@@ -25,6 +27,7 @@ public class ZeitabhängigeRandbedingung : AbstraktZeitabhängigeRandbedingung
         KnotenId = knotenId;
         Festgehalten = new bool[1];
         Festgehalten[0] = true;
+        Vordefiniert = new double[1];
         Intervall = intervall;
         VariationsTyp = 1;
     }
@@ -34,6 +37,7 @@ public class ZeitabhängigeRandbedingung : AbstraktZeitabhängigeRandbedingung
     {
         KnotenId = knotenId;
         Festgehalten = new bool[1];
+        Vordefiniert = new double[1];
         Festgehalten[0] = true;
         Amplitude = amplitude;
         Frequenz = frequenz;

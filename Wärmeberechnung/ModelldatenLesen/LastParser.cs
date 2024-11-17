@@ -4,20 +4,20 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public class LastParser
 {
-    private string elementId;
-    private ElementLast3 elementLast3;
-    private ElementLast4 elementLast4;
-    private KnotenLast knotenLast;
-    private LinienLast linienLast;
-    private string loadId;
-    private FeModell modell;
-    private string nodeId, startNodeId, endNodeId;
-    private double[] p;
-    private string[] substrings;
+    private string _elementId;
+    private ElementLast3 _elementLast3;
+    private ElementLast4 _elementLast4;
+    private KnotenLast _knotenLast;
+    private LinienLast _linienLast;
+    private string _loadId;
+    private FeModell _modell;
+    private string _nodeId, _startNodeId, _endNodeId;
+    private double[] _p;
+    private string[] _substrings;
 
     public void ParseLasten(string[] lines, FeModell feModel)
     {
-        modell = feModel;
+        _modell = feModel;
         //p = new double[8];
         ParseKnotenLast(lines);
         ParseLinienLast(lines);
@@ -35,17 +35,17 @@ public class LastParser
             FeParser.EingabeGefunden += "\nKnotenLasten";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                switch (substrings.Length)
+                _substrings = lines[i + 1].Split(delimiters);
+                switch (_substrings.Length)
                 {
                     case 3:
                         {
-                            loadId = substrings[0];
-                            nodeId = substrings[1];
-                            p = new double[1];
-                            p[0] = double.Parse(substrings[2]);
-                            knotenLast = new KnotenLast(loadId, nodeId, p);
-                            modell.Lasten.Add(loadId, knotenLast);
+                            _loadId = _substrings[0];
+                            _nodeId = _substrings[1];
+                            _p = new double[1];
+                            _p[0] = double.Parse(_substrings[2]);
+                            _knotenLast = new KnotenLast(_loadId, _nodeId, _p);
+                            _modell.Lasten.Add(_loadId, _knotenLast);
                             i++;
                             break;
                         }
@@ -68,19 +68,19 @@ public class LastParser
             FeParser.EingabeGefunden += "\nLinienLasten";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                switch (substrings.Length)
+                _substrings = lines[i + 1].Split(delimiters);
+                switch (_substrings.Length)
                 {
                     case 5:
                         {
-                            loadId = substrings[0];
-                            startNodeId = substrings[1];
-                            endNodeId = substrings[2];
-                            p = new double[2];
-                            p[0] = double.Parse(substrings[3]);
-                            p[1] = double.Parse(substrings[4]);
-                            linienLast = new LinienLast(loadId, startNodeId, endNodeId, p);
-                            modell.LinienLasten.Add(loadId, linienLast);
+                            _loadId = _substrings[0];
+                            _startNodeId = _substrings[1];
+                            _endNodeId = _substrings[2];
+                            _p = new double[2];
+                            _p[0] = double.Parse(_substrings[3]);
+                            _p[1] = double.Parse(_substrings[4]);
+                            _linienLast = new LinienLast(_loadId, _startNodeId, _endNodeId, _p);
+                            _modell.LinienLasten.Add(_loadId, _linienLast);
                             i++;
                             break;
                         }
@@ -103,19 +103,19 @@ public class LastParser
             FeParser.EingabeGefunden += "\nElementLast3";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                switch (substrings.Length)
+                _substrings = lines[i + 1].Split(delimiters);
+                switch (_substrings.Length)
                 {
                     case 5:
                         {
-                            loadId = substrings[0];
-                            elementId = substrings[1];
-                            p = new double[3];
-                            p[0] = double.Parse(substrings[2]);
-                            p[1] = double.Parse(substrings[3]);
-                            p[2] = double.Parse(substrings[4]);
-                            elementLast3 = new ElementLast3(loadId, elementId, p);
-                            modell.ElementLasten.Add(loadId, elementLast3);
+                            _loadId = _substrings[0];
+                            _elementId = _substrings[1];
+                            _p = new double[3];
+                            _p[0] = double.Parse(_substrings[2]);
+                            _p[1] = double.Parse(_substrings[3]);
+                            _p[2] = double.Parse(_substrings[4]);
+                            _elementLast3 = new ElementLast3(_loadId, _elementId, _p);
+                            _modell.ElementLasten.Add(_loadId, _elementLast3);
                             i++;
                             break;
                         }
@@ -138,20 +138,20 @@ public class LastParser
             FeParser.EingabeGefunden += "\nElementLast4";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                switch (substrings.Length)
+                _substrings = lines[i + 1].Split(delimiters);
+                switch (_substrings.Length)
                 {
                     case 6:
                         {
-                            loadId = substrings[0];
-                            elementId = substrings[1];
-                            p = new double[4];
-                            p[0] = double.Parse(substrings[2]);
-                            p[1] = double.Parse(substrings[3]);
-                            p[2] = double.Parse(substrings[4]);
-                            p[3] = double.Parse(substrings[5]);
-                            elementLast4 = new ElementLast4(loadId, elementId, p);
-                            modell.ElementLasten.Add(loadId, elementLast4);
+                            _loadId = _substrings[0];
+                            _elementId = _substrings[1];
+                            _p = new double[4];
+                            _p[0] = double.Parse(_substrings[2]);
+                            _p[1] = double.Parse(_substrings[3]);
+                            _p[2] = double.Parse(_substrings[4]);
+                            _p[3] = double.Parse(_substrings[5]);
+                            _elementLast4 = new ElementLast4(_loadId, _elementId, _p);
+                            _modell.ElementLasten.Add(_loadId, _elementLast4);
                             i++;
                             break;
                         }

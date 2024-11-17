@@ -31,9 +31,9 @@ public class Element2D3 : AbstraktLinear2D3
         SpezifischeWärmeMatrix = new double[3];
     }
 
-    public double[] SpezifischeWärmeMatrix { get; }
+    private double[] SpezifischeWärmeMatrix { get; }
 
-    public FeModell Modell { get; }
+    private FeModell Modell { get; }
 
     // ....Compute element Matrix.....................................
     public override double[,] BerechneElementMatrix()

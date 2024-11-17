@@ -2,7 +2,7 @@
 
 public class KnotenLast : AbstraktKnotenlast
 {
-    private int[] systemIndices;
+    private int[] _systemIndices;
 
     // ....Constructor....................................................
     public KnotenLast()
@@ -38,8 +38,8 @@ public class KnotenLast : AbstraktKnotenlast
     // ....Compute the system indices of a node ..............................
     public int[] ComputeSystemIndices()
     {
-        systemIndices = Knoten.SystemIndizes;
-        return systemIndices;
+        _systemIndices = Knoten.SystemIndizes;
+        return _systemIndices;
     }
 
     public override double[] BerechneLastVektor()

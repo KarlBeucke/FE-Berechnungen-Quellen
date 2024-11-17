@@ -38,7 +38,7 @@ internal class TransientParser
         {
             if (lines[i] != "Zeitintegration") continue;
             FeParser.EingabeGefunden += "\nZeitintegration";
-            //id, tmax, dt, method, parameter1, parameter2
+            //id, Tmax, dt, method, parameter1, parameter2
             //method=1:beta,gamma  method=2:theta  method=3: alfa
             _substrings = lines[i + 1].Split(_delimiters);
             try

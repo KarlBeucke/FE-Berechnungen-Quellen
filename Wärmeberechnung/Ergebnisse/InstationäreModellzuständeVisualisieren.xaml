@@ -14,7 +14,7 @@
                 <Label x:Name="Zeitschritt" Content="Modellzustand an festgelegtem Zeitschritt" Width="300"
                        Grid.Column="0" Margin="10,0,0,0"
                        VerticalAlignment="Top" HorizontalAlignment="Left" />
-                <Label Content="Auswahl des Integrationszeit" HorizontalAlignment="Left" Margin="10,25,0,0"
+                <Label Content="Auswahl der Integrationszeit" HorizontalAlignment="Left" Margin="10,25,0,0"
                        VerticalAlignment="Top" Width="164" Height="25" />
                 <ComboBox Name="Zeitschrittauswahl" Grid.Column="0" Margin="180,28,0,10" Height="22" Width="100"
                           HorizontalAlignment="Left"

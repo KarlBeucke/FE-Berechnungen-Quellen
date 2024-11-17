@@ -4,30 +4,31 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
 public partial class Darstellungsbereich
 {
-    public double maxTemperatur;
-    public double maxWärmefluss;
-    public double tmin, tmax;
+    public double MaxTemperatur;
+    public double MaxWärmefluss;
+    public readonly double Tmin;
+    public double Tmax;
 
     public Darstellungsbereich(double tmin, double tmax, double maxTemperatur, double maxWärmefluss)
     {
         InitializeComponent();
-        this.tmin = tmin;
-        this.tmax = tmax;
-        this.maxTemperatur = maxTemperatur;
-        this.maxWärmefluss = maxWärmefluss;
+        this.Tmin = tmin;
+        this.Tmax = tmax;
+        this.MaxTemperatur = maxTemperatur;
+        this.MaxWärmefluss = maxWärmefluss;
         //TxtMinZeit.Text = this.tmin.ToString(CultureInfo.CurrentCulture);
-        TxtMaxZeit.Text = this.tmax.ToString(CultureInfo.CurrentCulture);
-        TxtMaxTemperatur.Text = this.maxTemperatur.ToString("N2");
-        TxtMaxWärmefluss.Text = this.maxWärmefluss.ToString("N2");
+        TxtMaxZeit.Text = this.Tmax.ToString(CultureInfo.CurrentCulture);
+        TxtMaxTemperatur.Text = this.MaxTemperatur.ToString("N2");
+        TxtMaxWärmefluss.Text = this.MaxWärmefluss.ToString("N2");
         ShowDialog();
     }
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
         //tmin = double.Parse(TxtMinZeit.Text);
-        tmax = double.Parse(TxtMaxZeit.Text);
-        maxTemperatur = double.Parse(TxtMaxTemperatur.Text);
-        maxWärmefluss = double.Parse(TxtMaxWärmefluss.Text);
+        Tmax = double.Parse(TxtMaxZeit.Text);
+        MaxTemperatur = double.Parse(TxtMaxTemperatur.Text);
+        MaxWärmefluss = double.Parse(TxtMaxWärmefluss.Text);
         Close();
     }
 

@@ -4,15 +4,14 @@ namespace FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
 public class Element3D8 : AbstraktLinear3D8
 {
-    private readonly double[,] e = new double[3, 3]; // material matrix
-    private readonly double[,] elementMatrix = new double[8, 8];
-    private readonly double[] elementTemperatures = new double[8]; // at element nodes
-    private AbstraktElement element;
+    private readonly double[,] _e = new double[3, 3]; // material matrix
+    private readonly double[,] _elementMatrix = new double[8, 8];
+    private readonly double[] _elementTemperatures = new double[8]; // at element nodes
+    private AbstraktElement _element;
 
     // constructor
     public Element3D8(string[] eKnotens, string materialId, FeModell modell)
     {
-        WärmeStatus = new double[3];
         if (modell.Raumdimension != 3)
             _ = MessageBox.Show("Das Modell ist nicht 3D", "Wärmeberechnung");
 
@@ -22,9 +21,7 @@ public class Element3D8 : AbstraktLinear3D8
         Knoten = new Knoten[KnotenProElement];
         for (var i = 0; i < KnotenProElement; i++)
         {
-            if (modell.Knoten.TryGetValue(KnotenIds[i], out var node))
-            {
-            }
+            if (modell.Knoten.TryGetValue(KnotenIds[i], out var node)) { }
 
             Knoten[i] = node;
         }
@@ -35,7 +32,6 @@ public class Element3D8 : AbstraktLinear3D8
     public Element3D8(string id, string[] eKnotens, string materialId, FeModell feModell)
     {
         Modell = feModell;
-        WärmeStatus = new double[3];
         if (Modell.Raumdimension != 3)
             _ = MessageBox.Show("Das Modell ist nicht 3D", "Wärmeberechnung");
 
@@ -46,9 +42,7 @@ public class Element3D8 : AbstraktLinear3D8
         Knoten = new Knoten[KnotenProElement];
         for (var i = 0; i < KnotenProElement; i++)
         {
-            if (Modell.Knoten.TryGetValue(KnotenIds[i], out var node))
-            {
-            }
+            if (Modell.Knoten.TryGetValue(KnotenIds[i], out var node)) { }
 
             Knoten[i] = node;
         }
@@ -56,7 +50,6 @@ public class Element3D8 : AbstraktLinear3D8
         ElementMaterialId = materialId;
     }
 
-    public double[] WärmeStatus { get; set; }
     private AbstraktMaterial Material { get; set; }
 
     private FeModell Modell { get; }
@@ -64,23 +57,21 @@ public class Element3D8 : AbstraktLinear3D8
     // ....Compute element matrix.....................................
     public override double[,] BerechneElementMatrix()
     {
-        if (Modell.Material.TryGetValue(ElementMaterialId, out var abstractMaterial))
-        {
-        }
+        if (Modell.Material.TryGetValue(ElementMaterialId, out var abstractMaterial)) { }
 
         Material = (Material)abstractMaterial;
         double[] gCoord = { -1 / Math.Sqrt(5.0 / 3), 0, 1 / Math.Sqrt(5.0 / 3) };
         double[] gWeight = { 5.0 / 9, 8.0 / 9, 5.0 / 9 }; // gaussian coordinates, weights
         _ = new double[8, 3];
-        MatrizenAlgebra.Clear(elementMatrix);
+        MatrizenAlgebra.Clear(_elementMatrix);
 
         // material matrix für ebene Verzerrung (plane strain)
         var conduct = ((Material)Material)?.MaterialWerte;
         if (conduct != null)
         {
-            e[0, 0] = conduct[0];
-            e[1, 1] = conduct[1];
-            e[2, 2] = conduct[2];
+            _e[0, 0] = conduct[0];
+            _e[1, 1] = conduct[1];
+            _e[2, 2] = conduct[2];
         }
 
         for (var i = 0; i < gCoord.Length; i++)
@@ -98,13 +89,13 @@ public class Element3D8 : AbstraktLinear3D8
                     BerechneGeometrie(z0, z1, z2);
                     Sx = BerechneSx(z0, z1, z2);
                     // Ke = determinant*g0*g1*g2*Sx*E*SxT
-                    var temp = MatrizenAlgebra.Mult(Sx, e);
-                    MatrizenAlgebra.MultAddMatrixTransposed(elementMatrix, Determinant * g0 * g1 * g2, temp, Sx);
+                    var temp = MatrizenAlgebra.Mult(Sx, _e);
+                    MatrizenAlgebra.MultAddMatrixTransposed(_elementMatrix, Determinant * g0 * g1 * g2, temp, Sx);
                 }
             }
         }
 
-        return elementMatrix;
+        return _elementMatrix;
     }
 
     // ....Compute diagonal Specific Heat Matrix.................................
@@ -123,10 +114,10 @@ public class Element3D8 : AbstraktLinear3D8
 
     public override double[] BerechneElementZustand(double z0, double z1, double z2)
     {
-        for (var i = 0; i < 8; i++) elementTemperatures[i] = Knoten[i].Knotenfreiheitsgrade[0];
+        for (var i = 0; i < 8; i++) _elementTemperatures[i] = Knoten[i].Knotenfreiheitsgrade[0];
         // midPointHeatState = E * Sx(transponiert) * Temperatures
-        var midpointHeatState = MatrizenAlgebra.MultTransposed(Sx, elementTemperatures);
-        midpointHeatState = MatrizenAlgebra.Mult(e, midpointHeatState);
+        var midpointHeatState = MatrizenAlgebra.MultTransposed(Sx, _elementTemperatures);
+        midpointHeatState = MatrizenAlgebra.Mult(_e, midpointHeatState);
         return midpointHeatState;
     }
 
@@ -141,9 +132,9 @@ public class Element3D8 : AbstraktLinear3D8
 
     public override Point3D BerechneSchwerpunkt3D()
     {
-        if (!Modell.Elemente.TryGetValue(ElementId, out element))
+        if (!Modell.Elemente.TryGetValue(ElementId, out _element))
             throw new ModellAusnahme("\nElement3D8: " + ElementId + " nicht im Modell gefunden");
-        element.SetzElementReferenzen(Modell);
-        return BerechneSchwerpunkt3D(element);
+        _element.SetzElementReferenzen(Modell);
+        return BerechneSchwerpunkt3D(_element);
     }
 }

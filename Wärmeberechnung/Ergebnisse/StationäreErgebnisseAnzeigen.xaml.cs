@@ -8,21 +8,21 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
 public partial class StationäreErgebnisseAnzeigen
 {
-    private readonly FeModell modell;
-    private Shape letzterKnoten;
-    private Shape letztesElement;
+    private readonly FeModell _modell;
+    private Shape _letzterKnoten;
+    private Shape _letztesElement;
 
     public StationäreErgebnisseAnzeigen(FeModell feModell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
-        modell = feModell;
+        _modell = feModell;
         InitializeComponent();
     }
 
     private void Knoten_Loaded(object sender, RoutedEventArgs e)
     {
         KnotenGrid = sender as DataGrid;
-        if (KnotenGrid != null) KnotenGrid.ItemsSource = modell.Knoten;
+        if (KnotenGrid != null) KnotenGrid.ItemsSource = _modell.Knoten;
     }
 
     //SelectionChanged
@@ -32,22 +32,22 @@ public partial class StationäreErgebnisseAnzeigen
         var cellInfo = KnotenGrid.SelectedCells[0];
         var cell = (KeyValuePair<string, Knoten>)cellInfo.Item;
         var knoten = cell.Value;
-        if (letzterKnoten != null)
-            StartFenster.StationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(letzterKnoten);
-        letzterKnoten = StartFenster.StationäreErgebnisse.darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
+        if (_letzterKnoten != null)
+            StartFenster.StationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(_letzterKnoten);
+        _letzterKnoten = StartFenster.StationäreErgebnisse.Darstellung.KnotenZeigen(knoten, Brushes.Green, 1);
     }
 
     //LostFocus
     private void KeinKnotenSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.StationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(letzterKnoten);
-        letztesElement = null;
+        StartFenster.StationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(_letzterKnoten);
+        _letztesElement = null;
     }
 
     private void WärmeflussVektoren_Loaded(object sender, RoutedEventArgs e)
     {
         WärmeflussVektorGrid = sender as DataGrid;
-        foreach (var item in modell.Elemente)
+        foreach (var item in _modell.Elemente)
             switch (item.Value)
             {
                 case Abstrakt2D value:
@@ -59,12 +59,12 @@ public partial class StationäreErgebnisseAnzeigen
                 case Element3D8 value:
                     {
                         var element3d8 = value;
-                        element3d8.WärmeStatus = element3d8.BerechneElementZustand(0, 0, 0);
+                        element3d8.BerechneElementZustand(0, 0, 0);
                         break;
                     }
             }
 
-        if (WärmeflussVektorGrid != null) WärmeflussVektorGrid.ItemsSource = modell.Elemente;
+        if (WärmeflussVektorGrid != null) WärmeflussVektorGrid.ItemsSource = _modell.Elemente;
     }
 
     //SelectionChanged
@@ -74,22 +74,22 @@ public partial class StationäreErgebnisseAnzeigen
         var cellInfo = WärmeflussVektorGrid.SelectedCells[0];
         var cell = (KeyValuePair<string, AbstraktElement>)cellInfo.Item;
         var element = cell.Value;
-        if (letztesElement != null)
-            StartFenster.StationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(letztesElement);
-        letztesElement = StartFenster.StationäreErgebnisse.darstellung.ElementFillZeichnen((Abstrakt2D)element,
+        if (_letztesElement != null)
+            StartFenster.StationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(_letztesElement);
+        _letztesElement = StartFenster.StationäreErgebnisse.Darstellung.ElementFillZeichnen((Abstrakt2D)element,
             Brushes.Black, Colors.Green, .2, 2);
     }
 
     //LostFocus
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
-        StartFenster.StationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(letztesElement);
-        letzterKnoten = null;
+        StartFenster.StationäreErgebnisse.VisualWärmeErgebnisse.Children.Remove(_letztesElement);
+        _letzterKnoten = null;
     }
 
     private void Wärmefluss_Loaded(object sender, RoutedEventArgs e)
     {
         WärmeflussGrid = sender as DataGrid;
-        if (WärmeflussGrid != null) WärmeflussGrid.ItemsSource = modell.Randbedingungen;
+        if (WärmeflussGrid != null) WärmeflussGrid.ItemsSource = _modell.Randbedingungen;
     }
 }

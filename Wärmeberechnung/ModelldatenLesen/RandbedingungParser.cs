@@ -4,15 +4,15 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public class RandbedingungParser
 {
-    private FeModell modell;
-    private string nodeId;
-    private Randbedingung randbedingung;
-    private string[] substrings;
-    private string supportId;
+    private FeModell _modell;
+    private string _nodeId;
+    private Randbedingung _randbedingung;
+    private string[] _substrings;
+    private string _supportId;
 
     public void ParseRandbedingungen(string[] lines, FeModell feModell)
     {
-        modell = feModell;
+        _modell = feModell;
         var delimiters = new[] { '\t' };
 
         for (var i = 0; i < lines.Length; i++)
@@ -21,16 +21,16 @@ public class RandbedingungParser
             FeParser.EingabeGefunden += "\nRandbedingungen";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                switch (substrings.Length)
+                _substrings = lines[i + 1].Split(delimiters);
+                switch (_substrings.Length)
                 {
                     case 3:
                         {
-                            supportId = substrings[0];
-                            nodeId = substrings[1];
-                            var pre = double.Parse(substrings[2]);
-                            randbedingung = new Randbedingung(supportId, nodeId, pre);
-                            modell.Randbedingungen.Add(supportId, randbedingung);
+                            _supportId = _substrings[0];
+                            _nodeId = _substrings[1];
+                            var pre = double.Parse(_substrings[2]);
+                            _randbedingung = new Randbedingung(_supportId, _nodeId, pre);
+                            _modell.Randbedingungen.Add(_supportId, _randbedingung);
                             i++;
                             break;
                         }

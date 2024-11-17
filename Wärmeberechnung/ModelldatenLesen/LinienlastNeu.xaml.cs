@@ -101,7 +101,6 @@ public partial class LinienlastNeu
         catch (FormatException)
         {
             _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue Linienlast");
-            return;
         }
     }
 

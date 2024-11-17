@@ -2,7 +2,7 @@
 
 public class ElementLast4 : AbstraktElementLast
 {
-    private int[] systemIndices;
+    private int[] _systemIndices;
 
     // ....Constructors...................................................
     public ElementLast4(string elementId, double[] p)
@@ -62,7 +62,7 @@ public class ElementLast4 : AbstraktElementLast
     // ....Compute the element system indices .................................
     public int[] ComputeSystemIndices()
     {
-        systemIndices = Element.SystemIndizesElement;
-        return systemIndices;
+        _systemIndices = Element.SystemIndizesElement;
+        return _systemIndices;
     }
 }

@@ -45,7 +45,7 @@
             AlternatingRowBackground="Aqua" AutoGenerateColumns="False"
             HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
             Loaded="Elemente_Loaded"
-            MouseDoubleClick="NeuesElement" UnloadingRow="ElementZeileLoeschen" SelectionChanged="ElementZeileSelected"
+            MouseDoubleClick="NeuesElement" UnloadingRow="ElementZeileLöschen" SelectionChanged="ElementZeileSelected"
             LostFocus="KeinElementSelected" CellEditEnding="Model_Changed"
             d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
@@ -107,7 +107,7 @@
             Margin="2,37,5,187" Grid.Column="3" Grid.Row="0"
             AlternatingRowBackground="Aqua" Loaded="KnotenEinwirkungen_Loaded" AutoGenerateColumns="False"
             CellEditEnding="Model_Changed" MouseDoubleClick="NeueKnotenlast"
-            UnloadingRow="KnotenlastZeileLoeschen" SelectionChanged="KnotenlastZeileSelected" Grid.RowSpan="2"
+            UnloadingRow="KnotenlastZeileLöschen" SelectionChanged="KnotenlastZeileSelected" Grid.RowSpan="2"
             d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />
@@ -122,7 +122,7 @@
             Name="LinienEinwirkungenGrid"
             Margin="6,25,3,6" Width="194" Grid.Column="3"
             AlternatingRowBackground="Aqua" Loaded="LinienEinwirkungen_Loaded" AutoGenerateColumns="False"
-            MouseDoubleClick="NeueLinienlast" UnloadingRow="LinienlastZeileLoeschen"
+            MouseDoubleClick="NeueLinienlast" UnloadingRow="LinienlastZeileLöschen"
             SelectionChanged="LinienlastZeileSelected" Grid.Row="1" VerticalContentAlignment="Stretch"
             HorizontalContentAlignment="Stretch" d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
@@ -141,7 +141,7 @@
             Margin="4,25,5,9" Grid.Column="3" Grid.Row="2"
             AlternatingRowBackground="Aqua"
             Loaded="ElementEinwirkungen_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
-            MouseDoubleClick="NeueElementlast" UnloadingRow="ElementlastZeileLoeschen"
+            MouseDoubleClick="NeueElementlast" UnloadingRow="ElementlastZeileLöschen"
             SelectionChanged="ElementlastlastZeileSelected" d:DataContext="{d:DesignData modell}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding LastId}" />

@@ -104,7 +104,7 @@ public partial class ZeitintegrationNeu
         }
         catch (FormatException)
         {
-            _ = MessageBox.Show("maximale Integrationszeit tmax hat falsches Format", "neue Zeitintegration");
+            _ = MessageBox.Show("maximale Integrationszeit Tmax hat falsches Format", "neue Zeitintegration");
             return;
         }
         try

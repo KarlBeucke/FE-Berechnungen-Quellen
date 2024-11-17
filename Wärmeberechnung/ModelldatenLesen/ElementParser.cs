@@ -4,18 +4,18 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
 public class ElementParser : FeParser
 {
-    private AbstraktElement element;
-    private string elementId;
-    private string materialId;
-    private FeModell modell;
-    private string[] nodeIds;
-    private int nodesPerElement;
+    private AbstraktElement _element;
+    private string _elementId;
+    private string _materialId;
+    private FeModell _modell;
+    private string[] _nodeIds;
+    private int _nodesPerElement;
     private string[] substrings;
 
     // parsing a new model to be read from file
     public void ParseWärmeElements(string[] lines, FeModell feModell)
     {
-        modell = feModell;
+        _modell = feModell;
         ParseElement2D2(lines);
         ParseElement2D3(lines);
         ParseElement2D4(lines);
@@ -24,7 +24,7 @@ public class ElementParser : FeParser
 
     private void ParseElement2D2(IReadOnlyList<string> lines)
     {
-        nodesPerElement = 2;
+        _nodesPerElement = 2;
         var delimiters = new[] { '\t' };
 
         for (var i = 0; i < lines.Count; i++)
@@ -38,13 +38,13 @@ public class ElementParser : FeParser
                 {
                     case 4:
                         {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            for (var k = 0; k < nodesPerElement; k++) nodeIds[k] = substrings[k + 1];
+                            _elementId = substrings[0];
+                            _nodeIds = new string[_nodesPerElement];
+                            for (var k = 0; k < _nodesPerElement; k++) _nodeIds[k] = substrings[k + 1];
 
-                            materialId = substrings[3];
-                            element = new Element2D2(elementId, nodeIds, materialId, modell);
-                            modell.Elemente.Add(elementId, element);
+                            _materialId = substrings[3];
+                            _element = new Element2D2(_elementId, _nodeIds, _materialId, _modell);
+                            _modell.Elemente.Add(_elementId, _element);
                             i++;
                             break;
                         }
@@ -59,7 +59,7 @@ public class ElementParser : FeParser
 
     private void ParseElement2D3(IReadOnlyList<string> lines)
     {
-        nodesPerElement = 3;
+        _nodesPerElement = 3;
         var delimiters = new[] { '\t' };
 
         for (var i = 0; i < lines.Count; i++)
@@ -73,14 +73,14 @@ public class ElementParser : FeParser
                 {
                     case 5:
                         {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            for (var k = 0; k < nodesPerElement; k++) nodeIds[k] = substrings[k + 1];
+                            _elementId = substrings[0];
+                            _nodeIds = new string[_nodesPerElement];
+                            for (var k = 0; k < _nodesPerElement; k++) _nodeIds[k] = substrings[k + 1];
 
-                            materialId = substrings[4];
+                            _materialId = substrings[4];
 
-                            element = new Element2D3(elementId, nodeIds, materialId, modell);
-                            modell.Elemente.Add(elementId, element);
+                            _element = new Element2D3(_elementId, _nodeIds, _materialId, _modell);
+                            _modell.Elemente.Add(_elementId, _element);
                             i++;
                             break;
                         }
@@ -95,7 +95,7 @@ public class ElementParser : FeParser
 
     private void ParseElement2D4(IReadOnlyList<string> lines)
     {
-        nodesPerElement = 4;
+        _nodesPerElement = 4;
         var delimiters = new[] { '\t' };
 
         for (var i = 0; i < lines.Count; i++)
@@ -109,14 +109,14 @@ public class ElementParser : FeParser
                 {
                     case 6:
                         {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            for (var k = 0; k < nodesPerElement; k++) nodeIds[k] = substrings[k + 1];
+                            _elementId = substrings[0];
+                            _nodeIds = new string[_nodesPerElement];
+                            for (var k = 0; k < _nodesPerElement; k++) _nodeIds[k] = substrings[k + 1];
 
-                            materialId = substrings[5];
+                            _materialId = substrings[5];
 
-                            element = new Element2D4(elementId, nodeIds, materialId, modell);
-                            modell.Elemente.Add(elementId, element);
+                            _element = new Element2D4(_elementId, _nodeIds, _materialId, _modell);
+                            _modell.Elemente.Add(_elementId, _element);
                             i++;
                             break;
                         }
@@ -131,7 +131,7 @@ public class ElementParser : FeParser
 
     private void ParseElement3D8(IReadOnlyList<string> lines)
     {
-        nodesPerElement = 8;
+        _nodesPerElement = 8;
         var delimiters = new[] { '\t' };
 
         for (var i = 0; i < lines.Count; i++)
@@ -145,14 +145,14 @@ public class ElementParser : FeParser
                 {
                     case 10:
                         {
-                            elementId = substrings[0];
-                            nodeIds = new string[nodesPerElement];
-                            for (var k = 0; k < nodesPerElement; k++) nodeIds[k] = substrings[k + 1];
+                            _elementId = substrings[0];
+                            _nodeIds = new string[_nodesPerElement];
+                            for (var k = 0; k < _nodesPerElement; k++) _nodeIds[k] = substrings[k + 1];
 
-                            materialId = substrings[9];
+                            _materialId = substrings[9];
 
-                            element = new Element3D8(elementId, nodeIds, materialId, modell);
-                            modell.Elemente.Add(elementId, element);
+                            _element = new Element3D8(_elementId, _nodeIds, _materialId, _modell);
+                            _modell.Elemente.Add(_elementId, _element);
                             i++;
                             break;
                         }

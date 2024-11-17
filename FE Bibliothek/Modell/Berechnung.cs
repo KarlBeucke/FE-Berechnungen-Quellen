@@ -3,7 +3,6 @@ using FEBibliothek.Zeitlöser;
 using Microsoft.Win32;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
 
 namespace FEBibliothek.Modell
 {
@@ -168,7 +167,7 @@ namespace FEBibliothek.Modell
                 {
                     //if (festgehalten[2] && _knoten.SystemIndizes.Length < 3)
                     //    throw new BerechnungAusnahme("\nKnoten " + _knoten.Id +
-                    //                                   " muss 3 Knotenfreiheitsgrade für Festeinspannung haben");
+                    //                                   " muß 3 Knotenfreiheitsgrade für Festeinspannung haben.");
                     if (festgehalten[i]) _systemGleichungen.SetzStatus(true, _knoten.SystemIndizes[i], vordefiniert[i]);
                 }
             }
@@ -425,7 +424,7 @@ namespace FEBibliothek.Modell
 
             for (var k = 0; k < _modell.Zeitintegration.Anfangsbedingungen.Count; k++)
             {
-                var anf = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[k];
+                var anf = _modell.Zeitintegration.Anfangsbedingungen[k];
                 if (anf.KnotenId == "alle")
                 {
                     for (var i = 0; i < _dimension; i++) temperatur[0][i] = anf.Werte[0];
@@ -699,9 +698,8 @@ namespace FEBibliothek.Modell
         {
             // finde vordefinierte Anfangsbedingungen
 
-            for (var k = 0; k < _modell.Zeitintegration.Anfangsbedingungen.Count; k++)
+            foreach (var anf in _modell.Zeitintegration.Anfangsbedingungen)
             {
-                var anf = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[k];
                 if (!_modell.Knoten.TryGetValue(anf.KnotenId, out var anfKnoten))
                     throw new BerechnungAusnahme("\nKnoten " + anf.KnotenId +
                                                  " für vordefinierte Anfangsbedingung ist nicht im Modell enthalten.");

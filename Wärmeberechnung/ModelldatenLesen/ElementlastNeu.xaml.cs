@@ -7,7 +7,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 public partial class ElementlastNeu
 {
     private readonly FeModell _modell;
-    private AbstraktElementLast vorhandeneElementlast;
+    private AbstraktElementLast _vorhandeneElementlast;
 
     public ElementlastNeu(FeModell modell)
     {
@@ -26,13 +26,13 @@ public partial class ElementlastNeu
         }
 
         // vorhandene Elementlast
-        if (_modell.ElementLasten.TryGetValue(elementlastId, out vorhandeneElementlast))
+        if (_modell.ElementLasten.TryGetValue(elementlastId, out _vorhandeneElementlast))
         {
-            vorhandeneElementlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
+            _vorhandeneElementlast.ElementId = ElementId.Text.ToString(CultureInfo.CurrentCulture);
 
-            if (!_modell.Elemente.TryGetValue(vorhandeneElementlast.ElementId, out var element))
+            if (!_modell.Elemente.TryGetValue(_vorhandeneElementlast.ElementId, out var element))
             {
-                _ = MessageBox.Show("Element '" + vorhandeneElementlast.ElementId + "' nicht im Modell gefunden", "neue Elementlast");
+                _ = MessageBox.Show("Element '" + _vorhandeneElementlast.ElementId + "' nicht im Modell gefunden", "neue Elementlast");
                 return;
             }
 
@@ -42,29 +42,29 @@ public partial class ElementlastNeu
                 {
                     case Element2D3:
                         {
-                            if (Knoten1.Text.Length > 0) vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
-                            if (Knoten2.Text.Length > 0) vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
-                            if (Knoten3.Text.Length > 0) vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
+                            if (Knoten1.Text.Length > 0) _vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
+                            if (Knoten2.Text.Length > 0) _vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
+                            if (Knoten3.Text.Length > 0) _vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
                             break;
                         }
                     case Element2D4:
                         {
-                            if (Knoten1.Text.Length > 0) vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
-                            if (Knoten2.Text.Length > 0) vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
-                            if (Knoten3.Text.Length > 0) vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
-                            if (Knoten4.Text.Length > 0) vorhandeneElementlast.Lastwerte[3] = double.Parse(Knoten4.Text);
+                            if (Knoten1.Text.Length > 0) _vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
+                            if (Knoten2.Text.Length > 0) _vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
+                            if (Knoten3.Text.Length > 0) _vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
+                            if (Knoten4.Text.Length > 0) _vorhandeneElementlast.Lastwerte[3] = double.Parse(Knoten4.Text);
                             break;
                         }
                     case Element3D8:
                         {
-                            if (Knoten1.Text.Length > 0) vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
-                            if (Knoten2.Text.Length > 0) vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
-                            if (Knoten3.Text.Length > 0) vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
-                            if (Knoten4.Text.Length > 0) vorhandeneElementlast.Lastwerte[3] = double.Parse(Knoten4.Text);
-                            if (Knoten5.Text.Length > 0) vorhandeneElementlast.Lastwerte[4] = double.Parse(Knoten5.Text);
-                            if (Knoten6.Text.Length > 0) vorhandeneElementlast.Lastwerte[5] = double.Parse(Knoten6.Text);
-                            if (Knoten7.Text.Length > 0) vorhandeneElementlast.Lastwerte[6] = double.Parse(Knoten7.Text);
-                            if (Knoten8.Text.Length > 0) vorhandeneElementlast.Lastwerte[7] = double.Parse(Knoten8.Text);
+                            if (Knoten1.Text.Length > 0) _vorhandeneElementlast.Lastwerte[0] = double.Parse(Knoten1.Text);
+                            if (Knoten2.Text.Length > 0) _vorhandeneElementlast.Lastwerte[1] = double.Parse(Knoten2.Text);
+                            if (Knoten3.Text.Length > 0) _vorhandeneElementlast.Lastwerte[2] = double.Parse(Knoten3.Text);
+                            if (Knoten4.Text.Length > 0) _vorhandeneElementlast.Lastwerte[3] = double.Parse(Knoten4.Text);
+                            if (Knoten5.Text.Length > 0) _vorhandeneElementlast.Lastwerte[4] = double.Parse(Knoten5.Text);
+                            if (Knoten6.Text.Length > 0) _vorhandeneElementlast.Lastwerte[5] = double.Parse(Knoten6.Text);
+                            if (Knoten7.Text.Length > 0) _vorhandeneElementlast.Lastwerte[6] = double.Parse(Knoten7.Text);
+                            if (Knoten8.Text.Length > 0) _vorhandeneElementlast.Lastwerte[7] = double.Parse(Knoten8.Text);
                             break;
                         }
                 }
@@ -157,24 +157,24 @@ public partial class ElementlastNeu
         }
 
         // vorhandene Elementlastdefinition
-        if (!_modell.ElementLasten.TryGetValue(ElementlastId.Text, out vorhandeneElementlast))
+        if (!_modell.ElementLasten.TryGetValue(ElementlastId.Text, out _vorhandeneElementlast))
         {
             _ = MessageBox.Show("Elementlast '" + ElementlastId.Text + "' nicht im Modell gefunden", "neue Elementlast");
             return;
         }
 
-        ElementlastId.Text = vorhandeneElementlast.LastId;
-        ElementId.Text = vorhandeneElementlast.ElementId;
-        Knoten1.Text = vorhandeneElementlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
-        Knoten2.Text = vorhandeneElementlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
-        switch (vorhandeneElementlast)
+        ElementlastId.Text = _vorhandeneElementlast.LastId;
+        ElementId.Text = _vorhandeneElementlast.ElementId;
+        Knoten1.Text = _vorhandeneElementlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
+        Knoten2.Text = _vorhandeneElementlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
+        switch (_vorhandeneElementlast)
         {
             case ElementLast3:
-                Knoten3.Text = vorhandeneElementlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
+                Knoten3.Text = _vorhandeneElementlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
                 break;
             case ElementLast4:
-                Knoten3.Text = vorhandeneElementlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
-                Knoten4.Text = vorhandeneElementlast.Lastwerte[3].ToString("G3", CultureInfo.CurrentCulture);
+                Knoten3.Text = _vorhandeneElementlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
+                Knoten4.Text = _vorhandeneElementlast.Lastwerte[3].ToString("G3", CultureInfo.CurrentCulture);
                 break;
                 //case ElementLast8:
                 //    Knoten3.Text = vorhandeneElementlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);

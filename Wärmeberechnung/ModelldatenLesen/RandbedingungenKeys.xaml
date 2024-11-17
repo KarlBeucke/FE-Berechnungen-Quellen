@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Title="vorhandene Randbedingungsdefinitionen" Height="200" Width="300">
     <Grid>
-        <ListView Margin="10" Name="RandbedingungKey">
+        <ListView Margin="10" Name="RandbedingungKey" d:DataContext="{d:DesignData modell}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding RandbedingungId}" />

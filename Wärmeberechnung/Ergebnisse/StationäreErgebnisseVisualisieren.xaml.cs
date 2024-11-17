@@ -9,102 +9,102 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 
 public partial class StationäreErgebnisseVisualisieren
 {
-    private readonly List<object> hitList = new();
-    private readonly List<TextBlock> hitTextBlock = new();
-    private readonly FeModell modell;
-    public Darstellung darstellung;
-    private EllipseGeometry hitArea;
-    private bool knotenTemperaturAn, elementTemperaturAn, wärmeflussAn;
+    private readonly List<object> _hitList = [];
+    private readonly List<TextBlock> _hitTextBlock = [];
+    private readonly FeModell _modell;
+    public Darstellung Darstellung;
+    private EllipseGeometry _hitArea;
+    private bool _knotenTemperaturAn, _elementTemperaturAn, _wärmeflussAn;
 
     public StationäreErgebnisseVisualisieren(FeModell model)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
-        modell = model;
+        _modell = model;
         InitializeComponent();
     }
 
     private void ModelGrid_Loaded(object sender, RoutedEventArgs e)
     {
-        darstellung = new Darstellung(modell, VisualWärmeErgebnisse);
-        darstellung.FestlegungAuflösung();
-        darstellung.AlleElementeZeichnen();
-        darstellung.KnotentemperaturZeichnen();
-        knotenTemperaturAn = true;
+        Darstellung = new Darstellung(_modell, VisualWärmeErgebnisse);
+        Darstellung.FestlegungAuflösung();
+        Darstellung.AlleElementeZeichnen();
+        Darstellung.KnotentemperaturZeichnen();
+        _knotenTemperaturAn = true;
     }
 
     private void BtnKnotentemperatur_Click(object sender, RoutedEventArgs e)
     {
-        if (!knotenTemperaturAn)
+        if (!_knotenTemperaturAn)
         {
             // zeichne den Wert einer jeden Randbedingung als Text an Randknoten
-            darstellung.KnotentemperaturZeichnen();
-            knotenTemperaturAn = true;
+            Darstellung.KnotentemperaturZeichnen();
+            _knotenTemperaturAn = true;
         }
         else
         {
             // entferne ALLE Textdarstellungen der Knotentemperaturen
-            foreach (var knotenTemp in darstellung.Knotentemperaturen)
+            foreach (var knotenTemp in Darstellung.Knotentemperaturen)
                 VisualWärmeErgebnisse.Children.Remove(knotenTemp);
-            knotenTemperaturAn = false;
+            _knotenTemperaturAn = false;
         }
     }
 
     private void BtnWärmefluss_Click(object sender, RoutedEventArgs e)
     {
-        if (!wärmeflussAn)
+        if (!_wärmeflussAn)
         {
             // zeichne ALLE resultierenden Wärmeflussvektoren in Elementschwerpunkten
-            darstellung.WärmeflussvektorenZeichnen();
+            Darstellung.WärmeflussvektorenZeichnen();
 
             // zeichne den Wert einer jeden Randbedingung als Text an Randknoten
-            darstellung.RandbedingungenZeichnen();
-            wärmeflussAn = true;
+            Darstellung.RandbedingungenZeichnen();
+            _wärmeflussAn = true;
         }
         else
         {
             // entferne ALLE resultierenden Wärmeflussvektoren in Elementschwerpunkten
-            foreach (var path in darstellung.WärmeVektoren) VisualWärmeErgebnisse.Children.Remove(path);
+            foreach (var path in Darstellung.WärmeVektoren) VisualWärmeErgebnisse.Children.Remove(path);
 
             // entferne ALLE Textdarstellungen der Randbedingungen
-            foreach (var rand in darstellung.RandKnoten) VisualWärmeErgebnisse.Children.Remove(rand);
-            wärmeflussAn = false;
+            foreach (var rand in Darstellung.RandKnoten) VisualWärmeErgebnisse.Children.Remove(rand);
+            _wärmeflussAn = false;
         }
     }
 
     private void BtnElementTemperaturen_Click(object sender, RoutedEventArgs e)
     {
-        if (!elementTemperaturAn)
+        if (!_elementTemperaturAn)
         {
-            darstellung.ElementTemperaturZeichnen();
-            elementTemperaturAn = true;
+            Darstellung.ElementTemperaturZeichnen();
+            _elementTemperaturAn = true;
         }
         else
         {
-            foreach (var path in darstellung.TemperaturElemente) VisualWärmeErgebnisse.Children.Remove(path);
-            elementTemperaturAn = false;
+            foreach (var path in Darstellung.TemperaturElemente) VisualWärmeErgebnisse.Children.Remove(path);
+            _elementTemperaturAn = false;
         }
     }
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        hitList.Clear();
-        hitTextBlock.Clear();
+        _hitList.Clear();
+        _hitTextBlock.Clear();
         var hitPoint = e.GetPosition(VisualWärmeErgebnisse);
-        hitArea = new EllipseGeometry(hitPoint, 1, 1);
+        _hitArea = new EllipseGeometry(hitPoint, 1, 1);
         VisualTreeHelper.HitTest(VisualWärmeErgebnisse, null, HitTestCallBack,
-            new GeometryHitTestParameters(hitArea));
+            new GeometryHitTestParameters(_hitArea));
 
         MyPopup.IsOpen = true;
 
         var sb = new StringBuilder();
         var done = "";
-        foreach (var item in hitList.Where(item => item != null))
+        foreach (var item in _hitList.Where(item => item != null))
             switch (item)
             {
                 case Polygon polygon:
                     {
                         MyPopup.IsOpen = true;
-                        if (modell.Elemente.TryGetValue(polygon.Name, out var multiKnotenElement))
+                        if (_modell.Elemente.TryGetValue(polygon.Name, out var multiKnotenElement))
                         {
                             var element2D = (Abstrakt2D)multiKnotenElement;
                             var elementTemperaturen = element2D.BerechneElementZustand(0, 0);
@@ -120,7 +120,7 @@ public partial class StationäreErgebnisseVisualisieren
                     {
                         if (path.Name == done) break;
                         MyPopup.IsOpen = true;
-                        if (modell.Elemente.TryGetValue(path.Name, out var multiKnotenElement))
+                        if (_modell.Elemente.TryGetValue(path.Name, out var multiKnotenElement))
                         {
                             var element2D = (Abstrakt2D)multiKnotenElement;
                             var elementTemperaturen = element2D.BerechneElementZustand(0, 0);
@@ -135,9 +135,9 @@ public partial class StationäreErgebnisseVisualisieren
                     }
             }
 
-        foreach (var item in hitTextBlock.Where(item => item != null))
+        foreach (var item in _hitTextBlock.Where(item => item != null))
         {
-            if (!modell.Knoten.TryGetValue(item.Name, out var knoten)) continue;
+            if (!_modell.Knoten.TryGetValue(item.Name, out var knoten)) continue;
             sb.Append("Knoten\t\t = " + knoten.Id);
             sb.Append("\nTemperatur\t= " + knoten.Knotenfreiheitsgrade[0].ToString("F2"));
             if (knoten.Reaktionen != null)
@@ -159,10 +159,10 @@ public partial class StationäreErgebnisseVisualisieren
                 switch (result.VisualHit)
                 {
                     case Shape hit:
-                        hitList.Add(hit);
+                        _hitList.Add(hit);
                         break;
                     case TextBlock hit:
-                        hitTextBlock.Add(hit);
+                        _hitTextBlock.Add(hit);
                         break;
                 }
 
@@ -173,7 +173,7 @@ public partial class StationäreErgebnisseVisualisieren
                 switch (result.VisualHit)
                 {
                     case Shape hit:
-                        hitList.Add(hit);
+                        _hitList.Add(hit);
                         break;
                 }
 
