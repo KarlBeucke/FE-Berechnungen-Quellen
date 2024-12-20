@@ -2,89 +2,94 @@
 
 public class Element2D4 : AbstraktLinear2D4
 {
-    private readonly double[,] elementMatrix = new double[4, 4];
-    private readonly double[] elementTemperatures = new double[4]; // at element nodes
-    private Material material;
+    private FeModell Modell { get; set; }
+    private readonly double[,] _elementMatrix = new double[4, 4];
+    private readonly double[] _elementTemperatures = new double[4]; // at element nodes
+    private Material _material;
+    private double[] SpezifischeWärmeMatrix { get; }
 
-    // ....Constructor................................................
+
     public Element2D4(string[] eNodes, string materialId, FeModell feModell)
     {
         // The null-coalescing operator ?? returns the value of its left-hand operand
         // if it isn't null; otherwise, it evaluates the right-hand operand and returns
         // its result. The ?? operator doesn't evaluate its right-hand operand if the
         // left-hand operand evaluates to non-null.
-        Modell = feModell ?? throw new ArgumentNullException(nameof(feModell));
+        Modell = feModell;
         ElementFreiheitsgrade = 1;
         KnotenProElement = 4;
-        KnotenIds = eNodes ?? throw new ArgumentNullException(nameof(eNodes));
+        KnotenIds = eNodes;
         Knoten = new Knoten[KnotenProElement];
         for (var i = 0; i < KnotenProElement; i++)
         {
-            if (Modell.Knoten.TryGetValue(KnotenIds[i], out var node)) { }
+            if (!Modell.Knoten.TryGetValue(KnotenIds[i], out var node))
+                throw new ModellAusnahme("\nElement2D4: Knoten " + KnotenIds[i] + "nicht im Modell gefunden");
 
-            Knoten[i] = node ?? throw new ArgumentNullException(nameof(node));
+            Knoten[i] = node;
         }
-
-        ElementMaterialId = materialId ?? throw new ArgumentNullException(nameof(materialId));
+        SpezifischeWärmeMatrix = new double[4];
+        ElementMaterialId = materialId;
     }
 
     public Element2D4(string id, string[] eNodes, string materialId, FeModell feModell)
     {
-        if (eNodes != null)
+        
+        Modell = feModell;
+        ElementId = id;
+        ElementFreiheitsgrade = 1;
+        KnotenProElement = 4;
+        KnotenIds = eNodes;
+        Knoten = new Knoten[KnotenProElement];
+        for (var i = 0; i < KnotenProElement; i++)
         {
-            Modell = feModell ?? throw new ArgumentNullException(nameof(feModell));
-            ElementId = id ?? throw new ArgumentNullException(nameof(id));
-            ElementFreiheitsgrade = 1;
-            KnotenProElement = 4;
-            KnotenIds = eNodes;
-            Knoten = new Knoten[KnotenProElement];
-            for (var i = 0; i < KnotenProElement; i++)
-            {
-                if (Modell.Knoten.TryGetValue(KnotenIds[i], out var node)) { }
+            if (!Modell.Knoten.TryGetValue(KnotenIds[i], out var node))
+                throw new ModellAusnahme("\nElement2D4: Knoten " + KnotenIds[i] + "nicht im Modell gefunden");
 
-                if (node != null) Knoten[i] = node;
-            }
+            Knoten[i] = node;
+        }
 
-            ElementMaterialId = materialId ?? throw new ArgumentNullException(nameof(materialId));
-        }
-        else
-        {
-            throw new ArgumentNullException(nameof(eNodes));
-        }
+        ElementMaterialId = materialId;
     }
 
-    private FeModell Modell { get; set; }
-
-    // ....Compute element Matrix.....................................
     public override double[,] BerechneElementMatrix()
     {
         double[] gaussCoord = [-1 / Math.Sqrt(3), 1 / Math.Sqrt(3)];
-        if (Modell.Material.TryGetValue(ElementMaterialId, out var abstractMaterial)) { }
+        if (!Modell.Material.TryGetValue(ElementMaterialId, out var abstractMaterial))
+            throw new ModellAusnahme("\nElement2D4: Elementmaterial " + ElementMaterialId + "nicht im Modell gefunden");
 
-        material = (Material)abstractMaterial;
-        ElementMaterial = material ?? throw new ArgumentNullException(nameof(material));
-        var conductivity = material.MaterialWerte[0];
+        _material = (Material)abstractMaterial;
+        ElementMaterial = _material;
 
-        MatrizenAlgebra.Clear(elementMatrix);
+        MatrizenAlgebra.Clear(_elementMatrix);
+        var c = new[,] { { _material.MaterialWerte[0], 0 }, { 0, _material.MaterialWerte[1] } };
         foreach (var coor1 in gaussCoord)
+        {
             foreach (var coor2 in gaussCoord)
             {
                 BerechneGeometrie(coor1, coor2);
                 Sx = BerechneSx(coor1, coor2);
-                // Ke = C*Sx*SxT*determinant
-                MatrizenAlgebra.MultAddMatrixTransposed(elementMatrix, Determinant * conductivity, Sx, Sx);
+                // Ke = Sx*c*SxT*determinant
+                var temp = MatrizenAlgebra.Mult(Sx, c);
+                MatrizenAlgebra.MultAddMatrixTransposed(_elementMatrix, Determinant, temp, Sx);
             }
+        }
 
-        return elementMatrix;
+        return _elementMatrix;
     }
 
-    // ....Compute diagonal Specific Heat Matrix.................................
+    // Compute diagonal Specific Heat Matrix
     public override double[] BerechneDiagonalMatrix()
     {
-        throw new ModellAusnahme("\n*** spezifische Wärmematrix noch nicht implementiert in Heat2D4");
+        //BerechneGeometrie();
+        // Me = dichte * leitfähigkeit * 0.5*determinante/4 (area/4)
+        SpezifischeWärmeMatrix[0] = _material.MaterialWerte[3] * Determinant / 8;
+        SpezifischeWärmeMatrix[1] = SpezifischeWärmeMatrix[0];
+        SpezifischeWärmeMatrix[2] = SpezifischeWärmeMatrix[0];
+        SpezifischeWärmeMatrix[3] = SpezifischeWärmeMatrix[0];
+        return SpezifischeWärmeMatrix;
     }
 
-    // ....Compute the heat state at the (z0,z1) of the element......
+    // Compute the heat state at the (z0,z1) of the element
     public override double[] BerechneZustandsvektor()
     {
         var elementWärmeStatus = new double[2]; // in element
@@ -97,9 +102,9 @@ public class Element2D4 : AbstraktLinear2D4
         BerechneGeometrie(z0, z1);
         Sx = BerechneSx(z0, z1);
         for (var i = 0; i < KnotenProElement; i++)
-            elementTemperatures[i] = Knoten[i].Knotenfreiheitsgrade[0];
-        var conductivity = material.MaterialWerte[0];
-        var midpointHeatState = MatrizenAlgebra.MultTransposed(-conductivity, Sx, elementTemperatures);
+            _elementTemperatures[i] = Knoten[i].Knotenfreiheitsgrade[0];
+        var conductivity = _material.MaterialWerte[0];
+        var midpointHeatState = MatrizenAlgebra.MultTransposed(-conductivity, Sx, _elementTemperatures);
         return midpointHeatState;
     }
 
@@ -114,6 +119,12 @@ public class Element2D4 : AbstraktLinear2D4
 
     public override Point BerechneSchwerpunkt()
     {
-        throw new NotImplementedException();
+        var p = new Point[4];
+        p[0] = new Point(Knoten[0].Koordinaten[0], Knoten[0].Koordinaten[1]);
+        p[1] = new Point(Knoten[1].Koordinaten[0], Knoten[1].Koordinaten[1]);
+        p[2] = new Point(Knoten[2].Koordinaten[0], Knoten[2].Koordinaten[1]);
+        p[3] = new Point(Knoten[3].Koordinaten[0], Knoten[3].Koordinaten[1]);
+        var cg = PolygonSchwerpunkt(p);
+        return cg;
     }
 }

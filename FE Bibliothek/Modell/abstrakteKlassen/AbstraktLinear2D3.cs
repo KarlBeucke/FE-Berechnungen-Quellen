@@ -5,7 +5,7 @@
         protected readonly double[,] Xzu = new double[2, 2];   // dx = Xzu * dzu
         protected double[,] Sx { get; set; } = new double[3, 2];
 
-        // ... berechne Geometrie ..........................................
+        // berechne Geometrie
         public void BerechneGeometrie()
         {
             Xzu[0, 0] = Knoten[0].Koordinaten[0] - Knoten[2].Koordinaten[0];
@@ -30,7 +30,7 @@
             return Sx;
         }
 
-        public static Point BerechneSchwerpunkt(AbstraktElement element)
+        protected static Point BerechneSchwerpunkt(AbstraktElement element)
         {
             var cg = new Point();
             var nodes = element.Knoten;

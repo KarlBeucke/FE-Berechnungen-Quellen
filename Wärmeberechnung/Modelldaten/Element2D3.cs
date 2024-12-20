@@ -2,11 +2,13 @@
 
 public class Element2D3 : AbstraktLinear2D3
 {
+    private FeModell Modell { get; }
     private readonly double[] _elementTemperaturen = new double[3]; // an Elementknoten
     private AbstraktElement _element;
     private double[,] _elementMatrix = new double[3, 3];
     private Knoten _knoten;
     private Material _material;
+    private double[] SpezifischeWärmeMatrix { get; }
 
     public Element2D3(string[] eKnotens, string eMaterialId, FeModell feModell)
     {
@@ -31,29 +33,25 @@ public class Element2D3 : AbstraktLinear2D3
         SpezifischeWärmeMatrix = new double[3];
     }
 
-    private double[] SpezifischeWärmeMatrix { get; }
-
-    private FeModell Modell { get; }
-
-    // ....Compute element Matrix.....................................
+    // Compute element Matrix
     public override double[,] BerechneElementMatrix()
     {
         BerechneGeometrie();
-        if (Modell.Material.TryGetValue(ElementMaterialId, out var abstraktMaterial))
-        {
-        }
+        if (Modell.Material.TryGetValue(ElementMaterialId, out var abstraktMaterial)) { }
 
         _material = (Material)abstraktMaterial;
         ElementMaterial = _material;
         if (_material == null) return _elementMatrix;
-        var leitfähigkeit = _material.MaterialWerte[0];
-        // Ke = area*c*Sx*SxT
-        _elementMatrix = MatrizenAlgebra.RectMultMatrixTransposed(0.5 * Determinant * leitfähigkeit, Sx, Sx);
+
+        // Ke = area*Sx*c*SxT
+        var c = new double[2, 2] { { _material.MaterialWerte[0], 0 }, { 0, _material.MaterialWerte[1] } };
+        var temp = MatrizenAlgebra.Mult(Sx, c);
+        _elementMatrix = MatrizenAlgebra.RectMultMatrixTransposed(0.5 * Determinant , temp, Sx);
 
         return _elementMatrix;
     }
 
-    // ....berechne diagonale spezifische Wärme Matrix .................................
+    // berechne diagonale spezifische Wärme Matrix
     public override double[] BerechneDiagonalMatrix()
     {
         BerechneGeometrie();
@@ -85,11 +83,9 @@ public class Element2D3 : AbstraktLinear2D3
         {
             for (var i = 0; i < _element.Knoten.Length; i++)
             {
-                if (Modell.Knoten.TryGetValue(_element.KnotenIds[i], out _knoten))
-                {
-                }
-
-                if (_knoten != null) _elementTemperaturen[i] = _knoten.Knotenfreiheitsgrade[0];
+                if (!Modell.Knoten.TryGetValue(_element.KnotenIds[i], out _knoten))
+                    throw new ModellAusnahme("\nElement2D3: Knoten " + _element.KnotenIds[i] + "nicht im Modell gefunden");
+                _elementTemperaturen[i] = _knoten.Knotenfreiheitsgrade[0];
             }
 
             if (_material == null) return elementWärmeStatus;

@@ -27,26 +27,44 @@ public class MaterialParser
                 _leitfähigkeit = new double[4];
                 switch (_substrings.Length)
                 {
-                    case 2:
-                        //leitfähigkeit = new double[1];
+                    case 2: // id, leitfähigkeit (isotropes Material)
                         _leitfähigkeit[0] = double.Parse(_substrings[1]);
+                        switch (feModell.Raumdimension)
+                        {
+                            case 2:
+                                _leitfähigkeit[1] = _leitfähigkeit[0];
+                                break;
+                            case 3:
+                                _leitfähigkeit[2] = _leitfähigkeit[0];
+                                break;
+                        }
+
                         _material = new Material(_materialId, _leitfähigkeit);
                         break;
-                    case 3:
-                        //leitfähigkeit = new double[1];
+
+                    case 3: // id, leitfähigkeit (isotropes Material), dichte*leitfähigkeit
                         _leitfähigkeit[0] = double.Parse(_substrings[1]);
+                        switch (feModell.Raumdimension)
+                        {
+                            case 2:
+                                _leitfähigkeit[1] = _leitfähigkeit[0];
+                                break;
+                            case 3:
+                                _leitfähigkeit[2] = _leitfähigkeit[0];
+                                break;
+                        }
                         _dichteLeitfähigkeit = double.Parse(_substrings[2]);
                         _material = new Material(_materialId, _leitfähigkeit, _dichteLeitfähigkeit);
                         break;
-                    case 4:
-                        //leitfähigkeit = new double[3];
+
+                    case 4: // id, leitfähigkeit x, leitfähigkeit y, dichte*leitfähigkeit
                         _leitfähigkeit[0] = double.Parse(_substrings[1]);
                         _leitfähigkeit[1] = double.Parse(_substrings[2]);
-                        _leitfähigkeit[2] = double.Parse(_substrings[3]);
-                        _material = new Material(_materialId, _leitfähigkeit);
+                        _dichteLeitfähigkeit = double.Parse(_substrings[3]);
+                        _material = new Material(_materialId, _leitfähigkeit, _dichteLeitfähigkeit);
                         break;
-                    case 5:
-                        //leitfähigkeit = new double[4];
+
+                    case 5: // id, leitfähigkeit x, leitfähigkeit y, leitfähigkeit z, dichte*leitfähigkeit
                         _leitfähigkeit[0] = double.Parse(_substrings[1]);
                         _leitfähigkeit[1] = double.Parse(_substrings[2]);
                         _leitfähigkeit[2] = double.Parse(_substrings[3]);

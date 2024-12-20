@@ -80,10 +80,9 @@ public partial class MaterialNeu
     {
         if (!_modell.Material.ContainsKey(MaterialId.Text))
         {
-            //LeitfähigkeitX.Text = "";
-            //LeitfähigkeitY.Text = "";
-            //LeitfähigkeitZ.Text = "";
-            //DichteLeitfähigkeit.Text = "";
+            var werte = new double[4];
+            _material = new Material(MaterialId.Text, werte);
+            _modell.Material.Add(MaterialId.Text,_material);
             return;
         }
 

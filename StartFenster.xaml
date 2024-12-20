@@ -123,7 +123,7 @@
                 <MenuItem Header="stationäre Berechnung" HorizontalAlignment="Left" Height="20" Width="250"
                           Margin="0,0,0,0" Click="WärmedatenBerechnen" />
                 <Separator HorizontalAlignment="Left" Height="4" Width="250" Margin="0,0,-0.2,0" />
-                <MenuItem Header="stationäre Ergebnisse anzeigen" HorizontalAlignment="Left" Height="20" Width="250"
+                <MenuItem Header="stationäre Ergebnisse anzeigen" HorizontalAlignment="Left" Height="20" Width="300"
                           Margin="0,0,0,0" Click="WärmeberechnungErgebnisseAnzeigen" />
                 <MenuItem Header="stationäre Ergebnisse visualisieren" HorizontalAlignment="Left" Height="20"
                           Width="300" Margin="0,0,0,0" Click="WärmeberechnungErgebnisseVisualisieren" />

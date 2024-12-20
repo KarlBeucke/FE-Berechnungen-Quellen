@@ -241,7 +241,7 @@ public partial class ElementNeu
         }
 
         if (!_modell.Material.TryGetValue(MaterialId.Text, out var material)) return;
-        _ = new MaterialNeu(_modell)
+        var materialNeu = new MaterialNeu(_modell)
         {
             Topmost = true,
             Owner = (Window)Parent,
@@ -251,5 +251,6 @@ public partial class ElementNeu
             LeitfähigkeitZ = { Text = material.MaterialWerte[2].ToString("g3") },
             DichteLeitfähigkeit = { Text = material.MaterialWerte[3].ToString("g3") }
         };
+        //MaterialId.Text = materialNeu.MaterialId.Text;
     }
 }

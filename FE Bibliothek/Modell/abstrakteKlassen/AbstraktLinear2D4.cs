@@ -54,18 +54,33 @@
             s[3] = 0.25 * (1 - z0) * (1 + z1);
             return s;
         }
-        protected static Point Schwerpunkt(AbstraktElement element)
+
+        private static double Polygonfläche(Point[] k)
         {
-            var cg = new Point();
-            var nodes = element.Knoten;
-            cg.X = 0;
-            for (var i = 0; i < element.Knoten.Length; i++)
+            double fläche = 0;
+            var p = new Point[k.Length + 1];
+            for (var i = 0; i < k.Length; i++) p[i] = k[i];
+            p[k.Length] = p[0];
+            for (var i = 0; i < p.Length - 1; i++)
             {
-                cg.X += nodes[i].Koordinaten[0];
-                cg.Y += nodes[i].Koordinaten[1];
+                fläche += p[i].X * p[i + 1].Y - p[i + 1].X * p[i].Y;
             }
-            cg.X /= 4.0;
-            cg.Y /= 4.0;
+            return 0.5 * fläche;
+        }
+
+        public static Point PolygonSchwerpunkt(Point[] k)
+        {
+            double xs = 0, ys = 0;
+            var fläche = Polygonfläche(k);
+            var p = new Point[k.Length + 1];
+            for (var i = 0; i < k.Length; i++) p[i] = k[i];
+            p[k.Length] = p[0];
+            for (var i = 0; i < p.Length - 1; i++)
+            {
+                xs += (p[i].X + p[i + 1].X) * (p[i].X * p[i + 1].Y - p[i + 1].X * p[i].Y);
+                ys += (p[i].Y + p[i + 1].Y) * (p[i].X * p[i + 1].Y - p[i + 1].X * p[i].Y);
+            }
+            var cg = new Point(xs / 6 / fläche, ys / 6 / fläche);
             return cg;
         }
     }

@@ -60,8 +60,8 @@ public class Element3D8 : AbstraktLinear3D8
         if (Modell.Material.TryGetValue(ElementMaterialId, out var abstractMaterial)) { }
 
         Material = (Material)abstractMaterial;
-        double[] gCoord = { -1 / Math.Sqrt(5.0 / 3), 0, 1 / Math.Sqrt(5.0 / 3) };
-        double[] gWeight = { 5.0 / 9, 8.0 / 9, 5.0 / 9 }; // gaussian coordinates, weights
+        double[] gCoord = [-1 / Math.Sqrt(5.0 / 3), 0, 1 / Math.Sqrt(5.0 / 3)];
+        double[] gWeight = [5.0 / 9, 8.0 / 9, 5.0 / 9]; // gaussian coordinates, weights
         _ = new double[8, 3];
         MatrizenAlgebra.Clear(_elementMatrix);
 

@@ -4,8 +4,15 @@ namespace FEBibliothek.Werkzeuge
 {
     public static class FeGeometrie
     {
-        private static List<Knoten> _innenKnoten = [];
+        private static Vector RotateVector(Vector vec, double angle)  // clockwise in degree
+        {
+            var winkel = angle * Math.PI / 180;
+            var rotated = new Vector(vec.X * Math.Cos(winkel) - vec.Y * Math.Sin(winkel),
+                vec.X * Math.Sin(winkel) + vec.Y * Math.Cos(winkel));
+            return rotated;
+        }
 
+        private static List<Knoten> _innenKnoten = [];
         public static List<Knoten> ConvexHull(List<Knoten> knoten, bool eng, double formFaktor)
         // ***** The convex hull or convex envelope or convex closure of a shape is the smallest convex set that contains it. 
         // ***** For a bounded subset of the plane, the convex hull may be visualized as the shape enclosed by a rubber band stretched around the subset. 
@@ -73,14 +80,6 @@ namespace FEBibliothek.Werkzeuge
                 { break; }
             }
             return hullKnotenList;
-        }
-
-        private static Vector RotateVector(Vector vec, double angle)  // clockwise in degree
-        {
-            var winkel = angle * Math.PI / 180;
-            var rotated = new Vector(vec.X * Math.Cos(winkel) - vec.Y * Math.Sin(winkel),
-                                     vec.X * Math.Sin(winkel) + vec.Y * Math.Cos(winkel));
-            return rotated;
         }
     }
 }
