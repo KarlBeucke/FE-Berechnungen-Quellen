@@ -33,7 +33,7 @@ public class Element2D4 : AbstraktLinear2D4
 
     public Element2D4(string id, string[] eNodes, string materialId, FeModell feModell)
     {
-        
+
         Modell = feModell;
         ElementId = id;
         ElementFreiheitsgrade = 1;

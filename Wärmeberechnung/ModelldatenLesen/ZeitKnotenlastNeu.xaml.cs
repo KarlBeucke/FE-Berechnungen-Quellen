@@ -111,7 +111,7 @@ public partial class ZeitKnotenlastNeu
             }
             else if (Linear.Text.Length > 0)
             {
-                char[] delimiters = [' ','\t'];
+                char[] delimiters = [' ', '\t'];
                 var teilStrings = Linear.Text.Split(delimiters);
                 var k = 0;
                 char[] paarDelimiter = [';'];

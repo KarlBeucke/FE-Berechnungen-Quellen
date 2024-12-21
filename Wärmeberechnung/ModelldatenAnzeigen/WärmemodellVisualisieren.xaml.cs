@@ -500,30 +500,30 @@ public partial class WärmemodellVisualisieren
                         return;
                     }
                     else switch (zeitKnotenlast.VariationsTyp)
-                    {
-                        case 1:
-                            _zeitKnotenlastNeu.Konstant.Text = zeitKnotenlast.KonstanteTemperatur.ToString("N2", CultureInfo.CurrentCulture);
-                            return;
-                        case 2:
-                            _zeitKnotenlastNeu.Amplitude.Text = zeitKnotenlast.Amplitude.ToString("G4", CultureInfo.CurrentCulture);
-                            _zeitKnotenlastNeu.Frequenz.Text = zeitKnotenlast.Frequenz.ToString("G4", CultureInfo.CurrentCulture);
-                            _zeitKnotenlastNeu.Winkel.Text = zeitKnotenlast.PhasenWinkel.ToString("G4", CultureInfo.CurrentCulture);
-                            return;
-                        case 3:
                         {
-                            var sb = new StringBuilder();
-                            sb.Append(zeitKnotenlast.Intervall[0].ToString("G2") + ";");
-                            sb.Append(zeitKnotenlast.Intervall[1].ToString("G2"));
-                            for (var i = 2; i < zeitKnotenlast.Intervall.Length; i += 2)
-                            {
-                                sb.Append('\t');
-                                sb.Append(zeitKnotenlast.Intervall[i].ToString("G2") + ";");
-                                sb.Append(zeitKnotenlast.Intervall[i + 1].ToString("G2"));
-                            }
-                            _zeitKnotenlastNeu.Linear.Text = sb.ToString();
-                            return;
+                            case 1:
+                                _zeitKnotenlastNeu.Konstant.Text = zeitKnotenlast.KonstanteTemperatur.ToString("N2", CultureInfo.CurrentCulture);
+                                return;
+                            case 2:
+                                _zeitKnotenlastNeu.Amplitude.Text = zeitKnotenlast.Amplitude.ToString("G4", CultureInfo.CurrentCulture);
+                                _zeitKnotenlastNeu.Frequenz.Text = zeitKnotenlast.Frequenz.ToString("G4", CultureInfo.CurrentCulture);
+                                _zeitKnotenlastNeu.Winkel.Text = zeitKnotenlast.PhasenWinkel.ToString("G4", CultureInfo.CurrentCulture);
+                                return;
+                            case 3:
+                                {
+                                    var sb = new StringBuilder();
+                                    sb.Append(zeitKnotenlast.Intervall[0].ToString("G2") + ";");
+                                    sb.Append(zeitKnotenlast.Intervall[1].ToString("G2"));
+                                    for (var i = 2; i < zeitKnotenlast.Intervall.Length; i += 2)
+                                    {
+                                        sb.Append('\t');
+                                        sb.Append(zeitKnotenlast.Intervall[i].ToString("G2") + ";");
+                                        sb.Append(zeitKnotenlast.Intervall[i + 1].ToString("G2"));
+                                    }
+                                    _zeitKnotenlastNeu.Linear.Text = sb.ToString();
+                                    return;
+                                }
                         }
-                    }
                 }
                 ZeitKnotenlastNeu(zeitKnotenlast);
             }
@@ -574,34 +574,34 @@ public partial class WärmemodellVisualisieren
                         return;
                     }
                     else switch (zeitRandtemperatur.VariationsTyp)
-                    {
-                        case 1:
-                            _zeitRandtemperaturNeu.Konstant.Text =
-                                zeitRandtemperatur.KonstanteTemperatur.ToString("N2", CultureInfo.CurrentCulture);
-                            return;
-                        case 2:
-                            _zeitRandtemperaturNeu.Amplitude.Text =
-                                zeitRandtemperatur.Amplitude.ToString("G4", CultureInfo.CurrentCulture);
-                            _zeitRandtemperaturNeu.Frequenz.Text =
-                                zeitRandtemperatur.Frequenz.ToString("G4", CultureInfo.CurrentCulture);
-                            _zeitRandtemperaturNeu.Winkel.Text =
-                                zeitRandtemperatur.PhasenWinkel.ToString("G4", CultureInfo.CurrentCulture);
-                            return;
-                        case 3:
                         {
-                            var sb = new StringBuilder();
-                            sb.Append(zeitRandtemperatur.Intervall[0].ToString("G2") + ";");
-                            sb.Append(zeitRandtemperatur.Intervall[1].ToString("G2"));
-                            for (var i = 2; i < zeitRandtemperatur.Intervall.Length; i += 2)
-                            {
-                                sb.Append('\t');
-                                sb.Append(zeitRandtemperatur.Intervall[i].ToString("G2") + ";");
-                                sb.Append(zeitRandtemperatur.Intervall[i + 1].ToString("G2"));
-                            }
-                            _zeitRandtemperaturNeu.Linear.Text = sb.ToString();
-                            return;
+                            case 1:
+                                _zeitRandtemperaturNeu.Konstant.Text =
+                                    zeitRandtemperatur.KonstanteTemperatur.ToString("N2", CultureInfo.CurrentCulture);
+                                return;
+                            case 2:
+                                _zeitRandtemperaturNeu.Amplitude.Text =
+                                    zeitRandtemperatur.Amplitude.ToString("G4", CultureInfo.CurrentCulture);
+                                _zeitRandtemperaturNeu.Frequenz.Text =
+                                    zeitRandtemperatur.Frequenz.ToString("G4", CultureInfo.CurrentCulture);
+                                _zeitRandtemperaturNeu.Winkel.Text =
+                                    zeitRandtemperatur.PhasenWinkel.ToString("G4", CultureInfo.CurrentCulture);
+                                return;
+                            case 3:
+                                {
+                                    var sb = new StringBuilder();
+                                    sb.Append(zeitRandtemperatur.Intervall[0].ToString("G2") + ";");
+                                    sb.Append(zeitRandtemperatur.Intervall[1].ToString("G2"));
+                                    for (var i = 2; i < zeitRandtemperatur.Intervall.Length; i += 2)
+                                    {
+                                        sb.Append('\t');
+                                        sb.Append(zeitRandtemperatur.Intervall[i].ToString("G2") + ";");
+                                        sb.Append(zeitRandtemperatur.Intervall[i + 1].ToString("G2"));
+                                    }
+                                    _zeitRandtemperaturNeu.Linear.Text = sb.ToString();
+                                    return;
+                                }
                         }
-                    }
                 }
                 ZeitRandtemperaturNeu(zeitRandtemperatur);
             }

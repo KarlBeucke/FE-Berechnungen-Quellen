@@ -82,7 +82,7 @@ public partial class MaterialNeu
         {
             var werte = new double[4];
             _material = new Material(MaterialId.Text, werte);
-            _modell.Material.Add(MaterialId.Text,_material);
+            _modell.Material.Add(MaterialId.Text, _material);
             return;
         }
 
