@@ -8,10 +8,6 @@ using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
-using Microsoft.Win32;
-using System.IO;
-using System.Text;
-using System.Windows.Markup;
 
 namespace FE_Berechnungen;
 

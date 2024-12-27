@@ -4,6 +4,7 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Path = System.Windows.Shapes.Path;
 
 namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 

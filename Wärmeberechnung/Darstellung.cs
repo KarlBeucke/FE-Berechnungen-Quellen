@@ -5,6 +5,7 @@ using static System.Globalization.CultureInfo;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;
 using static System.Windows.Media.Color;
+using Path = System.Windows.Shapes.Path;
 
 namespace FE_Berechnungen.Wärmeberechnung;
 
@@ -108,7 +109,7 @@ public class Darstellung
         // der Path wird auf einem Canvas dargestellt
         var knotenZeigen = new GeometryGroup();
         knotenZeigen.Children.Add(new EllipseGeometry(new Point(punkt.X, punkt.Y), 3, 3));
-        Shape knotenPath = new Path
+        var knotenPath = new Path
         {
             Stroke = farbe,
             Fill = farbe,

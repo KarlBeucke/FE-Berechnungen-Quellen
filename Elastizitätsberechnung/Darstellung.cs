@@ -5,6 +5,7 @@ using System.Windows.Shapes;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;
 using static System.Windows.Media.Color;
+using Path = System.Windows.Shapes.Path;
 
 namespace FE_Berechnungen.Elastizitätsberechnung;
 
@@ -12,7 +13,7 @@ public class Darstellung
 {
     private const double Eps = 1.0E-10;
     private const int RandLinks = 60;
-    private const double PlazierungText = 45;
+    private const double PlatzierungText = 45;
     private const double MaxScreenLength = 40;
     private readonly FeModell _modell;
     private readonly Canvas _visualErgebnisse;
@@ -93,7 +94,7 @@ public class Darstellung
                 Text = item.Key,
                 Foreground = Red
             };
-            SetTop(id, (-item.Value.Koordinaten[1] + _maxY) * _auflösung + PlazierungText);
+            SetTop(id, (-item.Value.Koordinaten[1] + _maxY) * _auflösung + PlatzierungText);
             SetLeft(id, item.Value.Koordinaten[0] * _auflösung + RandLinks);
             _visualErgebnisse.Children.Add(id);
             KnotenIDs.Add(id);
@@ -113,7 +114,7 @@ public class Darstellung
                 Text = item.Key,
                 Foreground = Blue
             };
-            SetTop(id, (-cg.Y + _maxY) * _auflösung + PlazierungText);
+            SetTop(id, (-cg.Y + _maxY) * _auflösung + PlatzierungText);
             SetLeft(id, cg.X * _auflösung + RandLinks);
             _visualErgebnisse.Children.Add(id);
             ElementIDs.Add(id);
@@ -237,7 +238,7 @@ public class Darstellung
         var tragwerk = new GeometryGroup();
         tragwerk.Children.Add(pathGeometry);
 
-        Shape path = new Path
+        var path = new Path
         {
             Stroke = Red,
             StrokeThickness = 1,

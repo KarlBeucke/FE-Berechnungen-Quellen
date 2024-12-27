@@ -5,6 +5,7 @@ using System.Windows.Shapes;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;
 using static System.Windows.Media.Color;
+using Path = System.Windows.Shapes.Path;
 
 namespace FE_Berechnungen.Tragwerksberechnung;
 
@@ -128,7 +129,7 @@ public class Darstellung
                                select new EllipseGeometry(gelenkPunkt, 5, 5))
             tragwerk.Children.Add(gelenk);
         // Knotengelenke werden gezeichnet
-        Shape tragwerkPath = new Path
+        var tragwerkPath = new Path
         {
             Stroke = Black,
             StrokeThickness = 1,

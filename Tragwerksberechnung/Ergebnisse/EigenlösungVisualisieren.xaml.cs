@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;
+using Path = System.Windows.Shapes.Path;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 
@@ -81,7 +82,7 @@ public partial class EigenlösungVisualisieren
         {
             var pathGeometry = Eigenform_Zeichnen(_modell.Eigenzustand.Eigenvektoren[_index]);
 
-            Shape path = new Path
+            var path = new Path
             {
                 Stroke = Red,
                 StrokeThickness = 2,

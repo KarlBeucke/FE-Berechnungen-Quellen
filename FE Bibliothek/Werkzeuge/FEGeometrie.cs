@@ -4,6 +4,34 @@ namespace FEBibliothek.Werkzeuge
 {
     public static class FeGeometrie
     {
+        private static double Polygonfläche(Point[] k)
+        {
+            double fläche = 0;
+            var p = new Point[k.Length + 1];
+            for (var i = 0; i < k.Length; i++) p[i] = k[i];
+            p[k.Length] = p[0];
+            for (var i = 0; i < p.Length - 1; i++)
+            {
+                fläche += p[i].X * p[i + 1].Y - p[i + 1].X * p[i].Y;
+            }
+            return 0.5 * fläche;
+        }
+
+        public static Point PolygonSchwerpunkt(Point[] k)
+        {
+            double xs = 0, ys = 0;
+            var fläche = Polygonfläche(k);
+            var p = new Point[k.Length + 1];
+            for (var i = 0; i < k.Length; i++) p[i] = k[i];
+            p[k.Length] = p[0];
+            for (var i = 0; i < p.Length - 1; i++)
+            {
+                xs += (p[i].X + p[i + 1].X) * (p[i].X * p[i + 1].Y - p[i + 1].X * p[i].Y);
+                ys += (p[i].Y + p[i + 1].Y) * (p[i].X * p[i + 1].Y - p[i + 1].X * p[i].Y);
+            }
+            var cg = new Point(xs / 6 / fläche, ys / 6 / fläche);
+            return cg;
+        }
         private static Vector RotateVector(Vector vec, double angle)  // clockwise in degree
         {
             var winkel = angle * Math.PI / 180;
