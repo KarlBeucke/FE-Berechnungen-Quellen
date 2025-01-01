@@ -21,6 +21,8 @@ public partial class StartFenster
     public static Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren StatikErgebnisse { get; private set; }
     public static WärmemodellVisualisieren WärmeVisual { get; set; }
     public static StationäreErgebnisseVisualisieren StationäreErgebnisse { get; private set; }
+    private static ElastizitätsmodellVisualisieren ElastizitätVisual { get; set; }
+    public static Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren ElastizitätsErgebnisse { get; private set; }
 
     private OpenFileDialog _dateiDialog;
     private string _dateiPfad;
@@ -1249,6 +1251,21 @@ public partial class StartFenster
         catch (ParseAusnahme e2)
         {
             _ = MessageBox.Show(e2.Message);
+        }
+        switch (_elastizitätsModell.Raumdimension)
+        {
+            case 2:
+            {
+                ElastizitätVisual = new ElastizitätsmodellVisualisieren(_elastizitätsModell);
+                ElastizitätVisual.Show();
+                break;
+            }
+            case 3:
+            {
+                var visual = new Elastizitätsmodell3DVisualisieren(_elastizitätsModell);
+                visual.Show();
+                break;
+            }
         }
     }
 

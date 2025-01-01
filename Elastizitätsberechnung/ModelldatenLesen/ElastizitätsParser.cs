@@ -3,25 +3,25 @@
 public class ElastizitätsParser : FeParser
 {
     public static RandbedingungenParser ParseElastizitätsRandbedingungen;
-    private FeModell modell;
-    private ElementParser parseElastizitätsElemente;
-    private LastParser parseElastizitätsLasten;
-    private MaterialParser parseElastizitätsMaterial;
+    private FeModell _modell;
+    private ElementParser _parseElastizitätsElemente;
+    private LastParser _parseElastizitätsLasten;
+    private MaterialParser _parseElastizitätsMaterial;
 
-    // Eingabedaten für eine Elastizitätsberechnung aus Detei lesen
+    // Eingabedaten für eine Elastizitätsberechnung aus Datei lesen
     public void ParseElastizität(string[] lines, FeModell feModell)
     {
-        modell = feModell;
-        parseElastizitätsElemente = new ElementParser();
-        parseElastizitätsElemente.ParseElements(lines, modell);
+        _modell = feModell;
+        _parseElastizitätsElemente = new ElementParser();
+        _parseElastizitätsElemente.ParseElements(lines, _modell);
 
-        parseElastizitätsMaterial = new MaterialParser();
-        parseElastizitätsMaterial.ParseMaterials(lines, modell);
+        _parseElastizitätsMaterial = new MaterialParser();
+        _parseElastizitätsMaterial.ParseMaterials(lines, _modell);
 
-        parseElastizitätsLasten = new LastParser();
-        parseElastizitätsLasten.ParseLasten(lines, modell);
+        _parseElastizitätsLasten = new LastParser();
+        _parseElastizitätsLasten.ParseLasten(lines, _modell);
 
         ParseElastizitätsRandbedingungen = new RandbedingungenParser();
-        ParseElastizitätsRandbedingungen.ParseRandbedingungen(lines, modell);
+        ParseElastizitätsRandbedingungen.ParseRandbedingungen(lines, _modell);
     }
 }
