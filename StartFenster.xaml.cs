@@ -22,7 +22,7 @@ public partial class StartFenster
     public static WärmemodellVisualisieren WärmeVisual { get; set; }
     public static StationäreErgebnisseVisualisieren StationäreErgebnisse { get; private set; }
     private static ElastizitätsmodellVisualisieren ElastizitätVisual { get; set; }
-    public static Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren ElastizitätsErgebnisse { get; private set; }
+    public static Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren ElastizitätsErgebnisse { get; set; }
 
     private OpenFileDialog _dateiDialog;
     private string _dateiPfad;

@@ -23,7 +23,7 @@ namespace FEBibliothek.Modell
             {
                 throw new BerechnungAusnahme("\nModelleingabedaten noch nicht eingelesen");
             }
-            // setz System Indizes
+            // setz Systemindizes
             var k = 0;
             foreach (var item in _modell.Knoten)
             {
@@ -74,8 +74,8 @@ namespace FEBibliothek.Modell
                     case AbstraktLinienlast linienlast:
                         linienlast.SetzLinienlastReferenzen(_modell);
                         break;
-                    case AbstraktElementLast elementlast:
-                        elementlast.SetzElementlastReferenzen(_modell);
+                    case not null:
+                        last.SetzElementlastReferenzen(_modell);
                         break;
                     default:
                         _ = MessageBox.Show("Elementlast nicht gefunden", "Berechnung");
@@ -693,7 +693,6 @@ namespace FEBibliothek.Modell
             }
             return dämpfungsMatrix;
         }
-
         private void SetzRandbedingungenZweiterOrdnung(IReadOnlyList<double[]> displ, IReadOnlyList<double[]> veloc)
         {
             // finde vordefinierte Anfangsbedingungen

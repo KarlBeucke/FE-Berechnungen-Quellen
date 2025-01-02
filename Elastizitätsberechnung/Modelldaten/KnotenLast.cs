@@ -1,6 +1,6 @@
 ﻿namespace FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 
-public class KnotenLast : AbstraktLast
+public class KnotenLast : AbstraktKnotenlast
 {
     public KnotenLast(string knotenId, double px, double py)
     {
