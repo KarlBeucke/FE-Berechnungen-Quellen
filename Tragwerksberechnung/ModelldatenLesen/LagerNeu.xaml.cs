@@ -1,14 +1,15 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows.Input;
-using Lager = FE_Berechnungen.Tragwerksberechnung.Modelldaten.Lager;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class LagerNeu
 {
     private readonly FeModell _modell;
+    private LagerKeys _lagerKeys;
+    public string AktuelleId;
 
     public LagerNeu(FeModell modell)
     {
@@ -33,6 +34,7 @@ public partial class LagerNeu
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
         var lagerId = LagerId.Text;
+
         if (lagerId == "")
         {
             _ = MessageBox.Show("Lager Id muss definiert sein", "neues Lager");
@@ -64,8 +66,8 @@ public partial class LagerNeu
                     if (lagerKnoten != null)
                     {
                         lagerKnoten.AnzahlKnotenfreiheitsgrade = 3;
-                        //_ = MessageBox.Show("\nFesteinspannung von '" + vorhandenesLager.RandbedingungId
-                        //                                    + "' erfordert 3 Knotenfreiheitsgrade und "
+                        //_ = MessageBox.Show("\nFesteinspannung von " + vorhandenesLager.RandbedingungId
+                        //                                    + "' erfordert 3 Knotenfreiheitsgrade und 
                         //                                    + "ggf. Anpassung von Biegestab ohne Gelenk am Lager");
                     }
                 }
@@ -73,6 +75,11 @@ public partial class LagerNeu
             catch (ModellAusnahme lagerNeu)
             {
                 _ = MessageBox.Show(lagerNeu.Message);
+            }
+            if (vorhandenesLager.Typ == 0)
+            {
+                _ = MessageBox.Show("ungültiges Modell, keine Festhaltung spezifiziert", "neues Lager");
+                return;
             }
 
             try
@@ -108,9 +115,15 @@ public partial class LagerNeu
             if (Xfest.IsChecked != null && (bool)Xfest.IsChecked) typ = Lager.XFixed;
             if (Yfest.IsChecked != null && (bool)Yfest.IsChecked) typ += Lager.Yfixed;
             if (Rfest.IsChecked != null && (bool)Rfest.IsChecked) typ += Lager.Rfixed;
+            if (typ == 0)
+            {
+                _ = MessageBox.Show("ungültiges Modell, keine Festhaltung spezifiziert", "neues Lager");
+                return;
+            }
             var lager = new Lager(KnotenId.Text, typ, vordefiniert, _modell) { RandbedingungId = lagerId };
             _modell.Randbedingungen.Add(lagerId, lager);
         }
+        if(AktuelleId != LagerId.Text) _modell.Randbedingungen.Remove(AktuelleId);
 
         Close();
         StartFenster.TragwerkVisual.Close();
@@ -122,17 +135,23 @@ public partial class LagerNeu
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        StartFenster.TragwerkVisual.LagerKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.IsLager = false;
     }
 
+    private void LagerIdGotFocus(object sender, RoutedEventArgs e)
+    {
+        _lagerKeys = new LagerKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        _lagerKeys.Show();
+        LagerId.Focus();
+    }
+
     private void LagerIdLostFocus(object sender, RoutedEventArgs e)
     {
-        // vorhandene Lagerdefinition
-        _modell.Randbedingungen.TryGetValue(LagerId.Text, out var vorhandenesLager);
-        if (vorhandenesLager == null) return;
+        _lagerKeys?.Close();
+        if (!_modell.Randbedingungen.TryGetValue(LagerId.Text, out var vorhandenesLager)) return;
 
+        // vorhandene Lagerdefinition
         LagerId.Text = vorhandenesLager.RandbedingungId;
         KnotenId.Text = vorhandenesLager.KnotenId;
         Xfest.IsChecked = false;
@@ -148,8 +167,7 @@ public partial class LagerNeu
 
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
     {
-        _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
-        if (vorhandenerKnoten == null)
+        if (!_modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten))
         {
             _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neues Lager");
             LagerId.Text = "";
@@ -158,14 +176,15 @@ public partial class LagerNeu
         else
         {
             KnotenId.Text = vorhandenerKnoten.Id;
-            if (LagerId.Text == "") LagerId.Text = "L_" + KnotenId.Text;
+            if (LagerId.Text != "") return;
+            LagerId.Text = "L_" + KnotenId.Text;
+            AktuelleId = LagerId.Text;
         }
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Randbedingungen.Keys.Contains(LagerId.Text)) return;
-        _modell.Randbedingungen.Remove(LagerId.Text);
+        if (!_modell.Randbedingungen.Remove(LagerId.Text, out _)) return;
         Close();
         StartFenster.TragwerkVisual.Close();
 
@@ -178,31 +197,32 @@ public partial class LagerNeu
     {
         _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
         if (knoten == null) { _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neues Lager"); return; }
-        StartFenster.TragwerkVisual.KnotenClick(knoten);
+        StartFenster.TragwerkVisual.KnotenEdit(knoten);
         Close();
         _modell.Berechnet = false;
     }
 
-    private bool Lagergelenk(string knotenId)
-    {
-        var gelenk = true;
-        foreach (var element in _modell.Elemente)
-        {
-            switch (element.Value)
-            {
-                case Fachwerk:
-                    gelenk = true;
-                    break;
-                case Biegebalken when element.Value.KnotenIds[0] == knotenId:
-                case Biegebalken when element.Value.KnotenIds[1] == knotenId:
-                case BiegebalkenGelenk when element.Value.KnotenIds[0] == knotenId
-                                            && element.Value.Typ == 1:
-                case BiegebalkenGelenk when element.Value.KnotenIds[1] == knotenId
-                                            && element.Value.Typ == 2:
-                    gelenk = false;
-                    break;
-            }
-        }
-        return gelenk;
-    }
+
+    //private bool Lagergelenk(string knotenId)
+    //{
+    //    var gelenk = true;
+    //    foreach (var element in _modell.Elemente)
+    //    {
+    //        switch (element.Value)
+    //        {
+    //            case Fachwerk:
+    //                gelenk = true;
+    //                break;
+    //            case Biegebalken when element.Value.KnotenIds[0] == knotenId:
+    //            case Biegebalken when element.Value.KnotenIds[1] == knotenId:
+    //            case BiegebalkenGelenk when element.Value.KnotenIds[0] == knotenId
+    //                                        && element.Value.Typ == 1:
+    //            case BiegebalkenGelenk when element.Value.KnotenIds[1] == knotenId
+    //                                        && element.Value.Typ == 2:
+    //                gelenk = false;
+    //                break;
+    //        }
+    //    }
+    //    return gelenk;
+    //}
 }

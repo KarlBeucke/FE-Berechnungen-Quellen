@@ -13,7 +13,8 @@
             <RowDefinition Height="150" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-        <ListView Width="260" Margin="0,10,0,10" Name="QuerschnittKey" d:DataContext="{d:DesignData modell}" HorizontalAlignment="Center">
+        <ListView Width="260" Margin="0,10,0,10" Name="QuerschnittKey" d:DataContext="{d:DesignData modell}" 
+                  HorizontalAlignment="Center" SelectionChanged="SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding QuerschnittId}" />

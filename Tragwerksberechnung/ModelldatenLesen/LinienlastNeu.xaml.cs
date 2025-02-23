@@ -1,18 +1,21 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using System.Globalization;
+using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using System.Globalization;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class LinienlastNeu
 {
     private readonly FeModell _modell;
+    private TragwerkLastenKeys _lastenKeys;
+    public string AktuelleId;
 
     public LinienlastNeu(FeModell modell)
     {
         InitializeComponent();
         _modell = modell;
         Show();
+        AktuelleId = LastId.Text;
     }
 
     public LinienlastNeu(FeModell modell, string last, string element,
@@ -90,9 +93,10 @@ public partial class LinienlastNeu
             };
             _modell.ElementLasten.Add(linienlastId, linienlast);
         }
+        if (AktuelleId != LastId.Text) _modell.ElementLasten.Remove(AktuelleId);
 
-        StartFenster.TragwerkVisual.Close();
         Close();
+        StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         _modell.Berechnet = false;
@@ -104,10 +108,19 @@ public partial class LinienlastNeu
         StartFenster.TragwerkVisual.IsLinienlast = false;
     }
 
+
+    private void LastIdGotFocus(object sender, RoutedEventArgs e)
+    {
+        _lastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        _lastenKeys.Show();
+        _lastenKeys.Focus();
+    }
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
     {
-        // vorhandene Linienlastdefinition
+        _lastenKeys?.Close();
         if (!_modell.ElementLasten.TryGetValue(LastId.Text, out var vorhandeneLinienlast)) return;
+
+        // vorhandene Linienlastdefinition
         LastId.Text = vorhandeneLinienlast.LastId;
         ElementId.Text = vorhandeneLinienlast.ElementId;
         Pxa.Text = vorhandeneLinienlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
@@ -115,32 +128,36 @@ public partial class LinienlastNeu
         Pxb.Text = vorhandeneLinienlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
         Pyb.Text = vorhandeneLinienlast.Lastwerte[3].ToString("G3", CultureInfo.CurrentCulture);
         vorhandeneLinienlast.InElementKoordinatenSystem = InElement.IsChecked != null && (bool)InElement.IsChecked;
+
+        if (AktuelleId != LastId.Text) _modell.ElementLasten.Remove(LastId.Text);
+
     }
 
     private void ElementIdLostFocus(object sender, RoutedEventArgs e)
     {
-        _modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement);
-        switch (vorhandenesElement)
+        if (!_modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement))
         {
-            case null:
-                _ = MessageBox.Show("Element nicht im Modell gefunden", "neue Linienlast");
-                LastId.Text = "";
-                ElementId.Text = "";
-                return;
-            case Fachwerk:
-                throw new ModellAusnahme("Linienlast ungültig für Fachwerkstab");
+            _ = MessageBox.Show("Element nicht im Modell gefunden", "neue Linienlast");
+            LastId.Text = "";
+            ElementId.Text = "";
         }
 
-        if (LastId.Text == "") LastId.Text = "LL_" + ElementId.Text;
+        else
+        {
+            if (vorhandenesElement is Fachwerk)
+                throw new ModellAusnahme("Linienlast ungültig für Fachwerkstab");
+            ElementId.Text = vorhandenesElement.ElementId;
+            if (LastId.Text != "") return;
+            LastId.Text = "LL_" + ElementId.Text;
+            AktuelleId = LastId.Text;
+        }
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.ElementLasten.ContainsKey(LastId.Text)) return;
-        _modell.ElementLasten.Remove(LastId.Text);
-        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
-        StartFenster.TragwerkVisual.Close();
+        if (!_modell.ElementLasten.Remove(LastId.Text, out _)) return;
         Close();
+        StartFenster.TragwerkVisual.Close();
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();

@@ -4,10 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Neue Knotenlast" Height="300" Width="310">
+        Title="Neue Knotenlast" Height="300" Width="320">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="170" />
             <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -24,23 +24,24 @@
         </Label>
 
         <Label Grid.Column="0" Margin="0,0,0,5" Grid.Row="1">Last ID:</Label>
-        <Label Grid.Row="1" Grid.Column="0" Margin="0,15,0,34" FontSize="8" Grid.RowSpan="2">(generiert aus "K_L_" und Knoten ID)</Label>
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,15,0,34" FontSize="8" Grid.RowSpan="2">(ggf. generiert aus "K_L_" und Knoten ID)</Label>
         <TextBox Name="LastId" Grid.Row="1" Grid.Column="1" Margin="10,10,-10,0" Height="20"
-                 VerticalAlignment="Top" LostFocus="LastIdLostFocus" />
-        <Label Grid.Row="2" Grid.Column="0" Margin="0,0,0,5">Knoten ID:</Label>
-        <Label Grid.Row="2" Grid.Column="0" Margin="0,14,0,1" FontSize="8">(click vorhandene Knoten ID)</Label>
+                 VerticalAlignment="Top" LostFocus="LastIdLostFocus" GotFocus="LastIdGotFocus" />
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,29,0,7" Grid.RowSpan="2">Knoten ID:</Label>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,8,0,7" FontSize="8">(click vorhandene Knoten ID für Lastknoten)</Label>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,18,0,30" FontSize="8" Grid.RowSpan="2">(Doppelclick für neue Lastknotenposition</Label>
         <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="10,9.6,10,5.6" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" LostFocus="KnotenIdLostFocus" 
                  MouseDoubleClick="KnotenPositionNeu"/>
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5.4,0,0">Lastwert in x-Richtung:</Label>
         <TextBox Name="Px" Grid.Row="3" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" />
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5.4,0,0">Lastwert in y-Richtung:</Label>
         <TextBox Name="Py" Grid.Row="4" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" />
         <Label Grid.Row="5" Grid.Column="0" Margin="0,5.4,0,0">Knotenmoment:</Label>
         <TextBox Name="M" Grid.Row="5" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" />
 
         <Button Grid.Row="6" Grid.Column="0" Width="50" Height="26" Margin="5,0,0,4.6"
                 Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">

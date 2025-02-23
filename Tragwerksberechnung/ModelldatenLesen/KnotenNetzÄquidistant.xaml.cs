@@ -58,7 +58,7 @@ public partial class KnotenNetzÄquidistant
             for (var k = 0; k < wiederholungenX; k++)
             {
                 var knotenId = knotenPräfix + k.ToString().PadLeft(2, '0');
-                var knotenKoords = new[] { koordinaten[0] };
+                var knotenKoords = new[] { koordinaten[0], 0 };
                 var neuerKnoten = new Knoten(knotenId, knotenKoords, anzahlKnotenDof, dimension);
                 _knotenListe.Add(neuerKnoten);
                 koordinaten[0] += abstandX;

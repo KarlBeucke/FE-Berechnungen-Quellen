@@ -2,6 +2,7 @@
 {
     public abstract class AbstraktElement
     {
+        public string Id { get; }
         public double E { get; set; }
         public double Nue { get; set; }
         public double M { get; set; }

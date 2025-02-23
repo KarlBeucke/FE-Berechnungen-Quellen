@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Neues Element" Height="470" Width="320">
+        Title="Neues Element" Height="470" Width="340">
     <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150" />
-            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="160" />
+            <ColumnDefinition Width="90" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
@@ -29,9 +29,9 @@
             Eingabewerte für ein neues oder vorhandenes Element
         </Label>
         <Label Grid.Row="0" Grid.Column="0" Margin="0,23,0,10" Grid.RowSpan="2">Element ID:</Label>
-        <Label Grid.Row="1" Grid.Column="0" Margin="0,9,0,68" FontSize="8" Grid.RowSpan="2">(generiert aus Start- und Endknoten ID)</Label>
-        <TextBox Name="ElementId" Grid.Row="1" Grid.Column="1" Margin="10,0,-10,0" Height="19"
-                 VerticalAlignment="Center" LostFocus="ElementIdLostFocus" />
+        <Label Grid.Row="1" Grid.Column="0" Margin="-4,9,90,68" FontSize="8" Grid.RowSpan="2" Grid.ColumnSpan="2">(ggf. generiert aus Start- und Endknoten ID)</Label>
+        <TextBox Name="ElementId" Grid.Row="1" Grid.Column="1" Margin="10,0,-10,0" Height="15"
+                 VerticalAlignment="Center" LostFocus="ElementIdLostFocus" GotFocus="ElementIdGotFocus" />
 
         <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,24,0,48" Grid.RowSpan="2">Elementtyp definieren:</Label>
         <CheckBox Name="FachwerkCheck" Grid.Row="2" Grid.Column="0" Margin="10,18,0,33"
@@ -46,41 +46,41 @@
                   Checked="FederChecked">
             Federelement
         </CheckBox>
-        <CheckBox Name="Gelenk1" Grid.Row="2" Grid.Column="1" Margin="11,17,-36,35">Gelenk am Anfang</CheckBox>
+        <CheckBox Name="Gelenk1" Grid.Row="2" Grid.Column="1" Margin="11,17,-42,35">Gelenk am Anfang</CheckBox>
         <CheckBox Name="Gelenk2" Grid.Row="2" Grid.Column="1" Margin="11,35,-26,18">Gelenk am Ende</CheckBox>
 
         <Label Grid.Row="2" Grid.Column="0" Margin="0,64,0,13" Grid.RowSpan="2">Startknoten ID:</Label>
-        <TextBox Name="StartknotenId" Grid.Row="3" Grid.Column="1" Margin="10,0,0,0" Height="20"
+        <TextBox Name="StartknotenId" Grid.Row="3" Grid.Column="1" Margin="10,0,0,0" Height="15"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="25" />
         <Label Grid.Row="3" Grid.Column="0" Margin="0,9,0,1" FontSize="8">(click vorhandene Knoten ID)</Label>
         <Label Grid.Row="3" Grid.Column="0" Margin="0,25,0,12" Grid.RowSpan="2">Endknoten ID:</Label>
-        <TextBox Name="EndknotenId" Grid.Row="4" Grid.Column="1" Margin="10,0,0,0" Height="20"
+        <TextBox Name="EndknotenId" Grid.Row="4" Grid.Column="1" Margin="10,0,0,0" Height="15"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="25" />
         <Label Grid.Row="4" Grid.Column="0" Margin="0,9,0,1" FontSize="8">(click vorhandene Knoten ID)</Label>
 
         <Label Grid.Row="5" Grid.Column="0" Margin="0,0,-71,0" Grid.ColumnSpan="2" FontSize="8" FontWeight="Bold">click vorhandene Element Id für Übernahme von Material- und Querschnittswerten</Label>
 
         <Label Grid.Row="6" Grid.Column="0" Margin="0,0,0,0">Material ID:</Label>
-        <TextBox Name="MaterialId" Grid.Row="6" Grid.Column="1" Margin="10,0,56,0" Height="20"
-                 VerticalAlignment="Center" />
+        <TextBox Name="MaterialId" Grid.Row="6" Grid.Column="1" Margin="10,0,56,0" Height="15"
+                 VerticalAlignment="Center" GotFocus="MaterialIdGotFocus" LostFocus="MaterialIdLostFocus" />
 
         <Label Grid.Row="7" Grid.Column="0" Margin="0,0,0,0">Elastizitätsmodul E:</Label>
-        <TextBox Name="EModul" Grid.Row="7" Grid.Column="1" Margin="10,0,0,0" Height="20" VerticalAlignment="Center" />
+        <TextBox Name="EModul" Grid.Row="7" Grid.Column="1" Margin="10,0,0,0" Height="15" VerticalAlignment="Center" />
 
         <Label Grid.Row="8" Grid.Column="0" Margin="0,0,0,0">spezifische Masse m:</Label>
-        <TextBox Name="Masse" Grid.Row="8" Grid.Column="1" Margin="10,0,0,0" Height="20" VerticalAlignment="Center" />
+        <TextBox Name="Masse" Grid.Row="8" Grid.Column="1" Margin="10,0,0,0" Height="15" VerticalAlignment="Center" />
 
         <Label Grid.Row="9" Grid.Column="0" Margin="0,0,0,0">Querschnitt ID:</Label>
-        <TextBox Name="QuerschnittId" Grid.Row="9" Grid.Column="1" Margin="10,0,0,0" Height="20"
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="34" />
+        <TextBox Name="QuerschnittId" Grid.Row="9" Grid.Column="1" Margin="10,0,0,0" Height="15"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="34" GotFocus="QuerschnittIdGotFocus" LostFocus="QuerschnittIdLostFocus" />
 
         <Label Grid.Row="10" Grid.Column="0" Margin="0,0,0,0">Querschnittfläche A:</Label>
-        <TextBox Name="Fläche" Grid.Row="10" Grid.Column="1" Margin="10,0,0,0" Height="20"
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="88" />
+        <TextBox Name="Fläche" Grid.Row="10" Grid.Column="1" Margin="10,0,-11,0" Height="15"
+                 VerticalAlignment="Center" />
 
         <Label Grid.Row="11" Grid.Column="0" Margin="0,0,0,0">Trägheitsmoment I:</Label>
-        <TextBox Name="Trägheitsmoment" Grid.Row="11" Grid.Column="1" Margin="10,0,0,0" Height="20"
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="89" />
+        <TextBox Name="Trägheitsmoment" Grid.Row="11" Grid.Column="1" Margin="10,0,-11,0" Height="15"
+                 VerticalAlignment="Center" />
 
         <Button Grid.Row="12" Grid.Column="0" Width="50" Height="26" Margin="5,0,0,0"
                 Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">

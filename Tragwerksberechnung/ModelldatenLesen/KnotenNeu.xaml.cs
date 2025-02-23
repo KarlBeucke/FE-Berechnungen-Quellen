@@ -9,6 +9,7 @@ public partial class KnotenNeu
 {
     private readonly ObservableCollection<Knoten> _knotenListe;
     private readonly FeModell _modell;
+    private KnotenKeys _knotenKeys;
 
     public KnotenNeu(FeModell feModell)
     {
@@ -18,11 +19,28 @@ public partial class KnotenNeu
         StartFenster.TragwerkVisual.VisualTragwerkModel.Background = Brushes.Transparent;
         Show();
 
-        //KnotenId.Focus();
         var ndof = _modell.AnzahlKnotenfreiheitsgrade;
         AnzahlDof.Text = ndof.ToString("N0", CultureInfo.CurrentCulture);
         _knotenListe = [];
         KnotenGrid.Items.Clear();
+    }
+    private void KnotenIdGotFocus(object sender, RoutedEventArgs e)
+    {
+        _knotenKeys = new KnotenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        _knotenKeys.Show();
+        KnotenId.Focus();
+    }
+    private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
+    {
+        if (!_modell.Knoten.TryGetValue(KnotenId.Text, out _))
+        {
+            _knotenKeys.Close();
+            return;
+        }
+        _ = MessageBox.Show("neue Knoten ID " + KnotenId.Text +
+                            " nicht eindeutig, schon vorhanden im Modell");
+        _knotenKeys.Close();
+        KnotenId.Text = string.Empty;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -30,7 +48,7 @@ public partial class KnotenNeu
         // entferne Steuerungsknoten und deaktiviere Ereignishandler für Canvas
         StartFenster.TragwerkVisual.VisualTragwerkModel.Children.Remove(StartFenster.TragwerkVisual.Pilot);
         StartFenster.TragwerkVisual.VisualTragwerkModel.Background = null;
-        StartFenster.TragwerkVisual.KnotenKeys?.Close();
+        _knotenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.IsKnoten = false;
 
@@ -101,23 +119,11 @@ public partial class KnotenNeu
         StartFenster.TragwerkVisual.VisualTragwerkModel.Background = null;
         StartFenster.TragwerkVisual.Close();
         Close();
-        StartFenster.TragwerkVisual.KnotenKeys?.Close();
+        _knotenKeys?.Close();
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         _modell.Berechnet = false;
-    }
-
-    private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
-    {
-        if (!_modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten))
-        {
-
-        }
-        if (vorhandenerKnoten == null) return;
-        AnzahlDof.Text = vorhandenerKnoten.AnzahlKnotenfreiheitsgrade.ToString();
-        X.Text = vorhandenerKnoten.Koordinaten[0].ToString("N2", CultureInfo.CurrentCulture);
-        Y.Text = vorhandenerKnoten.Koordinaten[1].ToString("N2", CultureInfo.CurrentCulture);
     }
 
     private void BtnTabelleneintrag(object sender, RoutedEventArgs e)

@@ -1,6 +1,5 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using System.Diagnostics;
 using System.Globalization;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
@@ -8,6 +7,10 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 public partial class ElementNeu
 {
     private readonly FeModell _modell;
+    private ElementKeys _elementKeys;
+    private MaterialKeys _materialKeys;
+    private QuerschnittKeys _querschnittKeys;
+    private string _aktuelleId;
 
     public ElementNeu(FeModell modell)
     {
@@ -48,11 +51,7 @@ public partial class ElementNeu
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
         AbstraktElement element = null;
-        if (ElementId.Text == "")
-        {
-            _ = MessageBox.Show("Element Id muss definiert sein", "neues Element");
-            return;
-        }
+        if (ElementId.Text == "") ElementId.Text = _aktuelleId;
 
         // vorhandenes Element wird komplett entfernt, da Elementdefinition
         // (Fachwerk, Biegebalken, BiegebalkenGelenk) geändert werden kann
@@ -167,7 +166,7 @@ public partial class ElementNeu
         }
 
         StartFenster.TragwerkVisual.Close();
-        StartFenster.TragwerkVisual.ElementKeys?.Close();
+        _elementKeys?.Close();
         Close();
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
@@ -177,40 +176,35 @@ public partial class ElementNeu
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        StartFenster.TragwerkVisual.ElementKeys?.Close();
+        _elementKeys?.Close();
         StartFenster.TragwerkVisual.IsElement = false;
         Close();
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Elemente.ContainsKey(ElementId.Text)) return;
-        _modell.Elemente.Remove(ElementId.Text);
+        if (!_modell.Elemente.Remove(ElementId.Text, out _)) return;
         Close();
         StartFenster.TragwerkVisual.Close();
-        StartFenster.TragwerkVisual.ElementKeys?.Close();
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         _modell.Berechnet = false;
     }
 
+    private void ElementIdGotFocus(object sender, RoutedEventArgs e)
+    {
+        _aktuelleId = ElementId.Text;
+        _elementKeys = new ElementKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        _elementKeys.Show();
+        ElementId.Focus();
+    }
     private void ElementIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Elemente.ContainsKey(ElementId.Text))
-        {
-            StartknotenId.Text = "";
-            EndknotenId.Text = "";
-            MaterialId.Text = "";
-            QuerschnittId.Text = "";
-            return;
-        }
+        _elementKeys?.Close();
+        if (!_modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement)) return;
 
-        // vorhandene element definitionen
-        _modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement);
-        Debug.Assert(vorhandenesElement != null, nameof(vorhandenesElement) + " != null");
-        ElementId.Text = "";
-
+        // Elementtyp aus vorhandener Elementdefinition
         ElementId.Text = vorhandenesElement.ElementId;
         switch (vorhandenesElement)
         {
@@ -248,18 +242,7 @@ public partial class ElementNeu
                 break;
         }
 
-        switch (vorhandenesElement)
-        {
-            case Fachwerk:
-                FachwerkCheck.IsChecked = true;
-                BalkenCheck.IsChecked = false;
-                break;
-            case Biegebalken:
-                FachwerkCheck.IsChecked = false;
-                BalkenCheck.IsChecked = true;
-                break;
-        }
-
+        // Elementeigenschaften aus identifiziertem, vorhandenem Element
         StartknotenId.Text = vorhandenesElement.KnotenIds[0];
         MaterialId.Text = vorhandenesElement.ElementMaterialId;
         EModul.Text = vorhandenesElement.E == 0
@@ -275,6 +258,29 @@ public partial class ElementNeu
         Trägheitsmoment.Text = vorhandenesElement.I == 0
             ? string.Empty
             : vorhandenesElement.I.ToString("E2", CultureInfo.CurrentCulture);
+    }
+
+    private void MaterialIdGotFocus(object sender, RoutedEventArgs e)
+    {
+        _materialKeys = new MaterialKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        _materialKeys.Show();
+    }
+    private void MaterialIdLostFocus(object sender, RoutedEventArgs e)
+    {
+        MaterialId.Text = _materialKeys.Id;
+        _materialKeys.Close();
+    }
+
+    private void QuerschnittIdGotFocus(object sender, RoutedEventArgs e)
+    {
+        _querschnittKeys = new QuerschnittKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        _querschnittKeys.Show();
+    }
+
+    private void QuerschnittIdLostFocus(object sender, RoutedEventArgs e)
+    {
+        QuerschnittId.Text = _querschnittKeys.Id;
+       _querschnittKeys.Close();
     }
 
     private bool Gelenkstab(string knotenId)

@@ -6,6 +6,7 @@ public partial class QuerschnittNeu
 {
     private readonly FeModell _modell;
     private Querschnitt _querschnitt, _vorhandenerQuerschnitt;
+    private QuerschnittKeys _querschnittKeys;
 
     public QuerschnittNeu(FeModell modell)
     {
@@ -74,30 +75,27 @@ public partial class QuerschnittNeu
         }
 
         Close();
-        StartFenster.TragwerkVisual.QuerschnittKeys?.Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        StartFenster.TragwerkVisual.QuerschnittKeys?.Close();
         Close();
     }
 
+
+    private void QuerschnittIdGotFocus(object sender, RoutedEventArgs e)
+    {
+        _querschnittKeys = new QuerschnittKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        _querschnittKeys.Show();
+        QuerschnittId.Focus();
+    }
     private void QuerschnittIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Querschnitt.ContainsKey(QuerschnittId.Text))
-        {
-            Fläche.Text = "";
-            Ixx.Text = "";
-            return;
-        }
+        _querschnittKeys?.Close();
+        if (!_modell.Querschnitt.TryGetValue(QuerschnittId.Text, out _vorhandenerQuerschnitt)) return;
 
         // vorhandene Querschnittdefinition
-        if (!_modell.Querschnitt.TryGetValue(QuerschnittId.Text, out _vorhandenerQuerschnitt)) return;
-        QuerschnittId.Text = "";
-
         QuerschnittId.Text = _vorhandenerQuerschnitt.QuerschnittId;
-
         Fläche.Text = _vorhandenerQuerschnitt.QuerschnittsWerte[0].ToString("G3", CultureInfo.CurrentCulture);
         if (Ixx.Text == "")
             Ixx.Text = _vorhandenerQuerschnitt.QuerschnittsWerte[1].ToString("G3", CultureInfo.CurrentCulture);
@@ -108,7 +106,6 @@ public partial class QuerschnittNeu
         if (QuerschnittReferenziert()) return;
 
         _modell.Querschnitt.Remove(_vorhandenerQuerschnitt.QuerschnittId);
-        StartFenster.TragwerkVisual.QuerschnittKeys?.Close();
         Close();
     }
 

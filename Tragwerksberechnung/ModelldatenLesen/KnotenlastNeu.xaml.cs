@@ -1,12 +1,14 @@
-﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using System.Globalization;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using System.Globalization;
+using KnotenLast = FE_Berechnungen.Tragwerksberechnung.Modelldaten.KnotenLast;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class KnotenlastNeu
 {
     private readonly FeModell _modell;
+    private TragwerkLastenKeys _lastenKeys;
+    public string AktuelleId;
 
     public KnotenlastNeu()
     {
@@ -92,6 +94,8 @@ public partial class KnotenlastNeu
             _modell.Lasten.Add(knotenlastId, knotenlast);
         }
 
+        if (AktuelleId != LastId.Text) _modell.Lasten.Remove(AktuelleId);
+
         Close();
         StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
@@ -105,21 +109,19 @@ public partial class KnotenlastNeu
         StartFenster.TragwerkVisual.IsKnotenlast = false;
     }
 
+
+    private void LastIdGotFocus(object sender, RoutedEventArgs e)
+    {
+        _lastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        _lastenKeys.Show();
+        _lastenKeys.Focus();
+    }
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Lasten.ContainsKey(LastId.Text))
-        {
-            KnotenId.Text = "";
-            Px.Text = "";
-            Py.Text = "";
-            M.Text = "";
-            return;
-        }
+        _lastenKeys?.Close();
+        if (!_modell.Lasten.TryGetValue(LastId.Text, out var vorhandeneKnotenlast)) return;
 
         // vorhandene Knotenlastdefinition
-        if (!_modell.Lasten.TryGetValue(LastId.Text, out var vorhandeneKnotenlast))
-            throw new ModellAusnahme("\nKnotenlast '" + LastId.Text + "' nicht im Modell gefunden");
-
         LastId.Text = vorhandeneKnotenlast.LastId;
         KnotenId.Text = vorhandeneKnotenlast.KnotenId;
         Px.Text = vorhandeneKnotenlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
@@ -130,23 +132,24 @@ public partial class KnotenlastNeu
 
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
     {
-        _modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten);
-        if (vorhandenerKnoten == null)
+        if (!_modell.Knoten.TryGetValue(KnotenId.Text, out var vorhandenerKnoten))
         {
             _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue Knotenlast");
             LastId.Text = "";
             KnotenId.Text = "";
-            return;
         }
-
-        if (LastId.Text == "") LastId.Text = "KL_" + KnotenId.Text;
+        else
+        {
+            KnotenId.Text = vorhandenerKnoten.Id;
+            if (LastId.Text != "") return;
+            LastId.Text = "KL_" + KnotenId.Text;
+            AktuelleId = LastId.Text;
+        }
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Lasten.ContainsKey(LastId.Text)) return;
-        _modell.Lasten.Remove(LastId.Text);
-        //StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
+        if (!_modell.Lasten.Remove(LastId.Text, out _)) return;
         Close();
         StartFenster.TragwerkVisual.Close();
 
@@ -159,7 +162,7 @@ public partial class KnotenlastNeu
     {
         _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
         if (knoten == null) { _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue Knotenlast"); return; }
-        StartFenster.TragwerkVisual.KnotenClick(knoten);
+        StartFenster.TragwerkVisual.KnotenEdit(knoten);
         Close();
         _modell.Berechnet = false;
     }

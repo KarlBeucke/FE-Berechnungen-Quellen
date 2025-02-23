@@ -67,16 +67,16 @@ public class Darstellung
 
         var x = new List<double>();
         var y = new List<double>();
+
         foreach (var item in _modell.Knoten)
         {
             x.Add(item.Value.Koordinaten[0]);
             y.Add(item.Value.Koordinaten[1]);
         }
-
-        _maxX = x.Max();
-        _minX = x.Min();
         MaxY = y.Max();
         _minY = y.Min();
+        _maxX = x.Max();
+        _minX = x.Min();
 
         // vertikales Modell
         var delta = Math.Abs(_maxX - _minX);

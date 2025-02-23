@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Neue Punktlast" Height="290" Width="300">
+        Title="Neue Punktlast" Height="290" Width="320">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="140" />
@@ -23,11 +23,11 @@
         <Label Grid.Row="1" Grid.Column="0" Margin="0,1,0,4">Last ID:</Label>
         <Label Grid.Row="1" Grid.Column="0" Margin="0,15,0,34" FontSize="8" Grid.RowSpan="2">(generiert aus "P_L_" und Element ID)</Label>
         <TextBox Name="LastId" Grid.Row="1" Grid.Column="1" Margin="10,10,0,0" Height="20"
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" LostFocus="PunktlastIdLostFocus" />
+                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" LostFocus="LastIdLostFocus" GotFocus="LastIdGotFocus" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,3,0,2">Element ID:</Label>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,17,0,34" FontSize="8" Grid.RowSpan="2">(click vorhandene Element ID)</Label>
         <TextBox Name="ElementId" Grid.Row="2" Grid.Column="1" Margin="10,9.6,10,5.6" Height="20"
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" LostFocus="ElementIdLostFocus" />
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" LostFocus="ElementIdLostFocus" />
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5.4,0.2,35" Grid.RowSpan="2">Lastwert in x</Label>
         <TextBox Name="Px" Grid.Row="3" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" />

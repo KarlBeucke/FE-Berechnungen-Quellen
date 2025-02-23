@@ -14,7 +14,7 @@
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <ListView Grid.Row="0" Width="290" Margin="10,10,0,10" Name="MaterialKey" HorizontalAlignment="Left"
-                  d:DataContext="{d:DesignData modell}">
+                  d:DataContext="{d:DesignData modell}" SelectionChanged="SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding MaterialId}" />

@@ -7,12 +7,15 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 public partial class PunktlastNeu
 {
     private readonly FeModell _modell;
+    private TragwerkLastenKeys _lastenKeys;
+    public string AktuelleId;
 
     public PunktlastNeu(FeModell modell)
     {
         InitializeComponent();
         _modell = modell;
         Show();
+        AktuelleId = LastId.Text;
     }
 
     public PunktlastNeu(FeModell modell, string last, string element, double px, double py, double offset)
@@ -81,11 +84,10 @@ public partial class PunktlastNeu
             };
             _modell.PunktLasten.Add(punktlastId, punktLast);
         }
+        if (AktuelleId != LastId.Text) _modell.PunktLasten.Remove(AktuelleId);
 
-        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.Close();
-
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         _modell.Berechnet = false;
@@ -93,55 +95,56 @@ public partial class PunktlastNeu
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
         Close();
         StartFenster.TragwerkVisual.IsPunktlast = false;
     }
 
-    private void PunktlastIdLostFocus(object sender, RoutedEventArgs e)
+    private void LastIdGotFocus(object sender, RoutedEventArgs e)
     {
-        if (!_modell.PunktLasten.ContainsKey(LastId.Text))
-        {
-            ElementId.Text = "";
-            Px.Text = "";
-            Py.Text = "";
-            Offset.Text = "";
-            return;
-        }
+        _lastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        _lastenKeys.Show();
+        _lastenKeys.Focus();
+    }
+    private void LastIdLostFocus(object sender, RoutedEventArgs e)
+    {
+        _lastenKeys?.Close();
+        if (!_modell.PunktLasten.TryGetValue(LastId.Text, out var vorhandenePunktlast)) return;
 
         // vorhandene Punktlastdefinition
-        _modell.PunktLasten.TryGetValue(LastId.Text, out var vorhandenePunktlast);
-        if (vorhandenePunktlast == null) return;
         LastId.Text = vorhandenePunktlast.LastId;
 
         ElementId.Text = vorhandenePunktlast.ElementId;
         Px.Text = vorhandenePunktlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
         Py.Text = vorhandenePunktlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
         Offset.Text = vorhandenePunktlast.Offset.ToString("G3", CultureInfo.CurrentCulture);
+        
+        if (AktuelleId != LastId.Text) _modell.PunktLasten.Remove(LastId.Text);
+
     }
 
     private void ElementIdLostFocus(object sender, RoutedEventArgs e)
     {
-        _modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement);
-        switch (vorhandenesElement)
+        if (!_modell.Elemente.TryGetValue(ElementId.Text, out var vorhandenesElement))
         {
-            case null:
-                _ = MessageBox.Show("Element nicht im Modell gefunden", "neue Linienlast");
-                LastId.Text = "";
-                ElementId.Text = "";
-                return;
-            case Fachwerk:
-                throw new ModellAusnahme(" Punktlast ungültig für Fachwerkstab");
+            _ = MessageBox.Show("Element nicht im Modell gefunden", "neue Punktlast");
+            LastId.Text = "";
+            ElementId.Text = "";
         }
 
-        if (LastId.Text == "") LastId.Text = "PL_" + ElementId.Text;
+        else
+        {
+            if (vorhandenesElement is Fachwerk)
+                throw new ModellAusnahme("Punktlast ungültig für Fachwerkstab");
+            ElementId.Text = vorhandenesElement.ElementId;
+            if (LastId.Text != "") return;
+            LastId.Text = "PL_" + ElementId.Text;
+            AktuelleId = LastId.Text;
+        }
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.PunktLasten.Keys.Contains(LastId.Text)) return;
-        _modell.PunktLasten.Remove(LastId.Text);
-        StartFenster.TragwerkVisual.TragwerkLastenKeys?.Close();
+        if (!_modell.PunktLasten.Remove(LastId.Text, out _)) return;
         Close();
         StartFenster.TragwerkVisual.Close();
 
