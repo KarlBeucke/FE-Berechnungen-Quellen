@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using System.Windows.Input;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using System.Globalization;
+using System.Windows.Input;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -123,7 +123,7 @@ public partial class LagerNeu
             var lager = new Lager(KnotenId.Text, typ, vordefiniert, _modell) { RandbedingungId = lagerId };
             _modell.Randbedingungen.Add(lagerId, lager);
         }
-        if(AktuelleId != LagerId.Text) _modell.Randbedingungen.Remove(AktuelleId);
+        if (AktuelleId != LagerId.Text) _modell.Randbedingungen.Remove(AktuelleId);
 
         Close();
         StartFenster.TragwerkVisual.Close();

@@ -1,6 +1,4 @@
-﻿using System.Windows.Markup;
-
-namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
+﻿namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 
 public partial class DynamischeErgebnisseAnzeigen
 {

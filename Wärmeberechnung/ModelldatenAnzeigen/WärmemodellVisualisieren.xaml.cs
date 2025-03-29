@@ -2,10 +2,8 @@
 using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 using System.Globalization;
-using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Element2D3 = FE_Berechnungen.Wärmeberechnung.Modelldaten.Element2D3;

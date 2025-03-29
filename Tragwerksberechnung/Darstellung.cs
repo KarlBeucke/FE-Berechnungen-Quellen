@@ -65,18 +65,33 @@ public class Darstellung
         _screenH = _visual.ActualWidth;
         _screenV = _visual.ActualHeight;
 
-        var x = new List<double>();
-        var y = new List<double>();
-
-        foreach (var item in _modell.Knoten)
+        if (_modell.MaxX - _modell.MinX == 0 && _modell.MaxY - _modell.MinY == 0)
         {
-            x.Add(item.Value.Koordinaten[0]);
-            y.Add(item.Value.Koordinaten[1]);
+            var x = new List<double>();
+            var y = new List<double>();
+
+            if (_modell.Knoten.Count == 0)
+            {
+                throw new ModellAusnahme("\nModellabmessungen können nicht bestimmt werden, keine Knotengeometrie vorhanden");
+            }
+
+            foreach (var item in _modell.Knoten)
+            {
+                x.Add(item.Value.Koordinaten[0]);
+                y.Add(item.Value.Koordinaten[1]);
+            }
+            MaxY = y.Max();
+            _minY = y.Min();
+            _maxX = x.Max();
+            _minX = x.Min();
         }
-        MaxY = y.Max();
-        _minY = y.Min();
-        _maxX = x.Max();
-        _minX = x.Min();
+        else
+        {
+            MaxY = _modell.MaxY;
+            _minY = _modell.MinY;
+            _maxX = _modell.MaxX;
+            _minX = _modell.MinX;
+        }
 
         // vertikales Modell
         var delta = Math.Abs(_maxX - _minX);

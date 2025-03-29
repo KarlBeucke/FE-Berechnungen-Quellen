@@ -2,7 +2,6 @@
 using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Markup;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
 

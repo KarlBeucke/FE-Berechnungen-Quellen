@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using System.Windows.Markup;
 
 namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 

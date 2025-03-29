@@ -1,6 +1,4 @@
-﻿using System.Text;
-using System.Windows.Controls;
-using System.Windows.Markup;
+﻿using System.Windows.Controls;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 

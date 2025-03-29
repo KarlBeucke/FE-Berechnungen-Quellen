@@ -1,7 +1,4 @@
-﻿using Microsoft.Win32;
-using System.IO;
-
-namespace FE_Berechnungen.Dateieingabe;
+﻿namespace FE_Berechnungen.Dateieingabe;
 
 public partial class ModelldatenEditieren
 {

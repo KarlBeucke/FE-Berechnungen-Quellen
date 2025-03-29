@@ -1,7 +1,6 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 using System.Globalization;
-using System.Text;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 

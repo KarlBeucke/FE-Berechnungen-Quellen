@@ -9,23 +9,30 @@ public partial class ZeitKnotenanfangswerteNeu
     {
         InitializeComponent();
         _modell = modell;
-        _aktuell = StartFenster.TragwerkVisual.ZeitintegrationNeu.Aktuell;
-        var anfang = (Knotenwerte)modell.Zeitintegration.Anfangsbedingungen[_aktuell];
-        KnotenId.Text = anfang.KnotenId;
-        Dof1D0.Text = anfang.Werte[0].ToString("G2");
-        Dof1V0.Text = anfang.Werte[1].ToString("G2");
-        if (anfang.Werte.Length > 2)
+        if (modell.Zeitintegration.Anfangsbedingungen.Count == 0)
         {
-            Dof2D0.Text = anfang.Werte[2].ToString("G2");
-            Dof2V0.Text = anfang.Werte[3].ToString("G2");
-        }
 
-        if (anfang.Werte.Length > 4)
+        }
+        else
         {
-            Dof3D0.Text = anfang.Werte[4].ToString("G2");
-            Dof3V0.Text = anfang.Werte[5].ToString("G2");
-        }
+            _aktuell = StartFenster.TragwerkVisual.ZeitintegrationNeu.Aktuell;
+            var anfang = modell.Zeitintegration.Anfangsbedingungen[_aktuell];
+            KnotenId.Text = anfang.KnotenId;
+            Dof1D0.Text = anfang.Werte[0].ToString("G2");
+            Dof1V0.Text = anfang.Werte[1].ToString("G2");
+            if (anfang.Werte.Length > 2)
+            {
+                Dof2D0.Text = anfang.Werte[2].ToString("G2");
+                Dof2V0.Text = anfang.Werte[3].ToString("G2");
+            }
 
+            if (anfang.Werte.Length > 4)
+            {
+                Dof3D0.Text = anfang.Werte[4].ToString("G2");
+                Dof3V0.Text = anfang.Werte[5].ToString("G2");
+            }
+        }
+        
         Show();
     }
 
@@ -73,7 +80,7 @@ public partial class ZeitKnotenanfangswerteNeu
         // vorhandene Anfangsbedingung ändern
         else
         {
-            var anfang = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[_aktuell];
+            var anfang = _modell.Zeitintegration.Anfangsbedingungen[_aktuell];
             anfang.KnotenId = KnotenId.Text;
             try
             {
@@ -110,7 +117,7 @@ public partial class ZeitKnotenanfangswerteNeu
             return;
         }
 
-        var anfangsWerte = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[_aktuell];
+        var anfangsWerte = _modell.Zeitintegration.Anfangsbedingungen[_aktuell];
         KnotenId.Text = anfangsWerte.KnotenId;
         Dof1D0.Text = anfangsWerte.Werte[0].ToString("G2");
         Dof1V0.Text = anfangsWerte.Werte[1].ToString("G2");

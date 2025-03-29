@@ -11,6 +11,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="160" />
                     <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="90" />
@@ -53,7 +54,7 @@
                                   VerticalAlignment="Center" Padding="5,0,0,0">
                             <MenuItem Header="dynamische Daten anzeigen" HorizontalAlignment="Left" Height="20" Width="250"
                                 Margin="0,0,0,0" Click="DynamischeDaten" />
-                           <MenuItem Header="dynamische Berechnung" HorizontalAlignment="Left" Height="20" Width="250"
+                            <MenuItem Header="dynamische Berechnung" HorizontalAlignment="Left" Height="20" Width="250"
                                 Margin="0,0,0,0" Click="DynamischeBerechnung" />
                             <Separator HorizontalAlignment="Left" Height="4" Width="250" Margin="0,0,-0.2,0" />
                             <MenuItem Header="zeitabhängige Modellzustände visualisieren" HorizontalAlignment="Left" Height="20"
@@ -64,8 +65,11 @@
                     </Menu>
                 </Grid>
 
-                <Grid Column="2" Grid.ColumnSpan="4" Height="41" VerticalAlignment="Center" FlowDirection="LeftToRight" Background="GreenYellow">
+                <Grid Column="2" Grid.ColumnSpan="6" Height="41" VerticalAlignment="Center" FlowDirection="LeftToRight"
+                      Background="GreenYellow">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="80" />
@@ -79,10 +83,14 @@
                              Grid.ColumnSpan="4">
                         Modelldefinitionen neu definieren und vorhandene editieren
                     </TextBox>
-
-                    <Menu Grid.Column="0" HorizontalAlignment="Center" Width="60" FlowDirection="LeftToRight"
-                          Margin="0,22,0,-2">
-                        <MenuItem Header="Knoten" Height="18" Width="50"
+                    <Button Grid.Column="0"   IsDefault="False" HorizontalAlignment="Center" VerticalAlignment="Top"
+                            Width="90" Click="OnBtnAbmessungen_Click" Padding="0,-2,0,0" Height="17"
+                            Margin="0,22,0,0">
+                        Abmessungen
+                    </Button>
+                    <Menu Grid.Column="1" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight"
+                          Margin="0,22,0,0" Height="16" VerticalAlignment="Top">
+                        <MenuItem Header="Knoten" Height="21" Width="65"
                                   Padding="5,0,0,0" VerticalAlignment="Center">
                             <MenuItem Header="Knoten" HorizontalAlignment="Left" Height="20" Width="250"
                                       Margin="0,0,0,0" Click="MenuBalkenKnotenNeu" />
@@ -95,9 +103,9 @@
                                       Margin="0,0,0,0" Click="MenuBalkenKnotenNetzVariabel" />
                         </MenuItem>
                     </Menu>
-                    <Menu Grid.Column="1" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight"
-                          Margin="0,22,0,0" Height="19" VerticalAlignment="Top">
-                        <MenuItem Header="Elemente" Height="20" Width="65"
+                    <Menu Grid.Column="2" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight"
+                          Margin="0,22,0,0" Height="16" VerticalAlignment="Top">
+                        <MenuItem Header="Elemente" Height="21" Width="65"
                                   Padding="5,0,0,0" VerticalAlignment="Center">
                             <MenuItem Header="Element" HorizontalAlignment="Left" Height="20" Width="250"
                                       Margin="0,0,0,0" Click="MenuBalkenElementNeu" />
@@ -108,9 +116,9 @@
                                       Margin="0,0,0,0" Click="MenuMaterialNeu" />
                         </MenuItem>
                     </Menu>
-                    <Menu Grid.Column="2" HorizontalAlignment="Center" Height="18"
-                          VerticalAlignment="Top" Width="60" FlowDirection="LeftToRight" Margin="0,23,0,0">
-                        <MenuItem Header="Lasten" Height="17" Width="50"
+                    <Menu Grid.Column="3" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight"
+                          Margin="0,22,0,0" Height="16" VerticalAlignment="Top">
+                        <MenuItem Header="Lasten" Height="21" Width="65"
                                   Padding="5,0,0,0" VerticalAlignment="Center">
                             <MenuItem Header="Knotenlast" HorizontalAlignment="Left" Height="20" Width="250"
                                       Margin="0,0,0,0" Click="MenuKnotenlastNeu" />
@@ -120,14 +128,26 @@
                                       Margin="0,0,0,0" Click="MenuPunktlastNeu" />
                         </MenuItem>
                     </Menu>
-                    <Button Grid.Column="3" IsDefault="False" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Width="60" Click="OnBtnLagerNeu_Click" Padding="0,-2,0,0" Height="17"
-                            Margin="15,22,0,0">
+                    <Button Grid.Column="4" IsDefault="False" HorizontalAlignment="Center"
+                            Width="60" Click="OnBtnLagerNeu_Click" Padding="0,-2,0,0"
+                            Margin="0,22,0,1">
                         Lager
                     </Button>
+                    <Menu Grid.Column="5" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight"
+                          Margin="0,22,0,0" Height="16" VerticalAlignment="Top">
+                        <MenuItem Header="Dynamik" Height="17" Width="70"
+                                  Padding="5,0,0,0" VerticalAlignment="Center">
+                            <MenuItem Header="Zeitintegration" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuZeitintegrationNeu" />
+                            <MenuItem Header="Anfangswerte" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuAnfangswerteNeu" />
+                            <MenuItem Header="Knotenlast" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuZeitKnotenlastNeu" />
+                        </MenuItem>
+                    </Menu>
                 </Grid>
 
-                <Grid Grid.Column="6" Grid.ColumnSpan="4" Height="40" Width="330" VerticalAlignment="Top" FlowDirection="LeftToRight"
+                <Grid Grid.Column="8" Grid.ColumnSpan="4" Height="40" Width="330" VerticalAlignment="Top" FlowDirection="LeftToRight"
                       Background="LightBlue" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80" />

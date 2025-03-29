@@ -109,7 +109,7 @@ namespace FEBibliothek.Modell
                 foreach (var element in _modell.Elemente)
                 {
                     if (element.Value.KnotenIds.Any(t => t == id)) { frei = false; }
-                    if(!frei) break;
+                    if (!frei) break;
                 }
                 if (frei) throw new BerechnungAusnahme("\nKnoten '" + id + "' ist instabil, wird durch kein Element genutzt");
             }
@@ -224,7 +224,7 @@ namespace FEBibliothek.Modell
                 else
                 {
                     var elementId = elementLast.ElementId;
-                    if(_modell.Elemente.TryGetValue(elementId, out var element))
+                    if (_modell.Elemente.TryGetValue(elementId, out var element))
                     {
                         indizes = element.SystemIndizesElement;
                         lastVektor = elementLast.BerechneLastVektor();

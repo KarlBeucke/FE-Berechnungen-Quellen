@@ -5,7 +5,7 @@
         public double Dämpfung { get; set; } = wert;
         public string Text { get; set; } = text;
 
-        public ModaleWerte(double wert) : this(wert, null)
+        public ModaleWerte(double wert) : this(wert, string.Empty)
         {
         }
     }

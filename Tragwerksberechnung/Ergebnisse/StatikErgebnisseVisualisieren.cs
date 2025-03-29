@@ -1,8 +1,6 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
 

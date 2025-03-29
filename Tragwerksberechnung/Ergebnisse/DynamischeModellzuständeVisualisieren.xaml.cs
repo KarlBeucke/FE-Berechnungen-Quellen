@@ -1,7 +1,5 @@
 ﻿using System.Globalization;
-using System.Text;
 using System.Windows.Controls;
-using System.Windows.Markup;
 using System.Windows.Shapes;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;

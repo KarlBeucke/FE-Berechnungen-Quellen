@@ -154,6 +154,11 @@ public partial class TragwerkmodellVisualisieren
 
 
     // Modelldefinitionen neu definieren und vorhandene editieren
+    private void OnBtnAbmessungen_Click(object sender, RoutedEventArgs e)
+    {
+        var abmessungenNeu = new AbmessungenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        abmessungenNeu.Show();
+    }
     private void MenuBalkenKnotenNeu(object sender, RoutedEventArgs e)
     {
         _knotenNeu = new KnotenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
@@ -221,6 +226,22 @@ public partial class TragwerkmodellVisualisieren
         _lagerNeu = new LagerNeu(_modell) { Topmost = true, Owner = (Window)Parent };
         _modell.Berechnet = false;
     }
+
+    private void MenuZeitintegrationNeu(object sender, RoutedEventArgs e)
+    {
+        ZeitintegrationNeu = new ZeitintegrationNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+    }
+
+    private void MenuAnfangswerteNeu(object sender, RoutedEventArgs e)
+    {
+        _ = new ZeitKnotenanfangswerteNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+    }
+
+    private void MenuZeitKnotenlastNeu(object sender, RoutedEventArgs e)
+    {
+        _ = new ZeitKnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+    }
+
 
     // Modelldefinitionen darstellen
     private void OnBtnKnotenIDs_Click(object sender, RoutedEventArgs e)

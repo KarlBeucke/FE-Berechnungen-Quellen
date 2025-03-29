@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Material = FE_Berechnungen.Tragwerksberechnung.Modelldaten.Material;
+﻿using Material = FE_Berechnungen.Tragwerksberechnung.Modelldaten.Material;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 

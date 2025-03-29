@@ -1255,17 +1255,17 @@ public partial class StartFenster
         switch (_elastizitätsModell.Raumdimension)
         {
             case 2:
-            {
-                ElastizitätVisual = new ElastizitätsmodellVisualisieren(_elastizitätsModell);
-                ElastizitätVisual.Show();
-                break;
-            }
+                {
+                    ElastizitätVisual = new ElastizitätsmodellVisualisieren(_elastizitätsModell);
+                    ElastizitätVisual.Show();
+                    break;
+                }
             case 3:
-            {
-                var visual = new Elastizitätsmodell3DVisualisieren(_elastizitätsModell);
-                visual.Show();
-                break;
-            }
+                {
+                    var visual = new Elastizitätsmodell3DVisualisieren(_elastizitätsModell);
+                    visual.Show();
+                    break;
+                }
         }
     }
 

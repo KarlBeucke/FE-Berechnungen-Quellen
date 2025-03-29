@@ -13,6 +13,11 @@
         private string ModellId { get; set; }
         public FeModell FeModell { get; private set; }
         private int Raumdimension { get; set; }
+        public int MinX { get; set; }
+        public int MaxX { get; set; }
+        public int MinY { get; set; }
+        public int MaxY { get; set; }
+
         private int AnzahlKnotenfreiheitsgrade { get; set; }
         public static string EingabeGefunden { get; set; }
 
@@ -38,6 +43,22 @@
                 break;
             }
             FeModell = new FeModell(ModellId, Raumdimension, AnzahlKnotenfreiheitsgrade);
+
+            for (var i = 0; i < zeilen.Length; i++)
+            {
+                if (zeilen[i] != "Modellabmessungen") continue;
+                _substrings = zeilen[i + 1].Split(_delimiters);
+                MinX = int.Parse(_substrings[0]);
+                MaxX = int.Parse(_substrings[1]);
+                MinY = int.Parse(_substrings[2]);
+                MaxY = int.Parse(_substrings[3]);
+                FeModell.MinX = MinX;
+                FeModell.MaxX = MaxX;
+                FeModell.MinY = MinY;
+                FeModell.MaxY = MaxY;
+                EingabeGefunden += "\nModellabmessungen min x, max x = " + MinX + "," + MaxX + " und min y, max y = " + MinY + "," + MaxY;
+                break;
+            }
         }
 
         // KnotenId, Knotenkoordinaten

@@ -204,7 +204,6 @@ public class ElementParser
                                 var fläche = double.Parse(_substrings[1]);
                                 var querschnitt = new Querschnitt(fläche) { QuerschnittId = querschnittId };
                                 _modell.Querschnitt.Add(querschnittId, querschnitt);
-                                i++;
                                 break;
                             }
                         case 3:
@@ -214,12 +213,12 @@ public class ElementParser
                                 var ixx = double.Parse(_substrings[2]);
                                 var querschnitt = new Querschnitt(fläche, ixx) { QuerschnittId = querschnittId };
                                 _modell.Querschnitt.Add(querschnittId, querschnitt);
-                                i++;
                                 break;
                             }
                         default:
                             throw new ParseAusnahme((i + 2) + ":\nQuerschnitt, falsche Anzahl Parameter");
                     }
+                    i++;
                 }
                 catch (FormatException)
                 {

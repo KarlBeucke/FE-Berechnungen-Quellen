@@ -5,6 +5,10 @@
         public string ModellId { get; set; } = modellId;
         public int Raumdimension { get; set; } = raumdimension;
         public int AnzahlKnotenfreiheitsgrade { get; set; } = anzahlKnotenfreiheitsgrade;
+        public int MinX { get; set; }
+        public int MaxX { get; set; }
+        public int MinY { get; set; }
+        public int MaxY { get; set; }
         public bool Eigen { get; set; }
         public bool ZeitIntegration { get; set; }
         public bool ZeitintegrationDaten { get; set; }

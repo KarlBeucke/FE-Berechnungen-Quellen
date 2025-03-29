@@ -1,0 +1,46 @@
+﻿<Window x:Class="FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.AbmessungenNeu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Neue Modellabmessungen eingeben" Height="270" Width="370">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="100" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Label Grid.Column="0" Name="Titel" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,-36,37" Grid.RowSpan="2">
+            minimale und maximale Modellabmessungen in x und y</Label>
+
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">minimale x-Koordinate:</Label>
+        <TextBox Name="MinX" Grid.Row="1" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" />
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">maximale x-Koordinate::</Label>
+        <TextBox Name="MaxX" Grid.Row="2" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" />
+        <Label Grid.Row="3" Grid.Column="0" Margin="0,5,0,0">minimale y-Koordinate:</Label>
+        <TextBox Name="MinY" Grid.Row="3" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" />
+        <Label Grid.Row="4" Grid.Column="0" Margin="0,5,0,0">maximale y-Koordinate::</Label>
+        <TextBox Name="MaxY" Grid.Row="4" Grid.Column="1" Margin="13.2,13.2,0,6.8" Height="20"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="32" />
+
+        <Button IsDefault="True" Grid.Row="5" Grid.Column="1" Height="26" Margin="101,0,-36,0"
+                VerticalAlignment="Center" Click="BtnDialogOk_Click">
+            _Ok
+        </Button>
+        <Button Grid.Row="5" Grid.Column="1" Width="71" Height="26" Margin="21.2,0,0,7.8"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="BtnDialogCancel_Click">
+            _Abbrechen
+        </Button>
+    </Grid>
+</Window>

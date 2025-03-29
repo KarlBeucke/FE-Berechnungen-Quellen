@@ -3,53 +3,52 @@ using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Markup;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
 public partial class DynamikDatenAnzeigen
 {
-    private readonly FeModell modell;
-    private int removeIndex;
-    private string removeKey;
+    private readonly FeModell _modell;
+    private int _removeIndex;
+    private string _removeKey;
 
     public DynamikDatenAnzeigen(FeModell feModell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
-        modell = feModell;
+        _modell = feModell;
         InitializeComponent();
         //DataContext für Integrationsparameter
-        DataContext = modell;
+        DataContext = _modell;
     }
 
     private void DynamikLoaded(object sender, RoutedEventArgs e)
     {
         // ************************* Anfangsbedingungen *********************************
-        if (modell.Zeitintegration.Anfangsbedingungen.Count > 0)
+        if (_modell.Zeitintegration.Anfangsbedingungen.Count > 0)
         {
-            var anfangsverformungen = modell.Zeitintegration.Anfangsbedingungen.Cast<Knotenwerte>().ToList();
+            var anfangsverformungen = _modell.Zeitintegration.Anfangsbedingungen.ToList();
             AnfangsbedingungenGrid.ItemsSource = anfangsverformungen;
         }
 
         // ************************* Zeitabhängige KnotenLasten ***********************
-        if (modell.ZeitabhängigeKnotenLasten.Count > 0)
+        if (_modell.ZeitabhängigeKnotenLasten.Count > 0)
         {
             var knotenBoden = (from item
-                    in modell.ZeitabhängigeKnotenLasten
+                    in _modell.ZeitabhängigeKnotenLasten
                                where item.Value.Bodenanregung
                                select item.Value).ToList();
             if (knotenBoden.Count > 0) Boden.Content = "Bodenanregung";
 
 
             var knotenDatei = (from item
-                    in modell.ZeitabhängigeKnotenLasten
+                    in _modell.ZeitabhängigeKnotenLasten
                                where item.Value.VariationsTyp == 0
                                select item.Value).ToList();
             if (knotenDatei.Count > 0) DateiGrid.ItemsSource = knotenDatei;
 
 
             var knotenHarmonisch = (from item
-                    in modell.ZeitabhängigeKnotenLasten
+                    in _modell.ZeitabhängigeKnotenLasten
                                     where item.Value.VariationsTyp == 2
                                     select item.Value).ToList();
 
@@ -57,35 +56,58 @@ public partial class DynamikDatenAnzeigen
             if (knotenHarmonisch.Count > 0) HarmonischGrid.ItemsSource = knotenHarmonisch;
 
             var knotenLinear = (from item
-                    in modell.ZeitabhängigeKnotenLasten
+                    in _modell.ZeitabhängigeKnotenLasten
                                 where item.Value.VariationsTyp == 1
                                 select item.Value).ToList();
             if (knotenLinear.Count > 0) LinearGrid.ItemsSource = knotenLinear;
         }
 
         // ************************* modale Dämpfungsmaße ***********************
-        if (modell.Eigenzustand.DämpfungsRaten.Count <= 0) return;
-        var dämpfungsmaße = modell.Eigenzustand.DämpfungsRaten.Cast<ModaleWerte>().ToList();
-        dämpfungsmaße[0].Text = dämpfungsmaße.Count == 1 ? "alle Eigenmodes" : string.Empty;
+        if (_modell.Eigenzustand == null)
+        {
+            _modell.Eigenzustand = new Eigenzustände("leer", 0);
+            _modell.Zeitintegration = new Zeitintegration(0, 0, 0, 0, 0);
+            return;
+        }
+
+        var dämpfungsmaße = _modell.Eigenzustand.DämpfungsRaten.Cast<ModaleWerte>().ToList();
+        switch (_modell.Eigenzustand.DämpfungsRaten.Count)
+        {
+            case 1:
+                dämpfungsmaße[0].Text = "alle Eigenformen";
+                break;
+            default:
+            {
+                for (var i = 0; i < dämpfungsmaße.Count; i++)
+                {
+                    dämpfungsmaße[i].Text = i + 1 + ". Eigenform";
+                }
+                break;
+            }
+        }
         DämpfungGrid.ItemsSource = dämpfungsmaße;
     }
 
-    // ************************* modale Dämpfungsmaße *********************************
+    // ************************* neue Dämpfungsmaße *********************************
     private void NeueDämpfungsraten(object sender, MouseButtonEventArgs e)
     {
-        _ = new ZeitDämpfungsratenNeu(modell);
-        modell.Berechnet = false;
+        var neu = _modell.Eigenzustand.DämpfungsRaten.Count +1;
+        _modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(0,neu.ToString()+". Eigenform"));
+        _modell.Berechnet = false;
         Close();
+
+        var tragwerk = new DynamikDatenAnzeigen(_modell);
+        tragwerk.Show();
     }
 
     //UnloadingRow
-    private void DämpfungZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void DämpfungZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        modell.Eigenzustand.DämpfungsRaten.RemoveAt(removeIndex);
-        modell.Berechnet = false;
+        _modell.Eigenzustand.DämpfungsRaten.RemoveAt(_removeIndex);
+        _modell.Berechnet = false;
         Close();
 
-        var tragwerk = new DynamikDatenAnzeigen(modell);
+        var tragwerk = new DynamikDatenAnzeigen(_modell);
         tragwerk.Show();
     }
 
@@ -94,25 +116,25 @@ public partial class DynamikDatenAnzeigen
     {
         if (DämpfungGrid.SelectedCells.Count <= 0) return;
         var cellInfo = DämpfungGrid.SelectedCells[0];
-        removeIndex = modell.Eigenzustand.DämpfungsRaten.IndexOf(cellInfo.Item);
+        _removeIndex = _modell.Eigenzustand.DämpfungsRaten.IndexOf(cellInfo.Item);
     }
 
     // ************************* Anfangsbedingungen *********************************
     private void NeueKnotenanfangswerte(object sender, MouseButtonEventArgs e)
     {
-        _ = new ZeitKnotenanfangswerteNeu(modell);
-        modell.Berechnet = false;
+        _ = new ZeitKnotenanfangswerteNeu(_modell);
+        _modell.Berechnet = false;
         Close();
     }
 
     //UnloadingRow
-    private void AnfangswerteZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void AnfangswerteZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        modell.Zeitintegration.Anfangsbedingungen.RemoveAt(removeIndex);
-        modell.Berechnet = false;
+        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_removeIndex);
+        _modell.Berechnet = false;
         Close();
 
-        var tragwerk = new DynamikDatenAnzeigen(modell);
+        var tragwerk = new DynamikDatenAnzeigen(_modell);
         tragwerk.Show();
     }
 
@@ -121,45 +143,45 @@ public partial class DynamikDatenAnzeigen
     {
         if (AnfangsbedingungenGrid.SelectedCells.Count <= 0) return;
         var cellInfo = AnfangsbedingungenGrid.SelectedCells[0];
-        removeIndex = modell.Zeitintegration.Anfangsbedingungen.IndexOf((Knotenwerte)cellInfo.Item);
+        _removeIndex = _modell.Zeitintegration.Anfangsbedingungen.IndexOf((Knotenwerte)cellInfo.Item);
     }
 
     // ************************* Knotenlasten *********************************
     private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
     {
-        _ = new ZeitKnotenlastNeu(modell);
-        modell.Berechnet = false;
+        _ = new ZeitKnotenlastNeu(_modell);
+        _modell.Berechnet = false;
         Close();
     }
 
     //UnloadingRow
-    private void KnotenDateiZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenDateiZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
-        modell.Berechnet = false;
+        if (_removeKey == null) return;
+        _modell.ZeitabhängigeKnotenLasten.Remove(_removeKey);
+        _modell.Berechnet = false;
         Close();
-        var tragwerk = new DynamischeErgebnisseAnzeigen(modell);
+        var tragwerk = new DynamischeErgebnisseAnzeigen(_modell);
         tragwerk.Show();
     }
 
-    private void KnotenHarmonischZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenHarmonischZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
-        modell.Berechnet = false;
+        if (_removeKey == null) return;
+        _modell.ZeitabhängigeKnotenLasten.Remove(_removeKey);
+        _modell.Berechnet = false;
         Close();
-        var tragwerk = new DynamischeErgebnisseAnzeigen(modell);
+        var tragwerk = new DynamischeErgebnisseAnzeigen(_modell);
         tragwerk.Show();
     }
 
-    private void KnotenLinearZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenLinearZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.ZeitabhängigeKnotenLasten.Remove(removeKey);
-        modell.Berechnet = false;
+        if (_removeKey == null) return;
+        _modell.ZeitabhängigeKnotenLasten.Remove(_removeKey);
+        _modell.Berechnet = false;
         Close();
-        var tragwerk = new DynamischeErgebnisseAnzeigen(modell);
+        var tragwerk = new DynamischeErgebnisseAnzeigen(_modell);
         tragwerk.Show();
     }
 
@@ -169,7 +191,7 @@ public partial class DynamikDatenAnzeigen
         if (DateiGrid.SelectedCells.Count <= 0) return;
         var cellInfo = DateiGrid.SelectedCells[0];
         var last = (ZeitabhängigeKnotenLast)cellInfo.Item;
-        removeKey = last.LastId;
+        _removeKey = last.LastId;
     }
 
     private void KnotenHarmonischSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -177,7 +199,7 @@ public partial class DynamikDatenAnzeigen
         if (HarmonischGrid.SelectedCells.Count <= 0) return;
         var cellInfo = HarmonischGrid.SelectedCells[0];
         var last = (ZeitabhängigeKnotenLast)cellInfo.Item;
-        removeKey = last.LastId;
+        _removeKey = last.LastId;
     }
 
     private void KnotenLinearSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -185,12 +207,12 @@ public partial class DynamikDatenAnzeigen
         if (LinearGrid.SelectedCells.Count <= 0) return;
         var cellInfo = LinearGrid.SelectedCells[0];
         var last = (ZeitabhängigeKnotenLast)cellInfo.Item;
-        removeKey = last.LastId;
+        _removeKey = last.LastId;
     }
 
     // ************************* Modell muss neu berechnet werden ****************
     private void Model_Changed(object sender, DataGridCellEditEndingEventArgs e)
     {
-        modell.Berechnet = false;
+        _modell.Berechnet = false;
     }
 }

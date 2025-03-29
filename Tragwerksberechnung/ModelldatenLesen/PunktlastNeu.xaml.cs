@@ -117,7 +117,7 @@ public partial class PunktlastNeu
         Px.Text = vorhandenePunktlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
         Py.Text = vorhandenePunktlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
         Offset.Text = vorhandenePunktlast.Offset.ToString("G3", CultureInfo.CurrentCulture);
-        
+
         if (AktuelleId != LastId.Text) _modell.PunktLasten.Remove(LastId.Text);
 
     }

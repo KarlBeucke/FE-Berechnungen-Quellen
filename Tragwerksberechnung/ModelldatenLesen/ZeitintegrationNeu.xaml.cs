@@ -1,7 +1,6 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using System.Globalization;
 using System.Windows.Input;
-using System.Windows.Markup;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -9,25 +8,26 @@ public partial class ZeitintegrationNeu
 {
     private readonly FeModell _modell;
     private ZeitKnotenanfangswerteNeu _anfangswerteNeu;
-    public int Aktuell, EigenForm;
+    public int Aktuell;
+    private int _eigenform;
 
     public ZeitintegrationNeu(FeModell modell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
         InitializeComponent();
         _modell = modell;
-        if (modell.Eigenzustand != null)
+        if (modell.Eigenzustand == null) modell.Eigenzustand = new Eigenzustände("eigen", 1);
+        else 
         {
-            EigenForm = 1;
+            _eigenform = 1;
             Eigenlösung.Text = modell.Eigenzustand.AnzahlZustände.ToString(CultureInfo.InvariantCulture);
         }
-
+        
         if (modell.Eigenzustand != null && modell.Eigenzustand.DämpfungsRaten.Count > 0)
         {
-            Eigenform.Text = "1";
             var modalwerte = (ModaleWerte)modell.Eigenzustand.DämpfungsRaten[0];
-            var rate = modalwerte.Dämpfung;
-            Dämpfungsraten.Text = rate.ToString(CultureInfo.CurrentCulture);
+            Dämpfungsraten.Text = modalwerte.Dämpfung.ToString(CultureInfo.CurrentCulture);
+            Eigen.Text = modalwerte.Text;
         }
 
         if (modell.Zeitintegration != null)
@@ -156,7 +156,7 @@ public partial class ZeitintegrationNeu
         }
         else
         {
-            var knotenwerte = (Knotenwerte)_modell.Zeitintegration.Anfangsbedingungen[Aktuell - 1];
+            var knotenwerte = _modell.Zeitintegration.Anfangsbedingungen[Aktuell - 1];
             StartFenster.TragwerkVisual.ZeitintegrationNeu.Anfangsbedingungen.Text =
                 Aktuell.ToString(CultureInfo.CurrentCulture);
             StartFenster.TragwerkVisual.ZeitintegrationNeu.Show();
@@ -183,48 +183,56 @@ public partial class ZeitintegrationNeu
 
     private void DämpfungsratenNext(object sender, MouseButtonEventArgs e)
     {
-        EigenForm++;
-        StartFenster.TragwerkVisual.ZeitintegrationNeu.Eigenform.Text =
-            EigenForm.ToString(CultureInfo.CurrentCulture);
-        _ = new ZeitDämpfungsratenNeu(_modell);
+        if (Eigen.Text == "alle") return;
+        _eigenform++;
+        if (_eigenform > _modell.Eigenzustand.AnzahlZustände)
+        {
+            _ = MessageBox.Show("modale Dämpfung nur für jede Eigenlösung", "Zeitintegration neu");
+            Ok.Focus();
+            return;
+        }
 
-        var modalwerte = (ModaleWerte)_modell.Eigenzustand.DämpfungsRaten[EigenForm - 1];
+        if (_eigenform > _modell.Eigenzustand.DämpfungsRaten.Count)
+        {
+            var neu = _modell.Eigenzustand.DämpfungsRaten.Count + 1;
+            _modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(0,neu.ToString()+". Eigenform"));
+        }
+
+        StartFenster.TragwerkVisual.ZeitintegrationNeu.Eigen.Text =
+            _eigenform.ToString(CultureInfo.CurrentCulture);
+
+        var modalwerte = (ModaleWerte)_modell.Eigenzustand.DämpfungsRaten[_eigenform - 1];
         StartFenster.TragwerkVisual.ZeitintegrationNeu.Dämpfungsraten.Text =
             modalwerte.Dämpfung.ToString(CultureInfo.CurrentCulture);
     }
 
-    private void EigenformKeyDown(object sender, KeyEventArgs e)
+    private void EigenformGotFocus(object sender, RoutedEventArgs e)
     {
-        if (Eigenform.Text.Length == 0) return;
+        Eigen.Clear();
+    }
+    private void EigenformLostFocus(object sender, RoutedEventArgs e)
+    {
+        if (Eigen.Text == "alle") return;
         try
         {
-            if (int.Parse(Eigenform.Text) > _modell.Eigenzustand.AnzahlZustände) return;
-            EigenForm = int.Parse(Eigenform.Text);
+            if (int.Parse(Eigen.Text) > _modell.Eigenzustand.AnzahlZustände)
+            {
+                _ = MessageBox.Show("gewählte Eigenform größer als Anzahl verfügbarer Eigenzustände", "neue Zeitintegration");
+                return;
+            }
+            _eigenform = int.Parse(Eigen.Text);
         }
         catch (FormatException)
         {
             _ = MessageBox.Show("Anzahl Eigenzustände", "neue Zeitintegration");
         }
-        if (Dämpfungsraten.Text.Length != 0) Dämpfungsraten.Text = _modell.Eigenzustand.DämpfungsRaten[EigenForm].ToString()!;
-    }
-
-    private void EigenformGotFocus(object sender, RoutedEventArgs e)
-    {
-        Eigenform.Clear();
-    }
-
-    private void BtnLöschen_Click(object sender, RoutedEventArgs e)
-    {
-        _modell.Zeitintegration = null;
-        Close();
     }
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
         if (Zeitintervall.Text == "")
         {
-            _ = MessageBox.Show("kritischer Zeitschritt unbeschränkt für Stabilität, gewählt für Genauigkeit",
-                "neue Zeitintegration");
+            _ = MessageBox.Show("Zeitintervall für Integration muss definiert sein", "neue Zeitintegration");
             return;
         }
 
@@ -260,8 +268,42 @@ public partial class ZeitintegrationNeu
             {
                 _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration");
             }
+            if(Newmark.IsChecked == true)
+            {
+                var beta = double.Parse(Beta.Text);
+                var gamma = double.Parse(Gamma.Text);
+                _modell.Zeitintegration = new Zeitintegration(tmax, dt, 1, beta, gamma);
+            }
+            else if (Wilson.IsChecked == true)
+            {
+                var theta = double.Parse(Theta.Text);
+                _modell.Zeitintegration = new Zeitintegration(tmax, dt, 2, theta);
+            }
+            else if (Taylor.IsChecked == true)
+            {
+                var alfa = double.Parse(Alfa.Text);
+                _modell.Zeitintegration = new Zeitintegration(tmax, dt, 3, alfa);
+            }
 
             _modell.Eigenzustand = new Eigenzustände("eigen", anzahlEigenlösungen);
+            if (Dämpfungsraten.Text.Length == 0)
+            {
+                if (_modell.Eigenzustand.DämpfungsRaten.Count > 0) _modell.Eigenzustand.DämpfungsRaten.Clear();
+                Eigen.Text = "";
+                _eigenform = 0;
+            }
+            else
+            {
+                try
+                {
+                    var modalwerte = new ModaleWerte(double.Parse(Dämpfungsraten.Text, CultureInfo.CurrentCulture), Eigen.Text);
+                    _modell.Eigenzustand.DämpfungsRaten.Add(modalwerte);
+                }
+                catch (FormatException)
+                {
+                    _ = MessageBox.Show("DämpfungsRaten hat falsches Format", "neue Zeitintegration");
+                }
+            }
 
             if (Newmark.IsChecked == true)
             {
@@ -353,14 +395,22 @@ public partial class ZeitintegrationNeu
             if (Dämpfungsraten.Text.Length == 0)
             {
                 if (_modell.Eigenzustand.DämpfungsRaten.Count > 0) _modell.Eigenzustand.DämpfungsRaten.Clear();
-                Eigenform.Text = "";
-                EigenForm = 0;
+                Eigen.Text = "";
+                _eigenform = 0;
             }
             else
             {
                 try
                 {
-                    _modell.Eigenzustand.DämpfungsRaten[0] = double.Parse(Dämpfungsraten.Text);
+                    var modalwerte = new ModaleWerte(double.Parse(Dämpfungsraten.Text, CultureInfo.CurrentCulture),Eigen.Text);
+                    if (_modell.Eigenzustand.DämpfungsRaten.Count < _eigenform)
+                    {
+                        _modell.Eigenzustand.DämpfungsRaten.Add(modalwerte);
+                    }
+                    else
+                    {
+                        _modell.Eigenzustand.DämpfungsRaten[_eigenform-1] = modalwerte;
+                    }
                 }
                 catch (FormatException)
                 {
@@ -411,6 +461,7 @@ public partial class ZeitintegrationNeu
                 }
             }
         }
+        Close();
     }
 
     private void BtnDialogAbbrechen_Click(object sender, RoutedEventArgs e)

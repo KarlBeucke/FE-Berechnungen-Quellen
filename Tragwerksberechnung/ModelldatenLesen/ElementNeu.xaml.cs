@@ -280,7 +280,7 @@ public partial class ElementNeu
     private void QuerschnittIdLostFocus(object sender, RoutedEventArgs e)
     {
         QuerschnittId.Text = _querschnittKeys.Id;
-       _querschnittKeys.Close();
+        _querschnittKeys.Close();
     }
 
     private bool Gelenkstab(string knotenId)

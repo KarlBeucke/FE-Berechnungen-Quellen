@@ -1,6 +1,4 @@
-﻿using System.Text;
-using System.Windows.Input;
-using System.Windows.Markup;
+﻿using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
