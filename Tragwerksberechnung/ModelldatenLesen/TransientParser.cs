@@ -19,7 +19,7 @@ internal class TransientParser
             _substrings = lines[i + 1].Split(_delimiters);
             if (_substrings.Length != 2) throw new ParseAusnahme((i + 2) + ":\nEigenlösungen, falsche Anzahl Parameter");
             var id = _substrings[0];
-            var numberOfStates = 1;
+            int numberOfStates;
             try
             {
                 numberOfStates = short.Parse(_substrings[1]);
@@ -82,8 +82,18 @@ internal class TransientParser
                 _substrings = lines[i + 1].Split(_delimiters);
                 try
                 {
-                    foreach (var rate in _substrings)
-                        feModell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(double.Parse(rate)));
+                    for (var k = 0; k < _substrings.Length; k++)
+                    {
+                        var modalwerte = new ModaleWerte(double.Parse(_substrings[k]), (k+1).ToString());
+                        feModell.Eigenzustand.DämpfungsRaten.Add(modalwerte);
+                    }
+
+                    // wenn nur ein Wert eingegeben wurde, dann wird dieser für alle Eigenzustände verwendet
+                    if (_substrings.Length == 1)
+                    {
+                        var modalwerte = (ModaleWerte)feModell.Eigenzustand.DämpfungsRaten[0];
+                        modalwerte.Text = "alle";
+                    }
                 }
                 catch (FormatException)
                 {

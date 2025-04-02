@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Neue Knotenanfangswerte" Height="260" Width="390">
+        Title="Anfangsbedingungen an Knoten neu definieren oder editieren" Height="260" Width="390">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
@@ -20,13 +20,11 @@
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,-23.8,37.4" Grid.RowSpan="2">
-            Definition neuer Knotenanfangswerte
-        </Label>
+            Anfangsbedingungen an definiertem Knoten</Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knoten ID:</Label>
         <TextBox Name="KnotenId" Grid.Row="1" Grid.Column="1" Margin="10,13.2,0,6.8" Height="20"
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" />
-
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" LostFocus="KnotenIdLostFocus"/>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Freiheitsgrad 1:</Label>
         <Label Grid.Row="2" Grid.Column="1" Margin="0.8,10,76,0">d0</Label>
         <TextBox Name="Dof1D0" Grid.Row="2" Grid.Column="1" Margin="29,0,0,7" Height="20"

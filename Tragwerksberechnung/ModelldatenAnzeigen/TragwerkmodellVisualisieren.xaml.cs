@@ -229,12 +229,12 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuZeitintegrationNeu(object sender, RoutedEventArgs e)
     {
-        ZeitintegrationNeu = new ZeitintegrationNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        ZeitintegrationNeu = new ZeitintegrationNeu(_modell);// { Topmost = true, Owner = (Window)Parent };
     }
 
     private void MenuAnfangswerteNeu(object sender, RoutedEventArgs e)
     {
-        _ = new ZeitKnotenanfangswerteNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _ = new ZeitKnotenanfangswerteNeu(_modell,0) { Topmost = true, Owner = (Window)Parent };
     }
 
     private void MenuZeitKnotenlastNeu(object sender, RoutedEventArgs e)

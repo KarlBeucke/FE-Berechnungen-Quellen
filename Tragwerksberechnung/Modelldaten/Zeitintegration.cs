@@ -2,6 +2,13 @@
 
 public class Zeitintegration : AbstraktZeitintegration
 {
+    public Zeitintegration(double tmax, double dt, int methode)
+    {
+        Tmax = tmax;
+        Dt = dt;
+        Methode = methode;
+        Anfangsbedingungen = [];
+    }
     public Zeitintegration(double tmax, double dt, int methode, double parameter1)
     {
         Tmax = tmax;

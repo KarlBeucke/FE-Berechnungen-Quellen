@@ -1,4 +1,6 @@
-﻿namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+
+namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class ZeitKnotenanfangswerteNeu
 {
@@ -9,13 +11,10 @@ public partial class ZeitKnotenanfangswerteNeu
     {
         InitializeComponent();
         _modell = modell;
-        if (modell.Zeitintegration.Anfangsbedingungen.Count == 0)
+        _modell.Zeitintegration ??= new Zeitintegration(0, 0, 0);
+        StartFenster.TragwerkVisual.ZeitintegrationNeu ??= new ZeitintegrationNeu(_modell);
+        if (modell.Zeitintegration.Anfangsbedingungen.Count != 0)
         {
-
-        }
-        else
-        {
-            _aktuell = StartFenster.TragwerkVisual.ZeitintegrationNeu.Aktuell;
             var anfang = modell.Zeitintegration.Anfangsbedingungen[_aktuell];
             KnotenId.Text = anfang.KnotenId;
             Dof1D0.Text = anfang.Werte[0].ToString("G2");
@@ -32,18 +31,40 @@ public partial class ZeitKnotenanfangswerteNeu
                 Dof3V0.Text = anfang.Werte[5].ToString("G2");
             }
         }
-        
         Show();
+    }
+    public ZeitKnotenanfangswerteNeu(FeModell modell, int aktuell)
+    {
+        InitializeComponent();
+        _modell = modell;
+        _aktuell = aktuell;
+        modell.Zeitintegration ??= new Zeitintegration(0, 0, 0);
+        if (_aktuell > 0 && modell.Zeitintegration.Anfangsbedingungen.Count >= _aktuell)
+        {
+            var anfang = modell.Zeitintegration.Anfangsbedingungen[_aktuell-1];
+            KnotenId.Text = anfang.KnotenId;
+            Dof1D0.Text = anfang.Werte[0].ToString("G2");
+            Dof1V0.Text = anfang.Werte[1].ToString("G2");
+            if (anfang.Werte.Length > 2)
+            {
+                Dof2D0.Text = anfang.Werte[2].ToString("G2");
+                Dof2V0.Text = anfang.Werte[3].ToString("G2");
+            }
+
+            if (anfang.Werte.Length > 4)
+            {
+                Dof3D0.Text = anfang.Werte[4].ToString("G2");
+                Dof3V0.Text = anfang.Werte[5].ToString("G2");
+            }
+        }
+        ShowDialog();
     }
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
-        if (KnotenId.Text.Length == 0) Close();
-
         // neue Anfangsbedingung hinzufügen
-        if (StartFenster.TragwerkVisual.ZeitintegrationNeu.Aktuell > _modell.Zeitintegration.Anfangsbedingungen.Count)
+        if (_aktuell > _modell.Zeitintegration.Anfangsbedingungen.Count)
         {
-            if (KnotenId.Text == "") return;
             var knotenId = KnotenId.Text;
             if (_modell.Knoten.TryGetValue(knotenId, out var knoten))
             {
@@ -76,44 +97,50 @@ public partial class ZeitKnotenanfangswerteNeu
                 }
                 _modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(KnotenId.Text, anfangsWerte));
             }
+            else
+            {
+                _ = MessageBox.Show("Knotennummer muss definiert sein", "neue ZeitKnotenanfangswerte");
+                return;
+            }
         }
         // vorhandene Anfangsbedingung ändern
         else
         {
-            var anfang = _modell.Zeitintegration.Anfangsbedingungen[_aktuell];
+            var anfang = _modell.Zeitintegration.Anfangsbedingungen[_aktuell-1];
             anfang.KnotenId = KnotenId.Text;
             try
             {
-                anfang.Werte[0] = double.Parse(Dof1D0.Text);
-                anfang.Werte[1] = double.Parse(Dof1V0.Text);
-                anfang.Werte[2] = double.Parse(Dof2D0.Text);
-                anfang.Werte[3] = double.Parse(Dof2V0.Text);
-                anfang.Werte[4] = double.Parse(Dof3D0.Text);
-                anfang.Werte[5] = double.Parse(Dof3V0.Text);
+                if (Dof1D0.Text != string.Empty) anfang.Werte[0] = double.Parse(Dof1D0.Text);
+                if (Dof1V0.Text != string.Empty) anfang.Werte[1] = double.Parse(Dof1V0.Text);
+                if (Dof2D0.Text != string.Empty) anfang.Werte[2] = double.Parse(Dof2D0.Text);
+                if (Dof2V0.Text != string.Empty) anfang.Werte[3] = double.Parse(Dof2V0.Text);
+                if (Dof3D0.Text != string.Empty) anfang.Werte[4] = double.Parse(Dof3D0.Text);
+                if (Dof3V0.Text != string.Empty) anfang.Werte[5] = double.Parse(Dof3V0.Text);
             }
             catch (FormatException)
             {
                 _ = MessageBox.Show("ungültiges  Eingabeformat", "neue ZeitKnotenanfangswerte");
             }
         }
-
         Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();
-        StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
+        if (StartFenster.TragwerkVisual.ZeitintegrationNeu != null)
+            StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell + 1);
+        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell-1);
         _aktuell = 0;
         if (_modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
         {
             Close();
-            StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
+            if (StartFenster.TragwerkVisual.ZeitintegrationNeu != null) 
+                StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
             return;
         }
 
@@ -135,6 +162,35 @@ public partial class ZeitKnotenanfangswerteNeu
         }
 
         Close();
-        StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
+        if (StartFenster.TragwerkVisual.ZeitintegrationNeu != null)
+            StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
+    }
+
+    private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
+    {
+        var knotenId = KnotenId.Text;
+        for (var i = 0; i < _modell.Zeitintegration.Anfangsbedingungen.Count; i++)
+        {
+            if (_modell.Zeitintegration.Anfangsbedingungen[i].KnotenId != knotenId) continue;
+            var anfangsWerte = _modell.Zeitintegration.Anfangsbedingungen[i];
+            Dof1D0.Text = anfangsWerte.Werte[0].ToString("G2");
+            Dof1V0.Text = anfangsWerte.Werte[1].ToString("G2");
+            if (anfangsWerte.Werte.Length > 2)
+            {
+                Dof2D0.Text = anfangsWerte.Werte[2].ToString("G2");
+                Dof2V0.Text = anfangsWerte.Werte[3].ToString("G2");
+            }
+
+            if (anfangsWerte.Werte.Length > 4)
+            {
+                Dof3D0.Text = anfangsWerte.Werte[4].ToString("G2");
+                Dof3V0.Text = anfangsWerte.Werte[5].ToString("G2");
+            }
+            _aktuell = i+1;
+            return;
+        }
+
+        _aktuell = _modell.Zeitintegration.Anfangsbedingungen.Count + 1;
+        Dof1D0.Text = ""; Dof1V0.Text = ""; Dof2D0.Text = ""; Dof2V0.Text = "";
     }
 }

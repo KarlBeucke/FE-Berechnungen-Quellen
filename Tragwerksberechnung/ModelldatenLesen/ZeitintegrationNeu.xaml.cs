@@ -16,6 +16,7 @@ public partial class ZeitintegrationNeu
         Language = XmlLanguage.GetLanguage("de-DE");
         InitializeComponent();
         _modell = modell;
+        Aktuell = 1;
         if (modell.Eigenzustand == null) modell.Eigenzustand = new Eigenzustände("eigen", 1);
         else 
         {
@@ -30,7 +31,11 @@ public partial class ZeitintegrationNeu
             Eigen.Text = modalwerte.Text;
         }
 
-        if (modell.Zeitintegration != null)
+        if (modell.Zeitintegration == null)
+        {
+            modell.Zeitintegration = new Zeitintegration(0, 0, 0);
+        }
+        else
         {
             MaximalZeit.Text = modell.Zeitintegration.Tmax.ToString(CultureInfo.CurrentCulture);
             switch (modell.Zeitintegration.Methode)
@@ -133,52 +138,26 @@ public partial class ZeitintegrationNeu
         }
 
         var omegaMax = _modell.Eigenzustand.Eigenwerte[anzahl - 1];
-        // kleinste Periode für größten Eigenwert in Lösung
-        var tmin = 2 * Math.PI / Math.Sqrt(omegaMax);
-        Zeitintervall.Text = tmin.ToString("F3");
+        if (omegaMax == 0)
+        {
+            _ = MessageBox.Show("Eigenwerte = 0, Δt nicht berechenbar", "neue Zeitintegration");
+        }
+        else
+        {
+            // kleinste Periode für größten Eigenwert in Lösung
+            var tmin = 2 * Math.PI / Math.Sqrt(omegaMax);
+            Zeitintervall.Text = tmin.ToString("F3");
+        }
     }
 
     private void AnfangsbedingungNext(object sender, MouseButtonEventArgs e)
     {
+        // Aktuell beinhaltet die aktuelle Nummer der Anfangsbedingung in Bearbeitung
+        if (string.IsNullOrEmpty(Anfangsbedingungen.Text)) Aktuell = 1;
+        Anfangsbedingungen.Text = Aktuell.ToString();
+        _anfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell, Aktuell) { Topmost = true };
         Aktuell++;
-        _anfangswerteNeu ??= new ZeitKnotenanfangswerteNeu(_modell);
-        if (_modell.Zeitintegration.Anfangsbedingungen.Count < Aktuell)
-        {
-            _anfangswerteNeu.KnotenId.Text = "";
-            _anfangswerteNeu.Dof1D0.Text = "";
-            _anfangswerteNeu.Dof1V0.Text = "";
-            _anfangswerteNeu.Dof2D0.Text = "";
-            _anfangswerteNeu.Dof2V0.Text = "";
-            _anfangswerteNeu.Dof3D0.Text = "";
-            _anfangswerteNeu.Dof3V0.Text = "";
-            StartFenster.TragwerkVisual.ZeitintegrationNeu.Anfangsbedingungen.Text =
-                Aktuell.ToString(CultureInfo.CurrentCulture);
-        }
-        else
-        {
-            var knotenwerte = _modell.Zeitintegration.Anfangsbedingungen[Aktuell - 1];
-            StartFenster.TragwerkVisual.ZeitintegrationNeu.Anfangsbedingungen.Text =
-                Aktuell.ToString(CultureInfo.CurrentCulture);
-            StartFenster.TragwerkVisual.ZeitintegrationNeu.Show();
-
-            _anfangswerteNeu.KnotenId.Text = knotenwerte.KnotenId;
-            _anfangswerteNeu.Dof1D0.Text = knotenwerte.Werte[0].ToString(CultureInfo.CurrentCulture);
-            _anfangswerteNeu.Dof1V0.Text = knotenwerte.Werte[1].ToString(CultureInfo.CurrentCulture);
-            if (knotenwerte.Werte.Length > 2)
-            {
-                _anfangswerteNeu.Dof2D0.Text = knotenwerte.Werte[2].ToString(CultureInfo.CurrentCulture);
-                _anfangswerteNeu.Dof2V0.Text = knotenwerte.Werte[3].ToString(CultureInfo.CurrentCulture);
-            }
-
-            if (knotenwerte.Werte.Length > 4)
-            {
-                _anfangswerteNeu.Dof3D0.Text = knotenwerte.Werte[4].ToString(CultureInfo.CurrentCulture);
-                _anfangswerteNeu.Dof3V0.Text = knotenwerte.Werte[5].ToString(CultureInfo.CurrentCulture);
-            }
-
-            var anf = Aktuell.ToString("D");
-            StartFenster.TragwerkVisual.ZeitintegrationNeu.Anfangsbedingungen.Text = anf;
-        }
+        _anfangswerteNeu.Close();
     }
 
     private void DämpfungsratenNext(object sender, MouseButtonEventArgs e)
@@ -461,6 +440,7 @@ public partial class ZeitintegrationNeu
                 }
             }
         }
+        _anfangswerteNeu.Close();
         Close();
     }
 
