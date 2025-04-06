@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Neue zeitabhängige Knotenlast" Height="390" Width="400">
+        Title="Neue zeitabhängige Knotenlast" Height="390" Width="420">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
@@ -22,11 +22,12 @@
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,0">
-            Definition zeitabhängiger Randtemperaturen an einem Knoten
+            Definition zeitabhängiger Randbedingungen an einem Knoten
         </Label>
-        <Label Grid.Row="1" Grid.Column="0" Margin="0,0,0,0">Load ID:</Label>
-        <TextBox Name="LoadId" Grid.Row="1" Grid.Column="1" Margin="10,0,0,0" Height="15"
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" />
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,0,0,0">Last ID:</Label>
+        <TextBox Name="LastId" Grid.Row="1" Grid.Column="1" Margin="10,0,0,0" Height="15"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" 
+                 LostFocus="LastIdLostFocus" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,0,0,0">Knoten ID:</Label>
         <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="10,0,0,0" Height="15"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" />
@@ -47,18 +48,18 @@
         <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Top" Margin="0,18,0,0">Amplitude:</Label>
         <TextBox Name="Amplitude" Grid.Row="6" Grid.Column="1" Margin="10,20,0,0" Height="15"
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="40" />
-        <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Top" Margin="0,36,0,0">Frequenz:</Label>
+        <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Top" Margin="0,36,0,0">Frequenz:</Label>
         <TextBox Name="Frequenz" Grid.Row="6" Grid.Column="1" Margin="10,40,0,0" Height="15"
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="40" />
-        <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Top" Margin="0,54,0,0">Phasenwinkel:</Label>
+        <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Top" Margin="0,54,0,0">Phasenwinkel:</Label>
         <TextBox Name="Winkel" Grid.Row="6" Grid.Column="1" Margin="10,60,0,0" Height="15"
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="40" />
         <Separator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" />
 
         <Label Grid.Row="7" Grid.Column="0" VerticalAlignment="Top" Height="28" Margin="0,0,0,0">stückweise lineare Anregung:</Label>
         <Label Grid.Row="7" Grid.Column="0" VerticalAlignment="Top" Margin="0,18,0,0">Wertepaare (Zeit;Temperatur):</Label>
-        <TextBox Name="Linear" Grid.Row="7" Grid.Column="1" Margin="10,20.2,0,0" Height="15"
-                 VerticalAlignment="Top" HorizontalAlignment="Left" Width="180" />
+        <TextBox Name="Linear" Grid.Row="7" Grid.Column="1" Height="39" Margin="5,0,0,0"
+                 VerticalAlignment="Center" HorizontalScrollBarVisibility="Visible" />
         <Separator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" />
 
         <Button IsDefault="True" Grid.Row="8" Grid.Column="1" Width="35" Height="26" Margin="0,9.8,85,-15"

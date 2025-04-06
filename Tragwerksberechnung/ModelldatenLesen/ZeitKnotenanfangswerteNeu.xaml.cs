@@ -41,7 +41,7 @@ public partial class ZeitKnotenanfangswerteNeu
         modell.Zeitintegration ??= new Zeitintegration(0, 0, 0);
         if (_aktuell > 0 && modell.Zeitintegration.Anfangsbedingungen.Count >= _aktuell)
         {
-            var anfang = modell.Zeitintegration.Anfangsbedingungen[_aktuell-1];
+            var anfang = modell.Zeitintegration.Anfangsbedingungen[_aktuell - 1];
             KnotenId.Text = anfang.KnotenId;
             Dof1D0.Text = anfang.Werte[0].ToString("G2");
             Dof1V0.Text = anfang.Werte[1].ToString("G2");
@@ -106,7 +106,7 @@ public partial class ZeitKnotenanfangswerteNeu
         // vorhandene Anfangsbedingung ändern
         else
         {
-            var anfang = _modell.Zeitintegration.Anfangsbedingungen[_aktuell-1];
+            var anfang = _modell.Zeitintegration.Anfangsbedingungen[_aktuell - 1];
             anfang.KnotenId = KnotenId.Text;
             try
             {
@@ -134,12 +134,12 @@ public partial class ZeitKnotenanfangswerteNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell-1);
+        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell - 1);
         _aktuell = 0;
         if (_modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
         {
             Close();
-            if (StartFenster.TragwerkVisual.ZeitintegrationNeu != null) 
+            if (StartFenster.TragwerkVisual.ZeitintegrationNeu != null)
                 StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
             return;
         }
@@ -186,7 +186,7 @@ public partial class ZeitKnotenanfangswerteNeu
                 Dof3D0.Text = anfangsWerte.Werte[4].ToString("G2");
                 Dof3V0.Text = anfangsWerte.Werte[5].ToString("G2");
             }
-            _aktuell = i+1;
+            _aktuell = i + 1;
             return;
         }
 

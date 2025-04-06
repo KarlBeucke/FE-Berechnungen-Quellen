@@ -10,7 +10,7 @@ public partial class ZeitKnotenlastNeu
     {
         InitializeComponent();
         _modell = modell;
-        LoadId.Text = string.Empty;
+        LastId.Text = string.Empty;
         KnotenId.Text = string.Empty;
         KnotenDof.Text = string.Empty;
         Datei.IsChecked = false;
@@ -23,11 +23,11 @@ public partial class ZeitKnotenlastNeu
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
-        var loadId = LoadId.Text;
+        var lastId = LastId.Text;
         var knotenId = KnotenId.Text;
         var knotenDof = int.Parse(KnotenDof.Text);
         var zeitabhängigeKnotenlast =
-            new ZeitabhängigeKnotenLast(loadId, knotenId, knotenDof, false, false);
+            new ZeitabhängigeKnotenLast(lastId, knotenId, knotenDof, false, false);
 
         if (Datei.IsChecked == true)
         {
@@ -37,8 +37,6 @@ public partial class ZeitKnotenlastNeu
             Linear.Text = string.Empty;
             zeitabhängigeKnotenlast.Datei = true;
             zeitabhängigeKnotenlast.VariationsTyp = 0;
-            AbstraktZeitabhängigeKnotenlast last = zeitabhängigeKnotenlast;
-            _modell.ZeitabhängigeKnotenLasten.Add(loadId, last);
         }
         else if ((Amplitude.Text.Length & Frequenz.Text.Length & Winkel.Text.Length) != 0)
         {
@@ -73,12 +71,47 @@ public partial class ZeitKnotenlastNeu
             if (Bodenanregung.IsChecked == true) zeitabhängigeKnotenlast.Bodenanregung = true;
         }
 
-        _modell.ZeitabhängigeKnotenLasten.Add(loadId, zeitabhängigeKnotenlast);
+        _modell.ZeitabhängigeKnotenLasten.Add(lastId, zeitabhängigeKnotenlast);
         Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void LastIdLostFocus(object sender, RoutedEventArgs e)
+    {
+        if (!_modell.ZeitabhängigeKnotenLasten.TryGetValue(LastId.Text, out var abstractLast)) return;
+        var last = (ZeitabhängigeKnotenLast)abstractLast;
+        KnotenId.Text = last.KnotenId;
+        KnotenDof.Text = last.KnotenFreiheitsgrad.ToString();
+        if (last.Bodenanregung.Equals(true)) Bodenanregung.IsChecked = true;
+        switch (last.VariationsTyp)
+        {
+            case 0:
+                Datei.IsChecked = true;
+                break;
+            case 2:
+                Amplitude.Text = last.Amplitude.ToString("G2");
+                Frequenz.Text = (last.Frequenz / (2 * Math.PI)).ToString("G2");
+                Winkel.Text = (last.PhasenWinkel * 180 / Math.PI).ToString("G2");
+                break;
+            default:
+                {
+                    if (last.Intervall != null)
+                    {
+                        var knotenlinear = "";
+                        for (var i = 0; i < last.Intervall.Length; i += 2)
+                        {
+                            knotenlinear += last.Intervall[i].ToString("G2") + ";";
+                            knotenlinear += last.Intervall[i + 1].ToString("G2") + "  ";
+                        }
+                        Linear.Text = knotenlinear;
+                    }
+                    break;
+                }
+        }
+        Show();
     }
 }

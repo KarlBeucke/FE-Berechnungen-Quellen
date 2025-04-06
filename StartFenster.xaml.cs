@@ -1111,14 +1111,28 @@ public partial class StartFenster
 
     private void DynamischeDaten(object sender, RoutedEventArgs e)
     {
-        if (_tragwerkModell.ZeitintegrationDaten && _tragwerkModell != null)
+        try
         {
+            if (_tragwerkModell == null)
+            {
+                _ = MessageBox.Show("Tragwerkmodell noch nicht spezifiziert", "Tragwerksberechnung");
+                return;
+            }
+
+            if (_tragwerkModell.Zeitintegration == null)
+            {
+                _tragwerkModell.Zeitintegration = new Tragwerksberechnung.Modelldaten.Zeitintegration(0, 0, 0, 0)
+                { VonStationär = false };
+                _tragwerkModell.ZeitintegrationDaten = true;
+            }
+
             var tragwerk = new DynamikDatenAnzeigen(_tragwerkModell);
             tragwerk.Show();
+            _tragwerkModell.ZeitintegrationBerechnet = false;
         }
-        else
+        catch (BerechnungAusnahme e2)
         {
-            _ = MessageBox.Show("Daten für Zeitintegration sind noch nicht spezifiziert", "Tragwerksberechnung");
+            _ = MessageBox.Show(e2.Message);
         }
     }
 

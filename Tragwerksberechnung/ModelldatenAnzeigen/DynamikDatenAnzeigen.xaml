@@ -129,8 +129,8 @@
 
         <Label Grid.Column="1" Content="stückweise linear" Margin="5,0.4,0,0"
                HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="24" Grid.Row="2" />
-        <Label Grid.Column="1" Content="Wertepaare (t=Zeit,T=Temperatur)" Margin="5,14.4,0,0"
-               HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" Height="30" Grid.Row="2" />
+        <Label Grid.Column="1" Content="max 10 Wertepaare (t=Zeit,L=Last) werden angezeigt" Margin="5,14,0,0"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Width="301" Height="30" Grid.Row="2" />
         <Grid Margin="3,40,1,1" Grid.Row="2" Grid.Column="1">
             <DataGrid
                 Name="LinearGrid" AlternatingRowBackground="Aqua"
@@ -146,15 +146,23 @@
                     <DataGridTextColumn Header="t" Binding="{Binding Intervall[0]}" />
                     <DataGridTextColumn Header="T" Binding="{Binding Intervall[1]}" />
                     <DataGridTextColumn Header="t" Binding="{Binding Intervall[2]}" />
-                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[3]}" />
+                    <DataGridTextColumn Header="L" Binding="{Binding Intervall[3]}" />
                     <DataGridTextColumn Header="t" Binding="{Binding Intervall[4]}" />
-                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[5]}" />
+                    <DataGridTextColumn Header="L" Binding="{Binding Intervall[5]}" />
                     <DataGridTextColumn Header="t" Binding="{Binding Intervall[6]}" />
-                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[7]}" />
+                    <DataGridTextColumn Header="L" Binding="{Binding Intervall[7]}" />
                     <DataGridTextColumn Header="t" Binding="{Binding Intervall[8]}" />
-                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[9]}" />
+                    <DataGridTextColumn Header="L" Binding="{Binding Intervall[9]}" />
                     <DataGridTextColumn Header="t" Binding="{Binding Intervall[10]}" />
-                    <DataGridTextColumn Header="T" Binding="{Binding Intervall[11]}" />
+                    <DataGridTextColumn Header="L" Binding="{Binding Intervall[11]}" />
+                    <DataGridTextColumn Header="t" Binding="{Binding Intervall[12]}" />
+                    <DataGridTextColumn Header="L" Binding="{Binding Intervall[13]}" />
+                    <DataGridTextColumn Header="t" Binding="{Binding Intervall[14]}" />
+                    <DataGridTextColumn Header="L" Binding="{Binding Intervall[15]}" />
+                    <DataGridTextColumn Header="t" Binding="{Binding Intervall[16]}" />
+                    <DataGridTextColumn Header="L" Binding="{Binding Intervall[17]}" />
+                    <DataGridTextColumn Header="t" Binding="{Binding Intervall[18]}" />
+                    <DataGridTextColumn Header="L" Binding="{Binding Intervall[19]}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

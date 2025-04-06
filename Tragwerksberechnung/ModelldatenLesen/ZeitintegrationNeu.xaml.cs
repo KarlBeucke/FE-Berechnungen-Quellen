@@ -18,12 +18,12 @@ public partial class ZeitintegrationNeu
         _modell = modell;
         Aktuell = 1;
         if (modell.Eigenzustand == null) modell.Eigenzustand = new Eigenzustände("eigen", 1);
-        else 
+        else
         {
             _eigenform = 1;
             Eigenlösung.Text = modell.Eigenzustand.AnzahlZustände.ToString(CultureInfo.InvariantCulture);
         }
-        
+
         if (modell.Eigenzustand != null && modell.Eigenzustand.DämpfungsRaten.Count > 0)
         {
             var modalwerte = (ModaleWerte)modell.Eigenzustand.DämpfungsRaten[0];
@@ -174,7 +174,7 @@ public partial class ZeitintegrationNeu
         if (_eigenform > _modell.Eigenzustand.DämpfungsRaten.Count)
         {
             var neu = _modell.Eigenzustand.DämpfungsRaten.Count + 1;
-            _modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(0,neu.ToString()+". Eigenform"));
+            _modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(0, neu.ToString() + ". Eigenform"));
         }
 
         StartFenster.TragwerkVisual.ZeitintegrationNeu.Eigen.Text =
@@ -247,7 +247,7 @@ public partial class ZeitintegrationNeu
             {
                 _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration");
             }
-            if(Newmark.IsChecked == true)
+            if (Newmark.IsChecked == true)
             {
                 var beta = double.Parse(Beta.Text);
                 var gamma = double.Parse(Gamma.Text);
@@ -381,14 +381,14 @@ public partial class ZeitintegrationNeu
             {
                 try
                 {
-                    var modalwerte = new ModaleWerte(double.Parse(Dämpfungsraten.Text, CultureInfo.CurrentCulture),Eigen.Text);
+                    var modalwerte = new ModaleWerte(double.Parse(Dämpfungsraten.Text, CultureInfo.CurrentCulture), Eigen.Text);
                     if (_modell.Eigenzustand.DämpfungsRaten.Count < _eigenform)
                     {
                         _modell.Eigenzustand.DämpfungsRaten.Add(modalwerte);
                     }
                     else
                     {
-                        _modell.Eigenzustand.DämpfungsRaten[_eigenform-1] = modalwerte;
+                        _modell.Eigenzustand.DämpfungsRaten[_eigenform - 1] = modalwerte;
                     }
                 }
                 catch (FormatException)

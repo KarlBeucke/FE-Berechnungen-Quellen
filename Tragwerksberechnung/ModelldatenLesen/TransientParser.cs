@@ -84,7 +84,7 @@ internal class TransientParser
                 {
                     for (var k = 0; k < _substrings.Length; k++)
                     {
-                        var modalwerte = new ModaleWerte(double.Parse(_substrings[k]), (k+1).ToString());
+                        var modalwerte = new ModaleWerte(double.Parse(_substrings[k]), (k + 1).ToString());
                         feModell.Eigenzustand.DämpfungsRaten.Add(modalwerte);
                     }
 
@@ -170,7 +170,7 @@ internal class TransientParser
                                 zeitabhängigeKnotenLast =
                                     new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, true, boden)
                                     { VariationsTyp = 0 };
-                                var last = (AbstraktZeitabhängigeKnotenlast)zeitabhängigeKnotenLast;
+                                AbstraktZeitabhängigeKnotenlast last = zeitabhängigeKnotenLast;
                                 feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, last);
                                 break;
                             }

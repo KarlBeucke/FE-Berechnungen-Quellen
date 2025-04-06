@@ -28,7 +28,8 @@ public partial class TragwerkmodellVisualisieren
     private LinienlastNeu _linienlastNeu;
     private PunktlastNeu _punktlastNeu;
     private LagerNeu _lagerNeu;
-    public bool IsKnoten, IsElement, IsKnotenlast, IsLinienlast, IsPunktlast, IsLager;
+    private ZeitKnotenlastNeu _zeitKnotenlastNeu;
+    public bool IsKnoten, IsElement, IsKnotenlast, IsLinienlast, IsPunktlast, IsLager, IsZeitKnotenlast;
     public ZeitintegrationNeu ZeitintegrationNeu;
 
     public TragwerkmodellVisualisieren(FeModell feModell)
@@ -234,12 +235,13 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuAnfangswerteNeu(object sender, RoutedEventArgs e)
     {
-        _ = new ZeitKnotenanfangswerteNeu(_modell,0) { Topmost = true, Owner = (Window)Parent };
+        _ = new ZeitKnotenanfangswerteNeu(_modell, 0) { Topmost = true, Owner = (Window)Parent };
     }
 
     private void MenuZeitKnotenlastNeu(object sender, RoutedEventArgs e)
     {
-        _ = new ZeitKnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        IsZeitKnotenlast = true;
+        _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
     }
 
 
@@ -449,10 +451,17 @@ public partial class TragwerkmodellVisualisieren
             {
                 PunktlastNeu(punktlast);
             }
+
             // Textdarstellung ist ein Lager
             else if (_modell.Randbedingungen.TryGetValue(item.Text, out var lager))
             {
                 LagerNeu(lager);
+            }
+
+            // Textdarstellung ist eine zeitveränderliche Knotenlast
+            else if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(item.Text, out var zeitKnotenlast))
+            {
+                ZeitKnotenlastNeu(zeitKnotenlast);
             }
         }
     }
@@ -507,6 +516,15 @@ public partial class TragwerkmodellVisualisieren
             if (_lagerNeu.LagerId.Text == string.Empty) _lagerNeu.LagerId.Text = "L_" + knoten.Id;
             _lagerNeu.AktuelleId = _lagerNeu.LagerId.Text;
             _lagerNeu.Show();
+            return;
+        }
+
+        // Knotentext angeklickt bei Definition einer neuen zeitveränderlichen Knotenlast
+        else if (IsZeitKnotenlast)
+        {
+            _zeitKnotenlastNeu.KnotenId.Text = knoten.Id;
+            _zeitKnotenlastNeu.LastId.Text = "zkl_" + knoten.Id;
+            _zeitKnotenlastNeu.Show();
             return;
         }
 
@@ -744,6 +762,46 @@ public partial class TragwerkmodellVisualisieren
         if ((bool)_lagerNeu.Rfest.IsChecked) _lagerNeu.VorRot.Text = lager.Vordefiniert[2].ToString("0.00");
         IsLager = true;
         _lagerNeu.AktuelleId = _lagerNeu.LagerId.Text;
+    }
+
+    private void ZeitKnotenlastNeu(AbstraktZeitabhängigeKnotenlast zeitKnotenlast)
+    {
+        _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell)
+        {
+            Topmost = true,
+            Owner = (Window)Parent,
+            LastId = { Text = zeitKnotenlast.LastId },
+            KnotenId = { Text = zeitKnotenlast.KnotenId.ToString(CultureInfo.CurrentCulture) },
+            KnotenDof = { Text = zeitKnotenlast.KnotenFreiheitsgrad.ToString() }
+        };
+        if (zeitKnotenlast.Bodenanregung.Equals(true)) _zeitKnotenlastNeu.Bodenanregung.IsChecked = true;
+        switch (zeitKnotenlast.VariationsTyp)
+        {
+            case 0:
+                _zeitKnotenlastNeu.Datei.IsChecked = true;
+                break;
+            case 2:
+                _zeitKnotenlastNeu.Amplitude.Text = zeitKnotenlast.Amplitude.ToString("G2");
+                _zeitKnotenlastNeu.Frequenz.Text = (zeitKnotenlast.Frequenz / (2 * Math.PI)).ToString("G2");
+                _zeitKnotenlastNeu.Winkel.Text = (zeitKnotenlast.PhasenWinkel * 180 / Math.PI).ToString("G2");
+                break;
+            default:
+                {
+                    if (zeitKnotenlast.Intervall != null)
+                    {
+                        var knotenlinear = "";
+                        for (var i = 0; i < zeitKnotenlast.Intervall.Length; i += 2)
+                        {
+                            knotenlinear += zeitKnotenlast.Intervall[i].ToString("G2") + ";";
+                            knotenlinear += zeitKnotenlast.Intervall[i + 1].ToString("G2") + "  ";
+                        }
+                        _zeitKnotenlastNeu.Linear.Text = knotenlinear;
+                    }
+                    break;
+                }
+        }
+        IsZeitKnotenlast = true;
+        Show();
     }
 
     private HitTestResultBehavior HitTestCallBack(HitTestResult result)

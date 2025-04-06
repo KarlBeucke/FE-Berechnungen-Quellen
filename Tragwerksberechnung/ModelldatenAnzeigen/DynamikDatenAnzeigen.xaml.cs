@@ -55,6 +55,7 @@ public partial class DynamikDatenAnzeigen
             HarmonischGrid.Items.Clear();
             if (knotenHarmonisch.Count > 0) HarmonischGrid.ItemsSource = knotenHarmonisch;
 
+            // maximal 10 Wertepaare (Zeit t, Last L) werden angezeigt
             var knotenLinear = (from item
                     in _modell.ZeitabhängigeKnotenLasten
                                 where item.Value.VariationsTyp == 1
@@ -77,13 +78,13 @@ public partial class DynamikDatenAnzeigen
                 dämpfungsmaße[0].Text = "alle Eigenformen";
                 break;
             default:
-            {
-                for (var i = 0; i < dämpfungsmaße.Count; i++)
                 {
-                    dämpfungsmaße[i].Text = i + 1 + ". Eigenform";
+                    for (var i = 0; i < dämpfungsmaße.Count; i++)
+                    {
+                        dämpfungsmaße[i].Text = i + 1 + ". Eigenform";
+                    }
+                    break;
                 }
-                break;
-            }
         }
         DämpfungGrid.ItemsSource = dämpfungsmaße;
     }
@@ -91,8 +92,8 @@ public partial class DynamikDatenAnzeigen
     // ************************* neue Dämpfungsmaße *********************************
     private void NeueDämpfungsraten(object sender, MouseButtonEventArgs e)
     {
-        var neu = _modell.Eigenzustand.DämpfungsRaten.Count +1;
-        _modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(0,neu.ToString()+". Eigenform"));
+        var neu = _modell.Eigenzustand.DämpfungsRaten.Count + 1;
+        _modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(0, neu.ToString() + ". Eigenform"));
         _modell.Berechnet = false;
         Close();
 

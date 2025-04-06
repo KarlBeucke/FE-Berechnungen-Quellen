@@ -741,6 +741,32 @@ public class Darstellung
             SetTop(path, PlatzierungV);
             _visual.Children.Add(path);
         }
+
+        foreach (var item in _modell.ZeitabhängigeKnotenLasten)
+        {
+            last = item.Value;
+            last.LastId = item.Key;
+            var test = (AbstraktKnotenlast)last;
+            var dof = test.KnotenFreiheitsgrad;
+
+            var lastwerte = new double[2];
+            lastwerte[dof] = 1;
+            last.Lastwerte = lastwerte;
+
+            var pathGeometry = KnotenlastZeichnen(last);
+            path = new Path
+            {
+                Name = last.LastId,
+                Stroke = DarkRed,
+                StrokeThickness = 3,
+                Data = pathGeometry
+            };
+            LastVektoren.Add(path);
+
+            SetLeft(path, PlatzierungH);
+            SetTop(path, PlatzierungV);
+            _visual.Children.Add(path);
+        }
     }
 
     private PathGeometry KnotenlastZeichnen(AbstraktLast knotenlast)
@@ -972,9 +998,9 @@ public class Darstellung
                 Text = item.Key,
                 Foreground = Red
             };
-            var plazierung = ((Vector)TransformKnoten(item.Value.Element.Knoten[0], Auflösung, MaxY)
+            var platzierung = ((Vector)TransformKnoten(item.Value.Element.Knoten[0], Auflösung, MaxY)
                               + (Vector)TransformKnoten(item.Value.Element.Knoten[1], Auflösung, MaxY)) / 2;
-            _platzierungText = (Point)plazierung;
+            _platzierungText = (Point)platzierung;
             SetTop(id, _platzierungText.Y + PlatzierungV + elementOffset);
             SetLeft(id, _platzierungText.X + PlatzierungH);
             _visual.Children.Add(id);
@@ -996,6 +1022,27 @@ public class Darstellung
             _platzierungText = startPoint + (endPoint - startPoint) * last.Offset;
             const int knotenOffset = 15;
             SetTop(id, _platzierungText.Y + PlatzierungV + knotenOffset);
+            SetLeft(id, _platzierungText.X + PlatzierungH);
+            _visual.Children.Add(id);
+            LastIDs.Add(id);
+        }
+
+        foreach (var item in _modell.ZeitabhängigeKnotenLasten)
+        {
+            if (item.Value is null) continue;
+            var id = new TextBlock
+            {
+                FontSize = 12,
+                Text = item.Key,
+                Foreground = DarkRed
+            };
+            if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out var lastKnoten))
+            {
+                throw new ModellAusnahme("\nBiegebalken Lastknoten '" + item.Value.KnotenId + "' nicht im Modell gefunden");
+            }
+            _platzierungText = TransformKnoten(lastKnoten, Auflösung, MaxY);
+            const int knotenOffset = 20;
+            SetTop(id, _platzierungText.Y + PlatzierungV - knotenOffset);
             SetLeft(id, _platzierungText.X + PlatzierungH);
             _visual.Children.Add(id);
             LastIDs.Add(id);
