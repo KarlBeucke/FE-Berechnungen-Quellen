@@ -6,18 +6,7 @@
         mc:Ignorable="d"
         Title="Anregung visualisieren" Height="600" Width="1000">
     <ScrollViewer HorizontalScrollBarVisibility="Auto" Margin="0,0,0,0">
-        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Grid Background="AliceBlue" Width="1000" Height="40">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="240" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                </Grid.RowDefinitions>
-                <Button Grid.Row="0" Click="BtnAnregung_Click" Margin="3,7,41,0" IsDefault="False" Grid.Column="0">Anregungsdatei auswählen</Button>
-            </Grid>
-            <Canvas x:Name="VisualAnregung" Height="489" Width="1000" ScrollViewer.CanContentScroll="True"
+        <Canvas x:Name="VisualAnregung" Height="523" Width="1000" ScrollViewer.CanContentScroll="True"
                     ScrollViewer.HorizontalScrollBarVisibility="Auto" />
-        </StackPanel>
     </ScrollViewer>
 </Window>

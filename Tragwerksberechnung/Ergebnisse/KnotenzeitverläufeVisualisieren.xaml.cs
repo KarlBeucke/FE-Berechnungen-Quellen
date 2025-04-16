@@ -8,41 +8,41 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 
 public partial class KnotenzeitverläufeVisualisieren
 {
-    private readonly Darstellung darstellung;
-    private readonly double dt;
-    private readonly FeModell modell;
-    private double absMaxBeschleunigung;
-    private double absMaxVerformung;
-    private bool accXVerlauf, accYVerlauf;
-    private DarstellungsbereichDialog ausschnitt;
-    private double ausschnittMax, ausschnittMin;
-    private bool darstellungsBereichNeu;
-    private bool deltaXVerlauf, deltaYVerlauf;
-    private Knoten knoten;
-    private double maxBeschleunigung, minBeschleunigung;
-    private TextBlock maximal;
-    private double maxVerformung, minVerformung;
-    private double zeit;
+    private readonly Darstellung _darstellung;
+    private readonly double _dt;
+    private readonly FeModell _modell;
+    private double _absMaxBeschleunigung;
+    private double _absMaxVerformung;
+    private bool _accXVerlauf, _accYVerlauf;
+    private DarstellungsbereichDialog _ausschnitt;
+    private double _ausschnittMax, _ausschnittMin;
+    private bool _darstellungsBereichNeu;
+    private bool _deltaXVerlauf, _deltaYVerlauf;
+    private Knoten _knoten;
+    private double _maxBeschleunigung, _minBeschleunigung;
+    private TextBlock _maximal;
+    private double _maxVerformung, _minVerformung;
+    private double _zeit;
 
     public KnotenzeitverläufeVisualisieren(FeModell feModell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
-        modell = feModell;
+        _modell = feModell;
         InitializeComponent();
         Show();
 
         // Festlegung der Zeitachse
-        dt = modell.Zeitintegration.Dt;
+        _dt = _modell.Zeitintegration.Dt;
         double tmin = 0;
-        var tmax = modell.Zeitintegration.Tmax;
-        ausschnittMin = tmin;
-        ausschnittMax = tmax;
+        var tmax = _modell.Zeitintegration.Tmax;
+        _ausschnittMin = tmin;
+        _ausschnittMax = tmax;
 
-        // Auswahl des Knotens         
-        Knotenauswahl.ItemsSource = modell.Knoten.Keys;
+        // Auswahl des Knotens
+        Knotenauswahl.ItemsSource = _modell.Knoten.Keys;
 
         // Initialisierung der Zeichenfläche
-        darstellung = new Darstellung(modell, VisualErgebnisse);
+        _darstellung = new Darstellung(_modell, VisualErgebnisse);
     }
 
     private void DropDownKnotenauswahlClosed(object sender, EventArgs e)
@@ -54,281 +54,295 @@ public partial class KnotenzeitverläufeVisualisieren
         }
 
         var knotenId = (string)Knotenauswahl.SelectedItem;
-        if (modell.Knoten.TryGetValue(knotenId, out knoten))
-        {
-        }
+        if (_modell.Knoten.TryGetValue(knotenId, out _knoten)) { }
     }
 
     private void BtnDeltaX_Click(object sender, RoutedEventArgs e)
     {
-        deltaYVerlauf = false;
-        accXVerlauf = false;
-        accYVerlauf = false;
-        maxVerformung = knoten.KnotenVariable[0].Max();
-        minVerformung = knoten.KnotenVariable[0].Min();
-        if (maxVerformung > Math.Abs(minVerformung))
+        _deltaYVerlauf = false;
+        _accXVerlauf = false;
+        _accYVerlauf = false;
+        _maxVerformung = _knoten.KnotenVariable[0].Max();
+        _minVerformung = _knoten.KnotenVariable[0].Min();
+        if (_maxVerformung > Math.Abs(_minVerformung))
         {
-            zeit = dt * Array.IndexOf(knoten.KnotenVariable[0], maxVerformung);
-            absMaxVerformung = maxVerformung;
-            DeltaXNeuZeichnen();
+            _zeit = _dt * Array.IndexOf(_knoten.KnotenVariable[0], _maxVerformung);
+            _absMaxVerformung = _maxVerformung;
         }
         else
         {
-            zeit = dt * Array.IndexOf(knoten.KnotenVariable[0], minVerformung);
-            absMaxVerformung = minVerformung;
-            DeltaXNeuZeichnen();
+            _zeit = _dt * Array.IndexOf(_knoten.KnotenVariable[0], _minVerformung);
+            _absMaxVerformung = _minVerformung;
         }
+
+        DeltaXNeuZeichnen();
     }
 
     private void DeltaXNeuZeichnen()
     {
-        if (knoten == null)
+        if (_knoten == null)
         {
             _ = MessageBox.Show("Knoten muss erst ausgewählt werden", "dynamische Tragwerksberechnung");
         }
         else
         {
-            if (darstellungsBereichNeu)
+            if (_darstellungsBereichNeu)
             {
                 VisualErgebnisse.Children.Clear();
-                ausschnittMin = ausschnitt.tmin;
-                ausschnittMax = ausschnitt.tmax;
-                maxVerformung = Math.Abs(ausschnitt.maxVerformung);
-                minVerformung = -maxVerformung;
+                _ausschnittMin = _ausschnitt.tmin;
+                _ausschnittMax = _ausschnitt.tmax;
+                _maxVerformung = Math.Abs(_ausschnitt.maxVerformung);
             }
             else
             {
                 VisualErgebnisse.Children.Clear();
-                maxVerformung = Math.Abs(absMaxVerformung);
-                minVerformung = -maxVerformung;
+                _maxVerformung = Math.Abs(_absMaxVerformung);
             }
 
-            Darstellungsbereich.Text = ausschnittMin.ToString("N2") + " <= zeit <= "
-                                                                    + ausschnittMax.ToString("N2");
-            if (maxVerformung < double.Epsilon) return;
-            darstellung.Koordinatensystem(ausschnittMin, ausschnittMax, maxVerformung, minVerformung);
+            _minVerformung = -_maxVerformung;
+
+            Darstellungsbereich.Text = _ausschnittMin.ToString("N2") + " <= zeit <= "
+                                                                     + _ausschnittMax.ToString("N2");
+            if (_maxVerformung < double.Epsilon)
+            {
+                _ = MessageBox.Show("Verschiebungen sind 0", "Knotenzeitverlauf in x");
+                return;
+            }
+            _darstellung.Koordinatensystem(_ausschnittMin, _ausschnittMax, _maxVerformung, _minVerformung);
 
             // Textdarstellung des Maximalwertes mit Zeitpunkt
-            MaximalwertText("Verformung x", absMaxVerformung, zeit);
+            MaximalwertText("Verformung x", _absMaxVerformung, _zeit);
 
-            darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxVerformung, knoten.KnotenVariable[0]);
+            _darstellung.ZeitverlaufZeichnen(_dt, _ausschnittMin, _ausschnittMax, _maxVerformung, _knoten.KnotenVariable[0]);
 
-            deltaXVerlauf = true;
-            deltaYVerlauf = false;
-            accXVerlauf = false;
-            accYVerlauf = false;
-            darstellungsBereichNeu = false;
+            _deltaXVerlauf = true;
+            _deltaYVerlauf = false;
+            _accXVerlauf = false;
+            _accYVerlauf = false;
+            _darstellungsBereichNeu = false;
         }
     }
 
     private void BtnDeltaY_Click(object sender, RoutedEventArgs e)
     {
-        deltaXVerlauf = false;
-        accXVerlauf = false;
-        accYVerlauf = false;
-        maxVerformung = knoten.KnotenVariable[1].Max();
-        minVerformung = knoten.KnotenVariable[1].Min();
-        if (maxVerformung > Math.Abs(minVerformung))
+        _deltaXVerlauf = false;
+        _accXVerlauf = false;
+        _accYVerlauf = false;
+        _maxVerformung = _knoten.KnotenVariable[1].Max();
+        _minVerformung = _knoten.KnotenVariable[1].Min();
+        if (_maxVerformung > Math.Abs(_minVerformung))
         {
-            zeit = dt * Array.IndexOf(knoten.KnotenVariable[1], maxVerformung);
-            absMaxVerformung = maxVerformung;
-            DeltaYNeuZeichnen();
+            _zeit = _dt * Array.IndexOf(_knoten.KnotenVariable[1], _maxVerformung);
+            _absMaxVerformung = _maxVerformung;
         }
         else
         {
-            zeit = dt * Array.IndexOf(knoten.KnotenVariable[1], minVerformung);
-            absMaxVerformung = minVerformung;
-            DeltaYNeuZeichnen();
+            _zeit = _dt * Array.IndexOf(_knoten.KnotenVariable[1], _minVerformung);
+            _absMaxVerformung = _minVerformung;
         }
+
+        DeltaYNeuZeichnen();
     }
 
     private void DeltaYNeuZeichnen()
     {
-        if (knoten == null)
+        if (_knoten == null)
         {
             _ = MessageBox.Show("Knoten muss erst ausgewählt werden", "dynamische Tragwerksberechnung");
         }
         else
         {
-            if (darstellungsBereichNeu)
+            if (_darstellungsBereichNeu)
             {
                 VisualErgebnisse.Children.Clear();
-                ausschnittMin = ausschnitt.tmin;
-                ausschnittMax = ausschnitt.tmax;
-                maxVerformung = Math.Abs(ausschnitt.maxVerformung);
-                minVerformung = -maxVerformung;
+                _ausschnittMin = _ausschnitt.tmin;
+                _ausschnittMax = _ausschnitt.tmax;
+                _maxVerformung = Math.Abs(_ausschnitt.maxVerformung);
             }
             else
             {
                 VisualErgebnisse.Children.Clear();
-                maxVerformung = Math.Abs(absMaxVerformung);
-                minVerformung = -maxVerformung;
+                _maxVerformung = Math.Abs(_absMaxVerformung);
             }
 
-            Darstellungsbereich.Text = ausschnittMin.ToString("N2") + " <= zeit <= "
-                                                                    + ausschnittMax.ToString("N2");
-            if (maxVerformung < double.Epsilon) return;
-            darstellung.Koordinatensystem(ausschnittMin, ausschnittMax, maxVerformung, minVerformung);
+            _minVerformung = -_maxVerformung;
+
+            Darstellungsbereich.Text = _ausschnittMin.ToString("N2") + " <= zeit <= "
+                                                                     + _ausschnittMax.ToString("N2");
+            if (_maxVerformung < double.Epsilon)
+            {
+                _ = MessageBox.Show("Verschiebungen sind 0", "Knotenzeitverlauf in y");
+                return;
+            }
+            _darstellung.Koordinatensystem(_ausschnittMin, _ausschnittMax, _maxVerformung, _minVerformung);
 
             // Textdarstellung des Maximalwertes mit Zeitpunkt
-            MaximalwertText("Verformung y", absMaxVerformung, zeit);
+            MaximalwertText("Verformung y", _absMaxVerformung, _zeit);
 
-            darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxVerformung, knoten.KnotenVariable[1]);
+            _darstellung.ZeitverlaufZeichnen(_dt, _ausschnittMin, _ausschnittMax, _maxVerformung, _knoten.KnotenVariable[1]);
 
-            deltaXVerlauf = false;
-            deltaYVerlauf = true;
-            accXVerlauf = false;
-            accYVerlauf = false;
-            darstellungsBereichNeu = false;
+            _deltaXVerlauf = false;
+            _deltaYVerlauf = true;
+            _accXVerlauf = false;
+            _accYVerlauf = false;
+            _darstellungsBereichNeu = false;
         }
     }
 
     private void BtnAccX_Click(object sender, RoutedEventArgs e)
     {
-        deltaXVerlauf = false;
-        deltaYVerlauf = false;
-        accYVerlauf = false;
-        maxBeschleunigung = knoten.KnotenAbleitungen[0].Max();
-        minBeschleunigung = knoten.KnotenAbleitungen[0].Min();
-        if (maxBeschleunigung > Math.Abs(minBeschleunigung))
+        _deltaXVerlauf = false;
+        _deltaYVerlauf = false;
+        _accYVerlauf = false;
+        _maxBeschleunigung = _knoten.KnotenAbleitungen[0].Max();
+        _minBeschleunigung = _knoten.KnotenAbleitungen[0].Min();
+        if (_maxBeschleunigung > Math.Abs(_minBeschleunigung))
         {
-            zeit = dt * Array.IndexOf(knoten.KnotenAbleitungen[0], maxBeschleunigung);
-            absMaxBeschleunigung = maxBeschleunigung;
-            AccXNeuZeichnen();
+            _zeit = _dt * Array.IndexOf(_knoten.KnotenAbleitungen[0], _maxBeschleunigung);
+            _absMaxBeschleunigung = _maxBeschleunigung;
         }
         else
         {
-            zeit = dt * Array.IndexOf(knoten.KnotenAbleitungen[0], minBeschleunigung);
-            absMaxBeschleunigung = minBeschleunigung;
-            AccXNeuZeichnen();
+            _zeit = _dt * Array.IndexOf(_knoten.KnotenAbleitungen[0], _minBeschleunigung);
+            _absMaxBeschleunigung = _minBeschleunigung;
         }
+
+        AccXNeuZeichnen();
     }
 
     private void AccXNeuZeichnen()
     {
-        if (knoten == null)
+        if (_knoten == null)
         {
             _ = MessageBox.Show("Knoten muss erst ausgewählt werden", "dynamische Tragwerksberechnung");
         }
         else
         {
-            if (darstellungsBereichNeu)
+            if (_darstellungsBereichNeu)
             {
                 VisualErgebnisse.Children.Clear();
-                ausschnittMin = ausschnitt.tmin;
-                ausschnittMax = ausschnitt.tmax;
-                maxBeschleunigung = Math.Abs(ausschnitt.maxBeschleunigung);
-                minBeschleunigung = -maxBeschleunigung;
+                _ausschnittMin = _ausschnitt.tmin;
+                _ausschnittMax = _ausschnitt.tmax;
+                _maxBeschleunigung = Math.Abs(_ausschnitt.maxBeschleunigung);
             }
             else
             {
                 VisualErgebnisse.Children.Clear();
-                maxBeschleunigung = Math.Abs(absMaxBeschleunigung);
-                minBeschleunigung = -maxBeschleunigung;
+                _maxBeschleunigung = Math.Abs(_absMaxBeschleunigung);
             }
 
-            Darstellungsbereich.Text = ausschnittMin.ToString("N2") + " <= zeit <= "
-                                                                    + ausschnittMax.ToString("N2");
-            if (maxBeschleunigung < double.Epsilon) return;
-            darstellung.Koordinatensystem(ausschnittMin, ausschnittMax, maxBeschleunigung, minBeschleunigung);
+            _minBeschleunigung = -_maxBeschleunigung;
+
+            Darstellungsbereich.Text = _ausschnittMin.ToString("N2") + " <= zeit <= "
+                                                                     + _ausschnittMax.ToString("N2");
+            if (_maxBeschleunigung < double.Epsilon)
+            {
+                _ = MessageBox.Show("Beschleunigungen sind 0", "Knotenzeitverlauf in x");
+                return;
+            }
+            _darstellung.Koordinatensystem(_ausschnittMin, _ausschnittMax, _maxBeschleunigung, _minBeschleunigung);
 
             // Textdarstellung des Maximalwertes mit Zeitpunkt
-            MaximalwertText("Beschleunigung x", absMaxBeschleunigung, zeit);
+            MaximalwertText("Beschleunigung x", _absMaxBeschleunigung, _zeit);
 
-            darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxBeschleunigung,
-                knoten.KnotenAbleitungen[0]);
+            _darstellung.ZeitverlaufZeichnen(_dt, _ausschnittMin, _ausschnittMax, _maxBeschleunigung,
+                _knoten.KnotenAbleitungen[0]);
 
-            deltaXVerlauf = false;
-            deltaYVerlauf = false;
-            accXVerlauf = true;
-            accYVerlauf = false;
-            darstellungsBereichNeu = false;
+            _deltaXVerlauf = false;
+            _deltaYVerlauf = false;
+            _accXVerlauf = true;
+            _accYVerlauf = false;
+            _darstellungsBereichNeu = false;
         }
     }
 
     private void BtnAccY_Click(object sender, RoutedEventArgs e)
     {
-        deltaXVerlauf = false;
-        deltaYVerlauf = false;
-        accXVerlauf = false;
-        maxBeschleunigung = knoten.KnotenAbleitungen[1].Max();
-        minBeschleunigung = knoten.KnotenAbleitungen[1].Min();
-        if (maxBeschleunigung > Math.Abs(minBeschleunigung))
+        _deltaXVerlauf = false;
+        _deltaYVerlauf = false;
+        _accXVerlauf = false;
+        _maxBeschleunigung = _knoten.KnotenAbleitungen[1].Max();
+        _minBeschleunigung = _knoten.KnotenAbleitungen[1].Min();
+        if (_maxBeschleunigung > Math.Abs(_minBeschleunigung))
         {
-            zeit = dt * Array.IndexOf(knoten.KnotenAbleitungen[1], maxBeschleunigung);
-            absMaxBeschleunigung = maxBeschleunigung;
-            AccYNeuZeichnen();
+            _zeit = _dt * Array.IndexOf(_knoten.KnotenAbleitungen[1], _maxBeschleunigung);
+            _absMaxBeschleunigung = _maxBeschleunigung;
         }
         else
         {
-            zeit = dt * Array.IndexOf(knoten.KnotenAbleitungen[1], minBeschleunigung);
-            absMaxBeschleunigung = minBeschleunigung;
-            AccYNeuZeichnen();
+            _zeit = _dt * Array.IndexOf(_knoten.KnotenAbleitungen[1], _minBeschleunigung);
+            _absMaxBeschleunigung = _minBeschleunigung;
         }
+
+        AccYNeuZeichnen();
     }
 
     private void AccYNeuZeichnen()
     {
-        if (knoten == null)
+        if (_knoten == null)
         {
             _ = MessageBox.Show("Knoten muss erst ausgewählt werden", "dynamische Tragwerksberechnung");
         }
         else
         {
-            if (darstellungsBereichNeu)
+            if (_darstellungsBereichNeu)
             {
                 VisualErgebnisse.Children.Clear();
-                ausschnittMin = ausschnitt.tmin;
-                ausschnittMax = ausschnitt.tmax;
-                maxBeschleunigung = Math.Abs(ausschnitt.maxBeschleunigung);
-                minBeschleunigung = -maxBeschleunigung;
+                _ausschnittMin = _ausschnitt.tmin;
+                _ausschnittMax = _ausschnitt.tmax;
+                _maxBeschleunigung = Math.Abs(_ausschnitt.maxBeschleunigung);
             }
             else
             {
                 VisualErgebnisse.Children.Clear();
-                maxBeschleunigung = Math.Abs(absMaxBeschleunigung);
-                minBeschleunigung = -maxBeschleunigung;
+                _maxBeschleunigung = Math.Abs(_absMaxBeschleunigung);
             }
 
-            Darstellungsbereich.Text = ausschnittMin.ToString("N2") + " <= zeit <= "
-                                                                    + ausschnittMax.ToString("N2");
-            if (maxBeschleunigung < double.Epsilon) return;
-            darstellung.Koordinatensystem(ausschnittMin, ausschnittMax, maxBeschleunigung, minBeschleunigung);
+            _minBeschleunigung = -_maxBeschleunigung;
+
+            Darstellungsbereich.Text = _ausschnittMin.ToString("N2") + " <= zeit <= "
+                                                                     + _ausschnittMax.ToString("N2");
+            if (_maxBeschleunigung < double.Epsilon)
+            {
+                _ = MessageBox.Show("Beschleunigungen sind 0", "Knotenzeitverlauf in y");
+                return;
+            }
+            _darstellung.Koordinatensystem(_ausschnittMin, _ausschnittMax, _maxBeschleunigung, _minBeschleunigung);
 
             // Textdarstellung des Maximalwertes mit Zeitpunkt
-            MaximalwertText("Beschleunigung y", absMaxBeschleunigung, zeit);
+            MaximalwertText("Beschleunigung y", _absMaxBeschleunigung, _zeit);
 
-            darstellung.ZeitverlaufZeichnen(dt, ausschnittMin, ausschnittMax, maxBeschleunigung,
-                knoten.KnotenAbleitungen[1]);
+            _darstellung.ZeitverlaufZeichnen(_dt, _ausschnittMin, _ausschnittMax, _maxBeschleunigung,
+                _knoten.KnotenAbleitungen[1]);
 
-            deltaXVerlauf = false;
-            deltaYVerlauf = false;
-            accXVerlauf = false;
-            accYVerlauf = true;
-            darstellungsBereichNeu = false;
+            _deltaXVerlauf = false;
+            _deltaYVerlauf = false;
+            _accXVerlauf = false;
+            _accYVerlauf = true;
+            _darstellungsBereichNeu = false;
         }
     }
 
     private void DarstellungsbereichÄndern_Click(object sender, RoutedEventArgs e)
     {
-        if (knoten == null)
+        if (_knoten == null)
         {
             _ = MessageBox.Show("Knoten muss erst ausgewählt werden", "dynamische Tragwerksberechnung");
         }
         else
         {
             VisualErgebnisse.Children.Clear();
-            ausschnitt =
-                new DarstellungsbereichDialog(ausschnittMin, ausschnittMax, absMaxVerformung, absMaxBeschleunigung);
-            ausschnittMin = ausschnitt.tmin;
-            ausschnittMax = ausschnitt.tmax;
-            maxVerformung = ausschnitt.maxVerformung;
-            maxBeschleunigung = ausschnitt.maxBeschleunigung;
-            darstellungsBereichNeu = true;
-            if (deltaXVerlauf) DeltaXNeuZeichnen();
-            else if (deltaYVerlauf) DeltaYNeuZeichnen();
-            else if (accXVerlauf) AccXNeuZeichnen();
-            else if (accYVerlauf) AccYNeuZeichnen();
+            _ausschnitt =
+                new DarstellungsbereichDialog(_ausschnittMin, _ausschnittMax, _absMaxVerformung, _absMaxBeschleunigung);
+            _ausschnittMin = _ausschnitt.tmin;
+            _ausschnittMax = _ausschnitt.tmax;
+            _maxVerformung = _ausschnitt.maxVerformung;
+            _maxBeschleunigung = _ausschnitt.maxBeschleunigung;
+            _darstellungsBereichNeu = true;
+            if (_deltaXVerlauf) DeltaXNeuZeichnen();
+            else if (_deltaYVerlauf) DeltaYNeuZeichnen();
+            else if (_accXVerlauf) AccXNeuZeichnen();
+            else if (_accYVerlauf) AccYNeuZeichnen();
         }
     }
 
@@ -338,7 +352,7 @@ public partial class KnotenzeitverläufeVisualisieren
         var myBrush = new SolidColorBrush(rot);
         var maxwert = "Maximalwert für " + ordinate + " = " + maxWert.ToString("N4") + Environment.NewLine +
                       "an Zeit = " + maxZeit.ToString("N2");
-        maximal = new TextBlock
+        _maximal = new TextBlock
         {
             FontSize = 12,
             Background = myBrush,
@@ -346,8 +360,8 @@ public partial class KnotenzeitverläufeVisualisieren
             FontWeight = FontWeights.Bold,
             Text = maxwert
         };
-        SetTop(maximal, 10);
-        SetLeft(maximal, 20);
-        VisualErgebnisse.Children.Add(maximal);
+        SetTop(_maximal, 10);
+        SetLeft(_maximal, 20);
+        VisualErgebnisse.Children.Add(_maximal);
     }
 }

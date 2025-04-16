@@ -10,7 +10,6 @@ public class ZeitabhängigeKnotenLast : AbstraktZeitabhängigeKnotenlast
         KnotenFreiheitsgrad = knotenFreiheitsgrad;
         Datei = datei;
         Bodenanregung = boden;
-        VariationsTyp = 0;
     }
 
     public override double[] BerechneLastVektor()

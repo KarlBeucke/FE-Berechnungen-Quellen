@@ -204,6 +204,7 @@ public partial class TragwerkmodellVisualisieren
     {
         IsKnotenlast = true;
         _knotenlastNeu = new KnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _knotenlastNeu.AktuelleId = _knotenlastNeu.LastId.Text;
         _modell.Berechnet = false;
     }
 
@@ -211,6 +212,7 @@ public partial class TragwerkmodellVisualisieren
     {
         IsLinienlast = true;
         _linienlastNeu = new LinienlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _linienlastNeu.AktuelleId = _linienlastNeu.LastId.Text;
         _modell.Berechnet = false;
     }
 
@@ -218,6 +220,7 @@ public partial class TragwerkmodellVisualisieren
     {
         IsPunktlast = true;
         _punktlastNeu = new PunktlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _punktlastNeu.AktuelleId = _punktlastNeu.LastId.Text;
         _modell.Berechnet = false;
     }
 
@@ -225,6 +228,7 @@ public partial class TragwerkmodellVisualisieren
     {
         IsLager = true;
         _lagerNeu = new LagerNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _lagerNeu.AktuelleId = _lagerNeu.LagerId.Text;
         _modell.Berechnet = false;
     }
 
@@ -242,8 +246,15 @@ public partial class TragwerkmodellVisualisieren
     {
         IsZeitKnotenlast = true;
         _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _zeitKnotenlastNeu.AktuelleId = _zeitKnotenlastNeu.LastId.Text;
+        _modell.Berechnet = false;
     }
 
+    private void MenuZeitAnregungNeu(object sender, RoutedEventArgs e)
+    {
+       var anregung = new ZeitAnregungVisualisierenNeu(_modell);
+       anregung.Show();
+    }
 
     // Modelldefinitionen darstellen
     private void OnBtnKnotenIDs_Click(object sender, RoutedEventArgs e)
@@ -397,6 +408,8 @@ public partial class TragwerkmodellVisualisieren
                 LinienlastNeu(elementlast);
             else if (_modell.PunktLasten.TryGetValue(item.Name, out var punktlast))
                 PunktlastNeu(punktlast);
+            else if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(item.Name, out var zeitKnotenlastlast))
+                ZeitKnotenlastNeu(zeitKnotenlastlast);
 
             // Lager
             else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
@@ -524,6 +537,7 @@ public partial class TragwerkmodellVisualisieren
         {
             _zeitKnotenlastNeu.KnotenId.Text = knoten.Id;
             _zeitKnotenlastNeu.LastId.Text = "zkl_" + knoten.Id;
+            _zeitKnotenlastNeu.AktuelleId = _zeitKnotenlastNeu.LastId.Text;
             _zeitKnotenlastNeu.Show();
             return;
         }
@@ -726,7 +740,6 @@ public partial class TragwerkmodellVisualisieren
         };
         IsLinienlast = true;
         _linienlastNeu.AktuelleId = _linienlastNeu.LastId.Text;
-
     }
     private void PunktlastNeu(AbstraktElementLast punktLast)
     {
@@ -801,7 +814,7 @@ public partial class TragwerkmodellVisualisieren
                 }
         }
         IsZeitKnotenlast = true;
-        Show();
+        _zeitKnotenlastNeu.AktuelleId = _zeitKnotenlastNeu.LastId.Text;
     }
 
     private HitTestResultBehavior HitTestCallBack(HitTestResult result)

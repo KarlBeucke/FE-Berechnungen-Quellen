@@ -769,19 +769,31 @@ public class Darstellung
         }
     }
 
-    private PathGeometry KnotenlastZeichnen(AbstraktLast knotenlast)
+    private PathGeometry KnotenlastZeichnen(AbstraktLast zeitKnotenlast)
     {
         var pathGeometry = new PathGeometry();
         var pathFigure = new PathFigure();
         const int lastPfeilGroesse = 10;
 
-        if (!_modell.Knoten.TryGetValue(knotenlast.KnotenId, out _knoten))
-            throw new ModellAusnahme("\nBiegebalken Knotenlast Knoten '" + knotenlast.KnotenId + "' nicht im Modell gefunden");
+        if (zeitKnotenlast.KnotenId == "boden")
+        {
+            // finde Knoten mit y=0, um den Bodenknoten zu zeichnen
+            foreach (var item in _modell.Knoten.
+                         Where(item => item.Value.Koordinaten[1] == 0))
+            {
+                _knoten = item.Value;
+                var knotenlast = (AbstraktKnotenlast)zeitKnotenlast;
+                knotenlast.Knoten = _knoten;
+                break;
+            }
+        }
+        else if (!_modell.Knoten.TryGetValue(zeitKnotenlast.KnotenId, out _knoten))
+            throw new ModellAusnahme("\nBiegebalken Knotenlast Knoten '" + zeitKnotenlast.KnotenId + "' nicht im Modell gefunden");
 
         if (_knoten != null)
         {
-            var endPoint = new Point(_knoten.Koordinaten[0] * Auflösung - knotenlast.Lastwerte[0] * _lastAuflösung,
-                (-_knoten.Koordinaten[1] + MaxY) * Auflösung + knotenlast.Lastwerte[1] * _lastAuflösung);
+            var endPoint = new Point(_knoten.Koordinaten[0] * Auflösung - zeitKnotenlast.Lastwerte[0] * _lastAuflösung,
+                (-_knoten.Koordinaten[1] + MaxY) * Auflösung + zeitKnotenlast.Lastwerte[1] * _lastAuflösung);
             pathFigure.StartPoint = endPoint;
 
             var startPoint = TransformKnoten(_knoten, Auflösung, MaxY);
@@ -799,7 +811,7 @@ public class Darstellung
             pathFigure.Segments.Add(new LineSegment(endPoint, false));
             pathFigure.Segments.Add(new LineSegment(startPoint, true));
 
-            if (knotenlast.Lastwerte.Length > 2 && Math.Abs(knotenlast.Lastwerte[2]) > double.Epsilon)
+            if (zeitKnotenlast.Lastwerte.Length > 2 && Math.Abs(zeitKnotenlast.Lastwerte[2]) > double.Epsilon)
             {
                 startPoint.X += 30;
                 pathFigure.Segments.Add(new LineSegment(startPoint, false));
@@ -1036,7 +1048,12 @@ public class Darstellung
                 Text = item.Key,
                 Foreground = DarkRed
             };
-            if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out var lastKnoten))
+            Knoten lastKnoten;
+            if (item.Value.KnotenId == "boden")
+            {
+                lastKnoten = item.Value.Knoten;
+            }
+            else if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out lastKnoten))
             {
                 throw new ModellAusnahme("\nBiegebalken Lastknoten '" + item.Value.KnotenId + "' nicht im Modell gefunden");
             }

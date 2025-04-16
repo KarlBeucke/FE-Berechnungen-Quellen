@@ -143,6 +143,8 @@
                                       Margin="0,0,0,0" Click="MenuAnfangswerteNeu" />
                             <MenuItem Header="zeitveränderliche Knotenlast" HorizontalAlignment="Left" Height="20" Width="250"
                                       Margin="0,0,0,0" Click="MenuZeitKnotenlastNeu" />
+                            <MenuItem Header="Anregung visualisieren" HorizontalAlignment="Left" Height="20" Width="250"
+                                      Margin="0,0,0,0" Click="MenuZeitAnregungNeu" />
                         </MenuItem>
                     </Menu>
                 </Grid>

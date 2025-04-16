@@ -27,9 +27,11 @@ public class Fachwerk : AbstraktBalken
     {
         BerechneGeometrie();
 
-        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) return null;
+        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material))
+            throw new ModellAusnahme("\nMaterialId " + ElementMaterialId + "nicht im Modell gefunden");
         _emodul = E == 0 ? material.MaterialWerte[0] : E;
-        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt)) return null;
+        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt))
+            throw new ModellAusnahme("\nQuerschnittId " + ElementQuerschnittId + "nicht im Modell gefunden");
         _fläche = A == 0 ? querschnitt.QuerschnittsWerte[0] : A;
         var factor = _emodul * _fläche / BalkenLänge;
         var sx = BerechneSx();
@@ -42,10 +44,13 @@ public class Fachwerk : AbstraktBalken
     {
         if (ElementMaterial.MaterialWerte.Length < 3 && M == 0)
             throw new ModellAusnahme("\nFachwerk " + ElementId + ", spezifische Masse noch nicht definiert");
+        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) 
+            throw new ModellAusnahme("\nMaterialId " + ElementMaterialId + "nicht im Modell gefunden");
+
         // Me = specific mass * area * 0.5*length
-        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) return null;
         _masse = M == 0 ? material.MaterialWerte[2] : M;
-        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt)) return null;
+        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt)) 
+            throw new ModellAusnahme("\nQuerschnittId " + ElementQuerschnittId + "nicht im Modell gefunden");
         _fläche = A == 0 ? querschnitt.QuerschnittsWerte[0] : A;
 
         MassMatrix[0] = MassMatrix[1] = MassMatrix[2] = MassMatrix[3] = _masse * _fläche * BalkenLänge / 2;
@@ -58,7 +63,7 @@ public class Fachwerk : AbstraktBalken
         throw new ModellAusnahme("\nFachwerkelement kann keine interne Last aufnehmen! Benutze Biegebalken mit Gelenk");
     }
 
-    // berechne Stabendkräfte eines Biegeelementes
+    // berechne Stabendkräfte eines Biegeelements
     public override double[] BerechneStabendkräfte()
     {
         BerechneGeometrie();

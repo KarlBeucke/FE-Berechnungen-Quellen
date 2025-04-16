@@ -3,6 +3,7 @@ using FEBibliothek.Zeitlöser;
 using Microsoft.Win32;
 using System.IO;
 using System.Linq;
+using System.Windows.Media.Animation;
 
 namespace FEBibliothek.Modell
 {
@@ -289,6 +290,13 @@ namespace FEBibliothek.Modell
         public void Eigenzustände()
         {
             var anzahlZustände = _modell.Eigenzustand.AnzahlZustände;
+            // Anzahl der Eigenzustände muss ≤ sein der Anzahl der freien Systemfreiheitsgrade
+            var anzahlFreieDof=0;
+            for (var i = 0; i < _dimension; i++) 
+                if (!_systemGleichungen.Status[i]) anzahlFreieDof += 1;
+            if (_modell.Eigenzustand.AnzahlZustände > anzahlFreieDof)
+                _modell.Eigenzustand.AnzahlZustände = anzahlFreieDof;
+
             var aMatrix = _systemGleichungen.Matrix;
             if (!_diagonalMatrix) BerechneDiagonalMatrix();
             var bDiag = _systemGleichungen.DiagonalMatrix;
@@ -329,6 +337,7 @@ namespace FEBibliothek.Modell
             var eigenvektoren = new double[anzahlZustände][];
             for (var i = 0; i < anzahlZustände; i++)
             {
+                
                 eigenwerte[i] = eigenLöser.HolEigenwert(i);
                 eigenvektoren[i] = eigenLöser.HolEigenvektor(i);
             }
@@ -668,9 +677,12 @@ namespace FEBibliothek.Modell
                 modaleDämpfung[i] = ((ModaleWerte)_modell.Eigenzustand.DämpfungsRaten[i]).Dämpfung;
             }
             // ist nur ein Dämpfungsmaß gegeben, werden ALLE Eigenzustände damit belegt
-            for (var i = _modell.Eigenzustand.DämpfungsRaten.Count; i < _modell.Eigenzustand.AnzahlZustände; i++)
+            if(_modell.Eigenzustand.DämpfungsRaten.Count == 1)
             {
-                modaleDämpfung[i] = modaleDämpfung[0];
+                for (var i = 1; i < _modell.Eigenzustand.AnzahlZustände; i++)
+                {
+                    modaleDämpfung[i] = modaleDämpfung[0];
+                }
             }
 
             double faktor = 0;
@@ -696,7 +708,6 @@ namespace FEBibliothek.Modell
         private void SetzRandbedingungenZweiterOrdnung(IReadOnlyList<double[]> displ, IReadOnlyList<double[]> veloc)
         {
             // finde vordefinierte Anfangsbedingungen
-
             foreach (var anf in _modell.Zeitintegration.Anfangsbedingungen)
             {
                 if (!_modell.Knoten.TryGetValue(anf.KnotenId, out var anfKnoten))
@@ -843,11 +854,9 @@ namespace FEBibliothek.Modell
                 for (var i = 0; i < last.Count; i++) { last[i] = werte[i]; }
             }
         }
-        public static List<double> AusDatei(string inputDirectory)
+        public static List<double> AusDatei(string inputDirectory, FeModell modell)
         {
-            var delimiters = new[] { '\t' };
             var werte = new List<double>();
-
             var datei = new OpenFileDialog
             {
                 Filter = "All files (*.*)|*.*",
@@ -856,9 +865,19 @@ namespace FEBibliothek.Modell
             datei.InitialDirectory += inputDirectory;
 
             if (datei.ShowDialog() != true)
-                return werte;
+                return null;
             var pfad = datei.FileName;
 
+            // lies tmax und dt aus Dateinamen
+            char[] delimiters = ['.'];
+            var name = pfad.Split(delimiters);
+            if (name.Length > 2)
+            {
+                modell.Zeitintegration.Tmax = double.Parse(name[1]);
+                modell.Zeitintegration.Dt = double.Parse(name[2]);
+            }
+            
+            delimiters = ['\t'];
             try
             {
                 var zeilen = File.ReadAllLines(pfad);
@@ -870,7 +889,7 @@ namespace FEBibliothek.Modell
             }
             catch (IOException ex)
             {
-                _ = MessageBox.Show(ex + " Anregungsfunktion konnte nicht aus Datei gelesen werden!!!", "Analysis FromFile");
+                _ = MessageBox.Show(ex + " Anregungsfunktion konnte nicht aus Datei gelesen werden!!!", "Berechnung AusDatei");
                 return werte;
             }
             return werte;

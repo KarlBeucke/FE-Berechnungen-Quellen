@@ -192,6 +192,7 @@ internal class TransientParser
                                 break;
                             }
                         // mehr als 3 Werte: lies Zeit-/Wert-Intervalle der Anregung mit linearer Interpolation, Variationstyp = 1
+                        // VariationsTyp = 1
                         default:
                             {
                                 var interval = new double[_substrings.Length];
@@ -208,7 +209,6 @@ internal class TransientParser
                                 break;
                             }
                     }
-
                     i += 2;
                 } while (lines[i].Length != 0);
             }

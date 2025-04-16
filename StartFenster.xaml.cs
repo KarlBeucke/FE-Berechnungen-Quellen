@@ -2,12 +2,16 @@
 using FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
 using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
 using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
+using FE_Berechnungen.Tragwerksberechnung;
 using FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
+using System.Windows.Controls;
+using System.Windows.Media;
+using AnregungVisualisieren = FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen.AnregungVisualisieren;
 
 namespace FE_Berechnungen;
 
@@ -1142,9 +1146,59 @@ public partial class StartFenster
         {
             if (_tragwerkModell.ZeitintegrationDaten && _tragwerkModell != null)
             {
-                _modellBerechnung ??= new Berechnung(_tragwerkModell);
-                var anregung = new Tragwerksberechnung.ModelldatenAnzeigen.AnregungVisualisieren(_tragwerkModell);
-                anregung.Show();
+                if (_tragwerkModell.ZeitabhängigeKnotenLasten.Count == 0)
+                {
+                    MessageBox.Show("Keine keine zeitabhängigen Knotenlasten definiert");
+                }
+                else
+                {
+                    foreach (var item in _tragwerkModell.ZeitabhängigeKnotenLasten)
+                    {
+                        switch (item.Value.VariationsTyp)
+                        {
+                            case 0:
+                            {
+                                _modellBerechnung ??= new Berechnung(_tragwerkModell);
+                                var anregung = new AnregungVisualisieren(_tragwerkModell);
+                                anregung.Show();
+
+                                // Festlegung der Zeitachse
+                                var dt = _tragwerkModell.Zeitintegration.Dt;
+                                double tmin = 0;
+                                var tmax = _tragwerkModell.Zeitintegration.Tmax;
+
+                                // Initialisierung der Zeichenfläche
+                                var darstellung = new Darstellung(_tragwerkModell, anregung.VisualAnregung);
+
+                                const string inputDirectory = "\\FE-Berechnungen\\input\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
+                                // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
+                                var werte = Berechnung.AusDatei(inputDirectory, _tragwerkModell);
+                                if (werte == null)
+                                {
+                                    MessageBox.Show("Keine Anregungswerte gefunden.");
+                                    return;
+                                }
+                                var anregungMax = werte.Max();
+                                var anregungMin = -anregungMax;
+
+                                // Textdarstellung der Anregungsdauer mit Anzahl Datenpunkten und Zeitintervall
+                                AnregungText(werte.Count * dt, werte.Count, dt, anregung);
+
+                                var funktion = new double[werte.Count];
+                                for (var i = 0; i < werte.Count; i++) funktion[i] = werte[i];
+                                darstellung.Koordinatensystem(tmin, tmax, anregungMax, anregungMin);
+                                darstellung.ZeitverlaufZeichnen(dt, tmin, tmax, anregungMax, funktion);
+                                break;
+                            }
+                            case 2:
+
+                                break;
+                            case 3:
+
+                                break;
+                        }
+                    }
+                }
             }
             else
             {
@@ -1155,6 +1209,23 @@ public partial class StartFenster
         {
             _ = MessageBox.Show(e2.Message);
         }
+    }
+
+    private static void AnregungText(double dauer, int nSteps, double dt, AnregungVisualisieren anregung)
+    {
+        var anregungsWerte = dauer.ToString("N2") + " [s] Anregung  mit "
+                                                  + nSteps + " Anregungswerten im Zeitschritt dt = " +
+                                                  dt.ToString("N3");
+        var anregungTextBlock = new TextBlock
+        {
+            FontSize = 12,
+            Foreground = Brushes.Black,
+            FontWeight = FontWeights.Bold,
+            Text = anregungsWerte
+        };
+        Canvas.SetTop(anregungTextBlock, 10);
+        Canvas.SetLeft(anregungTextBlock, 20);
+        anregung.VisualAnregung.Children.Add(anregungTextBlock);
     }
 
     private void DynamischeBerechnung(object sender, RoutedEventArgs e)
