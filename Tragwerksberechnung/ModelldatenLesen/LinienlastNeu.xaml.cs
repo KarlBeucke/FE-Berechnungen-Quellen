@@ -14,22 +14,22 @@ public partial class LinienlastNeu
     {
         InitializeComponent();
         _modell = modell;
+        AktuelleId = "";
         Show();
-        AktuelleId = LastId.Text;
     }
 
-    public LinienlastNeu(FeModell modell, string last, string element,
-        double pxa, double pya, double pxb, double pyb, bool inElement)
+    public LinienlastNeu(FeModell modell, AbstraktElementLast linienlast)
     {
         InitializeComponent();
         _modell = modell;
-        LastId.Text = last;
-        ElementId.Text = element;
-        Pxa.Text = pxa.ToString("0.00");
-        Pya.Text = pya.ToString("0.00");
-        Pxb.Text = pxb.ToString("0.00");
-        Pyb.Text = pyb.ToString("0.00");
-        InElement.IsChecked = inElement;
+        LastId.Text = linienlast.LastId;
+        AktuelleId = linienlast.LastId;
+        ElementId.Text = linienlast.ElementId;
+        Pxa.Text = linienlast.Lastwerte[0].ToString("0.00");
+        Pya.Text = linienlast.Lastwerte[1].ToString("0.00");
+        Pxb.Text = linienlast.Lastwerte[2].ToString("0.00");
+        Pyb.Text = linienlast.Lastwerte[3].ToString("0.00");
+        if (linienlast.InElementKoordinatenSystem) InElement.IsChecked = true;
         Show();
     }
 

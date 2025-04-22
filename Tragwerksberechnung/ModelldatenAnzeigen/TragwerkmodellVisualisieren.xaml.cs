@@ -252,8 +252,8 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuZeitAnregungNeu(object sender, RoutedEventArgs e)
     {
-       var anregung = new ZeitAnregungVisualisierenNeu(_modell);
-       anregung.Show();
+        _ = new ZeitAnregungVisualisieren(_modell);
+        //anregung.Show();
     }
 
     // Modelldefinitionen darstellen
@@ -414,6 +414,11 @@ public partial class TragwerkmodellVisualisieren
             // Lager
             else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
                 LagerNeu(lager);
+
+            // zeitabhängige Knotenlasten
+            else if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(item.Name, out var zeitKnotenlast))
+                ZeitKnotenlastNeu(zeitKnotenlast);
+
         }
 
         // click auf Textdarstellungen
@@ -493,13 +498,12 @@ public partial class TragwerkmodellVisualisieren
                 _elementNeu.EndknotenId.Text = knoten.Id;
                 _elementNeu.ElementId.Text = "e" + _elementNeu.StartknotenId.Text + knoten.Id;
             }
-
             _elementNeu.Show();
             return;
         }
 
         // Knotentext angeklickt bei Definition einer neuen Knotenlast
-        else if (IsKnotenlast)
+        if (IsKnotenlast)
         {
             _knotenlastNeu.KnotenId.Text = knoten.Id;
             _knotenlastNeu.LastId.Text = "KL_" + knoten.Id;
@@ -509,21 +513,21 @@ public partial class TragwerkmodellVisualisieren
         }
 
         // Knotentext angeklickt bei Definition einer neuen Linienlast
-        else if (IsLinienlast)
+        if (IsLinienlast)
         {
             _ = MessageBox.Show("Knoteneingabe ungültig bei Definition einer neuen Elementlast", "neue Linienlast");
             return;
         }
 
         // Knotentext angeklickt bei Definition einer neuen Elementlast
-        else if (IsPunktlast)
+        if (IsPunktlast)
         {
             _ = MessageBox.Show("Knoteneingabe ungültig bei Definition einer neuen Elementlast", "neue Punktlast");
             return;
         }
 
         // Knotentext angeklickt bei Definition eines neuen Lagers
-        else if (IsLager)
+        if (IsLager)
         {
             _lagerNeu.KnotenId.Text = knoten.Id;
             if (_lagerNeu.LagerId.Text == string.Empty) _lagerNeu.LagerId.Text = "L_" + knoten.Id;
@@ -533,7 +537,7 @@ public partial class TragwerkmodellVisualisieren
         }
 
         // Knotentext angeklickt bei Definition einer neuen zeitveränderlichen Knotenlast
-        else if (IsZeitKnotenlast)
+        if (IsZeitKnotenlast)
         {
             _zeitKnotenlastNeu.KnotenId.Text = knoten.Id;
             _zeitKnotenlastNeu.LastId.Text = "zkl_" + knoten.Id;
@@ -710,111 +714,31 @@ public partial class TragwerkmodellVisualisieren
 
     private void KnotenlastNeu(AbstraktLast knotenlast)
     {
-        _knotenlastNeu = new KnotenlastNeu(_modell)
-        {
-            Topmost = true,
-            Owner = (Window)Parent,
-            LastId = { Text = knotenlast.LastId },
-            KnotenId = { Text = knotenlast.KnotenId.ToString(CultureInfo.CurrentCulture) },
-            Px = { Text = knotenlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
-            Py = { Text = knotenlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) }
-        };
-        if (knotenlast.Lastwerte.Length > 2)
-            _knotenlastNeu.M.Text = knotenlast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
+        _knotenlastNeu = new KnotenlastNeu(_modell, knotenlast);
         IsKnotenlast = true;
-        _knotenlastNeu.AktuelleId = _knotenlastNeu.LastId.Text;
     }
     private void LinienlastNeu(AbstraktElementLast linienlast)
     {
-        _linienlastNeu = new LinienlastNeu(_modell)
-        {
-            Topmost = true,
-            Owner = (Window)Parent,
-            LastId = { Text = linienlast.LastId },
-            ElementId = { Text = linienlast.ElementId.ToString(CultureInfo.CurrentCulture) },
-            Pxa = { Text = linienlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
-            Pya = { Text = linienlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
-            Pxb = { Text = linienlast.Lastwerte[2].ToString(CultureInfo.CurrentCulture) },
-            Pyb = { Text = linienlast.Lastwerte[3].ToString(CultureInfo.CurrentCulture) },
-            InElement = { IsChecked = linienlast.InElementKoordinatenSystem }
-        };
+        _linienlastNeu = new LinienlastNeu(_modell, linienlast);
         IsLinienlast = true;
-        _linienlastNeu.AktuelleId = _linienlastNeu.LastId.Text;
     }
     private void PunktlastNeu(AbstraktElementLast punktLast)
     {
         var punktlast = (PunktLast)punktLast;
-        _punktlastNeu = new PunktlastNeu(_modell)
-        {
-            Topmost = true,
-            Owner = (Window)Parent,
-            LastId = { Text = punktlast.LastId },
-            ElementId = { Text = punktlast.ElementId.ToString(CultureInfo.CurrentCulture) },
-            Px = { Text = punktlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
-            Py = { Text = punktlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
-            Offset = { Text = punktlast.Offset.ToString(CultureInfo.CurrentCulture) }
-        };
-        IsPunktlast = true;
-        _punktlastNeu.AktuelleId = _punktlastNeu.LastId.Text;
+        _punktlastNeu = new PunktlastNeu(_modell, punktlast);
+        IsLinienlast = true;
     }
 
     private void LagerNeu(AbstraktRandbedingung lager)
     {
-        _lagerNeu = new LagerNeu(_modell)
-        {
-            Topmost = true,
-            Owner = (Window)Parent,
-            LagerId = { Text = lager.RandbedingungId },
-            KnotenId = { Text = lager.KnotenId.ToString(CultureInfo.CurrentCulture) },
-            Xfest = { IsChecked = (lager.Typ == 1) | (lager.Typ == 3) | (lager.Typ == 7) },
-            Yfest = { IsChecked = (lager.Typ == 2) | (lager.Typ == 3) | (lager.Typ == 7) },
-            Rfest = { IsChecked = (lager.Typ == 4) | (lager.Typ == 7) }
-        };
-        if ((bool)_lagerNeu.Xfest.IsChecked) _lagerNeu.VorX.Text = lager.Vordefiniert[0].ToString("0.00");
-        if ((bool)_lagerNeu.Yfest.IsChecked) _lagerNeu.VorY.Text = lager.Vordefiniert[1].ToString("0.00");
-        if ((bool)_lagerNeu.Rfest.IsChecked) _lagerNeu.VorRot.Text = lager.Vordefiniert[2].ToString("0.00");
+        _lagerNeu = new LagerNeu(_modell, lager);
         IsLager = true;
-        _lagerNeu.AktuelleId = _lagerNeu.LagerId.Text;
     }
 
     private void ZeitKnotenlastNeu(AbstraktZeitabhängigeKnotenlast zeitKnotenlast)
     {
-        _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell)
-        {
-            Topmost = true,
-            Owner = (Window)Parent,
-            LastId = { Text = zeitKnotenlast.LastId },
-            KnotenId = { Text = zeitKnotenlast.KnotenId.ToString(CultureInfo.CurrentCulture) },
-            KnotenDof = { Text = zeitKnotenlast.KnotenFreiheitsgrad.ToString() }
-        };
-        if (zeitKnotenlast.Bodenanregung.Equals(true)) _zeitKnotenlastNeu.Bodenanregung.IsChecked = true;
-        switch (zeitKnotenlast.VariationsTyp)
-        {
-            case 0:
-                _zeitKnotenlastNeu.Datei.IsChecked = true;
-                break;
-            case 2:
-                _zeitKnotenlastNeu.Amplitude.Text = zeitKnotenlast.Amplitude.ToString("G2");
-                _zeitKnotenlastNeu.Frequenz.Text = (zeitKnotenlast.Frequenz / (2 * Math.PI)).ToString("G2");
-                _zeitKnotenlastNeu.Winkel.Text = (zeitKnotenlast.PhasenWinkel * 180 / Math.PI).ToString("G2");
-                break;
-            default:
-                {
-                    if (zeitKnotenlast.Intervall != null)
-                    {
-                        var knotenlinear = "";
-                        for (var i = 0; i < zeitKnotenlast.Intervall.Length; i += 2)
-                        {
-                            knotenlinear += zeitKnotenlast.Intervall[i].ToString("G2") + ";";
-                            knotenlinear += zeitKnotenlast.Intervall[i + 1].ToString("G2") + "  ";
-                        }
-                        _zeitKnotenlastNeu.Linear.Text = knotenlinear;
-                    }
-                    break;
-                }
-        }
+        _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell, zeitKnotenlast);
         IsZeitKnotenlast = true;
-        _zeitKnotenlastNeu.AktuelleId = _zeitKnotenlastNeu.LastId.Text;
     }
 
     private HitTestResultBehavior HitTestCallBack(HitTestResult result)

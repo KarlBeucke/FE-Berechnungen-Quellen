@@ -9,11 +9,13 @@ public partial class AnregungVisualisieren
     private readonly Darstellung _darstellung;
     private readonly double _dt, _tmax, _tmin;
     private double _anregungMax, _anregungMin;
+    private readonly FeModell _modell;
 
     public AnregungVisualisieren(FeModell feModell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
         InitializeComponent();
+        _modell = feModell;
         Show();
 
         // Bestimmung der Zeitachse
@@ -31,7 +33,7 @@ public partial class AnregungVisualisieren
     {
         const string inputDirectory = "\\FE-Berechnungen-App\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
         // lies Ordinatenwerte im Zeitintervall dt aus Datei
-        Berechnung.AusDatei(inputDirectory, 1, _anregung);
+        Berechnung.AusDatei(inputDirectory, 1, _anregung, _modell);
         _anregungMax = _anregung.Max();
         _anregungMin = -_anregungMax;
 

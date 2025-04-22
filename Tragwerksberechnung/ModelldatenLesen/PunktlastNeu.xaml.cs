@@ -18,15 +18,15 @@ public partial class PunktlastNeu
         AktuelleId = LastId.Text;
     }
 
-    public PunktlastNeu(FeModell modell, string last, string element, double px, double py, double offset)
+    public PunktlastNeu(FeModell modell, AbstraktElementLast punktlast)
     {
         InitializeComponent();
         _modell = modell;
-        LastId.Text = last;
-        ElementId.Text = element;
-        Px.Text = px.ToString("0.00");
-        Py.Text = py.ToString("0.00");
-        Offset.Text = offset.ToString("0.00");
+        LastId.Text = punktlast.LastId;
+        ElementId.Text = punktlast.ElementId;
+        Px.Text = punktlast.Lastwerte[0].ToString("0.00");
+        Py.Text = punktlast.Lastwerte[1].ToString("0.00");
+        Offset.Text = punktlast.Offset.ToString("0.00");
         Show();
     }
 

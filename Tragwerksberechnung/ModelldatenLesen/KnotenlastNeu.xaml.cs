@@ -1,7 +1,6 @@
-﻿using System.Globalization;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
+using System.Globalization;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -11,29 +10,24 @@ public partial class KnotenlastNeu
     private TragwerkLastenKeys _lastenKeys;
     public string AktuelleId;
 
-    public KnotenlastNeu()
-    {
-        InitializeComponent();
-        Show();
-    }
-
     public KnotenlastNeu(FeModell modell)
     {
         InitializeComponent();
         _modell = modell;
+        AktuelleId = "";
         Show();
     }
 
-    public KnotenlastNeu(FeModell modell, string last, string knoten, double px, double py, double m)
+    public KnotenlastNeu(FeModell modell, AbstraktLast knotenlast)
     {
         InitializeComponent();
         _modell = modell;
-        LastId.Text = last;
-        AktuelleId = last;
-        KnotenId.Text = knoten;
-        Px.Text = px.ToString("0.00");
-        Py.Text = py.ToString("0.00");
-        M.Text = m.ToString("0.00");
+        LastId.Text = knotenlast.LastId;
+        AktuelleId = knotenlast.LastId;
+        KnotenId.Text = knotenlast.KnotenId;
+        Px.Text = knotenlast.Lastwerte[0].ToString("0.00");
+        Py.Text = knotenlast.Lastwerte[1].ToString("0.00");
+        if (knotenlast.Lastwerte.Length > 2) M.Text = knotenlast.Lastwerte[2].ToString("0.00");
         Show();
     }
 
@@ -110,7 +104,7 @@ public partial class KnotenlastNeu
         Close();
         StartFenster.TragwerkVisual.IsKnotenlast = false;
     }
-    
+
     private void LastIdGotFocus(object sender, RoutedEventArgs e)
     {
         _lastenKeys = new TragwerkLastenKeys(_modell) { Topmost = true, Owner = (Window)Parent };

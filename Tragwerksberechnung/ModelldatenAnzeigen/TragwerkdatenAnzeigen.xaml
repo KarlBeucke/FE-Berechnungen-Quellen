@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:modell="clr-namespace:FEBibliothek.Modell;assembly=FEBibliothek"
         mc:Ignorable="d"
         Title="Tragwerksdaten anzeigen" Height="535" Width="843">
     <Grid>
@@ -29,9 +28,9 @@
                 MouseDoubleClick="NeuerKnoten" UnloadingRow="KnotenZeileLöschen" SelectionChanged="KnotenZeileSelected"
                 LostFocus="KeinKnotenSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Knoten" Binding="{Binding Knoten.Id}" />
-                    <DataGridTextColumn Header="X" Binding="{Binding Knoten.Koordinaten[0]}" />
-                    <DataGridTextColumn Header="Y" Binding="{Binding Knoten.Koordinaten[1]}" />
+                    <DataGridTextColumn Header="Knoten" Binding="{Binding Id}" />
+                    <DataGridTextColumn Header="X" Binding="{Binding Koordinaten[0]}" />
+                    <DataGridTextColumn Header="Y" Binding="{Binding Koordinaten[1]}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

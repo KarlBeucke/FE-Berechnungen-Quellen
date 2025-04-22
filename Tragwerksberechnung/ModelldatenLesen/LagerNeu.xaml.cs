@@ -16,18 +16,16 @@ public partial class LagerNeu
         InitializeComponent();
         _modell = modell;
         Show();
-        VorX.Text = "0,00";
-        VorY.Text = "0,00";
-        VorRot.Text = "0,00";
+        AktuelleId = LagerId.Text;
     }
 
-    public LagerNeu(FeModell modell, double vordefX, double vordefY, double vordefRot)
+    public LagerNeu(FeModell modell, AbstraktRandbedingung lager)
     {
         InitializeComponent();
         _modell = modell;
-        VorX.Text = vordefX.ToString("0.00");
-        VorY.Text = vordefY.ToString("0.00");
-        VorRot.Text = vordefRot.ToString("0.00");
+        VorX.Text = lager.Vordefiniert[0].ToString("0.00");
+        VorY.Text = lager.Vordefiniert[1].ToString("0.00");
+        VorRot.Text = lager.Vordefiniert[2].ToString("0.00");
         Show();
     }
 

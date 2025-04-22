@@ -205,8 +205,7 @@ public partial class TragwerkdatenAnzeigen
     // MouseDoubleClick
     private void NeuesLager(object sender, MouseButtonEventArgs e)
     {
-        const double vorX = 0, vorY = 0, vorRot = 0;
-        _ = new LagerNeu(_modell, vorX, vorY, vorRot);
+        _ = new LagerNeu(_modell);
         _modell.Berechnet = false;
         Close();
     }
@@ -243,7 +242,7 @@ public partial class TragwerkdatenAnzeigen
     // MouseDoubleClick
     private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
     {
-        _ = new KnotenlastNeu(_modell, string.Empty, string.Empty, 0, 0, 0);
+        _ = new KnotenlastNeu(_modell);
         _modell.Berechnet = false;
         Close();
     }
@@ -280,7 +279,7 @@ public partial class TragwerkdatenAnzeigen
     // MouseDoubleClick
     private void NeuePunktlast(object sender, MouseButtonEventArgs e)
     {
-        _ = new PunktlastNeu(_modell, string.Empty, string.Empty, 0, 0, 0);
+        _ = new PunktlastNeu(_modell);
         _modell.Berechnet = false;
         Close();
     }
@@ -317,7 +316,7 @@ public partial class TragwerkdatenAnzeigen
     // MouseDoubleClick
     private void NeueLinienlast(object sender, MouseButtonEventArgs e)
     {
-        _ = new LinienlastNeu(_modell, string.Empty, string.Empty, 0, 0, 0, 0, true);
+        _ = new LinienlastNeu(_modell);
         _modell.Berechnet = false;
         Close();
     }

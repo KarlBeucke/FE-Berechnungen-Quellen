@@ -44,12 +44,12 @@ public class Fachwerk : AbstraktBalken
     {
         if (ElementMaterial.MaterialWerte.Length < 3 && M == 0)
             throw new ModellAusnahme("\nFachwerk " + ElementId + ", spezifische Masse noch nicht definiert");
-        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material)) 
+        if (!_modell.Material.TryGetValue(ElementMaterialId, out var material))
             throw new ModellAusnahme("\nMaterialId " + ElementMaterialId + "nicht im Modell gefunden");
 
         // Me = specific mass * area * 0.5*length
         _masse = M == 0 ? material.MaterialWerte[2] : M;
-        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt)) 
+        if (!_modell.Querschnitt.TryGetValue(ElementQuerschnittId, out var querschnitt))
             throw new ModellAusnahme("\nQuerschnittId " + ElementQuerschnittId + "nicht im Modell gefunden");
         _fläche = A == 0 ? querschnitt.QuerschnittsWerte[0] : A;
 

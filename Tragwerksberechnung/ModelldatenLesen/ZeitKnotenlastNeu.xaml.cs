@@ -1,27 +1,45 @@
-﻿using System.Globalization;
-using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using System.Globalization;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class ZeitKnotenlastNeu
 {
     private readonly FeModell _modell;
+    //private TragwerkLastenKeys _lastenKeys;
     public string AktuelleId;
 
     public ZeitKnotenlastNeu(FeModell modell)
     {
         InitializeComponent();
         _modell = modell;
-        LastId.Text = string.Empty;
-        KnotenId.Text = string.Empty;
-        KnotenDof.Text = string.Empty;
-        Bodenanregung.IsChecked = false;
-        Datei.IsChecked = false;
-        Amplitude.Text = string.Empty;
-        Frequenz.Text = string.Empty;
-        Winkel.Text = string.Empty;
-        Linear.Text = string.Empty;
+        AktuelleId = "";
+        Show();
+    }
+    public ZeitKnotenlastNeu(FeModell modell, AbstraktZeitabhängigeKnotenlast zeitKnotenlast)
+    {
+        InitializeComponent();
+        _modell = modell;
+        LastId.Text = zeitKnotenlast.LastId;
+        AktuelleId = zeitKnotenlast.LastId;
+        KnotenId.Text = zeitKnotenlast.KnotenId;
+        KnotenDof.Text = zeitKnotenlast.KnotenFreiheitsgrad.ToString();
+        if (zeitKnotenlast.Bodenanregung) Bodenanregung.IsChecked = true;
+        if (zeitKnotenlast.Datei) Datei.IsChecked = true;
+        Amplitude.Text = zeitKnotenlast.Amplitude.ToString("G2");
+        Frequenz.Text = zeitKnotenlast.Frequenz.ToString("G2");
+        Winkel.Text = zeitKnotenlast.PhasenWinkel.ToString("G2");
+        if (zeitKnotenlast.Intervall != null)
+        {
+            var knotenlinear = "";
+            for (var i = 0; i < zeitKnotenlast.Intervall.Length; i += 2)
+            {
+                knotenlinear += zeitKnotenlast.Intervall[i].ToString("G2") + ";";
+                knotenlinear += zeitKnotenlast.Intervall[i + 1].ToString("G2") + "  ";
+            }
+            Linear.Text = knotenlinear;
+        }
         Show();
     }
 
@@ -37,27 +55,43 @@ public partial class ZeitKnotenlastNeu
         // vorhandene zeitabhängige Knotenlast
         if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(knotenlastId, out var vorhandeneZeitKnotenlast))
         {
+            vorhandeneZeitKnotenlast.Datei = false;
+            vorhandeneZeitKnotenlast.Amplitude = 0;
+            vorhandeneZeitKnotenlast.Frequenz = 0;
+            vorhandeneZeitKnotenlast.PhasenWinkel = 0;
+            vorhandeneZeitKnotenlast.Intervall = null;
             if (KnotenId.Text.Length > 0)
                 vorhandeneZeitKnotenlast.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
             try
             {
                 if (KnotenDof.Text.Length > 0) vorhandeneZeitKnotenlast.KnotenFreiheitsgrad = int.Parse(KnotenDof.Text);
                 if (Bodenanregung.IsChecked == true) vorhandeneZeitKnotenlast.Bodenanregung = true;
-                if (Datei.IsChecked == true) vorhandeneZeitKnotenlast.Datei = true;
-                if (Amplitude.Text.Length > 0) vorhandeneZeitKnotenlast.Amplitude = double.Parse(Amplitude.Text);
-                if (Frequenz.Text.Length > 0) vorhandeneZeitKnotenlast.Frequenz = double.Parse(Frequenz.Text);
-                if (Winkel.Text.Length > 0) vorhandeneZeitKnotenlast.PhasenWinkel = double.Parse(Winkel.Text);
-                if (Linear.Text.Length <= 0) return;
-                var knotenlinear = Linear.Text;
-                char[] delimiters = [' ', ';'];
-                var substrings = knotenlinear.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                var interval = new double[substrings.Length];
-                for (var j = 0; j < substrings.Length; j += 2)
+                if (Datei.IsChecked == true)
                 {
-                    interval[j] = double.Parse(substrings[j]);
-                    interval[j + 1] = double.Parse(substrings[j + 1]);
+                    vorhandeneZeitKnotenlast.Datei = true;
+                    vorhandeneZeitKnotenlast.VariationsTyp = 0;
                 }
-                vorhandeneZeitKnotenlast.Intervall = interval;
+                else if (Amplitude.Text.Length > 0)
+                {
+                    vorhandeneZeitKnotenlast.Amplitude = double.Parse(Amplitude.Text);
+                    if (Frequenz.Text.Length > 0) vorhandeneZeitKnotenlast.Frequenz = double.Parse(Frequenz.Text);
+                    if (Winkel.Text.Length > 0) vorhandeneZeitKnotenlast.PhasenWinkel = double.Parse(Winkel.Text);
+                    vorhandeneZeitKnotenlast.VariationsTyp = 1;
+                }
+                else if (Linear.Text.Length > 0)
+                {
+                    var knotenlinear = Linear.Text;
+                    char[] delimiters = [' ', ';'];
+                    var substrings = knotenlinear.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                    var interval = new double[substrings.Length];
+                    for (var j = 0; j < substrings.Length; j += 2)
+                    {
+                        interval[j] = double.Parse(substrings[j]);
+                        interval[j + 1] = double.Parse(substrings[j + 1]);
+                    }
+                    vorhandeneZeitKnotenlast.Intervall = interval;
+                    vorhandeneZeitKnotenlast.VariationsTyp = 2;
+                }
             }
             catch (FormatException)
             {
@@ -70,10 +104,10 @@ public partial class ZeitKnotenlastNeu
         else
         {
             var knotenId = "";
-            var knotenDof=0;
-            bool boden=false, datei=false;
-            double amplitude=0, frequenz=0, phasenWinkel = 0;
-            double[] intervall;
+            var knotenDof = 0;
+            bool boden = false, datei = false;
+            double amplitude = 0, frequenz = 0, phasenWinkel = 0;
+            double[] intervall = null;
 
             if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
             if (!_modell.Knoten.TryGetValue(knotenId, out _))
@@ -87,15 +121,17 @@ public partial class ZeitKnotenlastNeu
                 if (Amplitude.Text.Length > 0) amplitude = double.Parse(Amplitude.Text);
                 if (Frequenz.Text.Length > 0) frequenz = double.Parse(Frequenz.Text);
                 if (Winkel.Text.Length > 0) phasenWinkel = double.Parse(Winkel.Text);
-                if (Linear.Text.Length <= 0) return;
-                var knotenlinear = Linear.Text;
-                char[] delimiters = [' ', ';'];
-                var substrings = knotenlinear.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                intervall = new double[substrings.Length];
-                for (var j = 0; j < substrings.Length; j += 2)
+                if (Linear.Text.Length > 0)
                 {
-                    intervall[j] = double.Parse(substrings[j]);
-                    intervall[j + 1] = double.Parse(substrings[j + 1]);
+                    var knotenlinear = Linear.Text;
+                    char[] delimiters = [' ', ';'];
+                    var substrings = knotenlinear.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                    intervall = new double[substrings.Length];
+                    for (var j = 0; j < substrings.Length; j += 2)
+                    {
+                        intervall[j] = double.Parse(substrings[j]);
+                        intervall[j + 1] = double.Parse(substrings[j + 1]);
+                    }
                 }
             }
             catch (FormatException)
@@ -145,19 +181,19 @@ public partial class ZeitKnotenlastNeu
                 Datei.IsChecked = true;
                 break;
             case 1:
-            {
-                if (vorhandeneZeitKnotenlast.Intervall != null)
                 {
-                    var knotenlinear = "";
-                    for (var i = 0; i < vorhandeneZeitKnotenlast.Intervall.Length; i += 2)
+                    if (vorhandeneZeitKnotenlast.Intervall != null)
                     {
-                        knotenlinear += vorhandeneZeitKnotenlast.Intervall[i].ToString("G2") + ";";
-                        knotenlinear += vorhandeneZeitKnotenlast.Intervall[i + 1].ToString("G2") + "  ";
+                        var knotenlinear = "";
+                        for (var i = 0; i < vorhandeneZeitKnotenlast.Intervall.Length; i += 2)
+                        {
+                            knotenlinear += vorhandeneZeitKnotenlast.Intervall[i].ToString("G2") + ";";
+                            knotenlinear += vorhandeneZeitKnotenlast.Intervall[i + 1].ToString("G2") + "  ";
+                        }
+                        Linear.Text = knotenlinear;
                     }
-                    Linear.Text = knotenlinear;
+                    break;
                 }
-                break;
-            }
             case 2:
                 Amplitude.Text = vorhandeneZeitKnotenlast.Amplitude.ToString("G2");
                 Frequenz.Text = (vorhandeneZeitKnotenlast.Frequenz / (2 * Math.PI)).ToString("G2");
@@ -192,6 +228,15 @@ public partial class ZeitKnotenlastNeu
 
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
+        _modell.Berechnet = false;
+    }
+
+    private void KnotenPositionNeu(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
+        if (knoten == null) { _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue zeitabhängige Knotenlast"); return; }
+        StartFenster.TragwerkVisual.KnotenEdit(knoten);
+        Close();
         _modell.Berechnet = false;
     }
 }
