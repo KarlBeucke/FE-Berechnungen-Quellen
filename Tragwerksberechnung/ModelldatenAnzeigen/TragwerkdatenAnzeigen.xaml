@@ -99,11 +99,11 @@
                 Loaded="Lager_Loaded" AutoGenerateColumns="False" CellEditEnding="Model_Changed"
                 MouseDoubleClick="NeuesLager" UnloadingRow="LagerZeileLöschen" SelectionChanged="LagerZeileSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Lager" Binding="{Binding RandbedingungId}" />
+                    <DataGridTextColumn Header="Lager" Binding="{Binding LagerId}" />
                     <DataGridTextColumn Header="Knoten" Binding="{Binding KnotenId}" />
-                    <DataGridTextColumn Header="X fest" Binding="{Binding Vordefiniert[0], StringFormat=N2}" />
-                    <DataGridTextColumn Header="Y fest" Binding="{Binding Vordefiniert[1], StringFormat=N2}" />
-                    <DataGridTextColumn Header="R fest" Binding="{Binding Vordefiniert[2], StringFormat=N2}" />
+                    <DataGridTextColumn Header="X fest" Binding="{Binding Fest[0], StringFormat=G2}" />
+                    <DataGridTextColumn Header="Y fest" Binding="{Binding Fest[1], StringFormat=G2}" />
+                    <DataGridTextColumn Header="R fest" Binding="{Binding Fest[2], StringFormat=G2}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

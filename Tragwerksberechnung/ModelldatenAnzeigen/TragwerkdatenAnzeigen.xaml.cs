@@ -189,13 +189,19 @@ public partial class TragwerkdatenAnzeigen
     // Loaded
     private void Lager_Loaded(object sender, RoutedEventArgs e)
     {
-        var lager = new List<AbstraktRandbedingung>();
+        var lager = new List<Festhaltung>();
+        var fest = new string[3];
         foreach (var item in _modell.Randbedingungen)
         {
             for (var i = 0; i < item.Value.Vordefiniert.Length; i++)
-                if (!item.Value.Festgehalten[i])
-                    item.Value.Vordefiniert[i] = double.PositiveInfinity;
-            lager.Add(item.Value);
+                //    if (!item.Value.Festgehalten[i])
+                //        item.Value.Vordefiniert[i] = double.PositiveInfinity;
+                //lager.Add(item.Value);
+            {
+                if (!item.Value.Festgehalten[i]) fest[i] = "";
+                else fest[i] = item.Value.Vordefiniert[i].ToString("G2");
+            }
+            lager.Add(new Festhaltung(item.Value.RandbedingungId, item.Value.KnotenId, fest));
         }
 
         LagerGrid = sender as DataGrid;
@@ -346,4 +352,11 @@ public partial class TragwerkdatenAnzeigen
     {
         _modell.Berechnet = false;
     }
+}
+
+internal class Festhaltung(string lagerId, string knotenId, string[] fest)
+{
+    public string LagerId { get; } = lagerId;
+    public string KnotenId { get; } = knotenId;
+    public string[] Fest { get; } = fest;
 }

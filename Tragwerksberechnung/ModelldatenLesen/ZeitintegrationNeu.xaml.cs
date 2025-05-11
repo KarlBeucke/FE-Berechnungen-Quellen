@@ -8,7 +8,7 @@ public partial class ZeitintegrationNeu
 {
     private readonly FeModell _modell;
     private ZeitKnotenanfangswerteNeu _anfangswerteNeu;
-    public int Aktuell;
+    private int _aktuell;
     private int _eigenform;
 
     public ZeitintegrationNeu(FeModell modell)
@@ -16,7 +16,7 @@ public partial class ZeitintegrationNeu
         Language = XmlLanguage.GetLanguage("de-DE");
         InitializeComponent();
         _modell = modell;
-        Aktuell = 1;
+        _aktuell = 1;
         if (modell.Eigenzustand == null) modell.Eigenzustand = new Eigenzustände("eigen", 1);
         else
         {
@@ -74,6 +74,53 @@ public partial class ZeitintegrationNeu
         }
 
         Show();
+    }
+
+    private void EigenformGotFocus(object sender, RoutedEventArgs e)
+    {
+        Eigen.Clear();
+    }
+    private void EigenformLostFocus(object sender, RoutedEventArgs e)
+    {
+        if (Eigen.Text == "alle") return;
+        try
+        {
+            if (int.Parse(Eigen.Text) > _modell.Eigenzustand.AnzahlZustände)
+            {
+                _ = MessageBox.Show("gewählte Eigenform größer als Anzahl verfügbarer Eigenzustände", "neue Zeitintegration");
+                return;
+            }
+            _eigenform = int.Parse(Eigen.Text);
+        }
+        catch (FormatException)
+        {
+            _ = MessageBox.Show("Anzahl Eigenzustände", "neue Zeitintegration");
+        }
+    }
+
+    private void DämpfungsratenNext(object sender, MouseButtonEventArgs e)
+    {
+        if (Eigen.Text == "alle") return;
+        _eigenform++;
+        if (_eigenform > _modell.Eigenzustand.AnzahlZustände)
+        {
+            _ = MessageBox.Show("modale Dämpfung nur für jede Eigenlösung", "Zeitintegration neu");
+            Ok.Focus();
+            return;
+        }
+
+        if (_eigenform > _modell.Eigenzustand.DämpfungsRaten.Count)
+        {
+            var neu = _modell.Eigenzustand.DämpfungsRaten.Count + 1;
+            _modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(0, neu.ToString() + ". Eigenform"));
+        }
+
+        StartFenster.TragwerkVisual.ZeitintegrationNeu.Eigen.Text =
+            _eigenform.ToString(CultureInfo.CurrentCulture);
+
+        var modalwerte = (ModaleWerte)_modell.Eigenzustand.DämpfungsRaten[_eigenform - 1];
+        StartFenster.TragwerkVisual.ZeitintegrationNeu.Dämpfungsraten.Text =
+            modalwerte.Dämpfung.ToString(CultureInfo.CurrentCulture);
     }
 
     private void Newmark_OnChecked(object sender, RoutedEventArgs e)
@@ -153,58 +200,20 @@ public partial class ZeitintegrationNeu
     private void AnfangsbedingungNext(object sender, MouseButtonEventArgs e)
     {
         // Aktuell beinhaltet die aktuelle Nummer der Anfangsbedingung in Bearbeitung
-        if (string.IsNullOrEmpty(Anfangsbedingungen.Text)) Aktuell = 1;
-        Anfangsbedingungen.Text = Aktuell.ToString();
-        _anfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell, Aktuell) { Topmost = true };
-        Aktuell++;
+        if (string.IsNullOrEmpty(Anfangsbedingungen.Text)) _aktuell = 1;
+        else if (int.Parse(Anfangsbedingungen.Text) <= _modell.Zeitintegration.Anfangsbedingungen.Count) _aktuell++;
+        else _aktuell = _modell.Zeitintegration.Anfangsbedingungen.Count + 1;
+        Anfangsbedingungen.Text = _aktuell.ToString();
+        _anfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell, _aktuell) { Topmost = true };
+        if (_aktuell > _modell.Zeitintegration.Anfangsbedingungen.Count) _aktuell = _modell.Zeitintegration.Anfangsbedingungen.Count;
+        Anfangsbedingungen.Text = _aktuell.ToString();
+        Gesamt.Text = (_modell.Zeitintegration.Anfangsbedingungen.Count).ToString();
         _anfangswerteNeu.Close();
     }
-
-    private void DämpfungsratenNext(object sender, MouseButtonEventArgs e)
+    private void AnfangsbedingungEdit(object sender, KeyEventArgs e)
     {
-        if (Eigen.Text == "alle") return;
-        _eigenform++;
-        if (_eigenform > _modell.Eigenzustand.AnzahlZustände)
-        {
-            _ = MessageBox.Show("modale Dämpfung nur für jede Eigenlösung", "Zeitintegration neu");
-            Ok.Focus();
-            return;
-        }
-
-        if (_eigenform > _modell.Eigenzustand.DämpfungsRaten.Count)
-        {
-            var neu = _modell.Eigenzustand.DämpfungsRaten.Count + 1;
-            _modell.Eigenzustand.DämpfungsRaten.Add(new ModaleWerte(0, neu.ToString() + ". Eigenform"));
-        }
-
-        StartFenster.TragwerkVisual.ZeitintegrationNeu.Eigen.Text =
-            _eigenform.ToString(CultureInfo.CurrentCulture);
-
-        var modalwerte = (ModaleWerte)_modell.Eigenzustand.DämpfungsRaten[_eigenform - 1];
-        StartFenster.TragwerkVisual.ZeitintegrationNeu.Dämpfungsraten.Text =
-            modalwerte.Dämpfung.ToString(CultureInfo.CurrentCulture);
-    }
-
-    private void EigenformGotFocus(object sender, RoutedEventArgs e)
-    {
-        Eigen.Clear();
-    }
-    private void EigenformLostFocus(object sender, RoutedEventArgs e)
-    {
-        if (Eigen.Text == "alle") return;
-        try
-        {
-            if (int.Parse(Eigen.Text) > _modell.Eigenzustand.AnzahlZustände)
-            {
-                _ = MessageBox.Show("gewählte Eigenform größer als Anzahl verfügbarer Eigenzustände", "neue Zeitintegration");
-                return;
-            }
-            _eigenform = int.Parse(Eigen.Text);
-        }
-        catch (FormatException)
-        {
-            _ = MessageBox.Show("Anzahl Eigenzustände", "neue Zeitintegration");
-        }
+        _aktuell = int.Parse(Anfangsbedingungen.Text);
+        _anfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell, _aktuell) { Topmost = true };
     }
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
@@ -352,7 +361,6 @@ public partial class ZeitintegrationNeu
                 _ = MessageBox.Show("Anzahl Eigenlösungen hat falsches Format", "neue Zeitintegration");
             }
 
-            if (_modell.Zeitintegration == null) return;
             try
             {
                 _modell.Zeitintegration.Dt = double.Parse(Zeitintervall.Text, CultureInfo.CurrentCulture);
@@ -446,6 +454,7 @@ public partial class ZeitintegrationNeu
 
     private void BtnDialogAbbrechen_Click(object sender, RoutedEventArgs e)
     {
+        _aktuell -= 1;
         Close();
     }
 }

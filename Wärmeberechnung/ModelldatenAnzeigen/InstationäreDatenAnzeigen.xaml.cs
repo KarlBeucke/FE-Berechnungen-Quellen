@@ -14,7 +14,7 @@ public partial class InstationäreDatenAnzeigen
     public InstationäreDatenAnzeigen(FeModell modell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
-        this._modell = modell;
+        _modell = modell;
         InitializeComponent();
         DataContext = this._modell;
     }
@@ -81,14 +81,12 @@ public partial class InstationäreDatenAnzeigen
         }
 
         // Elementtemperaturen
-        if (_modell.ZeitabhängigeElementLasten.Count > 0)
-        {
-            var elementLasten = (from item
-                    in _modell.ZeitabhängigeElementLasten
-                                 where item.Value.VariationsTyp == 1
-                                 select item.Value).ToList();
-            if (elementLasten.Count > 0) ElementLastenGrid.ItemsSource = elementLasten;
-        }
+        if (_modell.ZeitabhängigeElementLasten.Count <= 0) return;
+        var elementLasten = (from item
+                in _modell.ZeitabhängigeElementLasten
+            where item.Value.VariationsTyp == 1
+            select item.Value).ToList();
+        if (elementLasten.Count > 0) ElementLastenGrid.ItemsSource = elementLasten;
     }
 
     // ************************* Anfangsbedingungen *********************************
@@ -108,7 +106,7 @@ public partial class InstationäreDatenAnzeigen
 
     private void NeueAnfangstemperatur(object sender, MouseButtonEventArgs e)
     {
-        _ = new ZeitAnfangstemperaturNeu(_modell);
+        _ = new ZeitKnotenAnfangstemperaturNeu(_modell);
         _modell.Berechnet = false;
         Close();
     }

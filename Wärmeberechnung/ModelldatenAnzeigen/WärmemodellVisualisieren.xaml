@@ -7,19 +7,19 @@
         Title="Wärmemodell visualisieren" Height="900" Width="1300">
     <ScrollViewer HorizontalScrollBarVisibility="Auto" Margin="0,0,0,0">
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Grid Row="0" Width="1200" Height="40">
+            <Grid Row="0" Width="1128" Height="40">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="160" />
                     <ColumnDefinition Width="160" />
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="90" />
-                    <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="120" />
-                    <ColumnDefinition Width="80" />
 
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -67,11 +67,13 @@
                 </Grid>
 
                 <!--Modelldefinitionen neu definieren und vorhandene editieren-->
-                <Grid Column="2" Grid.ColumnSpan="4" Height="41" VerticalAlignment="Center" FlowDirection="LeftToRight" Background="GreenYellow">
+                <Grid Column="2" Grid.ColumnSpan="5" Height="40" Width="450" VerticalAlignment="Center" 
+                      FlowDirection="LeftToRight" Background="GreenYellow" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="120" />
                         <ColumnDefinition Width="90" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -106,37 +108,47 @@
                     </Menu>
                     <Menu Grid.Column="2" HorizontalAlignment="Center" Height="18" VerticalAlignment="Top" Width="60" FlowDirection="LeftToRight" 
                           Margin="0,23,0,0">
-                        <MenuItem Header="Lasten" Height="17" Width="50" Padding="5,0,0,0" VerticalAlignment="Center">
+                        <MenuItem Header="Lasten" Height="17" Width="58" Padding="5,0,0,0" VerticalAlignment="Center">
                             <MenuItem Header="Knotenlast" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
                                       Click="MenuKnotenlastNeu" />
                             <MenuItem Header="Linienlast" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
                                       Click="MenuLinienlastNeu" />
                             <MenuItem Header="Elementlast" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
                                       Click="MenuElementlastNeu" />
-                            <Separator></Separator>
-                            <MenuItem Header="zeitabhängige Knotenlast" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
-                                      Click="MenuZeitKnotenlastNeu" />
-                            <MenuItem Header="zeitabhängige Elementlast" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
-                                      Click="MenuZeitElementlastNeu" />
                         </MenuItem>
                     </Menu>
-                    <Menu Grid.Column="3" Height="18" VerticalAlignment="Top" FlowDirection="LeftToRight" 
-                          Margin="0,23,-30,0">
-                        <MenuItem Header="Randbedingungen" Height="17" Width="111" Padding="5,0,0,0" VerticalAlignment="Center">
-                            <MenuItem Header="Randtemperatur" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
-                                      Click="MenuRandbedingungNeu" />
+
+                    <Button Grid.Column="3" IsDefault="False" Height="18" VerticalAlignment="Top" HorizontalAlignment="Center"
+                            Width="110" Click="OnBtnRandbedingungNeu_Click" Padding="0,-2,0,0"
+                            Margin="0,22,0,1">
+                        Randbedingung
+                    </Button>
+
+                    <Menu Grid.Column="4" Height="18" VerticalAlignment="Top" FlowDirection="LeftToRight" 
+                          Margin="10,23,5,0">
+                        <MenuItem Header="instationär" Height="17" Width="76" Padding="5,0,0,0" VerticalAlignment="Center">
+                            <MenuItem Header="Zeitintegration" HorizontalAlignment="Left" Height="20" Width="250" 
+                                      Margin="0,0,0,0" Click="MenuZeitintegrationNeu" />
                             <Separator></Separator>
-                            <MenuItem Header="Anfangstemperatur" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
-                                      Click="MenuAnfangstemperaturNeu" />
-                            <MenuItem Header="zeitabhängige Randtemperatur" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
-                                      Click="MenuZeitRandbedingungNeu" />
+                            <MenuItem Header="Anfangstemperatur" HorizontalAlignment="Left" Height="20" Width="250" 
+                                      Margin="0,0,0,0" Click="MenuAnfangstemperaturNeu" />
+                            <MenuItem Header="zeitabhängige Randtemperatur" HorizontalAlignment="Left" Height="20" Width="250" 
+                                      Margin="0,0,0,0" Click="MenuZeitRandtemperaturNeu" />
+                            <Separator></Separator>
+                            <MenuItem Header="zeitabhängige Knotentemperatur" HorizontalAlignment="Left" Height="20" Width="300" 
+                                      Margin="0,0,0,0" Click="MenuZeitKnotentemperaturNeu" />
+                            <MenuItem Header="zeitabhängige Elementtemperatur" HorizontalAlignment="Left" Height="20" Width="300" 
+                                      Margin="0,0,0,0" Click="MenuZeitElementtemperaturNeu" />
+                            <Separator></Separator>
+                            <MenuItem Header="Anregung visualisieren" HorizontalAlignment="Left" Height="20" Width="300"
+                                      Margin="0,0,0,0" Click="MenuZeitAnregungNeu" />
                         </MenuItem>
                     </Menu>
                 </Grid>
 
                 <!--Modelldefinitionen darstellen-->
-                <Grid Grid.Column="6" Grid.ColumnSpan="4" Height="40" Width="359" VerticalAlignment="Center" FlowDirection="LeftToRight"
-                      Background="LightBlue" HorizontalAlignment="Center">
+                <Grid Grid.Column="7" Grid.ColumnSpan="4" Height="40" Width="360" VerticalAlignment="Center" 
+                      FlowDirection="LeftToRight" Background="LightBlue">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="80" />
@@ -176,7 +188,7 @@
             <Grid Row="1">
                 <Canvas x:Name="VisualWärmeModell"
                         ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                        MouseLeftButtonDown="OnMouseLeftButtonDown" Margin="0,0,-50,-800">
+                        MouseLeftButtonDown="OnMouseLeftButtonDown" Margin="0,0,-50,0" Height="800" VerticalAlignment="Top">
                     <Popup x:Name="MyPopup" Placement="MousePoint">
                         <TextBlock x:Name="MyPopupText" Background="LightBlue" Foreground="Blue" Padding="10" />
                     </Popup>

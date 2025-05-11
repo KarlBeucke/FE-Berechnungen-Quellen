@@ -6,6 +6,16 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using ElementNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ElementNeu;
+using KnotenGruppeNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenGruppeNeu;
+using KnotenlastNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenlastNeu;
+using KnotenNetzÄquidistant = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenNetzÄquidistant;
+using KnotenNetzVariabel = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenNetzVariabel;
+using KnotenNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenNeu;
+using LinienlastNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.LinienlastNeu;
+using MaterialNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.MaterialNeu;
+using ZeitintegrationNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ZeitintegrationNeu;
+using ZeitKnotenlastNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ZeitKnotenlastNeu;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
@@ -28,8 +38,10 @@ public partial class TragwerkmodellVisualisieren
     private LinienlastNeu _linienlastNeu;
     private PunktlastNeu _punktlastNeu;
     private LagerNeu _lagerNeu;
+    private ZeitKnotenanfangswerteNeu _zeitKnotenanfangswertNeu;
     private ZeitKnotenlastNeu _zeitKnotenlastNeu;
-    public bool IsKnoten, IsElement, IsKnotenlast, IsLinienlast, IsPunktlast, IsLager, IsZeitKnotenlast;
+    public bool IsKnoten, IsElement, IsKnotenlast, IsLinienlast, IsPunktlast, IsLager;
+    public bool IsZeitKnotenanfangswert, IsZeitKnotenlast;
     public ZeitintegrationNeu ZeitintegrationNeu;
 
     public TragwerkmodellVisualisieren(FeModell feModell)
@@ -160,6 +172,7 @@ public partial class TragwerkmodellVisualisieren
         var abmessungenNeu = new AbmessungenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
         abmessungenNeu.Show();
     }
+    // Knoten
     private void MenuBalkenKnotenNeu(object sender, RoutedEventArgs e)
     {
         _knotenNeu = new KnotenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
@@ -181,6 +194,7 @@ public partial class TragwerkmodellVisualisieren
         _ = new KnotenNetzVariabel(_modell) { Topmost = true, Owner = (Window)Parent };
     }
 
+    //Elemente
     private void MenuBalkenElementNeu(object sender, RoutedEventArgs e)
     {
         IsElement = true;
@@ -200,6 +214,7 @@ public partial class TragwerkmodellVisualisieren
         _modell.Berechnet = false;
     }
 
+    //Lasten
     private void MenuKnotenlastNeu(object sender, RoutedEventArgs e)
     {
         IsKnotenlast = true;
@@ -224,6 +239,7 @@ public partial class TragwerkmodellVisualisieren
         _modell.Berechnet = false;
     }
 
+    // Lager
     private void OnBtnLagerNeu_Click(object sender, RoutedEventArgs e)
     {
         IsLager = true;
@@ -232,6 +248,7 @@ public partial class TragwerkmodellVisualisieren
         _modell.Berechnet = false;
     }
 
+    //Dynamik
     private void MenuZeitintegrationNeu(object sender, RoutedEventArgs e)
     {
         ZeitintegrationNeu = new ZeitintegrationNeu(_modell);// { Topmost = true, Owner = (Window)Parent };
@@ -239,7 +256,9 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuAnfangswerteNeu(object sender, RoutedEventArgs e)
     {
-        _ = new ZeitKnotenanfangswerteNeu(_modell, 0) { Topmost = true, Owner = (Window)Parent };
+        IsZeitKnotenanfangswert = true;
+        _zeitKnotenanfangswertNeu = new ZeitKnotenanfangswerteNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _modell.Berechnet = false;
     }
 
     private void MenuZeitKnotenlastNeu(object sender, RoutedEventArgs e)

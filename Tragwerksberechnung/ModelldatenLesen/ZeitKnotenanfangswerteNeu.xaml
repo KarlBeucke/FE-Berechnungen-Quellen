@@ -24,7 +24,8 @@
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knoten ID:</Label>
         <TextBox Name="KnotenId" Grid.Row="1" Grid.Column="1" Margin="10,13.2,0,6.8" Height="20"
-                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" LostFocus="KnotenIdLostFocus"/>
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="50"  LostFocus="KnotenIdLostFocus" 
+                 MouseDoubleClick="KnotenPositionNeu"/>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Freiheitsgrad 1:</Label>
         <Label Grid.Row="2" Grid.Column="1" Margin="0.8,10,76,0">d0</Label>
         <TextBox Name="Dof1D0" Grid.Row="2" Grid.Column="1" Margin="29,0,0,7" Height="20"

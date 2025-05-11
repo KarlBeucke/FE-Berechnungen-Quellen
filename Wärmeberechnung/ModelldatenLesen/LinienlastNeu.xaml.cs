@@ -7,6 +7,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 public partial class LinienlastNeu
 {
     private readonly FeModell _modell;
+    public string AktuelleId;
 
     public LinienlastNeu(FeModell modell)
     {

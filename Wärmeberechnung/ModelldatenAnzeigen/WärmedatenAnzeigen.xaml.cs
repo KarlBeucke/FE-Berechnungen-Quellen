@@ -37,7 +37,7 @@ public partial class WärmedatenAnzeigen
     }
 
     //UnloadingRow
-    private void KnotenZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenZeileLöschen(object sender, DataGridRowEventArgs e)
     {
         if (_removeKey == null) return;
         _modell.Knoten.Remove(_removeKey);

@@ -6,6 +6,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 public partial class RandbedingungNeu
 {
     private readonly FeModell _modell;
+    public string AktuelleId;
 
     public RandbedingungNeu(FeModell modell)
     {

@@ -1,4 +1,5 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
+using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
@@ -15,7 +16,7 @@ public partial class ZeitKnotenanfangswerteNeu
         StartFenster.TragwerkVisual.ZeitintegrationNeu ??= new ZeitintegrationNeu(_modell);
         if (modell.Zeitintegration.Anfangsbedingungen.Count != 0)
         {
-            var anfang = modell.Zeitintegration.Anfangsbedingungen[_aktuell];
+            var anfang = modell.Zeitintegration.Anfangsbedingungen[0];
             KnotenId.Text = anfang.KnotenId;
             Dof1D0.Text = anfang.Werte[0].ToString("G2");
             Dof1V0.Text = anfang.Werte[1].ToString("G2");
@@ -123,13 +124,15 @@ public partial class ZeitKnotenanfangswerteNeu
             }
         }
         Close();
+        StartFenster.TragwerkVisual.Close();
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
+        StartFenster.TragwerkVisual.Show();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();
-        if (StartFenster.TragwerkVisual.ZeitintegrationNeu != null)
-            StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
+        StartFenster.TragwerkVisual.ZeitintegrationNeu?.Close();
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
@@ -139,8 +142,7 @@ public partial class ZeitKnotenanfangswerteNeu
         if (_modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
         {
             Close();
-            if (StartFenster.TragwerkVisual.ZeitintegrationNeu != null)
-                StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
+            StartFenster.TragwerkVisual.ZeitintegrationNeu?.Close();
             return;
         }
 
@@ -162,8 +164,7 @@ public partial class ZeitKnotenanfangswerteNeu
         }
 
         Close();
-        if (StartFenster.TragwerkVisual.ZeitintegrationNeu != null)
-            StartFenster.TragwerkVisual.ZeitintegrationNeu.Close();
+        StartFenster.TragwerkVisual.ZeitintegrationNeu?.Close();
     }
 
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
@@ -192,5 +193,14 @@ public partial class ZeitKnotenanfangswerteNeu
 
         _aktuell = _modell.Zeitintegration.Anfangsbedingungen.Count + 1;
         Dof1D0.Text = ""; Dof1V0.Text = ""; Dof2D0.Text = ""; Dof2V0.Text = "";
+    }
+
+    private void KnotenPositionNeu(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
+        if (knoten == null) { _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue zeitabhängige Knotenlast"); return; }
+        StartFenster.WärmeVisual.KnotenEdit(knoten);
+        Close();
+        _modell.Berechnet = false;
     }
 }

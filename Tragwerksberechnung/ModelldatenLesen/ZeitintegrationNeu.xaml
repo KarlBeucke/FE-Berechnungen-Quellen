@@ -148,14 +148,15 @@
 
         <Separator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,48,0,0" />
 
-        <Label Grid.Row="7" Grid.Column="0" Padding="0,0,0,0" Margin="6,6,2,14" Content="Anfangsbedingung" />
+        <Label Grid.Row="7" Grid.Column="0" Padding="0,0,0,0" Margin="6,6,2,14" 
+               Content="Anfangsbedingung" />
         <Label Grid.Row="7" Grid.Column="0" Padding="0,0,0,0" Margin="6,27,133,6"
                FontSize="10" Content="Gesamtanzahl = " />
         <TextBox Name="Gesamt" Grid.Row="7" Grid.Column="0" Padding="0,0,0,0" Margin="80,26,95,0"
                  VerticalAlignment="Top" Height="18" />
 
         <TextBox Name="Anfangsbedingungen" Grid.Row="7" Grid.Column="1" Margin="5,12,20,24"
-                 MouseDoubleClick="AnfangsbedingungNext" />
+                 MouseDoubleClick="AnfangsbedingungNext" KeyUp="AnfangsbedingungEdit" />
         <TextBox Grid.Row="7" Grid.Column="1" Margin="0,40,0,0" Height="13" VerticalAlignment="Top"
                  FontSize="6" Padding="0,0,0,0" HorizontalAlignment="Center" Width="78"
                  Text="Doppelklick für Traversieren" BorderThickness="0,0,0,0" />

@@ -7,6 +7,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 public partial class KnotenlastNeu
 {
     private readonly FeModell _modell;
+    public string AktuelleId;
 
     public KnotenlastNeu()
     {
