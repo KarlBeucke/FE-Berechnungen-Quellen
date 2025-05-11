@@ -81,7 +81,7 @@ public partial class ZeitElementlastNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if(!_modell.ZeitabhängigeElementLasten.Remove(LastId.Text)) return;
+        if (!_modell.ZeitabhängigeElementLasten.Remove(LastId.Text)) return;
         Close();
         StartFenster.WärmeVisual.Close();
         StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);

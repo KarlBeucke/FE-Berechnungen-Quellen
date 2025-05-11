@@ -34,7 +34,7 @@ public partial class ZeitintegrationNeu
         }
         Show();
     }
-    
+
     private void ZeitintervallBerechnen(object sender, MouseButtonEventArgs e)
     {
         var anzahl = int.Parse(Eigenlösung.Text);
@@ -77,10 +77,10 @@ public partial class ZeitintegrationNeu
 
         var betaM = betaMax.ToString(CultureInfo.CurrentCulture);
 
-        _ = MessageBox.Show("kritischer Zeitschritt für β max = " + betaM 
+        _ = MessageBox.Show("kritischer Zeitschritt für β max = " + betaM
                                        + " ist frei für Stabilität und muss gewählt werden für Genauigkeit", "Zeitintegration");
     }
-    
+
     private void AnfangsbedingungNext(object sender, MouseButtonEventArgs e)
     {
         // Aktuell beinhaltet die aktuelle Nummer der Anfangsbedingung in Bearbeitung

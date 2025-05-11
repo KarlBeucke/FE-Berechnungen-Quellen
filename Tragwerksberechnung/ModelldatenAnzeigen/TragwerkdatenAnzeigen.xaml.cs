@@ -194,9 +194,9 @@ public partial class TragwerkdatenAnzeigen
         foreach (var item in _modell.Randbedingungen)
         {
             for (var i = 0; i < item.Value.Vordefiniert.Length; i++)
-                //    if (!item.Value.Festgehalten[i])
-                //        item.Value.Vordefiniert[i] = double.PositiveInfinity;
-                //lager.Add(item.Value);
+            //    if (!item.Value.Festgehalten[i])
+            //        item.Value.Vordefiniert[i] = double.PositiveInfinity;
+            //lager.Add(item.Value);
             {
                 if (!item.Value.Festgehalten[i]) fest[i] = "";
                 else fest[i] = item.Value.Vordefiniert[i].ToString("G2");

@@ -1,6 +1,6 @@
-﻿using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
+﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
+using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 using System.Globalization;
-using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
@@ -135,7 +135,7 @@ public partial class ZeitKnotenAnfangstemperaturNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell-1);
+        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell - 1);
         _aktuell = 0;
         if (StationäreLösung.IsChecked != null && (bool)StationäreLösung.IsChecked)
         {

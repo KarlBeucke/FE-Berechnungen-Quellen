@@ -150,7 +150,7 @@ public partial class ZeitRandtemperaturNeu
                 _ = MessageBox.Show("ungültiges Format in der Eingabe", "neue zeitabhängige Knotenlast");
                 return;
             }
-            
+
             _modell.ZeitabhängigeRandbedingung.Add(randbedingungId, zeitRandbedingung);
             StartFenster.WärmeVisual.IsZeitRandtemperatur = true;
         }
@@ -183,7 +183,7 @@ public partial class ZeitRandtemperaturNeu
     {
         // neue zeitabhängige Randbedingungsdefinition
         if (!_modell.ZeitabhängigeRandbedingung.ContainsKey(RandbedingungId.Text)) return;
-        
+
         // vorhandene zeitabhängige Randbedingungsdefinitionen
         if (!_modell.ZeitabhängigeRandbedingung.TryGetValue(RandbedingungId.Text, out var vorhandeneRandbedingung)) return;
         RandbedingungId.Text = vorhandeneRandbedingung.RandbedingungId;

@@ -149,7 +149,7 @@ public partial class ZeitKnotenlastNeu
             StartFenster.WärmeVisual.IsZeitKnotentemperatur = true;
         }
 
-        if(AktuelleId != LastId.Text) _modell.ZeitabhängigeKnotenLasten.Remove(AktuelleId);
+        if (AktuelleId != LastId.Text) _modell.ZeitabhängigeKnotenLasten.Remove(AktuelleId);
 
         Close();
         StartFenster.WärmeVisual.Close();

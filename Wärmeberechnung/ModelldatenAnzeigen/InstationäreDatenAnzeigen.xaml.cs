@@ -84,8 +84,8 @@ public partial class InstationäreDatenAnzeigen
         if (_modell.ZeitabhängigeElementLasten.Count <= 0) return;
         var elementLasten = (from item
                 in _modell.ZeitabhängigeElementLasten
-            where item.Value.VariationsTyp == 1
-            select item.Value).ToList();
+                             where item.Value.VariationsTyp == 1
+                             select item.Value).ToList();
         if (elementLasten.Count > 0) ElementLastenGrid.ItemsSource = elementLasten;
     }
 
