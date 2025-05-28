@@ -14,6 +14,7 @@ using KnotenNetzVariabel = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.
 using KnotenNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenNeu;
 using LinienlastNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.LinienlastNeu;
 using MaterialNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.MaterialNeu;
+using ZeitAnregungVisualisieren = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ZeitAnregungVisualisieren;
 using ZeitintegrationNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ZeitintegrationNeu;
 using ZeitKnotenlastNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ZeitKnotenlastNeu;
 
@@ -32,16 +33,17 @@ public partial class TragwerkmodellVisualisieren
     private readonly FeModell _modell;
     public readonly Darstellung Darstellung;
     private bool _lastenAn = true, _lagerAn = true, _knotenTexteAn = true, _elementTexteAn = true;
+    private bool _dynamikAn = true;
     private KnotenNeu _knotenNeu;
     private ElementNeu _elementNeu;
     private KnotenlastNeu _knotenlastNeu;
     private LinienlastNeu _linienlastNeu;
     private PunktlastNeu _punktlastNeu;
     private LagerNeu _lagerNeu;
-    private ZeitKnotenanfangswerteNeu _zeitKnotenanfangswertNeu;
+    private ZeitKnotenanfangswerteNeu _zeitKnotenanfangswerteNeu;
     private ZeitKnotenlastNeu _zeitKnotenlastNeu;
     public bool IsKnoten, IsElement, IsKnotenlast, IsLinienlast, IsPunktlast, IsLager;
-    public bool IsZeitKnotenanfangswert, IsZeitKnotenlast;
+    public bool IsZeitKnotenanfangswerte, IsZeitKnotenlast;
     public ZeitintegrationNeu ZeitintegrationNeu;
 
     public TragwerkmodellVisualisieren(FeModell feModell)
@@ -66,6 +68,8 @@ public partial class TragwerkmodellVisualisieren
             Darstellung.LastTexte();
             Darstellung.LagerZeichnen();
             Darstellung.LagerTexte();
+            Darstellung.DynamikTexte();
+            Darstellung.DynamikLastenZeichnen();
         }
         catch (ModellAusnahme e)
         {
@@ -256,8 +260,8 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuAnfangswerteNeu(object sender, RoutedEventArgs e)
     {
-        IsZeitKnotenanfangswert = true;
-        _zeitKnotenanfangswertNeu = new ZeitKnotenanfangswerteNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        IsZeitKnotenanfangswerte = true;
+        _zeitKnotenanfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell) { Topmost = true, Owner = (Window)Parent };
         _modell.Berechnet = false;
     }
 
@@ -265,7 +269,7 @@ public partial class TragwerkmodellVisualisieren
     {
         IsZeitKnotenlast = true;
         _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        _zeitKnotenlastNeu.AktuelleId = _zeitKnotenlastNeu.LastId.Text;
+        //_zeitKnotenlastNeu.AktuelleId = _zeitKnotenlastNeu.LastId.Text;
         _modell.Berechnet = false;
     }
 
@@ -340,6 +344,29 @@ public partial class TragwerkmodellVisualisieren
                 foreach (var id in Darstellung.LagerIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
             }
             _lagerAn = false;
+        }
+    }
+
+    private void OnBtnDynamik_Click(object sender, RoutedEventArgs e)
+    {
+        if (!_dynamikAn)
+        {
+            Darstellung.DynamikLastenZeichnen();
+            Darstellung.DynamikTexte();
+            _dynamikAn = true;
+        }
+        else
+        {
+            foreach (var id in Darstellung.DynamikIDs.SelectMany(anfang => Darstellung.DynamikIDs.Cast<TextBlock>()))
+            {
+                VisualTragwerkModel.Children.Remove(id);
+            }
+            foreach (var lasten in Darstellung.DynamikVektoren.Cast<Shape>())
+            {
+                VisualTragwerkModel.Children.Remove(lasten);
+                //foreach (var id in Darstellung.DynamikIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
+            }
+            _dynamikAn = false;
         }
     }
 
@@ -422,22 +449,35 @@ public partial class TragwerkmodellVisualisieren
 
             // Lasten
             else if (_modell.Lasten.TryGetValue(item.Name, out var knotenlast))
-                KnotenlastNeu(knotenlast);
-            else if (_modell.ElementLasten.TryGetValue(item.Name, out var elementlast))
-                LinienlastNeu(elementlast);
-            else if (_modell.PunktLasten.TryGetValue(item.Name, out var punktlast))
-                PunktlastNeu(punktlast);
-            else if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(item.Name, out var zeitKnotenlastlast))
-                ZeitKnotenlastNeu(zeitKnotenlastlast);
+            {
+                _knotenlastNeu = new KnotenlastNeu(_modell, knotenlast);
+                IsKnotenlast = true;
+            }
+            else if (_modell.ElementLasten.TryGetValue(item.Name, out var linienlast))
+            {
+                _linienlastNeu = new LinienlastNeu(_modell, linienlast);
+                IsLinienlast = true;
+            }
+            else if (_modell.PunktLasten.TryGetValue(item.Name, out var last))
+            {
+                var punktlast = (PunktLast)last;
+                _punktlastNeu = new PunktlastNeu(_modell, punktlast);
+                IsLinienlast = true;
+            }
 
             // Lager
             else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
-                LagerNeu(lager);
+            {
+                _lagerNeu = new LagerNeu(_modell, lager);
+                IsLager = true;
+            }
 
             // zeitabhängige Knotenlasten
             else if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(item.Name, out var zeitKnotenlast))
-                ZeitKnotenlastNeu(zeitKnotenlast);
-
+            {
+                _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell, zeitKnotenlast);
+                IsZeitKnotenlast = true;
+            }
         }
 
         // click auf Textdarstellungen
@@ -474,31 +514,43 @@ public partial class TragwerkmodellVisualisieren
             // Textdarstellung ist eine Knotenlast
             else if (_modell.Lasten.TryGetValue(item.Text, out var knotenlast))
             {
-                KnotenlastNeu(knotenlast);
+                _knotenlastNeu = new KnotenlastNeu(_modell, knotenlast);
+                IsKnotenlast = true;
             }
-
             // Textdarstellung ist eine Elementlast (Linienlast)
             else if (_modell.ElementLasten.TryGetValue(item.Text, out var linienlast))
             {
-                LinienlastNeu(linienlast);
+                _linienlastNeu = new LinienlastNeu(_modell, linienlast);
+                IsLinienlast = true;
             }
-
             // Textdarstellung ist eine Punktlast
-            else if (_modell.PunktLasten.TryGetValue(item.Text, out var punktlast))
+            else if (_modell.PunktLasten.TryGetValue(item.Text, out var last))
             {
-                PunktlastNeu(punktlast);
+                var punktlast = (PunktLast)last;
+                _punktlastNeu = new PunktlastNeu(_modell, punktlast);
+                IsLinienlast = true;
             }
 
             // Textdarstellung ist ein Lager
             else if (_modell.Randbedingungen.TryGetValue(item.Text, out var lager))
             {
-                LagerNeu(lager);
+                _lagerNeu = new LagerNeu(_modell, lager);
+                IsLager = true;
             }
 
+            // Textdarstellung ist eine Anfangsbedingung
+            else if (_modell.Zeitintegration.Anfangsbedingungen.Count > 0)
+            {
+
+
+                _zeitKnotenanfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell);
+                IsZeitKnotenanfangswerte = true;
+            }
             // Textdarstellung ist eine zeitveränderliche Knotenlast
             else if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(item.Text, out var zeitKnotenlast))
             {
-                ZeitKnotenlastNeu(zeitKnotenlast);
+                _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell, zeitKnotenlast);
+                IsZeitKnotenlast = true;
             }
         }
     }
@@ -729,35 +781,6 @@ public partial class TragwerkmodellVisualisieren
                 }
         }
         IsElement = true;
-    }
-
-    private void KnotenlastNeu(AbstraktLast knotenlast)
-    {
-        _knotenlastNeu = new KnotenlastNeu(_modell, knotenlast);
-        IsKnotenlast = true;
-    }
-    private void LinienlastNeu(AbstraktElementLast linienlast)
-    {
-        _linienlastNeu = new LinienlastNeu(_modell, linienlast);
-        IsLinienlast = true;
-    }
-    private void PunktlastNeu(AbstraktElementLast punktLast)
-    {
-        var punktlast = (PunktLast)punktLast;
-        _punktlastNeu = new PunktlastNeu(_modell, punktlast);
-        IsLinienlast = true;
-    }
-
-    private void LagerNeu(AbstraktRandbedingung lager)
-    {
-        _lagerNeu = new LagerNeu(_modell, lager);
-        IsLager = true;
-    }
-
-    private void ZeitKnotenlastNeu(AbstraktZeitabhängigeKnotenlast zeitKnotenlast)
-    {
-        _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell, zeitKnotenlast);
-        IsZeitKnotenlast = true;
     }
 
     private HitTestResultBehavior HitTestCallBack(HitTestResult result)

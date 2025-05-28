@@ -12,62 +12,61 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
             Show();
 
             // Festlegung der Zeitachse
-            var dt = feModell.Zeitintegration.Dt;
             const double tmin = 0;
             var tmax = feModell.Zeitintegration.Tmax;
+            var nZeitschritte = (int)(tmax / feModell.Zeitintegration.Dt) + 1;
+            var funktion = new double[nZeitschritte];
 
             // Initialisierung der Zeichenfläche
             var darstellung = new Darstellung(feModell, VisualAnregung);
 
             foreach (var item in feModell.ZeitabhängigeKnotenLasten)
             {
-                List<double> werte = null;
                 switch (item.Value.VariationsTyp)
                 {
                     case 0:
-                        {
-                            const string inputDirectory =
-                                "\\FE-Berechnungen\\input\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
-                            // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
-                            werte = Berechnung.AusDatei(inputDirectory, feModell);
-                            dt = feModell.Zeitintegration.Dt;
-                            tmax = feModell.Zeitintegration.Tmax;
-                            break;
-                        }
+                        const string inputDirectory =
+                            "\\FE-Berechnungen\\input\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
+                        // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
+                        Berechnung.AusDatei(inputDirectory, -1, funktion, feModell);
+                        break;
                     case 1:
                         var intervall = item.Value.Intervall;
-                        werte = Berechnung.StückweiseLinear(feModell.Zeitintegration.Dt, intervall, feModell);
+                        Berechnung.StückweiseLinear(intervall, funktion, feModell);
                         break;
                     case 2:
-                        werte = Berechnung.Periodisch(feModell.Zeitintegration.Dt, item.Value, feModell);
+                        var amplitude = item.Value.Amplitude;
+                        var frequenz = item.Value.Frequenz;
+                        var winkel = item.Value.PhasenWinkel;
+                        Berechnung.Periodisch(amplitude, frequenz, winkel, funktion, feModell);
                         break;
                 }
 
-                if (werte == null || werte.Count == 0)
+                if (funktion is not { Length: not 0 })
                 {
                     MessageBox.Show("Keine Anregungswerte gefunden.");
                     return;
                 }
 
-                var anregungMax = werte.Max();
+                var anregungMax = funktion.Max();
+                if (anregungMax > double.Epsilon) anregungMax = 1;
                 var anregungMin = -anregungMax;
 
                 // Textdarstellung der Anregungsdauer mit Anzahl Datenpunkten und Zeitintervall
-                AnregungText(werte.Count * dt, werte.Count, dt, VisualAnregung);
+                AnregungText(item.Value.LastId, item.Value.KnotenId, funktion.Length * feModell.Zeitintegration.Dt, funktion.Length, feModell.Zeitintegration.Dt, VisualAnregung);
 
-                var funktion = new double[werte.Count];
-                for (var i = 0; i < werte.Count; i++) funktion[i] = werte[i];
                 darstellung.Koordinatensystem(tmin, tmax, anregungMax, anregungMin);
-                darstellung.ZeitverlaufZeichnen(dt, tmin, tmax, anregungMax, funktion);
+                darstellung.ZeitverlaufZeichnen(feModell.Zeitintegration.Dt, tmin, tmax, anregungMax, funktion);
                 break;
             }
         }
 
-        private static void AnregungText(double dauer, int nSteps, double dt, Canvas anregung)
+        private static void AnregungText(string id, string knoten, double dauer, int nSteps, double dt, Canvas anregung)
         {
-            var anregungsWerte = dauer.ToString("N2") + " [s] Anregung  mit "
-                                                      + nSteps + " Anregungswerten im Zeitschritt dt = " +
-                                                      dt.ToString("N3");
+            var anregungsWerte = "zeitabhängige Knotenlast " + id + " am Knoten " + "'" + knoten + "', "
+                                        + dauer.ToString("N2") + " [s] Anregung  mit "
+                                        + nSteps + " Anregungswerten im Zeitschritt dt = "
+                                        + dt.ToString("N3");
             var anregungTextBlock = new TextBlock
             {
                 FontSize = 12,

@@ -33,7 +33,7 @@ public partial class AnregungVisualisieren
     {
         const string inputDirectory = "\\FE-Berechnungen-App\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
         // lies Ordinatenwerte im Zeitintervall dt aus Datei
-        Berechnung.AusDatei(inputDirectory, 1, _anregung, _modell);
+        Berechnung.AusDatei(inputDirectory, 0, _anregung, _modell);
         _anregungMax = _anregung.Max();
         _anregungMin = -_anregungMax;
 

@@ -44,7 +44,7 @@
         <TextBox Name="Parameter" Grid.Row="2" Grid.Column="1" Margin="4,0,14,0" Height="20" VerticalAlignment="Center" />
 
         <Label Grid.Row="3" Grid.Column="0" Padding="0,0,0,0" Margin="7,2,60,32" Grid.ColumnSpan="2">
-            Zeitintervall für Integration Δt [s]
+            kritisches Zeitintervall für Integration
         </Label>
         <RichTextBox Grid.Row="3" Grid.Column="0" Margin="6,18,66,21" BorderThickness="0,0,0,0">
             <FlowDocument>

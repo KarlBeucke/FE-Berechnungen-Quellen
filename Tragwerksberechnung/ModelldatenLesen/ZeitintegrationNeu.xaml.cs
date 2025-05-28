@@ -199,7 +199,7 @@ public partial class ZeitintegrationNeu
 
     private void AnfangsbedingungNext(object sender, MouseButtonEventArgs e)
     {
-        // Aktuell beinhaltet die aktuelle Nummer der Anfangsbedingung in Bearbeitung
+        // _aktuell beinhaltet die aktuelle Nummer der Anfangsbedingung in Bearbeitung
         if (string.IsNullOrEmpty(Anfangsbedingungen.Text)) _aktuell = 1;
         else if (int.Parse(Anfangsbedingungen.Text) <= _modell.Zeitintegration.Anfangsbedingungen.Count) _aktuell++;
         else _aktuell = _modell.Zeitintegration.Anfangsbedingungen.Count + 1;
@@ -224,6 +224,7 @@ public partial class ZeitintegrationNeu
             return;
         }
 
+        // Daten für Zeitintegration sind noch nicht definiert, werden neu gelesen
         if (_modell.Zeitintegration == null)
         {
             short methode;
@@ -350,6 +351,8 @@ public partial class ZeitintegrationNeu
 
             _modell.ZeitintegrationDaten = true;
         }
+
+        // Daten für Zeitintegration sind bereits definiert, werden aktualisiert
         else
         {
             try
@@ -379,12 +382,14 @@ public partial class ZeitintegrationNeu
                 _ = MessageBox.Show("maximale Integrationszeit hat falsches Format", "neue Zeitintegration");
             }
 
+            // Dämpfungsraten werden gelöscht, wenn Eingabe leer ist
             if (Dämpfungsraten.Text.Length == 0)
             {
                 if (_modell.Eigenzustand.DämpfungsRaten.Count > 0) _modell.Eigenzustand.DämpfungsRaten.Clear();
                 Eigen.Text = "";
                 _eigenform = 0;
             }
+            // Dämpfungsraten werden aktualisiert, wenn Eingabe nicht leer ist
             else
             {
                 try
@@ -448,7 +453,7 @@ public partial class ZeitintegrationNeu
                 }
             }
         }
-        _anfangswerteNeu.Close();
+        _anfangswerteNeu?.Close();
         Close();
     }
 

@@ -4,11 +4,11 @@ using System.Globalization;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
-public partial class ZeitRandtemperaturNeu
+public partial class ZeitRandbedingungNeu
 {
     private readonly FeModell _modell;
     public string AktuelleId;
-    public ZeitRandtemperaturNeu(FeModell modell)
+    public ZeitRandbedingungNeu(FeModell modell)
     {
         _modell = modell;
         InitializeComponent();
@@ -161,6 +161,7 @@ public partial class ZeitRandtemperaturNeu
         StartFenster.WärmeVisual.Close();
         StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
         StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -182,7 +183,8 @@ public partial class ZeitRandtemperaturNeu
     private void RandbedingungIdLostFocus(object sender, RoutedEventArgs e)
     {
         // neue zeitabhängige Randbedingungsdefinition
-        if (!_modell.ZeitabhängigeRandbedingung.ContainsKey(RandbedingungId.Text)) return;
+        if (!_modell.ZeitabhängigeRandbedingung.TryGetValue(RandbedingungId.Text,
+                out var vorhandeneZeitKnotenlast)) return;
 
         // vorhandene zeitabhängige Randbedingungsdefinitionen
         if (!_modell.ZeitabhängigeRandbedingung.TryGetValue(RandbedingungId.Text, out var vorhandeneRandbedingung)) return;
@@ -233,7 +235,7 @@ public partial class ZeitRandtemperaturNeu
         {
             KnotenId.Text = vorhandenerKnoten.Id;
             if (RandbedingungId.Text != "") return;
-            RandbedingungId.Text = "zRb_" + KnotenId.Text;
+            RandbedingungId.Text = "zRb" + KnotenId.Text;
             AktuelleId = RandbedingungId.Text;
         }
     }

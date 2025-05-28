@@ -94,64 +94,60 @@ public class TransientParser
                 var supportId = teilStrings[0];
                 var nodeId = teilStrings[1];
 
-                ZeitabhängigeRandbedingung zeitabhängigeRandbedingung = null;
-                if (teilStrings.Length < 3)
-                    throw new ParseAusnahme(i + 2 + ":\nZeitabhängige Randbedingungen, falsche Anzahl Parameter");
-                switch (teilStrings[2])
+                ZeitabhängigeRandbedingung zeitabhängigeRandbedingung;
+                switch (teilStrings.Length)
                 {
-                    case "datei":
-                        {
-                            const bool datei = true;
-                            zeitabhängigeRandbedingung =
-                                new ZeitabhängigeRandbedingung(nodeId, datei)
-                                { RandbedingungId = supportId, VariationsTyp = 0, Vordefiniert = new double[1] };
-                            break;
-                        }
-                    case "konstant":
-                        {
-                            if (teilStrings.Length != 4)
-                                throw new ParseAusnahme(i + 2 +
-                                                        ":\nZeitabhängige Randbedingungen konstant, falsche Anzahl Parameter");
-                            var konstanteTemperatur = double.Parse(teilStrings[3]);
-                            zeitabhängigeRandbedingung =
-                                new ZeitabhängigeRandbedingung(nodeId, konstanteTemperatur)
-                                { RandbedingungId = supportId, VariationsTyp = 1, Vordefiniert = new double[1] };
-                            break;
-                        }
-                    case "harmonisch":
-                        {
-                            if (teilStrings.Length != 6)
-                                throw new ParseAusnahme(i + 2 +
-                                                        ":\nZeitabhängige Randbedingungen harmonisch, falsche Anzahl Parameter");
-                            var amplitude = double.Parse(teilStrings[3]);
-                            var frequenz = double.Parse(teilStrings[4]);
-                            var phasenWinkel = double.Parse(teilStrings[5]);
-                            zeitabhängigeRandbedingung =
-                                new ZeitabhängigeRandbedingung(nodeId, amplitude, frequenz, phasenWinkel)
-                                { RandbedingungId = supportId, VariationsTyp = 2, Vordefiniert = new double[1] };
-                            break;
-                        }
-                    case "linear":
-                        {
-                            if (teilStrings.Length < 5)
-                                throw new ParseAusnahme(i + 2 +
-                                                        ":\nZeitabhängige Randbedingungen linear, falsche Anzahl Parameter");
-                            var k = 0;
-                            char[] paarDelimiter = [';'];
-                            var interval = new double[2 * (teilStrings.Length - 3)];
+                    case 3:
+                        const bool datei = true;
+                        zeitabhängigeRandbedingung =
+                            new ZeitabhängigeRandbedingung(nodeId, datei)
+                            { RandbedingungId = supportId, VariationsTyp = 0, Vordefiniert = new double[1] };
+                        break;
 
-                            for (var j = 3; j < teilStrings.Length; j++)
-                            {
-                                var wertePaar = teilStrings[j].Split(paarDelimiter);
-                                interval[k] = double.Parse(wertePaar[0]);
-                                interval[k + 1] = double.Parse(wertePaar[1]);
-                                k += 2;
-                            }
+                    case 4:
+                        if (teilStrings.Length != 4)
+                            throw new ParseAusnahme(i + 2 +
+                                                    ":\nZeitabhängige Randbedingungen konstant, falsche Anzahl Parameter");
+                        var konstanteTemperatur = double.Parse(teilStrings[3]);
+                        zeitabhängigeRandbedingung =
+                            new ZeitabhängigeRandbedingung(nodeId, konstanteTemperatur)
+                            { RandbedingungId = supportId, VariationsTyp = 1, Vordefiniert = new double[1] };
+                        break;
 
-                            zeitabhängigeRandbedingung = new ZeitabhängigeRandbedingung(nodeId, interval)
-                            { RandbedingungId = supportId, VariationsTyp = 3, Vordefiniert = new double[1] };
-                            break;
+                    case 6:
+                        if (teilStrings.Length != 6)
+                            throw new ParseAusnahme(i + 2 +
+                                                    ":\nZeitabhängige Randbedingungen harmonisch, falsche Anzahl Parameter");
+                        var amplitude = double.Parse(teilStrings[3]);
+                        var frequenz = double.Parse(teilStrings[4]);
+                        var phasenWinkel = double.Parse(teilStrings[5]);
+                        zeitabhängigeRandbedingung =
+                            new ZeitabhängigeRandbedingung(nodeId, amplitude, frequenz, phasenWinkel)
+                            { RandbedingungId = supportId, VariationsTyp = 2, Vordefiniert = new double[1] };
+                        break;
+
+                    case >= 5:
+                        if (teilStrings.Length < 5)
+                            throw new ParseAusnahme(i + 2 +
+                                                    ":\nZeitabhängige Randbedingungen linear, falsche Anzahl Parameter");
+                        var k = 0;
+                        char[] paarDelimiter = [';'];
+                        var interval = new double[2 * (teilStrings.Length - 3)];
+
+                        for (var j = 3; j < teilStrings.Length; j++)
+                        {
+                            var wertePaar = teilStrings[j].Split(paarDelimiter);
+                            interval[k] = double.Parse(wertePaar[0]);
+                            interval[k + 1] = double.Parse(wertePaar[1]);
+                            k += 2;
                         }
+
+                        zeitabhängigeRandbedingung = new ZeitabhängigeRandbedingung(nodeId, interval)
+                        { RandbedingungId = supportId, VariationsTyp = 3, Vordefiniert = new double[1] };
+                        break;
+
+                    default:
+                        throw new ParseAusnahme(i + 2 + ":\nZeitabhängige Randbedingungen, falsche Anzahl Parameter");
                 }
 
                 feModell.ZeitabhängigeRandbedingung.Add(supportId, zeitabhängigeRandbedingung);
@@ -177,49 +173,48 @@ public class TransientParser
                 var lastId = teilStrings[0];
                 var knotenId = teilStrings[1];
 
-                ZeitabhängigeKnotenLast zeitabhängigeKnotenLast = null;
+                ZeitabhängigeKnotenLast zeitabhängigeKnotenLast;
 
-                switch (teilStrings[2])
+                switch (teilStrings.Length)
                 {
-                    case "datei":
-                        {
-                            zeitabhängigeKnotenLast =
-                                new ZeitabhängigeKnotenLast(knotenId, true) { LastId = lastId };
-                            break;
-                        }
-                    case "harmonisch":
-                        {
-                            if (teilStrings.Length != 6)
-                                throw new ParseAusnahme(i + 2 +
-                                                        ":\nZeitabhängige Knotenlast harmonisch, falsche Anzahl Parameter");
-                            var amplitude = double.Parse(teilStrings[3]);
-                            var frequenz = double.Parse(teilStrings[4]);
-                            var phasenWinkel = double.Parse(teilStrings[5]);
-                            zeitabhängigeKnotenLast =
-                                new ZeitabhängigeKnotenLast(knotenId, amplitude, frequenz, phasenWinkel)
-                                { LastId = lastId };
-                            break;
-                        }
-                    case "linear":
-                        {
-                            if (teilStrings.Length < 5)
-                                throw new ParseAusnahme(i + 2 +
-                                                        ":\nZeitabhängige Knotenlast linear, falsche Anzahl Parameter");
-                            var k = 0;
-                            char[] paarDelimiter = [';'];
-                            var intervall = new double[2 * (teilStrings.Length - 3)];
-                            for (var j = 3; j < teilStrings.Length; j++)
-                            {
-                                var wertePaar = teilStrings[j].Split(paarDelimiter);
-                                intervall[k] = double.Parse(wertePaar[0]);
-                                intervall[k + 1] = double.Parse(wertePaar[1]);
-                                k += 2;
-                            }
+                    case 3:
+                        zeitabhängigeKnotenLast =
+                            new ZeitabhängigeKnotenLast(knotenId, true) { LastId = lastId };
+                        break;
 
-                            zeitabhängigeKnotenLast =
-                                new ZeitabhängigeKnotenLast(knotenId, intervall) { LastId = lastId };
-                            break;
+                    case 6:
+                        if (teilStrings.Length != 6)
+                            throw new ParseAusnahme(i + 2 +
+                                                    ":\nZeitabhängige Knotenlast harmonisch, falsche Anzahl Parameter");
+                        var amplitude = double.Parse(teilStrings[3]);
+                        var frequenz = double.Parse(teilStrings[4]);
+                        var phasenWinkel = double.Parse(teilStrings[5]);
+                        zeitabhängigeKnotenLast =
+                            new ZeitabhängigeKnotenLast(knotenId, amplitude, frequenz, phasenWinkel)
+                            { LastId = lastId };
+                        break;
+
+                    case >= 5:
+                        if (teilStrings.Length < 5)
+                            throw new ParseAusnahme(i + 2 +
+                                                    ":\nZeitabhängige Knotenlast linear, falsche Anzahl Parameter");
+                        var k = 0;
+                        char[] paarDelimiter = [';'];
+                        var intervall = new double[2 * (teilStrings.Length - 3)];
+                        for (var j = 3; j < teilStrings.Length; j++)
+                        {
+                            var wertePaar = teilStrings[j].Split(paarDelimiter);
+                            intervall[k] = double.Parse(wertePaar[0]);
+                            intervall[k + 1] = double.Parse(wertePaar[1]);
+                            k += 2;
                         }
+
+                        zeitabhängigeKnotenLast =
+                            new ZeitabhängigeKnotenLast(knotenId, intervall) { LastId = lastId };
+                        break;
+
+                    default:
+                        throw new ParseAusnahme(i + 2 + ":\nZeitabhängige Randbedingungen, falsche Anzahl Parameter");
                 }
 
                 feModell.ZeitabhängigeKnotenLasten.Add(lastId, zeitabhängigeKnotenLast);
@@ -241,24 +236,24 @@ public class TransientParser
                 var teilStrings = lines[i + 1].Split(delimiters);
                 var loadId = teilStrings[0];
                 var elementId = teilStrings[1];
-                ZeitabhängigeElementLast zeitabhängigeElementLast = null;
-                switch (teilStrings[2])
+                ZeitabhängigeElementLast zeitabhängigeElementLast;
+                switch (teilStrings.Length)
                 {
-                    case "konstant":
-                        {
-                            for (var k = 3; k < teilStrings.Length; k++)
-                                knotenWerte[k - 3] =
-                                    double.Parse(teilStrings[k]);
-                            zeitabhängigeElementLast =
-                                new ZeitabhängigeElementLast(elementId, knotenWerte) { LastId = loadId, VariationsTyp = 1 };
-                            break;
-                        }
+                    case > 4:
+                        for (var k = 3; k < teilStrings.Length; k++)
+                            knotenWerte[k - 3] =
+                                double.Parse(teilStrings[k]);
+                        zeitabhängigeElementLast =
+                            new ZeitabhängigeElementLast(elementId, knotenWerte) { LastId = loadId, VariationsTyp = 1 };
+                        break;
+
+                    default:
+                        throw new ParseAusnahme(i + 2 + ":\nZeitabhängige Randbedingungen, falsche Anzahl Parameter");
                 }
 
                 feModell.ZeitabhängigeElementLasten.Add(loadId, zeitabhängigeElementLast);
                 i++;
             } while (lines[i + 1].Length != 0);
-
             break;
         }
     }
@@ -266,20 +261,11 @@ public class TransientParser
     [Serializable]
     private class ParseException : Exception
     {
-        public ParseException()
-        {
-        }
+        public ParseException() { }
 
-        public ParseException(string message) : base(message)
-        {
-        }
+        public ParseException(string message) : base(message) { }
 
-        public ParseException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+        public ParseException(string message, Exception innerException) : base(message, innerException) { }
 
-        //protected ParseException(SerializationInfo info, StreamingContext context) : base(info, context)
-        //{
-        //}
     }
 }

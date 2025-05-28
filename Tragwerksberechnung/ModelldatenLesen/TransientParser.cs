@@ -147,75 +147,70 @@ internal class TransientParser
             var boden = false;
             i++;
 
-            try
+            do
             {
-                do
+                _substrings = lines[i].Split(_delimiters);
+                if (_substrings.Length != 3)
+                    throw new ParseAusnahme(i + 2 + ":\nZeitabhängige Knotenlast, falsche Anzahl Parameter");
+
+                var knotenLastId = _substrings[0];
+                var knotenId = _substrings[1];
+                if (knotenId == "boden") boden = true;
+                var knotenFreiheitsgrad = short.Parse(_substrings[2]);
+
+                _substrings = lines[i + 1].Split(_delimiters);
+                ZeitabhängigeKnotenLast zeitabhängigeKnotenLast;
+                switch (_substrings.Length)
                 {
-                    _substrings = lines[i].Split(_delimiters);
-                    if (_substrings.Length != 3)
-                        throw new ParseAusnahme(i + 2 + ":\nZeitabhängige Knotenlast, falsche Anzahl Parameter");
-
-                    var knotenLastId = _substrings[0];
-                    var knotenId = _substrings[1];
-                    if (knotenId == "boden") boden = true;
-                    var knotenFreiheitsgrad = short.Parse(_substrings[2]);
-
-                    _substrings = lines[i + 1].Split(_delimiters);
-                    ZeitabhängigeKnotenLast zeitabhängigeKnotenLast;
-                    switch (_substrings.Length)
-                    {
-                        // 1 Wert: lies Anregung (Lastvektor) aus Datei, Variationstyp = 0
-                        case 1:
-                            {
-                                zeitabhängigeKnotenLast =
-                                    new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, true, boden)
-                                    { VariationsTyp = 0 };
-                                AbstraktZeitabhängigeKnotenlast last = zeitabhängigeKnotenLast;
-                                feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, last);
-                                break;
-                            }
-                        // 3 Werte: harmonische Anregung, Variationstyp = 2
-                        case 3:
-                            {
-                                var amplitude = double.Parse(_substrings[0]);
-                                var circularFrequency = double.Parse(_substrings[1]);
-                                var phaseAngle = double.Parse(_substrings[2]);
-                                zeitabhängigeKnotenLast =
-                                    new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
-                                    {
-                                        Amplitude = amplitude,
-                                        Frequenz = circularFrequency,
-                                        PhasenWinkel = phaseAngle,
-                                        VariationsTyp = 2
-                                    };
-                                feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
-                                break;
-                            }
-                        // mehr als 3 Werte: lies Zeit-/Wert-Intervalle der Anregung mit linearer Interpolation, Variationstyp = 1
-                        // VariationsTyp = 1
-                        default:
-                            {
-                                var interval = new double[_substrings.Length];
-                                for (var j = 0; j < _substrings.Length; j += 2)
+                    // 1 Wert: lies Anregung (Lastvektor) aus Datei, Variationstyp = 0
+                    case 1:
+                        {
+                            zeitabhängigeKnotenLast =
+                                new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, true, boden)
+                                { VariationsTyp = 0 };
+                            AbstraktZeitabhängigeKnotenlast last = zeitabhängigeKnotenLast;
+                            feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, last);
+                            break;
+                        }
+                    // 3 Werte: harmonische Anregung, Variationstyp = 2
+                    case 3:
+                        {
+                            var amplitude = double.Parse(_substrings[0]);
+                            var circularFrequency = double.Parse(_substrings[1]);
+                            var phaseAngle = double.Parse(_substrings[2]);
+                            zeitabhängigeKnotenLast =
+                                new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
                                 {
-                                    interval[j] = double.Parse(_substrings[j]);
-                                    interval[j + 1] = double.Parse(_substrings[j + 1]);
-                                }
-
-                                zeitabhängigeKnotenLast =
-                                    new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
-                                    { Intervall = interval, VariationsTyp = 1 };
-                                feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
-                                break;
+                                    Amplitude = amplitude,
+                                    Frequenz = circularFrequency,
+                                    PhasenWinkel = phaseAngle,
+                                    VariationsTyp = 2
+                                };
+                            feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
+                            break;
+                        }
+                    // mehr als 3 Werte: lies Zeit-/Wert-Intervalle der Anregung mit linearer Interpolation, Variationstyp = 1
+                    // VariationsTyp = 1
+                    case > 3:
+                        {
+                            var interval = new double[_substrings.Length];
+                            for (var j = 0; j < _substrings.Length; j += 2)
+                            {
+                                interval[j] = double.Parse(_substrings[j]);
+                                interval[j + 1] = double.Parse(_substrings[j + 1]);
                             }
-                    }
-                    i += 2;
-                } while (lines[i].Length != 0);
-            }
-            catch (FormatException)
-            {
-                throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Knotenlast, ungültiges  Eingabeformat");
-            }
+
+                            zeitabhängigeKnotenLast =
+                                new ZeitabhängigeKnotenLast(knotenLastId, knotenId, knotenFreiheitsgrad, false, boden)
+                                { Intervall = interval, VariationsTyp = 1 };
+                            feModell.ZeitabhängigeKnotenLasten.Add(knotenLastId, zeitabhängigeKnotenLast);
+                            break;
+                        }
+                    default:
+                        throw new ParseAusnahme((i + 2) + ":\nZeitabhängige Knotenlast, ungültiges  Eingabeformat");
+                }
+                i += 2;
+            } while (lines[i].Length != 0);
         }
     }
 }

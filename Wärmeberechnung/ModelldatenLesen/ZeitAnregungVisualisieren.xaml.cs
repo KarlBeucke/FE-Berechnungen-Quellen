@@ -5,6 +5,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {
     public partial class ZeitAnregungVisualisieren
     {
+        private static string _typ = string.Empty;
         public ZeitAnregungVisualisieren(FeModell feModell)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
@@ -15,59 +16,135 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             var dt = feModell.Zeitintegration.Dt;
             const double tmin = 0;
             var tmax = feModell.Zeitintegration.Tmax;
+            var nZeitschritte = (int)(tmax / dt) + 1;
 
             // Initialisierung der Zeichenfläche
             var darstellung = new Darstellung(feModell, VisualAnregung);
+            var funktion = new double[nZeitschritte];
 
             foreach (var item in feModell.ZeitabhängigeKnotenLasten)
             {
-                List<double> werte = null;
+                _typ = "zeitabhängige Knotenlast ";
                 switch (item.Value.VariationsTyp)
                 {
                     case 0:
-                        {
-                            const string inputDirectory =
-                                "\\FE-Berechnungen\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
-                            // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
-                            werte = Berechnung.AusDatei(inputDirectory, feModell);
-                            dt = feModell.Zeitintegration.Dt;
-                            tmax = feModell.Zeitintegration.Tmax;
-                            break;
-                        }
+                        const string inputDirectory =
+                            "\\FE-Berechnungen\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                        // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
+                        // nur 1. Spalte lesen
+                        Berechnung.AusDatei(inputDirectory, 0, funktion, feModell);
+                        break;
                     case 1:
                         var intervall = item.Value.Intervall;
-                        werte = Berechnung.StückweiseLinear(feModell.Zeitintegration.Dt, intervall, feModell);
+                        Berechnung.StückweiseLinear(intervall, funktion, feModell);
                         break;
                     case 2:
-                        werte = Berechnung.Periodisch(feModell.Zeitintegration.Dt, item.Value, feModell);
+                        var amplitude = item.Value.Amplitude;
+                        var frequenz = item.Value.Frequenz;
+                        var winkel = item.Value.PhasenWinkel;
+                        Berechnung.Periodisch(amplitude, frequenz, winkel, funktion, feModell);
                         break;
                 }
 
-                if (werte == null || werte.Count == 0)
+                if (funktion.Length == 0)
                 {
                     MessageBox.Show("Keine Anregungswerte gefunden.");
                     return;
                 }
 
-                var anregungMax = werte.Max();
+                var anregungMax = funktion.Max();
                 var anregungMin = -anregungMax;
 
                 // Textdarstellung der Anregungsdauer mit Anzahl Datenpunkten und Zeitintervall
-                AnregungText(werte.Count * dt, werte.Count, dt, VisualAnregung);
+                AnregungText(item.Value.LastId, item.Value.KnotenId, funktion.Length * dt, funktion.Length, dt, VisualAnregung);
 
-                var funktion = new double[werte.Count];
-                for (var i = 0; i < werte.Count; i++) funktion[i] = werte[i];
+                //var funktion = new double[werte.Count];
+                darstellung.Koordinatensystem(tmin, tmax, anregungMax, anregungMin);
+                darstellung.ZeitverlaufZeichnen(dt, tmin, tmax, anregungMax, funktion);
+                break;
+            }
+
+            //if (feModell.ZeitabhängigeElementLasten.Any())
+            //{
+            foreach (var item in feModell.ZeitabhängigeElementLasten)
+            {
+                _typ = "zeitabhängige Elementlast ";
+                const string inputDirectory =
+                    "\\FE-Berechnungen\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
+                // nur 1. Spalte lesen
+                Berechnung.AusDatei(inputDirectory, 0, funktion, feModell);
+
+                if (funktion.Length == 0)
+                {
+                    MessageBox.Show("Keine Anregungswerte gefunden.");
+                    return;
+                }
+
+                var anregungMax = funktion.Max();
+                var anregungMin = -anregungMax;
+
+                // Textdarstellung der Anregungsdauer mit Anzahl Datenpunkten und Zeitintervall
+                AnregungText(item.Value.LastId, item.Value.KnotenId, funktion.Length * dt, funktion.Length, dt, VisualAnregung);
+
+                //var funktion = new double[werte.Count];
+                darstellung.Koordinatensystem(tmin, tmax, anregungMax, anregungMin);
+                darstellung.ZeitverlaufZeichnen(dt, tmin, tmax, anregungMax, funktion);
+                break;
+            }
+
+            foreach (var item in feModell.ZeitabhängigeRandbedingung)
+            {
+                _typ = "zeitabhängige Randbedingung ";
+                switch (item.Value.VariationsTyp)
+                {
+                    case 0:
+                        const string inputDirectory =
+                            "\\FE-Berechnungen\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                        // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
+                        // nur 1. Spalte lesen
+                        Berechnung.AusDatei(inputDirectory, 0, funktion, feModell);
+                        break;
+                    case 1:
+                        var intervall = item.Value.Intervall;
+                        Berechnung.StückweiseLinear(intervall, funktion, feModell);
+                        break;
+                    case 2:
+                        var amplitude = item.Value.Amplitude;
+                        var frequenz = item.Value.Frequenz;
+                        var winkel = item.Value.PhasenWinkel;
+                        Berechnung.Periodisch(amplitude, frequenz, winkel, funktion, feModell);
+                        break;
+                }
+
+                if (funktion.Length == 0)
+                {
+                    MessageBox.Show("Keine Anregungswerte gefunden.");
+                    return;
+                }
+
+                var anregungMax = funktion.Max();
+                if (anregungMax > double.Epsilon) anregungMax = 1;
+                var anregungMin = -anregungMax;
+
+                // Textdarstellung der Anregungsdauer mit Anzahl Datenpunkten und Zeitintervall
+                AnregungText(item.Value.RandbedingungId, item.Value.KnotenId, funktion.Length * dt, funktion.Length, dt, VisualAnregung);
+
+                //var funktion = new double[werte.Count];
                 darstellung.Koordinatensystem(tmin, tmax, anregungMax, anregungMin);
                 darstellung.ZeitverlaufZeichnen(dt, tmin, tmax, anregungMax, funktion);
                 break;
             }
         }
 
-        private static void AnregungText(double dauer, int nSteps, double dt, Canvas anregung)
+        private static void AnregungText(string id, string knoten, double dauer, int nSteps, double dt, Canvas anregung)
         {
-            var anregungsWerte = dauer.ToString("N2") + " [s] Anregung  mit "
-                                                      + nSteps + " Anregungswerten im Zeitschritt dt = " +
-                                                      dt.ToString("N3");
+            var tage = (dauer / 60 / 60 / 24).ToString("N2");
+            var anregungsWerte = _typ + "'" + id + "'" + " am Knoten " + "'" + knoten + "', "
+                                 + dauer.ToString("N0") + "s (" + tage + "Tage) Anregung  mit "
+                                 + nSteps + " Anregungswerten im Zeitschritt dt = "
+                                 + dt.ToString("N2");
+
             var anregungTextBlock = new TextBlock
             {
                 FontSize = 12,

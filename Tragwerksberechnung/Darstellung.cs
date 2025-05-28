@@ -26,8 +26,6 @@ public class Darstellung
     public double PlatzierungV, PlatzierungH;
 
     public int ÜberhöhungVerformung = 1, ÜberhöhungRotation = 1;
-    //public List<TextBlock> Anfangsbedingungen { get; }
-
 
     public Darstellung(FeModell feModell, Canvas visual)
     {
@@ -37,13 +35,15 @@ public class Darstellung
         KnotenIDs = [];
         LastIDs = [];
         LagerIDs = [];
+        DynamikIDs = [];
         Verformungen = [];
         LastVektoren = [];
+        DynamikVektoren = [];
         LagerDarstellung = [];
         NormalkraftListe = [];
         QuerkraftListe = [];
         MomenteListe = [];
-        //Anfangsbedingungen = [];
+        Anfangsbedingungen = [];
         MomentenMaxTexte = [];
         FestlegungAuflösung();
     }
@@ -52,10 +52,13 @@ public class Darstellung
     public List<object> KnotenIDs { get; }
     public List<object> LastIDs { get; }
     public List<object> LagerIDs { get; }
+    public List<object> DynamikIDs { get; }
     public List<object> MomentenMaxTexte { get; }
     public List<object> Verformungen { get; }
     public List<object> LastVektoren { get; }
     public List<object> LagerDarstellung { get; }
+    public List<TextBlock> Anfangsbedingungen { get; }
+    public List<object> DynamikVektoren { get; }
     public List<object> NormalkraftListe { get; }
     public List<object> QuerkraftListe { get; }
     public List<object> MomenteListe { get; }
@@ -559,7 +562,7 @@ public class Darstellung
         var pathFigure = new PathFigure { StartPoint = startPunkt };
         pathFigure.Segments.Add(new LineSegment(endPunkt, true));
 
-        // Gelenk am 1. Knoten des Biegebalken zeichnen
+        // Gelenk am 1. Knoten des Biegebalkens zeichnen
         if (element is BiegebalkenGelenk && element.Typ == 1)
         {
             direction = endPunkt - startPunkt;
@@ -576,7 +579,7 @@ public class Darstellung
             pathFigure.Segments.Add(new LineSegment(startPunkt, false));
         }
 
-        // Gelenk am 2. Knoten des Biegebalken zeichnen
+        // Gelenk am 2. Knoten des Biegebalkens zeichnen
         if (element is BiegebalkenGelenk && element.Typ == 2)
         {
             direction = startPunkt - endPunkt;
@@ -733,32 +736,6 @@ public class Darstellung
                 Fill = myBrush,
                 Stroke = Red,
                 StrokeThickness = 1,
-                Data = pathGeometry
-            };
-            LastVektoren.Add(path);
-
-            SetLeft(path, PlatzierungH);
-            SetTop(path, PlatzierungV);
-            _visual.Children.Add(path);
-        }
-
-        foreach (var item in _modell.ZeitabhängigeKnotenLasten)
-        {
-            last = item.Value;
-            last.LastId = item.Key;
-            var test = (AbstraktKnotenlast)last;
-            var dof = test.KnotenFreiheitsgrad;
-
-            var lastwerte = new double[2];
-            lastwerte[dof] = 1;
-            last.Lastwerte = lastwerte;
-
-            var pathGeometry = KnotenlastZeichnen(last);
-            path = new Path
-            {
-                Name = last.LastId,
-                Stroke = DarkRed,
-                StrokeThickness = 3,
                 Data = pathGeometry
             };
             LastVektoren.Add(path);
@@ -1000,7 +977,8 @@ public class Darstellung
             LastIDs.Add(id);
         }
 
-        foreach (var item in _modell.ElementLasten.Where(item => item.Value is LinienLast))
+        foreach (var item in _modell.ElementLasten.
+                     Where(item => item.Value is LinienLast))
         {
             const int elementOffset = -20;
 
@@ -1038,39 +1016,13 @@ public class Darstellung
             _visual.Children.Add(id);
             LastIDs.Add(id);
         }
-
-        foreach (var item in _modell.ZeitabhängigeKnotenLasten)
-        {
-            if (item.Value is null) continue;
-            var id = new TextBlock
-            {
-                FontSize = 12,
-                Text = item.Key,
-                Foreground = DarkRed
-            };
-            Knoten lastKnoten;
-            if (item.Value.KnotenId == "boden")
-            {
-                lastKnoten = item.Value.Knoten;
-            }
-            else if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out lastKnoten))
-            {
-                throw new ModellAusnahme("\nBiegebalken Lastknoten '" + item.Value.KnotenId + "' nicht im Modell gefunden");
-            }
-            _platzierungText = TransformKnoten(lastKnoten, Auflösung, MaxY);
-            const int knotenOffset = 20;
-            SetTop(id, _platzierungText.Y + PlatzierungV - knotenOffset);
-            SetLeft(id, _platzierungText.X + PlatzierungH);
-            _visual.Children.Add(id);
-            LastIDs.Add(id);
-        }
     }
 
     public void LagerZeichnen()
     {
-        foreach (var item in _modell.Randbedingungen)
+        foreach (var lager in _modell.Randbedingungen.
+                     Select(item => item.Value))
         {
-            var lager = item.Value;
             PathGeometry pathGeometry;
 
             if (!_modell.Knoten.TryGetValue(lager.KnotenId, out var lagerKnoten))
@@ -1304,33 +1256,87 @@ public class Darstellung
         }
     }
 
-    //public void AnfangsbedingungenZeichnen(string knotenId, double knotenwert, string anf)
-    //{
-    //    const int randOffset = 15;
-    //    // zeichne den Wert einer Anfangsbedingung als Text an Knoten
+    public void DynamikLastenZeichnen()
+    {
+        foreach (var item in _modell.ZeitabhängigeKnotenLasten)
+        {
+            AbstraktLast last = item.Value;
+            last.LastId = item.Key;
+            var test = (AbstraktKnotenlast)last;
+            var dof = test.KnotenFreiheitsgrad;
 
-    //    if (_modell.Knoten.TryGetValue(knotenId, out _knoten)) { }
-    //    var fensterKnoten = TransformKnoten(_knoten, Auflösung, MaxY);
+            var lastwerte = new double[2];
+            lastwerte[dof] = 1;
+            last.Lastwerte = lastwerte;
 
-    //    var anfangsbedingung = new TextBlock
-    //    {
-    //        Name = "Anfangsbedingung",
-    //        Uid = anf,
-    //        FontSize = 12,
-    //        Text = knotenwert.ToString("N2"),
-    //        Foreground = Black,
-    //        Background = Turquoise
-    //    };
-    //    SetTop(anfangsbedingung, fensterKnoten. Y + RandOben + randOffset);
-    //    SetLeft(anfangsbedingung, fensterKnoten. X + RandLinks);
-    //    _visual.Children.Add(anfangsbedingung);
-    //    Anfangsbedingungen.Add(anfangsbedingung);
-    //}
-    //public void AnfangsbedingungenEntfernen()
-    //{
-    //    foreach (var item in Anfangsbedingungen) _visual.Children.Remove(item);
-    //    Anfangsbedingungen.Clear();
-    //}
+            var pathGeometry = KnotenlastZeichnen(last);
+            Shape path = new Path
+            {
+                Name = last.LastId,
+                Stroke = DarkRed,
+                StrokeThickness = 3,
+                Data = pathGeometry
+            };
+            DynamikVektoren.Add(path);
+
+            SetLeft(path, PlatzierungH);
+            SetTop(path, PlatzierungV);
+            _visual.Children.Add(path);
+        }
+    }
+    public void DynamikTexte()
+    {
+        // Anfangsbedingung als Text an Knoten
+        foreach (var knotenId in _modell.Zeitintegration.Anfangsbedingungen.Select(anfang => anfang.KnotenId))
+        {
+            if (_modell.Knoten.TryGetValue(knotenId, out _knoten)) { }
+            var fensterKnoten = TransformKnoten(_knoten, Auflösung, MaxY);
+
+            var anfangsbedingung = new TextBlock
+            {
+                Name = "Anfangsbedingung",
+                FontSize = 12,
+                Text = "A" + knotenId,
+                Foreground = Black,
+                Background = Turquoise
+            };
+            const int anfangSymbol = 40;
+            SetTop(anfangsbedingung, _platzierungText.Y + PlatzierungV + anfangSymbol);
+            SetLeft(anfangsbedingung, fensterKnoten.X + RandLinks);
+            _visual.Children.Add(anfangsbedingung);
+            DynamikIDs.Add(anfangsbedingung);
+        }
+
+        // zeitabhängige KnotenLasten
+        foreach (var item in _modell.ZeitabhängigeKnotenLasten)
+        {
+            if (item.Value is null) continue;
+            var id = new TextBlock
+            {
+                FontSize = 12,
+                Text = item.Key,
+                Foreground = DarkRed
+            };
+            Knoten lastKnoten;
+            if (item.Value.KnotenId == "boden")
+            {
+                lastKnoten = item.Value.Knoten;
+            }
+            else if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out lastKnoten))
+            {
+                throw new ModellAusnahme("\nBiegebalken Lastknoten '" + item.Value.KnotenId +
+                                         "' nicht im Modell gefunden");
+            }
+
+            _platzierungText = TransformKnoten(lastKnoten, Auflösung, MaxY);
+            const int knotenOffset = 20;
+            SetTop(id, _platzierungText.Y + PlatzierungV - knotenOffset);
+            SetLeft(id, _platzierungText.X + PlatzierungH);
+            _visual.Children.Add(id);
+            DynamikIDs.Add(id);
+        }
+    }
+
 
     //public void Beschleunigungen_Zeichnen()
     //{

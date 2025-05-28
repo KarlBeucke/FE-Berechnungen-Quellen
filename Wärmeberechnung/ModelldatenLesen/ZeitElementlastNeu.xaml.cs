@@ -1,5 +1,6 @@
 ﻿using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
+using System.Globalization;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen;
 
@@ -7,10 +8,24 @@ public partial class ZeitElementlastNeu
 {
     private readonly FeModell _modell;
     public string AktuelleId;
+
     public ZeitElementlastNeu(FeModell modell)
     {
         _modell = modell;
         InitializeComponent();
+        Show();
+    }
+    public ZeitElementlastNeu(FeModell modell, AbstraktZeitabhängigeElementLast zeitElementlast)
+    {
+        InitializeComponent();
+        _modell = modell;
+        LastId.Text = zeitElementlast.LastId;
+        AktuelleId = zeitElementlast.LastId;
+        ElementId.Text = zeitElementlast.ElementId;
+        P0.Text = zeitElementlast.P[0].ToString(CultureInfo.CurrentCulture);
+        P1.Text = zeitElementlast.P[1].ToString(CultureInfo.CurrentCulture);
+        P2.Text = zeitElementlast.P[2].ToString(CultureInfo.CurrentCulture);
+        P3.Text = zeitElementlast.P[3].ToString(CultureInfo.CurrentCulture);
         Show();
     }
 
@@ -68,14 +83,18 @@ public partial class ZeitElementlastNeu
             StartFenster.WärmeVisual.IsZeitElementtemperatur = true;
         }
 
+        if (AktuelleId != LastId.Text) _modell.ZeitabhängigeElementLasten.Remove(AktuelleId);
+
         Close();
         StartFenster.WärmeVisual.Close();
         StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
         StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
+        StartFenster.WärmeVisual.IsZeitElementtemperatur = false;
         Close();
     }
 
@@ -86,28 +105,37 @@ public partial class ZeitElementlastNeu
         StartFenster.WärmeVisual.Close();
         StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
         StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void LastIdLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!_modell.ZeitabhängigeElementLasten.ContainsKey(LastId.Text))
-        {
-            ElementId.Text = "";
-            P0.Text = "";
-            P1.Text = "";
-            P2.Text = "";
-            P3.Text = "";
-            return;
-        }
+        if (!_modell.ZeitabhängigeElementLasten.TryGetValue(LastId.Text,
+                out var vorhandeneZeitElementlast)) return;
 
         // vorhandene zeitabhängige Elementlastdefinition
-        if (!_modell.ZeitabhängigeElementLasten.TryGetValue(LastId.Text, out var vorhandeneLast)) return;
-        LastId.Text = vorhandeneLast.LastId;
+        LastId.Text = vorhandeneZeitElementlast.LastId;
+        ElementId.Text = vorhandeneZeitElementlast.ElementId;
+        P0.Text = vorhandeneZeitElementlast.P[0].ToString("G2");
+        P1.Text = vorhandeneZeitElementlast.P[1].ToString("G2");
+        P2.Text = vorhandeneZeitElementlast.P[2].ToString("G2");
+        P3.Text = vorhandeneZeitElementlast.P[3].ToString("G2");
+        Show();
+    }
 
-        ElementId.Text = vorhandeneLast.ElementId;
-        P0.Text = vorhandeneLast.Lastwerte[0].ToString("G2");
-        P1.Text = vorhandeneLast.Lastwerte[1].ToString("G2");
-        P2.Text = vorhandeneLast.Lastwerte[2].ToString("G2");
-        P3.Text = vorhandeneLast.Lastwerte[3].ToString("G2");
+    private void ElementIdLostFocus(object sender, RoutedEventArgs e)
+    {
+        if (!_modell.Knoten.TryGetValue(ElementId.Text, out var vorhandenesElement))
+        {
+            LastId.Text = "";
+            ElementId.Text = "";
+        }
+        else
+        {
+            ElementId.Text = vorhandenesElement.Id;
+            if (LastId.Text != "") return;
+            LastId.Text = "zEl_" + ElementId.Text;
+            AktuelleId = LastId.Text;
+        }
     }
 }

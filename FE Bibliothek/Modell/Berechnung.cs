@@ -290,8 +290,8 @@ namespace FEBibliothek.Modell
         {
             var anzahlZustände = _modell.Eigenzustand.AnzahlZustände;
             // Anzahl der Eigenzustände muss ≤ sein der Anzahl der freien Systemfreiheitsgrade
-            var anzahlFreieDof=0;
-            for (var i = 0; i < _dimension; i++) 
+            var anzahlFreieDof = 0;
+            for (var i = 0; i < _dimension; i++)
                 if (!_systemGleichungen.Status[i]) anzahlFreieDof += 1;
             if (_modell.Eigenzustand.AnzahlZustände > anzahlFreieDof)
                 _modell.Eigenzustand.AnzahlZustände = anzahlFreieDof;
@@ -336,7 +336,7 @@ namespace FEBibliothek.Modell
             var eigenvektoren = new double[anzahlZustände][];
             for (var i = 0; i < anzahlZustände; i++)
             {
-                
+
                 eigenwerte[i] = eigenLöser.HolEigenwert(i);
                 eigenvektoren[i] = eigenLöser.HolEigenvektor(i);
             }
@@ -396,8 +396,8 @@ namespace FEBibliothek.Modell
             SetzZeitabhängigenStatusVektor();
 
             // berechne zeitabhängige Anregungsfunktion und Randbedingungen
-            BerechneAnregungsfunktionErsterOrdnung(dt, anregungsFunktion);
-            BerechneRandbedingungenErsterOrdnung(dt, temperatur);
+            BerechneAnregungsfunktionErsterOrdnung(anregungsFunktion);
+            BerechneRandbedingungenErsterOrdnung(temperatur);
 
             // Systemmatrix muss neu berechnet werden, falls Dreieckszerlegung gespeichert
             if (_zerlegt) { NeuberechnungSystemMatrix(); _zerlegt = false; }
@@ -425,7 +425,7 @@ namespace FEBibliothek.Modell
             }
             _modell.ZeitIntegration = true;
         }
-        private void SetzAnfangsbedingungenErsterOrdnung(IList<double[]> temperatur)
+        private void SetzAnfangsbedingungenErsterOrdnung(double[][] temperatur)
         {
             // setz stationäre Lösung als Anfangsbedingungen
             if (_modell.Zeitintegration.VonStationär) { temperatur[0] = _systemGleichungen.Primal; }
@@ -460,7 +460,7 @@ namespace FEBibliothek.Modell
             }
         }
         // zeitabhängige Knoten- und Elementlasten
-        private void BerechneAnregungsfunktionErsterOrdnung(double dt, double[][] temperatur)
+        private void BerechneAnregungsfunktionErsterOrdnung(double[][] temperatur)
         {
             var last = new double[temperatur.Length];
             var nZeitschritte = last.Length;
@@ -478,23 +478,22 @@ namespace FEBibliothek.Modell
                             {
                                 // Datei einlesen
                                 const string inputDirectory = @"\FE-Berechnungen\input\Wärmeberechnung\instationär\Anregungsdateien";
-                                const int spalte = -1;
+                                const int spalte = 0;
                                 AusDatei(inputDirectory, spalte, last, _modell);
                                 break;
                             }
                         case 1:
                             {
-                                StückweiseLinear(dt, item.Value.Intervall, last);
+                                StückweiseLinear(item.Value.Intervall, last, _modell);
                                 break;
                             }
                         case 2:
                             {
-                                Periodisch(dt, item.Value.Amplitude, item.Value.Frequenz, item.Value.PhasenWinkel, last);
+                                Periodisch(item.Value.Amplitude, item.Value.Frequenz, item.Value.PhasenWinkel, last, _modell);
                                 break;
                             }
                     }
-                    for (var k = 0; k < nZeitschritte; k++)
-                        temperatur[k][lastIndex[0]] = last[k];
+                    for (var k = 0; k < nZeitschritte; k++) temperatur[k][lastIndex[0]] = last[k];
                 }
                 else
                     throw new BerechnungAusnahme("\nKnoten " + item.Value.KnotenId + " für zeitabhängige Knotenlast ist nicht im Modell enthalten.");
@@ -516,7 +515,7 @@ namespace FEBibliothek.Modell
             }
         }
         // zeitabhängige vordefinierte Randbedingungen
-        private void BerechneRandbedingungenErsterOrdnung(double dt, double[][] temperatur)
+        private void BerechneRandbedingungenErsterOrdnung(double[][] temperatur)
         {
             var nZeitschritte = temperatur.Length;
             var vordefinierteTemperatur = new double[nZeitschritte];
@@ -535,7 +534,7 @@ namespace FEBibliothek.Modell
                                 _ = MessageBox.Show("Randbedingung " + item.Key + " Daten aus Datei", "Heat Transfer Analysis");
 
                                 const string inputDirectory = @"\FE-Berechnungen\input\Wärmeberechnung\instationär\Anregungsdateien";
-                                const int spalte = 1;
+                                const int spalte = 0;
                                 AusDatei(inputDirectory, spalte, vordefinierteTemperatur, _modell);
                                 break;
                             }
@@ -543,24 +542,17 @@ namespace FEBibliothek.Modell
                             {
                                 // konstant
                                 for (var k = 0; k < nZeitschritte; k++)
-                                {
                                     vordefinierteTemperatur[k] = item.Value.KonstanteTemperatur;
-                                }
                                 break;
                             }
                         case 2:
                             {
-                                // periodisch
-                                var amplitude = item.Value.Amplitude;
-                                var frequenz = item.Value.Frequenz;
-                                var phasenWinkel = item.Value.PhasenWinkel;
-                                Periodisch(dt, amplitude, frequenz, phasenWinkel, vordefinierteTemperatur);
+                                Periodisch(item.Value.Amplitude, item.Value.Frequenz, item.Value.PhasenWinkel, vordefinierteTemperatur, _modell);
                                 break;
                             }
                         case 3:
                             {
-                                var intervall = item.Value.Intervall;
-                                StückweiseLinear(dt, intervall, vordefinierteTemperatur);
+                                StückweiseLinear(item.Value.Intervall, vordefinierteTemperatur, _modell);
                                 break;
                             }
                     }
@@ -595,7 +587,7 @@ namespace FEBibliothek.Modell
             var dämpfungsmatrix = BerechneDämpfungsMatrix();
 
             // berechne zeitabhängige Anregungsfunktion und Randbedingungen
-            BerechneAnregungsfunktionZweiterOrdnung(dt, anregung);
+            BerechneAnregungsfunktionZweiterOrdnung(anregung);
 
             var verformung = new double[nZeitschritte][];
             for (var k = 0; k < nZeitschritte; k++) verformung[k] = new double[_dimension];
@@ -669,7 +661,7 @@ namespace FEBibliothek.Modell
                 modaleDämpfung[i] = ((ModaleWerte)_modell.Eigenzustand.DämpfungsRaten[i]).Dämpfung;
             }
             // ist nur ein Dämpfungsmaß gegeben, werden ALLE Eigenzustände damit belegt
-            if(_modell.Eigenzustand.DämpfungsRaten.Count == 1)
+            if (_modell.Eigenzustand.DämpfungsRaten.Count == 1)
             {
                 for (var i = 1; i < _modell.Eigenzustand.AnzahlZustände; i++)
                 {
@@ -697,7 +689,7 @@ namespace FEBibliothek.Modell
             }
             return dämpfungsMatrix;
         }
-        private void SetzRandbedingungenZweiterOrdnung(IReadOnlyList<double[]> displ, IReadOnlyList<double[]> veloc)
+        private void SetzRandbedingungenZweiterOrdnung(double[][] displ, double[][] veloc)
         {
             // finde vordefinierte Anfangsbedingungen
             foreach (var anf in _modell.Zeitintegration.Anfangsbedingungen)
@@ -726,12 +718,12 @@ namespace FEBibliothek.Modell
         }
 
         // zeitabhängige Knoteneinwirkungen
-        private void BerechneAnregungsfunktionZweiterOrdnung(double dt, IReadOnlyList<double[]> anregung)
+        private void BerechneAnregungsfunktionZweiterOrdnung(double[][] anregung)
         {
             // finde zeitabhängige Knoteneinwirkungen
             foreach (var item in _modell.ZeitabhängigeKnotenLasten)
             {
-                var last = new double[anregung.Count];
+                var last = new double[anregung.Length];
                 switch (item.Value.VariationsTyp)
                 {
                     case 0:
@@ -746,7 +738,7 @@ namespace FEBibliothek.Modell
                         {
                             var intervall = item.Value.Intervall;
                             // lineare Interpolation der abschnittweise linearen Eingabedaten im Zeitintervall dt
-                            StückweiseLinear(dt, intervall, last);
+                            StückweiseLinear(intervall, last, _modell);
                             break;
                         }
                     case 2:
@@ -755,7 +747,7 @@ namespace FEBibliothek.Modell
                             var frequenz = 2 * Math.PI * item.Value.Frequenz;
                             var phasenWinkel = Math.PI / 180 * item.Value.PhasenWinkel;
                             // periodische Anregung mit Ausgabe "last" im Zeitintervall dt
-                            Periodisch(dt, amplitude, frequenz, phasenWinkel, last);
+                            Periodisch(amplitude, frequenz, phasenWinkel, last, _modell);
                             break;
                         }
                 }
@@ -769,8 +761,8 @@ namespace FEBibliothek.Modell
                                  item2.Value.SystemIndizes).Where(index =>
                                  !_systemGleichungen.Status[index[knotenFreiheitsgrad]]))
                     {
-                        for (var k = 0; k < anregung.Count; k++)
-                            anregung[k][index[knotenFreiheitsgrad]] = 
+                        for (var k = 0; k < anregung.Length; k++)
+                            anregung[k][index[knotenFreiheitsgrad]] =
                                 -masse[index[knotenFreiheitsgrad]] * last[k];
                     }
                 }
@@ -779,13 +771,13 @@ namespace FEBibliothek.Modell
                 {
                     if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out _knoten))
                     {
-                        throw new BerechnungAusnahme("\nKnoten " + item.Value.KnotenId + 
+                        throw new BerechnungAusnahme("\nKnoten " + item.Value.KnotenId +
                                                      " für zeitabhängige Knotenlast ist nicht im Modell enthalten.");
                     }
                     var index = _knoten.SystemIndizes;
                     var knotenFreiheitsgrad = item.Value.KnotenFreiheitsgrad;
 
-                    for (var k = 0; k < anregung.Count; k++)
+                    for (var k = 0; k < anregung.Length; k++)
                         for (var j = 0; j < anregung[0].Length; j++)
                             anregung[k][index[knotenFreiheitsgrad]] = last[k];
                 }
@@ -793,10 +785,12 @@ namespace FEBibliothek.Modell
         }
 
         // zeitabhängige Eingabedaten
-        public static void AusDatei(string inputDirectory, int spalte, IList<double> last, FeModell modell)
-        {
-            string[] zeilen, substrings;
 
+        // Werte aus einer Spalte/alle Spalten(-spalte) einer auszuwählenden Datei lesen
+        // Lastfunktion in rufendem Programm initialisiert, Zeitschritt dt aus Modell oder Dateinamen 
+        // dt wird ggf. angepasst auf Daten in Anregungsdatei
+        public static void AusDatei(string inputDirectory, int spalte, double[] last, FeModell modell)
+        {
             var datei = new OpenFileDialog
             {
                 Filter = "All files (*.*)|*.*",
@@ -804,19 +798,26 @@ namespace FEBibliothek.Modell
             };
             datei.InitialDirectory += inputDirectory;
 
-            if (datei.ShowDialog() != true)
-                return;
+            if (datei.ShowDialog() != true) return;
             var pfad = datei.FileName;
 
-            // lies tmax und dt aus Dateinamen
+            // Datei enthält nur Anregungswerte im VORGEGEBENEM ZEITSCHRITT dt
+            // lies dt aus Dateinamen
             char[] delimiters = ['.'];
             var name = pfad.Split(delimiters);
-            if (name.Length > 2)
+            if (name.Length > 1)
             {
-                modell.Zeitintegration.Tmax = double.Parse(name[1]);
-                modell.Zeitintegration.Dt = double.Parse(name[2]);
+                var dt = double.Parse(name[1]);
+                if (Math.Abs(dt - modell.Zeitintegration.Dt) > double.Epsilon)
+                {
+                    modell.Zeitintegration.Dt = dt;
+                    _ = MessageBox.Show("Zeitschritt dt im Modell angepasst auf Daten in Anregungsdatei \ndt = "
+                                        + modell.Zeitintegration.Dt, " Berechnung.AusDatei");
+                }
             }
 
+            string[] zeilen;
+            delimiters = ['\t'];
             try
             {
                 zeilen = File.ReadAllLines(pfad);
@@ -826,39 +827,45 @@ namespace FEBibliothek.Modell
                 _ = MessageBox.Show(ex + " Anregungsfunktion konnte nicht aus Datei gelesen werden!!!", "Berechnung.AusDatei");
                 return;
             }
-            // Anregungsfunktion[nZeitschritte]
-            // Datei enthält nur Anregungswerte im VORGEGEBENEM ZEITSCHRITT dt
-            var werte = new List<double>();
+
             if (spalte < 0)
             {
                 // lies alle Werte einer Datei
+                var zähler = 0;
                 foreach (var zeile in zeilen)
                 {
-                    substrings = zeile.Split(delimiters);
-                    werte.AddRange(substrings.Select(double.Parse));
+                    var substrings = zeile.Split(delimiters);
+                    // lies nur so viel Werte, wie in last[] gespeichert werden können
+                    if ((zähler + substrings.Length) >= last.Length) break;
+                    foreach (var wert in substrings)
+                    {
+                        last[zähler] = double.Parse(wert);
+                        zähler++;
+                    }
                 }
             }
             else
             {
-                // lies alle Werte einer bestimmten Spalte col [][0-n]
-                foreach (var zeile in zeilen)
+                // lies alle Werte einer bestimmten Spalte [0-n]
+                var anzahl = last.Length;
+                if (zeilen.Length < anzahl) anzahl = zeilen.Length;
+                for (var i = 0; i < anzahl; i++)
                 {
-                    substrings = zeile.Split(delimiters);
-                    werte.Add(double.Parse(substrings[spalte - 1]));
+                    var zeile = zeilen[i].Split(delimiters);
+                    last[i] = double.Parse(zeile[spalte]);
                 }
-            }
-            if (werte.Count <= last.Count)
-            {
-                for (var i = 0; i < werte.Count; i++) { last[i] = werte[i]; }
-            }
-            else
-            {
-                for (var i = 0; i < last.Count; i++) { last[i] = werte[i]; }
             }
         }
-        public static List<double> AusDatei(string inputDirectory, FeModell modell)
+        // alle Werte aus einer auszuwählenden Datei lesen
+        // Zeitschritt dt und Maximalzeit tmax aus Modell oder Dateinamen
+        // Lastfunktion wird neu initialisiert (AnzahlZeitschritte im Modell) und zurückgegeben
+        // dt wird ggf. angepasst auf Daten in Anregungsdatei
+        public static double[] AusDatei(string inputDirectory, FeModell modell)
         {
-            var werte = new List<double>();
+            var tmax = modell.Zeitintegration.Tmax;
+            var nZeitschritte = (int)(tmax / modell.Zeitintegration.Dt) + 1;
+            var last = new double[nZeitschritte];
+
             var datei = new OpenFileDialog
             {
                 Filter = "All files (*.*)|*.*",
@@ -866,39 +873,56 @@ namespace FEBibliothek.Modell
             };
             datei.InitialDirectory += inputDirectory;
 
-            if (datei.ShowDialog() != true)
-                return null;
+            if (datei.ShowDialog() != true) return null;
             var pfad = datei.FileName;
 
+            // Anregungsfunktion[nZeitschritte]
+            // Datei enthält nur Anregungswerte im VORGEGEBENEM ZEITSCHRITT dt
             // lies tmax und dt aus Dateinamen
             char[] delimiters = ['.'];
             var name = pfad.Split(delimiters);
-            if (name.Length > 2)
+
+            if (name.Length > 1)
             {
-                modell.Zeitintegration.Tmax = double.Parse(name[1]);
-                modell.Zeitintegration.Dt = double.Parse(name[2]);
+                var dt = double.Parse(name[1]);
+                if (Math.Abs(dt - modell.Zeitintegration.Dt) > double.Epsilon)
+                {
+                    modell.Zeitintegration.Dt = dt;
+                    _ = MessageBox.Show("Zeitschritt dt im Modell angepasst auf Daten in Anregungsdatei \ndt = "
+                                        + modell.Zeitintegration.Dt, " Berechnung.AusDatei");
+                }
             }
-            
+
             delimiters = ['\t'];
             try
             {
+                // lies alle Werte einer Datei
                 var zeilen = File.ReadAllLines(pfad);
+                var zähler = 0;
                 foreach (var zeile in zeilen)
                 {
                     var substrings = zeile.Split(delimiters);
-                    werte.AddRange(substrings.Select(double.Parse));
+                    foreach (var wert in substrings)
+                    {
+                        last[zähler] = double.Parse(wert);
+                        zähler++;
+                    }
                 }
             }
             catch (IOException ex)
             {
-                _ = MessageBox.Show(ex + " Anregungsfunktion konnte nicht aus Datei gelesen werden!!!", "Berechnung AusDatei");
-                return werte;
+                _ = MessageBox.Show(ex + " Anregungsfunktion konnte nicht aus Datei gelesen werden!!!", "Berechnung.AusDatei");
             }
-            return werte;
+            return last;
         }
-        private static void StückweiseLinear(double dt, double[] intervall, double[] last)
+
+        // Zeitschritt dt und Maximalzeit tmax aus Modell 
+        // Werte aus Übergabeparameter Intervall (stückweise lineare Intervalle) berechnen
+        // dimensionierte Lastfunktion als Übergabeparameter
+        public static void StückweiseLinear(double[] intervall, double[] last, FeModell modell)
         {
-            int zähler = 0, nZeitschritte = last.Length;
+            var nZeitschritte = (int)(modell.Zeitintegration.Tmax / modell.Zeitintegration.Dt) + 1;
+            var zähler = 0;
             double endLast = 0;
             var startZeit = intervall[0];
             var startLast = intervall[1];
@@ -907,7 +931,7 @@ namespace FEBibliothek.Modell
             {
                 var endZeit = intervall[j];
                 endLast = intervall[j + 1];
-                var schritteJeIntervall = (int)(Math.Round((endZeit - startZeit) / dt));
+                var schritteJeIntervall = (int)(Math.Round((endZeit - startZeit) / modell.Zeitintegration.Dt));
                 var inkrement = (endLast - startLast) / schritteJeIntervall;
                 for (var k = 1; k <= schritteJeIntervall; k++)
                 {
@@ -920,61 +944,65 @@ namespace FEBibliothek.Modell
             }
             for (var k = zähler + 1; k < nZeitschritte; k++) last[k] = endLast;
         }
-        public static List<double> StückweiseLinear(double dt, double[] intervall, FeModell modell)
+
+        // Zeitschritt dt und Maximalzeit tmax als Übergabeparameter,
+        // Werte aus Übergabeparameter Intervall (stückweise lineare Intervalle) berechnen
+        // Lastfunktion wird neu erzeugt und zurückgegeben
+        public static double[] StückweiseLinear(double dt, double tmax, double[] intervall)
         {
-            var zähler = 0;
-            var tmax = modell.Zeitintegration.Tmax;
             var nZeitschritte = (int)(tmax / dt) + 1;
-            double endLast = 0;
-            var werte = new double[nZeitschritte];
+            var last = new double[nZeitschritte];
             var startZeit = intervall[0];
             var startLast = intervall[1];
-            werte[zähler] = startLast;
+
+            var zähler = 0;
+            last[zähler] = startLast;
             for (var j = 2; j < intervall.Length; j += 2)
             {
                 var endZeit = intervall[j];
-                endLast = intervall[j + 1];
+                var endLast = intervall[j + 1];
                 var schritteJeIntervall = (int)(Math.Round((endZeit - startZeit) / dt));
                 var inkrement = (endLast - startLast) / schritteJeIntervall;
                 for (var k = 1; k <= schritteJeIntervall; k++)
                 {
                     zähler++;
                     if (zähler == nZeitschritte) return null;
-                    werte[zähler] = werte[zähler - 1] + inkrement;
+                    last[zähler] = last[zähler - 1] + inkrement;
                 }
                 startZeit = endZeit;
                 startLast = endLast;
             }
-            for (var k = zähler + 1; k < nZeitschritte; k++) werte[k] = endLast;
-            var ordinaten = werte.ToList();
-            return ordinaten;
+            return last;
         }
-        private static void Periodisch(double dt, double amplitude, double frequenz, double phasenWinkel, double[] last)
+
+        // Zeitschritt dt und Maximalzeit tmax aus Modell
+        // Werte aus Übergabeparameter (Amplitude, Frequenz, Phasenwinkel) als periodische Anregung berechnen
+        // dimensionierte Lastfunktion als Übergabeparameter
+        public static void Periodisch(double amplitude, double frequenz, double phasenWinkel, double[] last, FeModell modell)
         {
-            var nZeitschritte = last.GetLength(0);
+            var tmax = modell.Zeitintegration.Tmax;
+            var nZeitschritte = (int)(tmax / modell.Zeitintegration.Dt) + 1;
             double zeit = 0;
+            for (var k = 0; k < nZeitschritte; k++)
+            {
+                last[k] = amplitude * Math.Sin(frequenz * zeit + phasenWinkel);
+                zeit += modell.Zeitintegration.Dt;
+            }
+        }
+        // Zeitschritt dt und Maximalzeit tmax als Übergabeparameter,
+        // Werte aus Übergabeparameter (Amplitude, Frequenz, Phasenwinkel) als periodische Anregung berechnen
+        // Lastfunktion wird neu erzeugt und zurückgegeben
+        public static double[] Periodisch(double dt, double tmax, double amplitude, double frequenz, double phasenWinkel)
+        {
+            var nZeitschritte = (int)(tmax / dt) + 1;
+            double zeit = 0;
+            var last = new double[nZeitschritte];
             for (var k = 0; k < nZeitschritte; k++)
             {
                 last[k] = amplitude * Math.Sin(frequenz * zeit + phasenWinkel);
                 zeit += dt;
             }
-        }
-        public static List<double> Periodisch(double dt, AbstraktZeitabhängigeKnotenlast zkl, FeModell modell)
-        {
-            var tmax = modell.Zeitintegration.Tmax;
-            var nZeitschritte = (int)(tmax / dt) + 1;
-            double zeit = 0;
-            var amplitude = zkl.Amplitude;
-            var frequenz = 2 * Math.PI * zkl.Frequenz;
-            var phasenWinkel = Math.PI / 180 * zkl.PhasenWinkel;
-            var werte = new double[nZeitschritte];
-            for (var k = 0; k < nZeitschritte; k++)
-            {
-                werte[k] = amplitude * Math.Sin(frequenz * zeit + phasenWinkel);
-                zeit += dt;
-            }
-            var ordinaten = werte.ToList();
-            return ordinaten;
+            return last;
         }
     }
 }

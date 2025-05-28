@@ -5,7 +5,6 @@ using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 using FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 using FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
@@ -508,8 +507,8 @@ public partial class StartFenster
     {
         if (_wärmeModell != null)
         {
-            _modellBerechnung ??= new Berechnung(_wärmeModell);
-            var anregung = new Wärmeberechnung.ModelldatenAnzeigen.AnregungVisualisieren(_wärmeModell);
+            //_modellBerechnung ??= new Berechnung(_wärmeModell);
+            var anregung = new Wärmeberechnung.ModelldatenLesen.ZeitAnregungVisualisieren(_wärmeModell);
             anregung.Show();
         }
         else
@@ -712,10 +711,10 @@ public partial class StartFenster
             var tragwerksLasten = new Tragwerksberechnung.ModelldatenLesen.LastParser();
             tragwerksLasten.ParseLasten(_dateiZeilen, _tragwerkModell);
 
-            var tragwerksRandbedingungen = new RandbedingungParser();
+            var tragwerksRandbedingungen = new Tragwerksberechnung.ModelldatenLesen.RandbedingungParser();
             tragwerksRandbedingungen.ParseRandbedingungen(_dateiZeilen, _tragwerkModell);
 
-            var tragwerksTransient = new TransientParser();
+            var tragwerksTransient = new Tragwerksberechnung.ModelldatenLesen.TransientParser();
             tragwerksTransient.ParseZeitintegration(_dateiZeilen, _tragwerkModell);
 
             _tragwerkModell.ZeitintegrationDaten = tragwerksTransient.ZeitintegrationDaten;
@@ -1139,7 +1138,16 @@ public partial class StartFenster
 
     private void AnregungVisualisieren(object sender, RoutedEventArgs e)
     {
-        _ = new ZeitAnregungVisualisieren(_tragwerkModell);
+        if (_tragwerkModell != null)
+        {
+            //_modellBerechnung ??= new Berechnung(_tragwerkModell);
+            var anregung = new Tragwerksberechnung.ModelldatenLesen.ZeitAnregungVisualisieren(_tragwerkModell);
+            anregung.Show();
+        }
+        else
+        {
+            _ = MessageBox.Show("Modelldaten für Tragwerkberechnung sind noch nicht spezifiziert", "Tragwerkberechnung");
+        }
     }
 
     private void DynamischeBerechnung(object sender, RoutedEventArgs e)
@@ -1170,7 +1178,7 @@ public partial class StartFenster
 
     private void DynamischeErgebnisseAnzeigen(object sender, RoutedEventArgs e)
     {
-        if (_tragwerkModell.ZeitintegrationBerechnet && _tragwerkModell != null)
+        if (_tragwerkModell is { ZeitintegrationBerechnet: false })
             _ = new DynamischeErgebnisseAnzeigen(_tragwerkModell);
         else
             _ = MessageBox.Show("Zeitintegration noch nicht ausgeführt!!", "dynamische Tragwerksberechnung");
@@ -1178,7 +1186,7 @@ public partial class StartFenster
 
     private void DynamischeModellzuständeVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (_tragwerkModell.ZeitintegrationBerechnet && _tragwerkModell != null)
+        if (_tragwerkModell is { ZeitintegrationBerechnet: false })
         {
             var dynamikErgebnisse = new DynamischeModellzuständeVisualisieren(_tragwerkModell);
             dynamikErgebnisse.Show();
@@ -1191,7 +1199,7 @@ public partial class StartFenster
 
     private void KnotenzeitverläufeTragwerkVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (_tragwerkModell.ZeitintegrationBerechnet && _tragwerkModell != null)
+        if (_tragwerkModell is { ZeitintegrationBerechnet: true })
         {
             var knotenzeitverläufe =
                 new Tragwerksberechnung.Ergebnisse.KnotenzeitverläufeVisualisieren(_tragwerkModell);

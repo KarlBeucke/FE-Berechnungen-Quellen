@@ -78,7 +78,7 @@ public partial class ZeitKnotenlastNeu
             }
             catch (FormatException)
             {
-                _ = MessageBox.Show("ungültiges  Eingabeformat", "neue Knotentemperaturen");
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neue zeitabhängige Knotentemperaturen");
             }
         }
 
@@ -136,7 +136,11 @@ public partial class ZeitKnotenlastNeu
                         k++;
                     }
 
-                    zeitKnotenlast = new ZeitabhängigeKnotenLast(knotenId, intervall) { LastId = knotenlastId, VariationsTyp = 3 };
+                    zeitKnotenlast = new ZeitabhängigeKnotenLast(knotenId, intervall)
+                    {
+                        LastId = knotenlastId,
+                        VariationsTyp = 3
+                    };
                 }
             }
             catch (FormatException)
@@ -155,6 +159,7 @@ public partial class ZeitKnotenlastNeu
         StartFenster.WärmeVisual.Close();
         StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
         StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -201,7 +206,7 @@ public partial class ZeitKnotenlastNeu
                     sb.Append(intervall[1].ToString("G2"));
                     for (var i = 2; i < intervall.Length; i += 2)
                     {
-                        sb.Append("\t");
+                        sb.Append('\t');
                         sb.Append(intervall[i].ToString("G2") + ";");
                         sb.Append(intervall[i + 1].ToString("G2"));
                     }
@@ -224,7 +229,7 @@ public partial class ZeitKnotenlastNeu
         {
             KnotenId.Text = vorhandenerKnoten.Id;
             if (LastId.Text != "") return;
-            LastId.Text = "zkl_" + KnotenId.Text;
+            LastId.Text = "zkl" + KnotenId.Text;
             AktuelleId = LastId.Text;
         }
     }

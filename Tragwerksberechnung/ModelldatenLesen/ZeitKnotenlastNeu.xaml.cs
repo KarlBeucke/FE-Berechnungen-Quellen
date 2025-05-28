@@ -120,6 +120,7 @@ public partial class ZeitKnotenlastNeu
                 {
                     zeitKnotenlast = new ZeitabhängigeKnotenLast(LastId.Text, knotenId, knotenDof, true, boden)
                     {
+                        LastId = knotenlastId,
                         VariationsTyp = 0
                     };
                 }
@@ -162,6 +163,7 @@ public partial class ZeitKnotenlastNeu
             }
 
             _modell.ZeitabhängigeKnotenLasten.Add(knotenlastId, zeitKnotenlast);
+            StartFenster.TragwerkVisual.IsZeitKnotenlast = true;
         }
 
         if (AktuelleId != LastId.Text) _modell.ZeitabhängigeKnotenLasten.Remove(AktuelleId);
@@ -240,7 +242,7 @@ public partial class ZeitKnotenlastNeu
             KnotenId.Text = vorhandenerKnoten.Id;
             if (LastId.Text != "") return;
             LastId.Text = "zkl_" + KnotenId.Text;
-            AktuelleId = LastId.Text;
+            //AktuelleId = LastId.Text;
         }
     }
 

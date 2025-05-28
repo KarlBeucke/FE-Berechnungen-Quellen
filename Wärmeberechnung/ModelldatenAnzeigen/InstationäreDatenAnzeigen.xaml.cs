@@ -133,7 +133,7 @@ public partial class InstationäreDatenAnzeigen
     // ************************* Zeitabhängige Randbedingungen ***********************
     private void NeueRandtemperatur(object sender, MouseButtonEventArgs e)
     {
-        _ = new ZeitRandtemperaturNeu(_modell);
+        _ = new ZeitRandbedingungNeu(_modell);
         _modell.Berechnet = false;
         Close();
     }
