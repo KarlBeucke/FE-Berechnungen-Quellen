@@ -1,17 +1,19 @@
-﻿using System.Globalization;
+﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using System.Globalization;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class QuerschnittNeu
 {
     private readonly FeModell _modell;
-    private Querschnitt _querschnitt, _vorhandenerQuerschnitt;
-    private QuerschnittKeys _querschnittKeys;
+    public string AktuelleId;
+
 
     public QuerschnittNeu(FeModell modell)
     {
         InitializeComponent();
         _modell = modell;
+        AktuelleId = "";
         Show();
     }
 
@@ -25,37 +27,17 @@ public partial class QuerschnittNeu
         }
 
         // vorhandener Querschnitt
-        if (_modell.Querschnitt.Keys.Contains(QuerschnittId.Text))
+        if (_modell.Querschnitt.TryGetValue(querschnittId, out var vorhandenerQuerschnitt))
         {
-            _modell.Querschnitt.TryGetValue(querschnittId, out _vorhandenerQuerschnitt);
-            if (_vorhandenerQuerschnitt != null)
+            try
             {
-                if (Fläche.Text == string.Empty)
-                {
-                    _ = MessageBox.Show("mindestens Fläche muss definiert sein", "neuer Querschnitt");
-                    return;
-                }
-
-                try
-                {
-                    _vorhandenerQuerschnitt.QuerschnittsWerte[0] = double.Parse(Fläche.Text);
-                }
-                catch (FormatException)
-                {
-                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neuer Querschnitt");
-                }
-
-                if (Ixx.Text != string.Empty)
-                {
-                    try
-                    {
-                        _vorhandenerQuerschnitt.QuerschnittsWerte[1] = double.Parse(Ixx.Text);
-                    }
-                    catch (FormatException)
-                    {
-                        _ = MessageBox.Show("ungültiges  Eingabeformat", "neuer Querschnitt");
-                    }
-                }
+                if (Fläche.Text.Length > 0) vorhandenerQuerschnitt.QuerschnittsWerte[0] = double.Parse(Fläche.Text);
+                if (vorhandenerQuerschnitt.QuerschnittsWerte.Length > 1 && Ixx.Text.Length > 0)
+                    vorhandenerQuerschnitt.QuerschnittsWerte[1] = double.Parse(Ixx.Text);
+            }
+            catch (FormatException)
+            {
+                _ = MessageBox.Show("ungültiges  Eingabeformat", "neuer Querschnitt");
             }
         }
         // neuer Querschnitt
@@ -63,50 +45,61 @@ public partial class QuerschnittNeu
         {
             if (Fläche.Text != string.Empty)
             {
-                double ixx = 0;
-                var fläche = double.Parse(Fläche.Text);
-                if (Ixx.Text != string.Empty) ixx = double.Parse(Ixx.Text);
-                _querschnitt = new Querschnitt(fläche, ixx)
+                double fläche = 0, ixx = 0;
+                try
+                {
+                    fläche = double.Parse(Fläche.Text);
+                    if (Ixx.Text != string.Empty) ixx = double.Parse(Ixx.Text);
+                }
+                catch (FormatException)
+                {
+                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neuer Querschnitt");
+                }
+                var querschnitt = new Querschnitt(fläche, ixx)
                 {
                     QuerschnittId = querschnittId
                 };
-                _modell.Querschnitt.Add(querschnittId, _querschnitt);
+                _modell.Querschnitt.Add(querschnittId, querschnitt);
+            }
+            else
+            {
+                _ = MessageBox.Show("Fläche muss definiert sein", "neuer Querschnitt");
+                return;
             }
         }
+        if (AktuelleId != QuerschnittId.Text) _modell.Material.Remove(AktuelleId);
 
         Close();
+        StartFenster.TragwerkVisual.Close();
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
+        StartFenster.TragwerkVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
         Close();
     }
-
-
-    private void QuerschnittIdGotFocus(object sender, RoutedEventArgs e)
-    {
-        _querschnittKeys = new QuerschnittKeys(_modell) { Topmost = true, Owner = (Window)Parent };
-        _querschnittKeys.Show();
-        QuerschnittId.Focus();
-    }
     private void QuerschnittIdLostFocus(object sender, RoutedEventArgs e)
     {
-        _querschnittKeys?.Close();
-        if (!_modell.Querschnitt.TryGetValue(QuerschnittId.Text, out _vorhandenerQuerschnitt)) return;
+        if (!_modell.Querschnitt.TryGetValue(QuerschnittId.Text, out var vorhandenerQuerschnitt)) return;
 
         // vorhandene Querschnittdefinition
-        QuerschnittId.Text = _vorhandenerQuerschnitt.QuerschnittId;
-        Fläche.Text = _vorhandenerQuerschnitt.QuerschnittsWerte[0].ToString("G3", CultureInfo.CurrentCulture);
-        if (Ixx.Text == "")
-            Ixx.Text = _vorhandenerQuerschnitt.QuerschnittsWerte[1].ToString("G3", CultureInfo.CurrentCulture);
+        Fläche.Text = ""; Ixx.Text = "";
+        QuerschnittId.Text = vorhandenerQuerschnitt.QuerschnittId;
+        Fläche.Text = vorhandenerQuerschnitt.QuerschnittsWerte[0].ToString("G3", CultureInfo.CurrentCulture);
+        if (vorhandenerQuerschnitt.QuerschnittsWerte.Length > 1)
+            Ixx.Text = vorhandenerQuerschnitt.QuerschnittsWerte[1].ToString("G3", CultureInfo.CurrentCulture);
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (QuerschnittReferenziert()) return;
-
-        _modell.Querschnitt.Remove(_vorhandenerQuerschnitt.QuerschnittId);
+        if (QuerschnittReferenziert() || !_modell.Querschnitt.Remove(QuerschnittId.Text))
+        {
+            Close(); return;
+        }
         Close();
+        _modell.Berechnet = false;
     }
 
     private bool QuerschnittReferenziert()

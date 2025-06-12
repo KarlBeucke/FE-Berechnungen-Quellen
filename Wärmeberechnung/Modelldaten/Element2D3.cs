@@ -44,7 +44,7 @@ public class Element2D3 : AbstraktLinear2D3
         if (_material == null) return _elementMatrix;
 
         // Ke = area*Sx*c*SxT
-        var c = new double[2, 2] { { _material.MaterialWerte[0], 0 }, { 0, _material.MaterialWerte[1] } };
+        var c = new[,] { { _material.MaterialWerte[0], 0 }, { 0, _material.MaterialWerte[1] } };
         var temp = MatrizenAlgebra.Mult(Sx, c);
         _elementMatrix = MatrizenAlgebra.RectMultMatrixTransposed(0.5 * Determinant, temp, Sx);
 

@@ -43,7 +43,6 @@ public class Darstellung
         NormalkraftListe = [];
         QuerkraftListe = [];
         MomenteListe = [];
-        Anfangsbedingungen = [];
         MomentenMaxTexte = [];
         FestlegungAuflösung();
     }
@@ -57,7 +56,6 @@ public class Darstellung
     public List<object> Verformungen { get; }
     public List<object> LastVektoren { get; }
     public List<object> LagerDarstellung { get; }
-    public List<TextBlock> Anfangsbedingungen { get; }
     public List<object> DynamikVektoren { get; }
     public List<object> NormalkraftListe { get; }
     public List<object> QuerkraftListe { get; }
@@ -1286,8 +1284,10 @@ public class Darstellung
     }
     public void DynamikTexte()
     {
+        if (_modell.Zeitintegration == null) return;
         // Anfangsbedingung als Text an Knoten
-        foreach (var knotenId in _modell.Zeitintegration.Anfangsbedingungen.Select(anfang => anfang.KnotenId))
+        foreach (var knotenId in _modell.Zeitintegration.Anfangsbedingungen.
+                     Select(anfang => anfang.KnotenId))
         {
             if (_modell.Knoten.TryGetValue(knotenId, out _knoten)) { }
             var fensterKnoten = TransformKnoten(_knoten, Auflösung, MaxY);
@@ -1295,6 +1295,7 @@ public class Darstellung
             var anfangsbedingung = new TextBlock
             {
                 Name = "Anfangsbedingung",
+                Uid = "A",
                 FontSize = 12,
                 Text = "A" + knotenId,
                 Foreground = Black,

@@ -61,7 +61,7 @@ internal class MaterialParser
                                 break;
                             case 5:
                                 {
-                                    var feder = _substrings[1];
+                                    //var feder = _substrings[1];
                                     _kx = double.Parse(_substrings[2]);
                                     _ky = double.Parse(_substrings[3]);
                                     _kphi = double.Parse(_substrings[4]);

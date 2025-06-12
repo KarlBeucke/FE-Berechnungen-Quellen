@@ -33,7 +33,7 @@
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="33" />
 
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,16,10">Startkoordinate x</Label>
-        <TextBox Name="startX" Grid.Row="2" Grid.Column="1" Height="20"
+        <TextBox Name="StartX" Grid.Row="2" Grid.Column="1" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
         <Label Grid.Row="2" Grid.Column="2" Margin="0,5,0,10">Abstände x</Label>
         <Label Grid.Row="2" Grid.Column="3" FontSize="10" Padding="0,0,0,0"
@@ -44,15 +44,15 @@
                Margin="7,0,13,24">
             z.B. 1; 3; 6; 10
         </Label>
-        <TextBox Name="inkrementsX" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" Height="20"
+        <TextBox Name="InkrementsX" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" Height="20"
                  Margin="20,15,0,0"
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" />
 
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5,16,10">Startkoordinate y</Label>
-        <TextBox Name="startY" Grid.Row="3" Grid.Column="1" Height="20"
+        <TextBox Name="StartY" Grid.Row="3" Grid.Column="1" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
         <Label Grid.Row="3" Grid.Column="2" Margin="0,5,0,10">Abstände y</Label>
-        <TextBox Name="inkrementsY" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Height="20"
+        <TextBox Name="InkrementsY" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Height="20"
                  Margin="20,0,0,0"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="102" />
 

@@ -184,7 +184,7 @@ public partial class ZeitRandbedingungNeu
     {
         // neue zeitabhängige Randbedingungsdefinition
         if (!_modell.ZeitabhängigeRandbedingung.TryGetValue(RandbedingungId.Text,
-                out var vorhandeneZeitKnotenlast)) return;
+                out _)) return;
 
         // vorhandene zeitabhängige Randbedingungsdefinitionen
         if (!_modell.ZeitabhängigeRandbedingung.TryGetValue(RandbedingungId.Text, out var vorhandeneRandbedingung)) return;

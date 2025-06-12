@@ -15,7 +15,7 @@ public partial class ZeitKnotenAnfangstemperaturNeu
     {
         InitializeComponent();
         _modell = modell;
-        _aktuell = -1;
+        _aktuell = modell.Zeitintegration.Anfangsbedingungen.Count + 1;
         ShowDialog();
     }
     public ZeitKnotenAnfangstemperaturNeu(FeModell modell, int aktuell, bool knotenIdFixed)
@@ -83,6 +83,7 @@ public partial class ZeitKnotenAnfangstemperaturNeu
                     }
                     _modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(KnotenId.Text, anfangsWert));
                     _modell.Zeitintegration.VonStationär = false;
+                    StartFenster.WärmeVisual.IsAnfangsbedingung = true;
                 }
                 else
                 {
@@ -109,21 +110,23 @@ public partial class ZeitKnotenAnfangstemperaturNeu
             StartFenster.WärmeVisual.IsAnfangsbedingung = true;
         }
         Close();
+        if (_knotenIdFixed) return;
         StartFenster.WärmeVisual.Close();
         StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
         StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        Close();
         StartFenster.WärmeVisual.ZeitintegrationNeu?.Close();
+        StartFenster.WärmeVisual.IsAnfangsbedingung = false;
+        Close();
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell - 1);
-
+        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell);
         Close();
         StartFenster.WärmeVisual.Close();
         StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);

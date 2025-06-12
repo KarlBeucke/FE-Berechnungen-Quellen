@@ -23,6 +23,7 @@ public partial class DynamischeModellzuständeVisualisieren
 
     private TextBlock _maximalWerte;
     private double _maxNormalkraft, _maxQuerkraft, _maxMoment;
+    private double _berechnet;
 
     public DynamischeModellzuständeVisualisieren(FeModell feModel)
     {
@@ -43,6 +44,9 @@ public partial class DynamischeModellzuständeVisualisieren
         _nSteps = _nSteps / zeitraster + 1;
         var zeit = new double[_nSteps];
         for (var i = 0; i < _nSteps; i++) zeit[i] = i * _dt * zeitraster;
+
+        var knoten = _modell.Knoten.Values.ToList();
+        _berechnet = knoten[0].KnotenVariable[0].Length;
 
         _darstellung = new Darstellung(_modell, VisualErgebnisse);
         _darstellung.UnverformteGeometrie();
@@ -341,7 +345,7 @@ public partial class DynamischeModellzuständeVisualisieren
         VisualErgebnisse.Children.Add(maximalVerformungen);
 
         // Schleife über alle Zeitschritte
-        for (var i = 0; i < _nSteps; i++)
+        for (var i = 0; i < _berechnet; i++)
         {
             foreach (var item in _modell.Knoten)
                 for (var k = 0; k < item.Value.AnzahlKnotenfreiheitsgrade; k++)

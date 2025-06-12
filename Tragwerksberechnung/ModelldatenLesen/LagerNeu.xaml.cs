@@ -23,6 +23,12 @@ public partial class LagerNeu
     {
         InitializeComponent();
         _modell = modell;
+        LagerId.Text = lager.RandbedingungId;
+        AktuelleId = lager.RandbedingungId;
+        KnotenId.Text = lager.KnotenId;
+        if (lager.Festgehalten[0]) Xfest.IsChecked = true;
+        if (lager.Festgehalten[1]) Yfest.IsChecked = true;
+        if (lager.Festgehalten[2]) Rfest.IsChecked = true;
         VorX.Text = lager.Vordefiniert[0].ToString("0.00");
         VorY.Text = lager.Vordefiniert[1].ToString("0.00");
         VorRot.Text = lager.Vordefiniert[2].ToString("0.00");
@@ -96,7 +102,12 @@ public partial class LagerNeu
         // neues Lager
         else
         {
+            var knotenId = "";
             var vordefiniert = new double[3];
+            if (KnotenId.Text.Length > 0) knotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
+            if (!_modell.Knoten.TryGetValue(knotenId, out _))
+                throw new ModellAusnahme("Lagerknoten im Modell nicht vorhanden");
+
             try
             {
                 if (VorX.Text.Length > 0) vordefiniert[0] = double.Parse(VorX.Text);
@@ -119,13 +130,14 @@ public partial class LagerNeu
                 return;
             }
             var lager = new Lager(KnotenId.Text, typ, vordefiniert, _modell) { RandbedingungId = lagerId };
+
+            lager.RandbedingungId = lagerId;
             _modell.Randbedingungen.Add(lagerId, lager);
         }
         if (AktuelleId != LagerId.Text) _modell.Randbedingungen.Remove(AktuelleId);
 
         Close();
         StartFenster.TragwerkVisual.Close();
-
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
         _modell.Berechnet = false;
@@ -141,7 +153,7 @@ public partial class LagerNeu
     {
         _lagerKeys = new LagerKeys(_modell) { Topmost = true, Owner = (Window)Parent };
         _lagerKeys.Show();
-        LagerId.Focus();
+        _lagerKeys.Focus();
     }
 
     private void LagerIdLostFocus(object sender, RoutedEventArgs e)

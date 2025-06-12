@@ -192,6 +192,7 @@ public partial class ZeitintegrationNeu
         else
         {
             // kleinste Periode für größten Eigenwert in Lösung
+            _ = MessageBox.Show("größter Eigenwert in Lösung = " + omegaMax.ToString("G4"), "neue Zeitintegration");
             var tmin = 2 * Math.PI / Math.Sqrt(omegaMax);
             Zeitintervall.Text = tmin.ToString("F3");
         }
@@ -201,10 +202,14 @@ public partial class ZeitintegrationNeu
     {
         // _aktuell beinhaltet die aktuelle Nummer der Anfangsbedingung in Bearbeitung
         if (string.IsNullOrEmpty(Anfangsbedingungen.Text)) _aktuell = 1;
-        else if (int.Parse(Anfangsbedingungen.Text) <= _modell.Zeitintegration.Anfangsbedingungen.Count) _aktuell++;
-        else _aktuell = _modell.Zeitintegration.Anfangsbedingungen.Count + 1;
+        else if (int.Parse(Anfangsbedingungen.Text) < _modell.Zeitintegration.Anfangsbedingungen.Count) _aktuell++;
+        else
+        {
+            _ = MessageBox.Show("keine weiteren Anfangsbedingungen definiert", "ZeitintegrationNeu");
+            return;
+        }
         Anfangsbedingungen.Text = _aktuell.ToString();
-        _anfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell, _aktuell) { Topmost = true };
+        _anfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell, _aktuell, true) { Topmost = true };
         if (_aktuell > _modell.Zeitintegration.Anfangsbedingungen.Count) _aktuell = _modell.Zeitintegration.Anfangsbedingungen.Count;
         Anfangsbedingungen.Text = _aktuell.ToString();
         Gesamt.Text = (_modell.Zeitintegration.Anfangsbedingungen.Count).ToString();
@@ -213,7 +218,7 @@ public partial class ZeitintegrationNeu
     private void AnfangsbedingungEdit(object sender, KeyEventArgs e)
     {
         _aktuell = int.Parse(Anfangsbedingungen.Text);
-        _anfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell, _aktuell) { Topmost = true };
+        _anfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell, _aktuell, true) { Topmost = true };
     }
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)

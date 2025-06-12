@@ -24,7 +24,7 @@
         <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,0">
             Definition zeitabhängiger Randtemperaturen an einem Knoten
         </Label>
-        <Label  Grid.Column="0" Margin="0,26,0,6" Grid.RowSpan="2">Randbedingung Id:</Label>
+        <Label  Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Margin="0,26,0,6" >Randbedingung Id:</Label>
         <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Margin="0,12,0,0" FontSize="8" Height="23" Grid.RowSpan="2">(ggf. generiert aus "zRb"+Knoten ID)</Label>
         <TextBox Name="RandbedingungId" Grid.Row="1" Grid.Column="1" Margin="10,0,0,0" Height="19"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" LostFocus="RandbedingungIdLostFocus" />

@@ -1,17 +1,46 @@
-﻿using Material = FE_Berechnungen.Tragwerksberechnung.Modelldaten.Material;
+﻿using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
+using System.Globalization;
+using Material = FE_Berechnungen.Tragwerksberechnung.Modelldaten.Material;
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 
 public partial class MaterialNeu
 {
     private readonly FeModell _modell;
-    private MaterialKeys _materialKeys;
-    private AbstraktMaterial _vorhandenesMaterial;
+    //private MaterialKeys _materialKeys;
+    public string AktuelleId;
 
     public MaterialNeu(FeModell modell)
     {
         InitializeComponent();
         _modell = modell;
+        AktuelleId = "";
+        Show();
+    }
+    public MaterialNeu(FeModell modell, AbstraktMaterial material)
+    {
+        InitializeComponent();
+        _modell = modell;
+        MaterialId.Text = material.MaterialId;
+        AktuelleId = material.MaterialId;
+        if (!material.Feder)
+        {
+            EModul.Text = material.MaterialWerte[0].ToString("G3", CultureInfo.CurrentCulture);
+            Poisson.Text = material.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
+            Masse.Text = material.MaterialWerte[2].ToString("G3", CultureInfo.CurrentCulture);
+            FederX.Text = "";
+            FederY.Text = "";
+            FederPhi.Text = "";
+        }
+        else
+        {
+            EModul.Text = "";
+            Poisson.Text = "";
+            Masse.Text = "";
+            FederX.Text = material.MaterialWerte[0].ToString("G3", CultureInfo.CurrentCulture);
+            FederY.Text = material.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
+            FederPhi.Text = material.MaterialWerte[2].ToString("G3", CultureInfo.CurrentCulture);
+        }
         Show();
     }
 
@@ -25,20 +54,21 @@ public partial class MaterialNeu
         }
 
         // vorhandenes Material
-        if (_modell.Material.TryGetValue(materialId, out _vorhandenesMaterial))
+        if (_modell.Material.TryGetValue(materialId, out var vorhandenesMaterial))
         {
             try
             {
-                if (EModul.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[0] = double.Parse(EModul.Text);
-                if (Poisson.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[1] = double.Parse(Poisson.Text);
-                if (Masse.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[2] = double.Parse(Masse.Text);
-                if (FederX.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[3] = double.Parse(FederX.Text);
-                if (FederY.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[4] = double.Parse(FederY.Text);
-                if (FederPhi.Text.Length > 0) _vorhandenesMaterial.MaterialWerte[5] = double.Parse(FederPhi.Text);
+                if (EModul.Text.Length > 0) vorhandenesMaterial.MaterialWerte[0] = double.Parse(EModul.Text);
+                if (Poisson.Text.Length > 0) vorhandenesMaterial.MaterialWerte[1] = double.Parse(Poisson.Text);
+                if (Masse.Text.Length > 0) vorhandenesMaterial.MaterialWerte[2] = double.Parse(Masse.Text);
+                if (FederX.Text.Length > 0) vorhandenesMaterial.MaterialWerte[0] = double.Parse(FederX.Text);
+                if (FederY.Text.Length > 0) vorhandenesMaterial.MaterialWerte[1] = double.Parse(FederY.Text);
+                if (FederPhi.Text.Length > 0) vorhandenesMaterial.MaterialWerte[2] = double.Parse(FederPhi.Text);
             }
             catch (FormatException)
             {
                 _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
+                return;
             }
         }
         // neues Material
@@ -46,10 +76,10 @@ public partial class MaterialNeu
         {
             if (EModul.Text.Length > 0)
             {
-                var eModul = double.Parse(EModul.Text);
-                double poisson = 0, masse = 0;
+                double eModul = 0, poisson = 0, masse = 0;
                 try
                 {
+                    eModul = double.Parse(EModul.Text);
                     if (Poisson.Text.Length > 0) poisson = double.Parse(Poisson.Text);
                     if (Masse.Text.Length > 0) masse = double.Parse(Masse.Text);
                 }
@@ -94,7 +124,13 @@ public partial class MaterialNeu
                 return;
             }
         }
+        if (AktuelleId != MaterialId.Text) _modell.Material.Remove(AktuelleId);
+
         Close();
+        StartFenster.TragwerkVisual.Close();
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
+        StartFenster.TragwerkVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
@@ -103,53 +139,47 @@ public partial class MaterialNeu
     }
 
 
-    private void MaterialIdGotFocus(object sender, RoutedEventArgs e)
-    {
-        _materialKeys = new MaterialKeys(_modell) { Topmost = true, Owner = (Window)Parent };
-        _materialKeys.Show();
-        MaterialId.Focus();
-    }
+    //private void MaterialIdGotFocus(object sender, RoutedEventArgs e)
+    //{
+    //    _materialKeys = new MaterialKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+    //    _materialKeys.Show();
+    //    MaterialId.Focus();
+    //}
     private void MaterialIdLostFocus(object sender, RoutedEventArgs e)
     {
-        _materialKeys.Close();
-        if (MaterialId.Text != "") return;
-        _ = MessageBox.Show("Material Id muss definiert sein", "neues Material");
+        //_materialKeys?.Close();
+        if (!_modell.Material.TryGetValue(MaterialId.Text, out var vorhandenesMaterial)) return;
 
-        //if (!_modell.Material.TryGetValue(MaterialId.Text, out _vorhandenesMaterial))
-        //{
-        //    _ = MessageBox.Show("Material Id " + MaterialId.Text +" nicht m Model gefunden", "neues Material");
-        //    MaterialId.Text = "";
-        //    return;
-        //}
-
-        //// vorhandene Materialdefinition
-        //MaterialId.Text = _vorhandenesMaterial.MaterialId;
-        //if (!_vorhandenesMaterial.Feder)
-        //{
-        //    EModul.Text = _vorhandenesMaterial.MaterialWerte[0].ToString("G3", CultureInfo.CurrentCulture);
-        //    if (Poisson.Text == "")
-        //        Poisson.Text = _vorhandenesMaterial.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
-        //    Masse.Text = _vorhandenesMaterial.MaterialWerte[2].ToString("G3", CultureInfo.CurrentCulture);
-        //    FederX.Text = "";
-        //    FederY.Text = "";
-        //    FederPhi.Text = "";
-        //}
-        //else
-        //{
-        //    EModul.Text = "";
-        //    Poisson.Text = "";
-        //    Masse.Text = "";
-        //    FederX.Text = _vorhandenesMaterial.MaterialWerte[0].ToString("G3", CultureInfo.CurrentCulture);
-        //    FederY.Text = _vorhandenesMaterial.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
-        //    FederPhi.Text = _vorhandenesMaterial.MaterialWerte[2].ToString("G3", CultureInfo.CurrentCulture);
-        //}
+        // vorhandene Materialdefinition
+        MaterialId.Text = vorhandenesMaterial.MaterialId;
+        if (!vorhandenesMaterial.Feder)
+        {
+            EModul.Text = vorhandenesMaterial.MaterialWerte[0].ToString("G3", CultureInfo.CurrentCulture);
+            Poisson.Text = vorhandenesMaterial.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
+            Masse.Text = vorhandenesMaterial.MaterialWerte[2].ToString("G3", CultureInfo.CurrentCulture);
+            FederX.Text = "";
+            FederY.Text = "";
+            FederPhi.Text = "";
+        }
+        else
+        {
+            EModul.Text = "";
+            Poisson.Text = "";
+            Masse.Text = "";
+            FederX.Text = vorhandenesMaterial.MaterialWerte[3].ToString("G3", CultureInfo.CurrentCulture);
+            FederY.Text = vorhandenesMaterial.MaterialWerte[4].ToString("G3", CultureInfo.CurrentCulture);
+            FederPhi.Text = vorhandenesMaterial.MaterialWerte[5].ToString("G3", CultureInfo.CurrentCulture);
+        }
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Material.Remove(MaterialId.Text)) return;
-        if (MaterialReferenziert()) return;
+        if (MaterialReferenziert() || !_modell.Material.Remove(MaterialId.Text))
+        {
+            Close(); return;
+        }
         Close();
+        _modell.Berechnet = false;
     }
 
     private bool MaterialReferenziert()

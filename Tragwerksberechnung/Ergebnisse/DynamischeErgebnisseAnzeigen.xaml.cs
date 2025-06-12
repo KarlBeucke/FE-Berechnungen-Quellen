@@ -2,21 +2,21 @@
 
 public partial class DynamischeErgebnisseAnzeigen
 {
-    private readonly FeModell modell;
-    private Knoten knoten;
+    private readonly FeModell _modell;
+    private Knoten _knoten;
 
     public DynamischeErgebnisseAnzeigen(FeModell feModell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
-        modell = feModell;
+        _modell = feModell;
         InitializeComponent();
         Show();
 
-        Knotenauswahl.ItemsSource = modell.Knoten.Keys;
+        Knotenauswahl.ItemsSource = _modell.Knoten.Keys;
 
         // Auswahl des Zeitschritts aus Zeitraster, z.B. jeder 10.
-        Dt = modell.Zeitintegration.Dt;
-        var tmax = modell.Zeitintegration.Tmax;
+        Dt = _modell.Zeitintegration.Dt;
+        var tmax = _modell.Zeitintegration.Tmax;
         NSteps = (int)(tmax / Dt);
         const int zeitraster = 1;
         //if (NSteps > 1000) zeitraster = 10;
@@ -40,20 +40,20 @@ public partial class DynamischeErgebnisseAnzeigen
         }
 
         var knotenId = (string)Knotenauswahl.SelectedItem;
-        if (modell.Knoten.TryGetValue(knotenId, out knoten))
+        if (_modell.Knoten.TryGetValue(knotenId, out _knoten))
         {
         }
 
-        if (knoten != null)
+        if (_knoten != null)
         {
-            var maxDeltaX = knoten.KnotenVariable[0].Max();
-            var maxDeltaXZeit = Dt * Array.IndexOf(knoten.KnotenVariable[0], maxDeltaX);
-            var maxDeltaY = knoten.KnotenVariable[1].Max();
-            var maxDeltaYZeit = Dt * Array.IndexOf(knoten.KnotenVariable[1], maxDeltaY);
-            var maxAccX = knoten.KnotenAbleitungen[0].Max();
-            var maxAccXZeit = Dt * Array.IndexOf(knoten.KnotenAbleitungen[0], maxAccX);
-            var maxAccY = knoten.KnotenAbleitungen[1].Max();
-            var maxAccYZeit = Dt * Array.IndexOf(knoten.KnotenAbleitungen[1], maxAccY);
+            var maxDeltaX = _knoten.KnotenVariable[0].Max();
+            var maxDeltaXZeit = Dt * Array.IndexOf(_knoten.KnotenVariable[0], maxDeltaX);
+            var maxDeltaY = _knoten.KnotenVariable[1].Max();
+            var maxDeltaYZeit = Dt * Array.IndexOf(_knoten.KnotenVariable[1], maxDeltaY);
+            var maxAccX = _knoten.KnotenAbleitungen[0].Max();
+            var maxAccXZeit = Dt * Array.IndexOf(_knoten.KnotenAbleitungen[0], maxAccX);
+            var maxAccY = _knoten.KnotenAbleitungen[1].Max();
+            var maxAccYZeit = Dt * Array.IndexOf(_knoten.KnotenAbleitungen[1], maxAccY);
 
             var maxText = "max. DeltaX = " + maxDeltaX.ToString("G4") + ", t =" + maxDeltaXZeit.ToString("N2")
                           + ", max. DeltaY = " + maxDeltaY.ToString("G4") + ", t =" + maxDeltaYZeit.ToString("N2")
@@ -67,28 +67,28 @@ public partial class DynamischeErgebnisseAnzeigen
 
     private void KnotenverformungenAnzeigen()
     {
-        if (knoten == null) return;
+        if (_knoten == null) return;
 
         var knotenverformungen = new List<Knotenverformungen>();
-        var dt = modell.Zeitintegration.Dt;
-        var nSteps = knoten.KnotenVariable[0].Length;
+        var dt = _modell.Zeitintegration.Dt;
+        var nSteps = _knoten.KnotenVariable[0].Length;
         var zeit = new double[nSteps + 1];
         zeit[0] = 0;
 
         Knotenverformungen knotenverformung = null;
         for (var i = 0; i < nSteps; i++)
         {
-            switch (knoten.KnotenVariable.Length)
+            switch (_knoten.KnotenVariable.Length)
             {
                 case 2:
-                    knotenverformung = new Knotenverformungen(zeit[i], knoten.KnotenVariable[0][i],
-                        knoten.KnotenVariable[1][i],
-                        knoten.KnotenAbleitungen[0][i], knoten.KnotenAbleitungen[1][i]);
+                    knotenverformung = new Knotenverformungen(zeit[i], _knoten.KnotenVariable[0][i],
+                        _knoten.KnotenVariable[1][i],
+                        _knoten.KnotenAbleitungen[0][i], _knoten.KnotenAbleitungen[1][i]);
                     break;
                 case 3:
-                    knotenverformung = new Knotenverformungen(zeit[i], knoten.KnotenVariable[0][i],
-                        knoten.KnotenVariable[1][i], knoten.KnotenVariable[2][i],
-                        knoten.KnotenAbleitungen[0][i], knoten.KnotenAbleitungen[1][i], knoten.KnotenAbleitungen[2][i]);
+                    knotenverformung = new Knotenverformungen(zeit[i], _knoten.KnotenVariable[0][i],
+                        _knoten.KnotenVariable[1][i], _knoten.KnotenVariable[2][i],
+                        _knoten.KnotenAbleitungen[0][i], _knoten.KnotenAbleitungen[1][i], _knoten.KnotenAbleitungen[2][i]);
                     break;
             }
 
@@ -114,35 +114,35 @@ public partial class DynamischeErgebnisseAnzeigen
     {
         if (Index == 0) return;
         var zeitschritt = new List<Knotenverformungen>();
-        var dt = modell.Zeitintegration.Dt;
-        var tmax = modell.Zeitintegration.Tmax;
-        var nSteps = (int)(tmax / dt) + 1;
-        var zeit = new double[nSteps + 1];
-        zeit[0] = 0;
+        //var dt = _modell.Zeitintegration.Dt;
+        //var tmax = _modell.Zeitintegration.Tmax;
+        //var nSteps = (int)(tmax / dt) + 1;
+        //var zeit = new double[nSteps + 1];
+        //zeit[0] = 0;
 
         Knotenverformungen knotenverformung = null;
-        foreach (var item in modell.Knoten)
+        foreach (var item in _modell.Knoten)
         {
             // eingabeEinheit z.B. in m, verformungsEinheit z.B. cm, beschleunigungsEinheit z.B. cm/s/s
             const int verformungsEinheit = 1;
-            knoten = item.Value;
-            switch (knoten.KnotenVariable.Length)
+            _knoten = item.Value;
+            switch (_knoten.KnotenVariable.Length)
             {
                 case 2:
                     knotenverformung = new Knotenverformungen(item.Value.Id,
-                        knoten.KnotenVariable[0][Index] * verformungsEinheit,
-                        knoten.KnotenVariable[1][Index] * verformungsEinheit,
-                        knoten.KnotenAbleitungen[0][Index] * verformungsEinheit,
-                        knoten.KnotenAbleitungen[1][Index] * verformungsEinheit);
+                        _knoten.KnotenVariable[0][Index] * verformungsEinheit,
+                        _knoten.KnotenVariable[1][Index] * verformungsEinheit,
+                        _knoten.KnotenAbleitungen[0][Index] * verformungsEinheit,
+                        _knoten.KnotenAbleitungen[1][Index] * verformungsEinheit);
                     break;
                 case 3:
                     knotenverformung = new Knotenverformungen(item.Value.Id,
-                        knoten.KnotenVariable[0][Index] * verformungsEinheit,
-                        knoten.KnotenVariable[1][Index] * verformungsEinheit,
-                        knoten.KnotenVariable[2][Index] * verformungsEinheit,
-                        knoten.KnotenAbleitungen[0][Index] * verformungsEinheit,
-                        knoten.KnotenAbleitungen[1][Index] * verformungsEinheit,
-                        knoten.KnotenAbleitungen[2][Index] * verformungsEinheit);
+                        _knoten.KnotenVariable[0][Index] * verformungsEinheit,
+                        _knoten.KnotenVariable[1][Index] * verformungsEinheit,
+                        _knoten.KnotenVariable[2][Index] * verformungsEinheit,
+                        _knoten.KnotenAbleitungen[0][Index] * verformungsEinheit,
+                        _knoten.KnotenAbleitungen[1][Index] * verformungsEinheit,
+                        _knoten.KnotenAbleitungen[2][Index] * verformungsEinheit);
                     break;
             }
 

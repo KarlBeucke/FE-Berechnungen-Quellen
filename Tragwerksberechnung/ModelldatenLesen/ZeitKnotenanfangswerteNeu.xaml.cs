@@ -7,56 +7,38 @@ public partial class ZeitKnotenanfangswerteNeu
 {
     private readonly FeModell _modell;
     private int _aktuell;
+    private readonly string _knotenIdSave;
+    private readonly bool _knotenIdFixed;
 
     public ZeitKnotenanfangswerteNeu(FeModell modell)
     {
         InitializeComponent();
         _modell = modell;
-        _modell.Zeitintegration ??= new Zeitintegration(0, 0, 0);
-        StartFenster.TragwerkVisual.ZeitintegrationNeu ??= new ZeitintegrationNeu(_modell);
-        if (modell.Zeitintegration.Anfangsbedingungen.Count != 0)
-        {
-            var anfang = modell.Zeitintegration.Anfangsbedingungen[0];
-            KnotenId.Text = anfang.KnotenId;
-            Dof1D0.Text = anfang.Werte[0].ToString("G2");
-            Dof1V0.Text = anfang.Werte[1].ToString("G2");
-            if (anfang.Werte.Length > 2)
-            {
-                Dof2D0.Text = anfang.Werte[2].ToString("G2");
-                Dof2V0.Text = anfang.Werte[3].ToString("G2");
-            }
-
-            if (anfang.Werte.Length > 4)
-            {
-                Dof3D0.Text = anfang.Werte[4].ToString("G2");
-                Dof3V0.Text = anfang.Werte[5].ToString("G2");
-            }
-        }
+        _aktuell = modell.Zeitintegration.Anfangsbedingungen.Count + 1;
         Show();
     }
-    public ZeitKnotenanfangswerteNeu(FeModell modell, int aktuell)
+    public ZeitKnotenanfangswerteNeu(FeModell modell, int aktuell, bool knotenIdFixed)
     {
         InitializeComponent();
         _modell = modell;
         _aktuell = aktuell;
+        _knotenIdFixed = knotenIdFixed;
         modell.Zeitintegration ??= new Zeitintegration(0, 0, 0);
-        if (_aktuell > 0 && modell.Zeitintegration.Anfangsbedingungen.Count >= _aktuell)
-        {
-            var anfang = modell.Zeitintegration.Anfangsbedingungen[_aktuell - 1];
-            KnotenId.Text = anfang.KnotenId;
-            Dof1D0.Text = anfang.Werte[0].ToString("G2");
-            Dof1V0.Text = anfang.Werte[1].ToString("G2");
-            if (anfang.Werte.Length > 2)
-            {
-                Dof2D0.Text = anfang.Werte[2].ToString("G2");
-                Dof2V0.Text = anfang.Werte[3].ToString("G2");
-            }
 
-            if (anfang.Werte.Length > 4)
-            {
-                Dof3D0.Text = anfang.Werte[4].ToString("G2");
-                Dof3V0.Text = anfang.Werte[5].ToString("G2");
-            }
+        var anfang = modell.Zeitintegration.Anfangsbedingungen[_aktuell];
+        KnotenId.Text = anfang.KnotenId;
+        _knotenIdSave = KnotenId.Text;
+        Dof1D0.Text = anfang.Werte[0].ToString("G2");
+        Dof1V0.Text = anfang.Werte[1].ToString("G2");
+        if (anfang.Werte.Length > 2)
+        {
+            Dof2D0.Text = anfang.Werte[2].ToString("G2");
+            Dof2V0.Text = anfang.Werte[3].ToString("G2");
+        }
+        if (anfang.Werte.Length > 4)
+        {
+            Dof3D0.Text = anfang.Werte[4].ToString("G2");
+            Dof3V0.Text = anfang.Werte[5].ToString("G2");
         }
         ShowDialog();
     }
@@ -97,13 +79,15 @@ public partial class ZeitKnotenanfangswerteNeu
                     _ = MessageBox.Show("ungültiges  Eingabeformat", "neue ZeitKnotenanfangswerte");
                 }
                 _modell.Zeitintegration.Anfangsbedingungen.Add(new Knotenwerte(KnotenId.Text, anfangsWerte));
+                StartFenster.TragwerkVisual.IsZeitAnfangsbedingung = true;
             }
             else
             {
-                _ = MessageBox.Show("Knotennummer muss definiert sein", "neue ZeitKnotenanfangswerte");
+                _ = MessageBox.Show("Knoten Id muss definiert sein", "neue ZeitKnotenanfangswerte");
                 return;
             }
         }
+
         // vorhandene Anfangsbedingung ändern
         else
         {
@@ -124,52 +108,45 @@ public partial class ZeitKnotenanfangswerteNeu
             }
         }
         Close();
+        if (_knotenIdFixed) return;
         StartFenster.TragwerkVisual.Close();
         StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
         StartFenster.TragwerkVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        Close();
         StartFenster.TragwerkVisual.ZeitintegrationNeu?.Close();
+        StartFenster.TragwerkVisual.IsZeitAnfangsbedingung = false;
+        Close();
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell - 1);
-        _aktuell = 0;
-        if (_modell.Zeitintegration.Anfangsbedingungen.Count <= 0)
-        {
-            Close();
-            StartFenster.TragwerkVisual.ZeitintegrationNeu?.Close();
-            return;
-        }
-
-        var anfangsWerte = _modell.Zeitintegration.Anfangsbedingungen[_aktuell];
-        KnotenId.Text = anfangsWerte.KnotenId;
-        Dof1D0.Text = anfangsWerte.Werte[0].ToString("G2");
-        Dof1V0.Text = anfangsWerte.Werte[1].ToString("G2");
-
-        if (anfangsWerte.Werte.Length > 2)
-        {
-            Dof2D0.Text = anfangsWerte.Werte[2].ToString("G2");
-            Dof2V0.Text = anfangsWerte.Werte[3].ToString("G2");
-        }
-
-        if (anfangsWerte.Werte.Length > 4)
-        {
-            Dof3D0.Text = anfangsWerte.Werte[4].ToString("G2");
-            Dof3V0.Text = anfangsWerte.Werte[5].ToString("G2");
-        }
-
+        _modell.Zeitintegration.Anfangsbedingungen.RemoveAt(_aktuell);
         Close();
-        StartFenster.TragwerkVisual.ZeitintegrationNeu?.Close();
+        StartFenster.TragwerkVisual.Close();
+        StartFenster.TragwerkVisual = new TragwerkmodellVisualisieren(_modell);
+        StartFenster.TragwerkVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
     {
+        if (_knotenIdFixed)
+        {
+            _ = MessageBox.Show("KnotenId kann hier nicht geändert werden", "ZeitKnotenAnfangswerteNeu");
+            KnotenId.Text = _knotenIdSave;
+            return;
+        }
         var knotenId = KnotenId.Text;
+        if (!_modell.Knoten.TryGetValue(knotenId, out _))
+        {
+            _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue zeitabhängige Knotenlast");
+            KnotenId.Text = "";
+            return;
+        }
         for (var i = 0; i < _modell.Zeitintegration.Anfangsbedingungen.Count; i++)
         {
             if (_modell.Zeitintegration.Anfangsbedingungen[i].KnotenId != knotenId) continue;

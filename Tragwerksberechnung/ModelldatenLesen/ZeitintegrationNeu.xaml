@@ -131,10 +131,14 @@
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-
-        <TextBox Name="Zeitintervall" Grid.Row="6" Grid.Column="1" Margin="5,7,40,26"
+        <Label Grid.Row="6" Grid.Column="1" Margin="2,34,1,0" Height="9" VerticalAlignment="Top"
+               FontSize="6" Padding="0,0,0,0">
+            Doppelclick für Δt kritisch
+        </Label>
+        <TextBox Name="Zeitintervall" Grid.Row="6" Grid.Column="1" Margin="5,12,40,21"
                  MouseDoubleClick="BerechneZeitintervall" />
-        <RichTextBox Grid.Row="6" Grid.Column="1" Margin="0,28,0,5" BorderThickness="0,0,0,0"
+
+        <!--<RichTextBox Grid.Row="6" Grid.Column="1" Margin="0,28,0,5" BorderThickness="0,0,0,0"
                      HorizontalAlignment="Center" Width="70">
             <FlowDocument>
                 <Paragraph FontSize="6" FontFamily="Segoe">
@@ -144,7 +148,7 @@
                     in Lösung
                 </Paragraph>
             </FlowDocument>
-        </RichTextBox>
+        </RichTextBox>-->
 
         <Separator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,48,0,0" />
 

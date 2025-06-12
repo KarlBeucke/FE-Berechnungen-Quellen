@@ -23,9 +23,15 @@
             Anfangsbedingungen an definiertem Knoten</Label>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="0,5,0,0">Knoten ID:</Label>
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,19,0,1" FontSize="8">(click vorhandene Knoten ID)</Label>
         <TextBox Name="KnotenId" Grid.Row="1" Grid.Column="1" Margin="10,13.2,0,6.8" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="50"  LostFocus="KnotenIdLostFocus" 
                  MouseDoubleClick="KnotenPositionNeu"/>
+        <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Margin="0,0,-38,1" />
+
+        <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Margin="0,36,68,0" FontSize="8" Height="24" Grid.ColumnSpan="2" Grid.RowSpan="2">
+            (click ID einer vorhandenen Anfangsbedingung)
+        </Label>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">Freiheitsgrad 1:</Label>
         <Label Grid.Row="2" Grid.Column="1" Margin="0.8,10,76,0">d0</Label>
         <TextBox Name="Dof1D0" Grid.Row="2" Grid.Column="1" Margin="29,0,0,7" Height="20"
@@ -35,18 +41,18 @@
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="50" />
 
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5,0,0">Freiheitsgrad 2:</Label>
-        <Label Grid.Row="3" Grid.Column="1" Margin="0.8,10,76,0">d0</Label>
+        <Label Grid.Row="3" Grid.Column="1" Margin="0.8,10,76,0">d1</Label>
         <TextBox Name="Dof2D0" Grid.Row="3" Grid.Column="1" Margin="29,0,32,7" Height="20"
                  VerticalAlignment="Bottom" />
-        <Label Grid.Row="3" Grid.Column="2" Margin="0.8,10,76,0">v0</Label>
+        <Label Grid.Row="3" Grid.Column="2" Margin="0.8,10,76,0">v1</Label>
         <TextBox Name="Dof2V0" Grid.Row="3" Grid.Column="2" Margin="29,13,0,0" Height="20"
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="50" />
 
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5,0,0">Freiheitsgrad 3:</Label>
-        <Label Grid.Row="4" Grid.Column="1" Margin="0.8,10,76,0">d0</Label>
+        <Label Grid.Row="4" Grid.Column="1" Margin="0.8,10,76,0">r2</Label>
         <TextBox Name="Dof3D0" Grid.Row="4" Grid.Column="1" Margin="29,0,32,7" Height="20"
                  VerticalAlignment="Bottom" />
-        <Label Grid.Row="4" Grid.Column="2" Margin="0.8,10,76,0">v0</Label>
+        <Label Grid.Row="4" Grid.Column="2" Margin="0.8,10,76,0">v2</Label>
         <TextBox Name="Dof3V0" Grid.Row="4" Grid.Column="2" Margin="29,13,21,0" Height="20"
                  VerticalAlignment="Top" />
 

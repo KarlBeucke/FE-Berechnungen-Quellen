@@ -30,8 +30,8 @@
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" 
                  LostFocus="LastIdLostFocus" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,0,0,0">Knoten ID:</Label>
-        <Label Grid.Row="2" Grid.Column="0" Margin="0,16,0,29" FontSize="8" Grid.RowSpan="2">(click vorhandene Knoten ID für Lastknoten)</Label>
-        <Label Grid.Row="2" Grid.Column="0" Margin="0,28,0,20" FontSize="8" Grid.RowSpan="2">(Doppelclick für neue Lastknotenposition</Label>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,16,0,15" FontSize="8">(click vorhandene Knoten ID für Lastknoten)</Label>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,28,0,3" FontSize="8">(Doppelclick für neue Lastknotenposition</Label>
 
         <TextBox Name="KnotenId" Grid.Row="2" Grid.Column="1" Margin="10,0,0,0" Height="15"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" LostFocus="KnotenIdLostFocus" 

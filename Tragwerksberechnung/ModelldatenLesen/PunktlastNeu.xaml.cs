@@ -14,8 +14,8 @@ public partial class PunktlastNeu
     {
         InitializeComponent();
         _modell = modell;
+        AktuelleId = "";
         Show();
-        AktuelleId = LastId.Text;
     }
 
     public PunktlastNeu(FeModell modell, AbstraktElementLast punktlast)
@@ -23,6 +23,7 @@ public partial class PunktlastNeu
         InitializeComponent();
         _modell = modell;
         LastId.Text = punktlast.LastId;
+        AktuelleId = punktlast.LastId;
         ElementId.Text = punktlast.ElementId;
         Px.Text = punktlast.Lastwerte[0].ToString("0.00");
         Py.Text = punktlast.Lastwerte[1].ToString("0.00");

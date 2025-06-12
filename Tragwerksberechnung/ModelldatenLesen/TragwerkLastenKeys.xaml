@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="vorhandene Tragwerklastdefinitionen" Height="220" Width="400">
+        Title="vorhandene Tragwerklastdefinitionen" Height="220" Width="355">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
@@ -13,7 +13,7 @@
             <RowDefinition Height="150" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" Margin="12,11,-70,9" Name="TragwerklastenKeys" d:DataContext="{d:DesignData modell}">
+        <ListView Grid.Row="0" Margin="0,3,-56,29" Name="TragwerklastenKeys" d:DataContext="{d:DesignData modell}" Grid.RowSpan="2">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding LastId}" />

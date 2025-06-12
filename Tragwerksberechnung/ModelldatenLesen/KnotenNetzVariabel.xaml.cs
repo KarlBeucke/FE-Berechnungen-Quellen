@@ -41,15 +41,15 @@ public partial class KnotenNetzVariabel
         if (Präfix.Text.Length > 0) knotenPräfix = Präfix.Text;
         if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
 
-        switch (inkrementsX.Text.Length)
+        switch (InkrementsX.Text.Length)
         {
-            case > 0 when inkrementsY.Text.Length == 0:
+            case > 0 when InkrementsY.Text.Length == 0:
                 {
                     var knotenId = knotenPräfix + "00";
                     try
                     {
-                        if (startX.Text.Length > 0) startx = double.Parse(startX.Text);
-                        if (startY.Text.Length > 0) starty = double.Parse(startY.Text);
+                        if (StartX.Text.Length > 0) startx = double.Parse(StartX.Text);
+                        if (StartY.Text.Length > 0) starty = double.Parse(StartY.Text);
                     }
                     catch (FormatException)
                     {
@@ -59,7 +59,7 @@ public partial class KnotenNetzVariabel
                     var neuerKnoten = new Knoten(knotenId, koordinaten, anzahlKnotenDof, dimension);
                     _knotenListe.Add(neuerKnoten);
 
-                    var substrings = inkrementsX.Text.Split(delimiters);
+                    var substrings = InkrementsX.Text.Split(delimiters);
                     var abstände = new double[substrings.Length];
 
                     for (var k = 0; k < abstände.Length; k++)
@@ -75,15 +75,15 @@ public partial class KnotenNetzVariabel
 
                     break;
                 }
-            case > 0 when inkrementsY.Text.Length > 0:
+            case > 0 when InkrementsY.Text.Length > 0:
                 {
                     // Startknoten
                     var idY = "00";
                     var knotenId = knotenPräfix + "0000";
                     try
                     {
-                        if (startX.Text.Length > 0) startx = double.Parse(startX.Text);
-                        if (startY.Text.Length > 0) starty = double.Parse(startY.Text);
+                        if (StartX.Text.Length > 0) startx = double.Parse(StartX.Text);
+                        if (StartY.Text.Length > 0) starty = double.Parse(StartY.Text);
                     }
                     catch (FormatException)
                     {
@@ -94,9 +94,9 @@ public partial class KnotenNetzVariabel
                     _knotenListe.Add(neuerKnoten);
 
                     // 1. Reihe in x-Richtung
-                    var substringsY = inkrementsY.Text.Split(delimiters);
+                    var substringsY = InkrementsY.Text.Split(delimiters);
                     var abständeY = new double[substringsY.Length];
-                    var substringsX = inkrementsX.Text.Split(delimiters);
+                    var substringsX = InkrementsX.Text.Split(delimiters);
                     var abständeX = new double[substringsX.Length];
                     for (var m = 0; m < abständeX.Length; m++)
                     {
@@ -158,8 +158,8 @@ public partial class KnotenNetzVariabel
             {
                 if (AnzahlDof.Text.Length > 0)
                     vorhandenerKnoten.AnzahlKnotenfreiheitsgrade = int.Parse(AnzahlDof.Text);
-                if (startX.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(startX.Text);
-                if (startY.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(startY.Text);
+                if (StartX.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(StartX.Text);
+                if (StartY.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(StartY.Text);
             }
             catch (FormatException)
             {

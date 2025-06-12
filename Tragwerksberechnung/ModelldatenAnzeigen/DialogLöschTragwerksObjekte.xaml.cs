@@ -2,24 +2,24 @@
 
 public partial class DialogLöschTragwerksObjekte
 {
-    public bool löschFlag;
+    public bool LöschFlag;
 
     public DialogLöschTragwerksObjekte(bool delete)
     {
-        löschFlag = delete;
+        LöschFlag = delete;
         InitializeComponent();
         Show();
     }
 
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
-        löschFlag = false;
+        LöschFlag = false;
         Close();
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
     {
-        löschFlag = false;
+        LöschFlag = false;
         Close();
     }
 }

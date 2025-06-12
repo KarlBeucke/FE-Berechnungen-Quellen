@@ -39,16 +39,16 @@ public partial class KnotenNetzÄquidistant
         var anzahlKnotenDof = 3;
         double abstandX = 0, abstandY = 0;
         int wiederholungenX = 0, wiederholungenY = 0;
-        if (startY.Text.Length == 0)
+        if (StartY.Text.Length == 0)
         {
             try
             {
                 if (Präfix.Text.Length > 0) knotenPräfix = Präfix.Text;
                 if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
 
-                if (startX.Text.Length > 0) koordinaten[0] = double.Parse(startX.Text);
-                if (inkrementX.Text.Length > 0) abstandX = double.Parse(inkrementX.Text);
-                if (anzahlX.Text.Length > 0) wiederholungenX = int.Parse(anzahlX.Text);
+                if (StartX.Text.Length > 0) koordinaten[0] = double.Parse(StartX.Text);
+                if (InkrementX.Text.Length > 0) abstandX = double.Parse(InkrementX.Text);
+                if (AnzahlX.Text.Length > 0) wiederholungenX = int.Parse(AnzahlX.Text);
             }
             catch (FormatException)
             {
@@ -72,13 +72,13 @@ public partial class KnotenNetzÄquidistant
             {
                 if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
 
-                if (startX.Text.Length > 0) koordinaten[0] = double.Parse(startX.Text);
-                if (inkrementX.Text.Length > 0) abstandX = double.Parse(inkrementX.Text);
-                if (anzahlX.Text.Length > 0) wiederholungenX = int.Parse(anzahlX.Text);
+                if (StartX.Text.Length > 0) koordinaten[0] = double.Parse(StartX.Text);
+                if (InkrementX.Text.Length > 0) abstandX = double.Parse(InkrementX.Text);
+                if (AnzahlX.Text.Length > 0) wiederholungenX = int.Parse(AnzahlX.Text);
 
-                if (startY.Text.Length > 0) koordinaten[1] = double.Parse(startY.Text);
-                if (inkrementY.Text.Length > 0) abstandY = double.Parse(inkrementY.Text);
-                if (anzahlY.Text.Length > 0) wiederholungenY = int.Parse(anzahlY.Text);
+                if (StartY.Text.Length > 0) koordinaten[1] = double.Parse(StartY.Text);
+                if (InkrementY.Text.Length > 0) abstandY = double.Parse(InkrementY.Text);
+                if (AnzahlY.Text.Length > 0) wiederholungenY = int.Parse(AnzahlY.Text);
             }
             catch (FormatException)
             {
@@ -120,8 +120,8 @@ public partial class KnotenNetzÄquidistant
             {
                 if (AnzahlDof.Text.Length > 0)
                     vorhandenerKnoten.AnzahlKnotenfreiheitsgrade = int.Parse(AnzahlDof.Text);
-                if (startX.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(startX.Text);
-                if (startY.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(startY.Text);
+                if (StartX.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(StartX.Text);
+                if (StartY.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(StartY.Text);
             }
             catch (FormatException)
             {

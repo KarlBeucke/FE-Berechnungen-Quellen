@@ -124,7 +124,7 @@ public class Element2D4 : AbstraktLinear2D4
         p[1] = new Point(Knoten[1].Koordinaten[0], Knoten[1].Koordinaten[1]);
         p[2] = new Point(Knoten[2].Koordinaten[0], Knoten[2].Koordinaten[1]);
         p[3] = new Point(Knoten[3].Koordinaten[0], Knoten[3].Koordinaten[1]);
-        var cg = FEBibliothek.Werkzeuge.FeGeometrie.PolygonSchwerpunkt(p);
+        var cg = FeGeometrie.PolygonSchwerpunkt(p);
         return cg;
     }
 }

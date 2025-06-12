@@ -36,15 +36,17 @@ public partial class TragwerkmodellVisualisieren
     private bool _dynamikAn = true;
     private KnotenNeu _knotenNeu;
     private ElementNeu _elementNeu;
+    private QuerschnittNeu _querschnittNeu;
+    private MaterialNeu _materialNeu;
     private KnotenlastNeu _knotenlastNeu;
     private LinienlastNeu _linienlastNeu;
     private PunktlastNeu _punktlastNeu;
     private LagerNeu _lagerNeu;
-    private ZeitKnotenanfangswerteNeu _zeitKnotenanfangswerteNeu;
     private ZeitKnotenlastNeu _zeitKnotenlastNeu;
-    public bool IsKnoten, IsElement, IsKnotenlast, IsLinienlast, IsPunktlast, IsLager;
-    public bool IsZeitKnotenanfangswerte, IsZeitKnotenlast;
+    private ZeitKnotenanfangswerteNeu _zeitAnfangsbedingungNeu;
     public ZeitintegrationNeu ZeitintegrationNeu;
+    public bool IsKnoten, IsElement, IsKnotenlast, IsLinienlast, IsPunktlast, IsLager;
+    public bool IsZeitKnotenlast, IsZeitAnfangsbedingung;
 
     public TragwerkmodellVisualisieren(FeModell feModell)
     {
@@ -208,13 +210,15 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuQuerschnittNeu(object sender, RoutedEventArgs e)
     {
-        _ = new QuerschnittNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _querschnittNeu = new QuerschnittNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _querschnittNeu.AktuelleId = _querschnittNeu.QuerschnittId.Text;
         _modell.Berechnet = false;
     }
 
     private void MenuMaterialNeu(object sender, RoutedEventArgs e)
     {
-        _ = new MaterialNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _materialNeu = new MaterialNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _materialNeu.AktuelleId = _materialNeu.MaterialId.Text;
         _modell.Berechnet = false;
     }
 
@@ -260,8 +264,8 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuAnfangswerteNeu(object sender, RoutedEventArgs e)
     {
-        IsZeitKnotenanfangswerte = true;
-        _zeitKnotenanfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        IsZeitAnfangsbedingung = true;
+        _zeitAnfangsbedingungNeu = new ZeitKnotenanfangswerteNeu(_modell) { Topmost = true, Owner = (Window)Parent };
         _modell.Berechnet = false;
     }
 
@@ -269,7 +273,6 @@ public partial class TragwerkmodellVisualisieren
     {
         IsZeitKnotenlast = true;
         _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        //_zeitKnotenlastNeu.AktuelleId = _zeitKnotenlastNeu.LastId.Text;
         _modell.Berechnet = false;
     }
 
@@ -357,7 +360,7 @@ public partial class TragwerkmodellVisualisieren
         }
         else
         {
-            foreach (var id in Darstellung.DynamikIDs.SelectMany(anfang => Darstellung.DynamikIDs.Cast<TextBlock>()))
+            foreach (var id in Darstellung.DynamikIDs.SelectMany(_ => Darstellung.DynamikIDs.Cast<TextBlock>()))
             {
                 VisualTragwerkModel.Children.Remove(id);
             }
@@ -539,12 +542,47 @@ public partial class TragwerkmodellVisualisieren
             }
 
             // Textdarstellung ist eine Anfangsbedingung
-            else if (_modell.Zeitintegration.Anfangsbedingungen.Count > 0)
+            else if (item.Uid == "A")
             {
+                var knotenId = item.Text[1..];
+                var aktuell = _modell.Zeitintegration.Anfangsbedingungen.FindIndex((a => a.KnotenId == knotenId));
 
+                if (aktuell < 0)
+                {
+                    _ = MessageBox.Show("Knoten Id für Anfangsbedingung konnte nicht gefunden werden", "neue Anfangsbedingung");
+                    return;
+                }
+                if (_modell.Zeitintegration == null)
+                {
+                    _ = MessageBox.Show("Zeitintegration noch nicht definiert", "neue Anfangsbedingung");
+                    return;
+                }
 
-                _zeitKnotenanfangswerteNeu = new ZeitKnotenanfangswerteNeu(_modell);
-                IsZeitKnotenanfangswerte = true;
+                _zeitAnfangsbedingungNeu ??= new ZeitKnotenanfangswerteNeu(_modell, aktuell, false)
+                {
+                    KnotenId = { Text = knotenId }
+                };
+
+                if (aktuell >= _modell.Zeitintegration.Anfangsbedingungen.Count) aktuell = _modell.Zeitintegration.Anfangsbedingungen.Count - 1;
+                _zeitAnfangsbedingungNeu.Dof1D0.Text = _modell.Zeitintegration.Anfangsbedingungen[aktuell].Werte[0]
+                    .ToString("G2", CultureInfo.CurrentCulture);
+                _zeitAnfangsbedingungNeu.Dof1V0.Text = _modell.Zeitintegration.Anfangsbedingungen[aktuell].Werte[1]
+                    .ToString("G2", CultureInfo.CurrentCulture);
+                if (_modell.Zeitintegration.Anfangsbedingungen[aktuell].Werte.Length > 2)
+                {
+                    _zeitAnfangsbedingungNeu.Dof2D0.Text = _modell.Zeitintegration.Anfangsbedingungen[aktuell].Werte[2]
+                        .ToString("G2", CultureInfo.CurrentCulture);
+                    _zeitAnfangsbedingungNeu.Dof2V0.Text = _modell.Zeitintegration.Anfangsbedingungen[aktuell].Werte[3]
+                        .ToString("G2", CultureInfo.CurrentCulture);
+                }
+                if (_modell.Zeitintegration.Anfangsbedingungen[aktuell].Werte.Length > 4)
+                {
+                    _zeitAnfangsbedingungNeu.Dof3D0.Text = _modell.Zeitintegration.Anfangsbedingungen[aktuell].Werte[4]
+                        .ToString("G2", CultureInfo.CurrentCulture);
+                    _zeitAnfangsbedingungNeu.Dof3V0.Text = _modell.Zeitintegration.Anfangsbedingungen[aktuell].Werte[5]
+                        .ToString("G2", CultureInfo.CurrentCulture);
+                }
+                IsZeitAnfangsbedingung = true;
             }
             // Textdarstellung ist eine zeitveränderliche Knotenlast
             else if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(item.Text, out var zeitKnotenlast))
@@ -601,9 +639,17 @@ public partial class TragwerkmodellVisualisieren
         if (IsLager)
         {
             _lagerNeu.KnotenId.Text = knoten.Id;
-            if (_lagerNeu.LagerId.Text == string.Empty) _lagerNeu.LagerId.Text = "L_" + knoten.Id;
+            if (_lagerNeu.LagerId.Text == string.Empty) _lagerNeu.LagerId.Text = "L" + knoten.Id;
             _lagerNeu.AktuelleId = _lagerNeu.LagerId.Text;
             _lagerNeu.Show();
+            return;
+        }
+
+        // Knotentext angeklickt bei Definition einer neuen Anfangsbedingung
+        if (IsZeitAnfangsbedingung)
+        {
+            _zeitAnfangsbedingungNeu.KnotenId.Text = knoten.Id;
+            _zeitAnfangsbedingungNeu.Show();
             return;
         }
 
@@ -611,7 +657,7 @@ public partial class TragwerkmodellVisualisieren
         if (IsZeitKnotenlast)
         {
             _zeitKnotenlastNeu.KnotenId.Text = knoten.Id;
-            _zeitKnotenlastNeu.LastId.Text = "zkl_" + knoten.Id;
+            _zeitKnotenlastNeu.LastId.Text = "zKl" + knoten.Id;
             _zeitKnotenlastNeu.AktuelleId = _zeitKnotenlastNeu.LastId.Text;
             _zeitKnotenlastNeu.Show();
             return;

@@ -395,17 +395,17 @@ public partial class StatikErgebnisseVisualisieren
         foreach (var unused in _hitList.Where(item => item is { Name: "Biegemomente" }))
         {
             MyPopup.IsOpen = false;
-            if (!_momentenMaxTexte)
+            if (_momentenMaxTexte)
             {
                 foreach (var momentenMaxText in Darstellung.MomentenMaxTexte.Cast<TextBlock>())
                     VisualTragwerkErgebnisse.Children.Add(momentenMaxText);
-                _momentenMaxTexte = true;
+                _momentenMaxTexte = false;
             }
             else
             {
                 foreach (var momentenMaxText in Darstellung.MomentenMaxTexte.Cast<TextBlock>())
                     VisualTragwerkErgebnisse.Children.Remove(momentenMaxText);
-                _momentenMaxTexte = false;
+                _momentenMaxTexte = true;
             }
         }
     }

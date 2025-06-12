@@ -8,7 +8,7 @@ public partial class ElementNeu
 {
     private readonly FeModell _modell;
     private ElementKeys _elementKeys;
-    private MaterialKeys _materialKeys;
+    public MaterialKeys _materialKeys;
     private QuerschnittKeys _querschnittKeys;
     private string _aktuelleId;
 
@@ -264,23 +264,27 @@ public partial class ElementNeu
     {
         _materialKeys = new MaterialKeys(_modell) { Topmost = true, Owner = (Window)Parent };
         _materialKeys.Show();
+        MaterialId.Focus();
     }
     private void MaterialIdLostFocus(object sender, RoutedEventArgs e)
     {
-        MaterialId.Text = _materialKeys.Id;
+        if (_materialKeys.Id != null) MaterialId.Text = _materialKeys.Id;
         _materialKeys.Close();
+        //Show();
     }
 
     private void QuerschnittIdGotFocus(object sender, RoutedEventArgs e)
     {
         _querschnittKeys = new QuerschnittKeys(_modell) { Topmost = true, Owner = (Window)Parent };
         _querschnittKeys.Show();
+        QuerschnittId.Focus();
     }
 
     private void QuerschnittIdLostFocus(object sender, RoutedEventArgs e)
     {
-        QuerschnittId.Text = _querschnittKeys.Id;
+        if (_querschnittKeys.Id != null) QuerschnittId.Text = _querschnittKeys.Id;
         _querschnittKeys.Close();
+        Show();
     }
 
     private bool Gelenkstab(string knotenId)

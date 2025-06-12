@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="vorhandene Materialdefinitionen" Height="220" Width="330">
+        Title="vorhandene Materialdefinitionen" Height="220" Width="400">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
@@ -14,7 +14,7 @@
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <ListView Grid.Row="0" Width="290" Margin="10,10,0,10" Name="MaterialKey" HorizontalAlignment="Left"
-                  d:DataContext="{d:DesignData modell}" SelectionChanged="SelectionChanged">
+                  d:DataContext="{d:DesignData modell}" MouseDoubleClick="MouseDoubleClickNeuesMaterial" SelectionChanged="SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding MaterialId}" />

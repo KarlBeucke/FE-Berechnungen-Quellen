@@ -38,13 +38,13 @@
                Grid.ColumnSpan="2">
             Startkoordinate x
         </Label>
-        <TextBox Name="startX" Grid.Row="2" Grid.Column="1" Height="20"
+        <TextBox Name="StartX" Grid.Row="2" Grid.Column="1" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
         <Label Grid.Row="2" Grid.Column="2" Margin="4,5,0,10">x Inkrement</Label>
-        <TextBox Name="inkrementX" Grid.Row="2" Grid.Column="3" Height="20"
+        <TextBox Name="InkrementX" Grid.Row="2" Grid.Column="3" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="34" />
         <Label Grid.Row="2" Grid.Column="4" Margin="0,5,0,5">Wiederholungen</Label>
-        <TextBox Name="anzahlX" Grid.Row="2" Grid.Column="5" Height="20"
+        <TextBox Name="AnzahlX" Grid.Row="2" Grid.Column="5" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
 
         <Label Grid.Row="3" Grid.Column="0" Margin="0,6,0,4" HorizontalAlignment="Left" Width="32">2D:</Label>
@@ -52,13 +52,13 @@
                Grid.ColumnSpan="2">
             Startkoordinate y
         </Label>
-        <TextBox Name="startY" Grid.Row="3" Grid.Column="1" Height="20"
+        <TextBox Name="StartY" Grid.Row="3" Grid.Column="1" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
         <Label Grid.Row="3" Grid.Column="2" Margin="4,5,0,10">y Inkrement</Label>
-        <TextBox Name="inkrementY" Grid.Row="3" Grid.Column="3" Height="20"
+        <TextBox Name="InkrementY" Grid.Row="3" Grid.Column="3" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="34" />
         <Label Grid.Row="3" Grid.Column="4" Margin="0,5,0,5">Wiederholungen</Label>
-        <TextBox Name="anzahlY" Grid.Row="3" Grid.Column="5" Height="20"
+        <TextBox Name="AnzahlY" Grid.Row="3" Grid.Column="5" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
 
         <DataGrid Name="KnotenGrid" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" Margin="0,0,-39,0"
