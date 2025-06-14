@@ -78,9 +78,9 @@ public partial class ElementNeu
             if (FachwerkCheck.IsChecked != null && (bool)FachwerkCheck.IsChecked)
             {
                 element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
-                // check, ob ein Knoten des Fachwerkstabs ein eingespannter lagerknoten ist
+                // check, ob ein Knoten des Fachwerkstabs ein eingespannter Knoten ist
                 if (Gelenkstab(startKnoten.Id) || (Gelenkstab(endKnoten.Id)))
-                    _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' kann nicht eingespannt werden");
+                    _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' mit Gelenk an Einspannung");
             }
             else if (BalkenCheck.IsChecked != null && (bool)BalkenCheck.IsChecked)
             {
@@ -97,28 +97,28 @@ public partial class ElementNeu
                 {
                     // falls Biegebalken angewählt ist und der Biegebalken an Knoten mit <3 Freiheitsgraden angeschlossen ist,
                     // wird Biegebalken automatisch als BiegebalkenGelenk bzw. Fachwerk eingefügt
-                    case false when Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked:
+                    case false when Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked:   // kein Startknotengelenk, Endknotengelenk, Biegebalken Gelenk 2
                         startKnoten.AnzahlKnotenfreiheitsgrade = 3;
                         element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 2);
                         break;
-                    case true when Gelenk2.IsChecked != null && !(bool)Gelenk2.IsChecked:
+                    case true when Gelenk2.IsChecked != null && !(bool)Gelenk2.IsChecked:   // Startknotengelenk, kein Endknotengelenk, Biegebalken Gelenk 1
                         if (Gelenkstab(startKnoten.Id))
-                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' kann nicht eingespannt werden");
+                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' mit Gelenk an Startknoten");
                         endKnoten.AnzahlKnotenfreiheitsgrade = 3;
                         element = new BiegebalkenGelenk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell, 1);
                         break;
-                    case false when Gelenk2.IsChecked != null && !(bool)Gelenk2.IsChecked:
+                    case false when Gelenk2.IsChecked != null && !(bool)Gelenk2.IsChecked:  // kein Startknotengelenk, kein Endknotengelenk, Biegebalken
                         if (Gelenkstab(endKnoten.Id))
-                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' kann nicht eingespannt werden");
+                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' mit Gelenk an Endknoten");
                         startKnoten.AnzahlKnotenfreiheitsgrade = 3;
                         endKnoten.AnzahlKnotenfreiheitsgrade = 3;
                         element = new Biegebalken(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
                         break;
-                    case true when Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked:
+                    case true when Gelenk2.IsChecked != null && (bool)Gelenk2.IsChecked:    // Startknotengelenk, Endknotengelenk, Fachwerk
                         if (Gelenkstab(startKnoten.Id))
-                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' kann nicht eingespannt werden");
+                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' mit Gelenk an Startknoten");
                         if (Gelenkstab(endKnoten.Id))
-                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' kann nicht eingespannt werden");
+                            _ = MessageBox.Show("\nGelenkstab '" + ElementId.Text + "' mit Gelenk an Endknoten");
                         element = new Fachwerk(knotenIds, MaterialId.Text, QuerschnittId.Text, _modell);
                         break;
                 }

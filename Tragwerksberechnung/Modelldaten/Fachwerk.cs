@@ -63,7 +63,7 @@ public class Fachwerk : AbstraktBalken
         throw new ModellAusnahme("\nFachwerkelement kann keine interne Last aufnehmen! Benutze Biegebalken mit Gelenk");
     }
 
-    // berechne Stabendkräfte eines Biegeelements
+    // berechne Stabendkräfte eines Biegeelementes
     public override double[] BerechneStabendkräfte()
     {
         BerechneGeometrie();
