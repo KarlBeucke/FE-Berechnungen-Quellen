@@ -794,7 +794,7 @@ namespace FEBibliothek.Modell
             var datei = new OpenFileDialog
             {
                 Filter = "All files (*.*)|*.*",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments)
             };
             datei.InitialDirectory += inputDirectory;
 
@@ -869,7 +869,7 @@ namespace FEBibliothek.Modell
             var datei = new OpenFileDialog
             {
                 Filter = "All files (*.*)|*.*",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments)
             };
             datei.InitialDirectory += inputDirectory;
 
