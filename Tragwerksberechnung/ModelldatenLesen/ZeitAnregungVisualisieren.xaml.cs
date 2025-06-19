@@ -49,7 +49,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
                 }
 
                 var anregungMax = funktion.Max();
-                if (anregungMax > double.Epsilon) anregungMax = 1;
+                //if (anregungMax < double.Epsilon) return;
                 var anregungMin = -anregungMax;
 
                 // Textdarstellung der Anregungsdauer mit Anzahl Datenpunkten und Zeitintervall

@@ -125,13 +125,12 @@ public partial class ElementlastNeu
                         break;
                     }
             }
-
-            Close();
-            StartFenster.WärmeVisual.Close();
-            StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
-            StartFenster.WärmeVisual.Show();
-            _modell.Berechnet = false;
         }
+        Close();
+        StartFenster.WärmeVisual.Close();
+        StartFenster.WärmeVisual = new WärmemodellVisualisieren(_modell);
+        StartFenster.WärmeVisual.Show();
+        _modell.Berechnet = false;
     }
 
     private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)

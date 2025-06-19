@@ -439,78 +439,6 @@ public partial class WärmemodellVisualisieren
             return;
         }
 
-        // click auf Shape Darstellungen
-        // nur neu, falls nicht im Benutzerdialog aktiviert
-        foreach (var item in _hitList
-                     .TakeWhile(_ => !IsKnoten && !IsElement && !IsKnotenlast && !IsLinienlast && !IsElementlast)
-                     .Where(item => item.Name != null))
-        {
-            // Elemente
-            if (_modell.Elemente.TryGetValue(item.Name, out var element))
-                ElementNeu(element);
-
-            // Lasten
-            else if (_modell.Lasten.TryGetValue(item.Name, out var knotenlast))
-            {
-                _knotenlastNeu = new KnotenlastNeu(_modell)
-                {
-                    Topmost = true,
-                    Owner = (Window)Parent,
-                    KnotenlastId = { Text = knotenlast.LastId },
-                    KnotenId = { Text = knotenlast.KnotenId.ToString(CultureInfo.CurrentCulture) },
-                    Temperatur = { Text = knotenlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) }
-                };
-                IsKnotenlast = true;
-            }
-            else if (_modell.LinienLasten.TryGetValue(item.Name, out var linienlast))
-            {
-                _linienlastNeu = new LinienlastNeu(_modell)
-                {
-                    Topmost = true,
-                    Owner = (Window)Parent,
-                    LinienlastId = { Text = linienlast.LastId },
-                    StartknotenId = { Text = linienlast.ElementId.ToString(CultureInfo.CurrentCulture) },
-                    Start = { Text = linienlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
-                    EndknotenId = { Text = linienlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
-                    End = { Text = linienlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
-                };
-                IsLinienlast = true;
-            }
-            else if (_modell.ElementLasten.TryGetValue(item.Name, out var elementLast))
-            {
-                _elementlastNeu = new ElementlastNeu(_modell)
-                {
-                    Topmost = true,
-                    Owner = (Window)Parent,
-                    ElementlastId = { Text = elementLast.LastId },
-                    ElementId = { Text = elementLast.ElementId.ToString(CultureInfo.CurrentCulture) },
-                    Knoten1 = { Text = elementLast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
-                    Knoten2 = { Text = elementLast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
-                    Knoten3 = { Text = elementLast.Lastwerte[2].ToString(CultureInfo.CurrentCulture) },
-                    Knoten4 = { Text = elementLast.Lastwerte[3].ToString(CultureInfo.CurrentCulture) },
-                    Knoten5 = { Text = elementLast.Lastwerte[4].ToString(CultureInfo.CurrentCulture) },
-                    Knoten6 = { Text = elementLast.Lastwerte[5].ToString(CultureInfo.CurrentCulture) },
-                    Knoten7 = { Text = elementLast.Lastwerte[6].ToString(CultureInfo.CurrentCulture) },
-                    Knoten8 = { Text = elementLast.Lastwerte[7].ToString(CultureInfo.CurrentCulture) },
-                };
-                IsElementlast = true;
-            }
-
-            // Lager
-            else if (_modell.Randbedingungen.TryGetValue(item.Name, out var randbedingung))
-            {
-                _randbedingungNeu = new RandbedingungNeu(_modell)
-                {
-                    Topmost = true,
-                    Owner = (Window)Parent,
-                    RandbedingungId = { Text = randbedingung.RandbedingungId },
-                    KnotenId = { Text = randbedingung.KnotenId.ToString(CultureInfo.CurrentCulture) },
-                    Temperatur = { Text = randbedingung.Vordefiniert[0].ToString("g3") }
-                };
-                IsRandbedingung = true;
-            }
-        }
-
         // click auf Textdarstellungen
         foreach (var item in _hitTextBlock)
         {
@@ -532,10 +460,8 @@ public partial class WärmemodellVisualisieren
                     _zeitElementtemperaturNeu.Show();
                     return;
                 }
-                else
-                {
-                    ElementNeu(element);
-                }
+
+                ElementNeu(element);
             }
 
             // Textdarstellung ist eine Knotenlast
@@ -576,14 +502,27 @@ public partial class WärmemodellVisualisieren
                     ElementlastId = { Text = elementLast.LastId },
                     ElementId = { Text = elementLast.ElementId.ToString(CultureInfo.CurrentCulture) },
                     Knoten1 = { Text = elementLast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
-                    Knoten2 = { Text = elementLast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
-                    Knoten3 = { Text = elementLast.Lastwerte[2].ToString(CultureInfo.CurrentCulture) },
-                    Knoten4 = { Text = elementLast.Lastwerte[3].ToString(CultureInfo.CurrentCulture) },
-                    Knoten5 = { Text = elementLast.Lastwerte[4].ToString(CultureInfo.CurrentCulture) },
-                    Knoten6 = { Text = elementLast.Lastwerte[5].ToString(CultureInfo.CurrentCulture) },
-                    Knoten7 = { Text = elementLast.Lastwerte[6].ToString(CultureInfo.CurrentCulture) },
-                    Knoten8 = { Text = elementLast.Lastwerte[7].ToString(CultureInfo.CurrentCulture) },
+                    Knoten2 = { Text = elementLast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) }
                 };
+
+                switch (elementLast.Lastwerte.Length)
+                {
+                    case 3:
+                        _elementlastNeu.Knoten3.Text = elementLast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
+                        break;
+                    case 4:
+                        _elementlastNeu.Knoten3.Text = elementLast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten4.Text = elementLast.Lastwerte[3].ToString(CultureInfo.CurrentCulture);
+                        break;
+                    case 5:
+                        _elementlastNeu.Knoten3.Text = elementLast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten4.Text = elementLast.Lastwerte[3].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten5.Text = elementLast.Lastwerte[4].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten6.Text = elementLast.Lastwerte[5].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten7.Text = elementLast.Lastwerte[6].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten8.Text = elementLast.Lastwerte[7].ToString(CultureInfo.CurrentCulture);
+                        break;
+                }
                 IsElementlast = true;
             }
 
@@ -692,7 +631,7 @@ public partial class WärmemodellVisualisieren
             }
 
             // Textdarstellung ist eine Randbedingung
-            else if (_modell.Randbedingungen.TryGetValue(item.Text, out var randbedingung))
+            else if (_modell.Randbedingungen.TryGetValue(item.Uid, out var randbedingung))
             {
                 _randbedingungNeu = new RandbedingungNeu(_modell)
                 {
@@ -765,6 +704,91 @@ public partial class WärmemodellVisualisieren
                     }
                 }
                 ZeitRandtemperaturNeu(zeitRandtemperatur);
+            }
+            return;
+        }
+        // click auf Shape Darstellungen
+        // nur neu, falls nicht im Benutzerdialog aktiviert
+        foreach (var item in _hitList
+                     .TakeWhile(_ => !IsKnoten && !IsElement && !IsKnotenlast && !IsLinienlast && !IsElementlast)
+                     .Where(item => item.Name != null))
+        {
+            // Elemente
+            if (_modell.Elemente.TryGetValue(item.Name, out var element))
+                ElementNeu(element);
+
+            // Lasten
+            else if (_modell.Lasten.TryGetValue(item.Name, out var knotenlast))
+            {
+                _knotenlastNeu = new KnotenlastNeu(_modell)
+                {
+                    Topmost = true,
+                    Owner = (Window)Parent,
+                    KnotenlastId = { Text = knotenlast.LastId },
+                    KnotenId = { Text = knotenlast.KnotenId.ToString(CultureInfo.CurrentCulture) },
+                    Temperatur = { Text = knotenlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) }
+                };
+                IsKnotenlast = true;
+            }
+            else if (_modell.LinienLasten.TryGetValue(item.Name, out var linienlast))
+            {
+                _linienlastNeu = new LinienlastNeu(_modell)
+                {
+                    Topmost = true,
+                    Owner = (Window)Parent,
+                    LinienlastId = { Text = linienlast.LastId },
+                    StartknotenId = { Text = linienlast.ElementId.ToString(CultureInfo.CurrentCulture) },
+                    Start = { Text = linienlast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
+                    EndknotenId = { Text = linienlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
+                    End = { Text = linienlast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
+                };
+                IsLinienlast = true;
+            }
+            else if (_modell.ElementLasten.TryGetValue(item.Name, out var elementLast))
+            {
+                _elementlastNeu = new ElementlastNeu(_modell)
+                {
+                    Topmost = true,
+                    Owner = (Window)Parent,
+                    ElementlastId = { Text = elementLast.LastId },
+                    ElementId = { Text = elementLast.ElementId.ToString(CultureInfo.CurrentCulture) },
+                    Knoten1 = { Text = elementLast.Lastwerte[0].ToString(CultureInfo.CurrentCulture) },
+                    Knoten2 = { Text = elementLast.Lastwerte[1].ToString(CultureInfo.CurrentCulture) },
+                };
+
+                switch (elementLast.Lastwerte.Length)
+                {
+                    case 3:
+                        _elementlastNeu.Knoten3.Text = elementLast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
+                        break;
+                    case 4:
+                        _elementlastNeu.Knoten3.Text = elementLast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten4.Text = elementLast.Lastwerte[3].ToString(CultureInfo.CurrentCulture);
+                        break;
+                    case 5:
+                        _elementlastNeu.Knoten3.Text = elementLast.Lastwerte[2].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten4.Text = elementLast.Lastwerte[3].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten5.Text = elementLast.Lastwerte[4].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten6.Text = elementLast.Lastwerte[5].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten7.Text = elementLast.Lastwerte[6].ToString(CultureInfo.CurrentCulture);
+                        _elementlastNeu.Knoten8.Text = elementLast.Lastwerte[7].ToString(CultureInfo.CurrentCulture);
+                        break;
+                }
+                IsElementlast = true;
+            }
+
+            // Lager
+            else if (_modell.Randbedingungen.TryGetValue(item.Name, out var randbedingung))
+            {
+                _randbedingungNeu = new RandbedingungNeu(_modell)
+                {
+                    Topmost = true,
+                    Owner = (Window)Parent,
+                    RandbedingungId = { Text = randbedingung.RandbedingungId },
+                    KnotenId = { Text = randbedingung.KnotenId.ToString(CultureInfo.CurrentCulture) },
+                    Temperatur = { Text = randbedingung.Vordefiniert[0].ToString("g3") }
+                };
+                IsRandbedingung = true;
             }
         }
     }

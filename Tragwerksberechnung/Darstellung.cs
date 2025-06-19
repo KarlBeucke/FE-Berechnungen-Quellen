@@ -1309,26 +1309,21 @@ public class Darstellung
         }
 
         // zeitabhängige KnotenLasten
-        foreach (var item in _modell.ZeitabhängigeKnotenLasten)
+        foreach (var item in _modell.ZeitabhängigeKnotenLasten.
+                     Where(item => item.Value is not null && item.Value.KnotenId != "boden"))
         {
-            if (item.Value is null) continue;
+            if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out var lastKnoten))
+            {
+                throw new ModellAusnahme("\nBiegebalken Lastknoten '" + item.Value.KnotenId +
+                                         "' nicht im Modell gefunden");
+            }
+
             var id = new TextBlock
             {
                 FontSize = 12,
                 Text = item.Key,
                 Foreground = DarkRed
             };
-            Knoten lastKnoten;
-            if (item.Value.KnotenId == "boden")
-            {
-                lastKnoten = item.Value.Knoten;
-            }
-            else if (!_modell.Knoten.TryGetValue(item.Value.KnotenId, out lastKnoten))
-            {
-                throw new ModellAusnahme("\nBiegebalken Lastknoten '" + item.Value.KnotenId +
-                                         "' nicht im Modell gefunden");
-            }
-
             _platzierungText = TransformKnoten(lastKnoten, Auflösung, MaxY);
             const int knotenOffset = 20;
             SetTop(id, _platzierungText.Y + PlatzierungV - knotenOffset);

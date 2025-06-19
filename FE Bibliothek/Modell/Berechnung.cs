@@ -794,11 +794,12 @@ namespace FEBibliothek.Modell
             var datei = new OpenFileDialog
             {
                 Filter = "All files (*.*)|*.*",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments)
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments),
             };
-            datei.InitialDirectory += inputDirectory;
 
+            datei.InitialDirectory += inputDirectory;
             if (datei.ShowDialog() != true) return;
+
             var pfad = datei.FileName;
 
             // Datei enthält nur Anregungswerte im VORGEGEBENEM ZEITSCHRITT dt

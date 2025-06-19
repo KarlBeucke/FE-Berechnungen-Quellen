@@ -441,48 +441,6 @@ public partial class TragwerkmodellVisualisieren
             return;
         }
 
-        // click auf Shape Darstellungen
-        // nur neu, falls nicht im Benutzerdialog aktiviert
-        foreach (var item in _hitList.TakeWhile(_ => !IsKnoten && !IsElement && !IsKnotenlast && !IsLinienlast && !IsPunktlast)
-                     .Where(item => item.Name != null))
-        {
-            // Elemente
-            if (_modell.Elemente.TryGetValue(item.Name, out var element))
-                ElementNeu(element);
-
-            // Lasten
-            else if (_modell.Lasten.TryGetValue(item.Name, out var knotenlast))
-            {
-                _knotenlastNeu = new KnotenlastNeu(_modell, knotenlast);
-                IsKnotenlast = true;
-            }
-            else if (_modell.ElementLasten.TryGetValue(item.Name, out var linienlast))
-            {
-                _linienlastNeu = new LinienlastNeu(_modell, linienlast);
-                IsLinienlast = true;
-            }
-            else if (_modell.PunktLasten.TryGetValue(item.Name, out var last))
-            {
-                var punktlast = (PunktLast)last;
-                _punktlastNeu = new PunktlastNeu(_modell, punktlast);
-                IsLinienlast = true;
-            }
-
-            // Lager
-            else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
-            {
-                _lagerNeu = new LagerNeu(_modell, lager);
-                IsLager = true;
-            }
-
-            // zeitabhängige Knotenlasten
-            else if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(item.Name, out var zeitKnotenlast))
-            {
-                _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell, zeitKnotenlast);
-                IsZeitKnotenlast = true;
-            }
-        }
-
         // click auf Textdarstellungen
         foreach (var item in _hitTextBlock)
         {
@@ -586,6 +544,49 @@ public partial class TragwerkmodellVisualisieren
             }
             // Textdarstellung ist eine zeitveränderliche Knotenlast
             else if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(item.Text, out var zeitKnotenlast))
+            {
+                _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell, zeitKnotenlast);
+                IsZeitKnotenlast = true;
+            }
+            return;
+        }
+
+        // click auf Shape Darstellungen
+        // nur neu, falls nicht im Benutzerdialog aktiviert
+        foreach (var item in _hitList.TakeWhile(_ => !IsKnoten && !IsElement && !IsKnotenlast && !IsLinienlast && !IsPunktlast)
+                     .Where(item => item.Name != null))
+        {
+            // Elemente
+            if (_modell.Elemente.TryGetValue(item.Name, out var element))
+                ElementNeu(element);
+
+            // Lasten
+            else if (_modell.Lasten.TryGetValue(item.Name, out var knotenlast))
+            {
+                _knotenlastNeu = new KnotenlastNeu(_modell, knotenlast);
+                IsKnotenlast = true;
+            }
+            else if (_modell.ElementLasten.TryGetValue(item.Name, out var linienlast))
+            {
+                _linienlastNeu = new LinienlastNeu(_modell, linienlast);
+                IsLinienlast = true;
+            }
+            else if (_modell.PunktLasten.TryGetValue(item.Name, out var last))
+            {
+                var punktlast = (PunktLast)last;
+                _punktlastNeu = new PunktlastNeu(_modell, punktlast);
+                IsLinienlast = true;
+            }
+
+            // Lager
+            else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
+            {
+                _lagerNeu = new LagerNeu(_modell, lager);
+                IsLager = true;
+            }
+
+            // zeitabhängige Knotenlasten
+            else if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(item.Name, out var zeitKnotenlast))
             {
                 _zeitKnotenlastNeu = new ZeitKnotenlastNeu(_modell, zeitKnotenlast);
                 IsZeitKnotenlast = true;

@@ -124,7 +124,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
                 }
 
                 var anregungMax = funktion.Max();
-                if (anregungMax > double.Epsilon) anregungMax = 1;
+                //if (anregungMax > double.Epsilon) anregungMax = 1;
                 var anregungMin = -anregungMax;
 
                 // Textdarstellung der Anregungsdauer mit Anzahl Datenpunkten und Zeitintervall
