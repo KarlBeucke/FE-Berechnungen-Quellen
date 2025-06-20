@@ -1,0 +1,80 @@
+ModellName
+sasol 1D Anlaufkurve in Sec
+
+Raumdimension
+2	1
+
+Knoten
+n00	0,0000	0
+n01	0,0100	0
+n02	0,0206	0
+n03	0,0312	0
+n04	0,0418	0
+n05	0,0524	0
+n06	0,0630	0
+n07	0,0736	0
+n08	0,0842	0
+n09	0,0948	0
+n10	0,1054	0
+n11	0,1160	0
+n12	0,1245	0
+n13	0,1330	0
+n14	0,1415	0
+n15	0,1500	0
+n16	0,1585	0
+n17	0,1670	0
+n18	0,1755	0
+n19	0,1840	0
+n20	0,1925	0
+n21	0,2010	0
+n22	0,2110	0
+
+Elemente2D2Knoten
+e00	n00	n01	ai
+e01	n01	n02	mw
+e02	n02	n03	mw
+e03	n03	n04	mw
+e04	n04	n05	mw
+e05	n05	n06	mw
+e06	n06	n07	mw
+e07	n07	n08	mw
+e08	n08	n09	mw
+e09	n09	n10	mw
+e10	n10	n11	mw
+e11	n11	n12	wd
+e12	n12	n13	wd
+e13	n13	n14	wd
+e14	n14	n15	wd
+e15	n15	n16	wd
+e16	n16	n17	wd
+e17	n17	n18	wd
+e18	n18	n19	wd
+e19	n19	n20	wd
+e20	n20	n21	wd
+e21	n21	n22	aa
+
+Material
+mw	1,4	1932000
+wd	0,035	150000
+ai	0,3	1
+aa	0,08	1
+
+Randbedingungen
+s0	n00	26
+s1	n22	0
+
+Eigenlösungen
+DOFEigen	5
+
+// id, tmax, dt, alfa	4320000s/60min/60h/24Tage=50Tage	tmax/dt=36000 Schritte
+Zeitintegration
+Anlaufkurve	4320000	120	1
+
+Anfangstemperaturen
+stationäre Lösung
+
+//_SasolAnlauf.0.50inSec.txt
+Zeitabhängige Randbedingungen
+zR0	n00	KaminStartKurve.120
+
+end

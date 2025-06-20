@@ -1,0 +1,35 @@
+ModellName
+3DOF Sinus Funktion Anregung 
+
+Raumdimension
+2	1
+
+Knoten
+n0	2	0
+n1	1	0
+n2	0	0
+
+Elemente2D2Knoten
+e00	n0	n1	c0
+e01	n1	n2	c1
+
+// Name, Leitfähigkeit, Dichte*spezifischeWärme
+Material
+c0	1	2
+c1	0,01	0
+
+Randbedingungen
+Randbedingung0	n2	0
+
+Eigenlösungen
+2DOFEigen	2
+
+// id, tmax, dt, alfa
+Zeitintegration
+3DOFSinusAnregung	400	0,99	0
+
+// Randbedingung an Knoten n0, Typ 2: Amplitude * Frequenz
+Zeitabhängige Randbedingungen
+zR1	n0	harmonisch	1	0,03	0
+
+end

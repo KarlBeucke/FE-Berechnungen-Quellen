@@ -1,0 +1,42 @@
+ModellName
+Beispiel: FEM stationaere, ebene Waermeberechnung
+Raumdimension
+2	1 
+
+Knoten
+n00	0	3
+n01	0	2
+n02	0	1
+n03	1	3
+n04	1	2
+n05	1	1
+n06	1	0
+n07	2	3
+n08	2	2
+n09	2	1
+n10	2	0
+
+Elemente2D4Knoten
+e0	n00	n01	n04	n03	iso
+e2	n01	n02	n05	n04	iso
+e4	n03	n04	n08	n07	iso
+e6	n04	n05	n09	n08	iso
+e8	n05	n06	n10	n09	iso
+
+Material
+iso	5	1
+
+ElementLast4
+a2	e2	30	30	30	30
+
+Randbedingungen
+s00	n00	10
+s01	n01	10
+s02	n02	10
+s06	n06	20
+s10	n10	20
+
+Eigenlösungen
+Rechenbeispiel	2
+
+end

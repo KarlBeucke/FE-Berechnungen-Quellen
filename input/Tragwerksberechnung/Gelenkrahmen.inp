@@ -1,0 +1,39 @@
+ModellName
+Gelenkrahmen
+
+Raumdimension
+2	3
+
+Knoten
+k1	0	0
+k2	0	5
+2
+k3	4	5
+3
+k4	4	0
+
+Biegebalken
+e1	k1	k2	m0	c0
+
+// Gelenk am 1. oder 2. Knoten
+BiegebalkenGelenk
+e2	k2	k3	m0	c0	2
+e3	k3	k4	m0	c0	1
+
+Querschnitt
+c0	5e-2	2e-5
+
+Material
+m0	2e8	0
+
+Knotenlast
+kl1	k2	100	0	0
+
+//Punktlast
+pl1	e2	0	-100	0,5
+
+Lager
+Lager1	k1	xyr
+Lager2	k4	xy
+
+end

@@ -1,0 +1,106 @@
+// Schlüsselworte kennzeichnen festgelegte Inhalte,  Tabulatoren trennen separate Eingaben
+
+// "ModellName" folgt ein beliebiger Name für die Modelldaten vergeben
+ModellName
+Fachwerkbrücke
+
+// "Raumdimension" folgt ein 
+// Integer für 2D oder 3D, und ein Integer für die Anzahl der Knotenfreiheitsgrade
+Raumdimension
+2	3
+
+// ************************************ Knoten*****************************
+// nach dem Schlüsselwort "Knoten" kommen beliebig viele Zeilen mit Knotenname und -koordinaten
+// eine Zeile mit einem Integer-Wert ändert die Anzahl der Knotenfreitsgrade für die folgenden Knoten: Knoten 3 mit 2 Freiheitsgraden
+Knoten
+1	0			// Knoten 1 in 1D mit 1 Koordinaten
+1	0	0		// Knoten 1 in 2D mit 2 Koordinaten
+1	0	0	0	// Knoten 1 in 3D mit 3 Koordinaten
+2				// ändere NDOF auf 2 DOF/Knoten
+2	4	5		// Knoten 2 in 2D
+3				// ändere NDOF auf 3 DOF/Knoten
+3	0	5		// Knoten 3 in 2D
+
+// nach dem Schlüsselwort "Knotengruppe" kommt 1 Zeile mit Initial für alle Knoten der Gruppe
+// danach kommen beliebig viele Zeilen mit Knotenkoordinaten gemäß Raumdimension
+// eindeutige Identifikatoren werden generiert mit Initial mit max 100 pro Richtung pro Knoten
+// IDzzyyxx, e.g. ID000000 - ID999999
+Knotengruppe
+k				// Initial für Knotenidentifikatoren der Knotengruppe 
+0	3			// 1. Identifikator generiert "k000000" mit Koordinaten 0;3
+0	2			// 2. Identifikator generiert "k000001" mit Koordinaten 0;2
+
+// nach dem Schlüsselwort "Äquidistantes Knotennetz"
+// kommen beliebig viele Zeilen mit Initial, Koordinate, Abstand, Anzahl je Raumdimension,
+// bzw. 4 Werte für 1D, 7 Werte für 2D und 10 Werte für 3D
+// in jede Richtung x,y,z werden max. 100 (0 - 99) Zähler hochgezählt Initialzzyyxx, z.B. E000000 - E000099
+Äquidistantes Knotennetz
+N	0.	2.	12							// 1D, Start 0., 12 Knoten mit Abstand 2., Id N000000 - N000011
+A	0.	1.	3	1.	1.	3				// 2D, (Start x=0, Abstand 1.)3 Knoten * 3 Knoten(Start y=1., Abstand 1.), Id A000000 - A000202
+Z	0.	1.	3	1.	1.	3	2.	1.	3	// 3D, (Start x=0, Abstand 1.)3 Knoten * 3 Knoten(Start y=1., Abstand 1.) * 3 Nodes(Start z=2., Abstand 1.), Id Z000000 - Z020202
+
+// weiteres Schlüsselwort "Variables Knotennetz"
+// die 1. Zeile beinhaltet die Knotenabstände in alle 3 Richtungen
+// sukzessive zuerst in z- mit x,y=0, dann in z- mit x=0,y=1. Abstand, dann in x=0, y=2. Abstand, usw.
+// so dass kombinatorisch (Anzahl Abstände ^3) Knoten generiert werden (hier 5^3=125)
+// die 2. Zeile beinhaltet einen initialen Identifikator (hier: N) und den Koordinatenursprung des Netzes
+// eindeutige Kontenidentifikatoren werden generiert, indem in jede Richtung 00-99 maximal hochgezählt werden
+Variables Knotennetz
+0.	1.	3.	6.	// Id X000000 - X000303, 4*4 Knoten mit 4 Knotenkoordinaten in x und y
+X	0.	0.		// Initial Identifikator X mit Netzursprung in x=0., y=0.
+
+// ************************************ Elemente *****************************
+// "Elemente2D2Knoten" folgen beliebig viele Zeilen mit
+// ElementName,  Knotenname1, Knotenname2, Material
+Elemente2D2Knoten
+e00	n00	n01	iso
+
+// "Elemente2D3Knoten" folgen beliebig viele Zeilen mit
+// ElementName,  Knotenname1, Knotenname2, Knotenname3, Material
+Elemente2D3Knoten
+e00	n00	n01	n03	iso
+
+// "Elemente2D4Knoten" folgen beliebig viele Zeilen mit
+// ElementName,  Knotenname1, Knotenname2, Knotenname3, Knotenname4, Material
+Elemente2D4Knoten
+e00	n00	n01	n03	n04	iso
+
+// "Elemente3D8Knoten" folgen beliebig viele Zeilen mit
+// ElementName,  Knotenname1, Knotenname2, Knotenname3, Knotenname4, Knotenname5, Knotenname6, Knotenname7, Knotenname8, Material
+Elemente3D8Knoten
+e00	n00	n01	n03	n04n05	n06	n07	n08	iso
+
+// ************************************ Material *****************************
+// "Material" folgen beliebig viele Zeilen mit
+// MaterialName, und bis zu 4 Zahlen für Wärmeleitfähigkeit in 3D und spezifische Wärme*Dichte (rhoC)
+Material
+iso	5	1
+
+// ************************************ Lasten *****************************
+// "KnotenLasten" folgen beliebig viele Zeilen mit
+// KnotenlastName, Knotenname und Wärmelast am Knoten
+KnotenLasten
+kl0	n00	20
+
+// "LinienLasten" folgen beliebig viele Zeilen mit
+// LinienlastName, Knotenname 1, Knotenname 2 und Wärmelast zwischen den Knoten
+LinienLasten
+ll0	n00	n01	10
+
+// "ElementLast3" folgen beliebig viele Zeilen mit
+// ElementlastName, Elementname und Wärmelast an 3 Knoten
+ElementLast3
+el0	e00	10	10	10
+
+// "ElementLast4" folgen beliebig viele Zeilen mit
+// ElementlastName, Elementname und Wärmelast an 4 Knoten
+ElementLast4
+el0	e00	10	10	10	10
+
+// ************************************ Randbedingungen *****************************
+// "Randbedingungen" folgen beliebig viele Zeilen mit
+// RandbedingungenName, Knotenname und Wert für vordefinierte Wärme
+Randbedingungen
+s00	n00	10
+
+end

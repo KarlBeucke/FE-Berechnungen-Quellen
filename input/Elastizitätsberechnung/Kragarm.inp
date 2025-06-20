@@ -1,0 +1,70 @@
+ModellName
+ebenes Spannungsproblem: Kragarm mit Einzellast am Ende
+
+Raumdimension
+2	2
+
+Knoten
+n00	0	0
+n10	1	0
+n20	2	0
+n30	3	0
+n40	4	0
+n50	5	0
+n60	6	0
+n01	0	1
+n11	1	1
+n21	2	1
+n31	3	1
+n41	4	1
+n51	5	1
+n61	6	1
+n02	0	2
+n12	1	2
+n22	2	2
+n32	3	2
+n42	4	2
+n52	5	2
+n62	6	2
+
+Element2D3
+ELower00	n00	n10	n11	dicke	ebeneSpannung
+ELower10	n10	n20	n21	dicke	ebeneSpannung
+ELower20	n20	n30	n31	dicke	ebeneSpannung
+ELower30	n30	n40	n41	dicke	ebeneSpannung
+ELower40	n40	n50	n51	dicke	ebeneSpannung
+ELower50	n50	n60	n61	dicke	ebeneSpannung
+EUpper00	n00	n11	n01	dicke	ebeneSpannung
+EUpper10	n10	n21	n11	dicke	ebeneSpannung
+EUpper20	n20	n31	n21	dicke	ebeneSpannung
+EUpper30	n30	n41	n31	dicke	ebeneSpannung
+EUpper40	n40	n51	n41	dicke	ebeneSpannung
+EUpper50	n50	n61	n51	dicke	ebeneSpannung
+ELower01	n01	n11	n02	dicke	ebeneSpannung
+ELower11	n11	n21	n12	dicke	ebeneSpannung
+ELower21	n21	n31	n22	dicke	ebeneSpannung
+ELower31	n31	n41	n32	dicke	ebeneSpannung
+ELower41	n41	n51	n42	dicke	ebeneSpannung
+ELower51	n51	n61	n52	dicke	ebeneSpannung
+EUpper01	n11	n12	n02	dicke	ebeneSpannung
+EUpper11	n21	n22	n12	dicke	ebeneSpannung
+EUpper21	n31	n32	n22	dicke	ebeneSpannung
+EUpper31	n41	n42	n32	dicke	ebeneSpannung
+EUpper41	n51	n52	n42	dicke	ebeneSpannung
+EUpper51	n61	n62	n52	dicke	ebeneSpannung
+
+Querschnitt
+dicke	1
+
+Material
+ebeneSpannung	3e7	0
+
+Knotenlasten
+P1	n62	0	-10000
+
+Randbedingungen
+SN00	n00	xy	0	0
+SN01	n01	xy	0	0
+SN02	n02	xy	0	0
+
+end

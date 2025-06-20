@@ -1,0 +1,46 @@
+ModellName
+6DOF Anfangswerte
+
+Raumdimension
+2	2
+
+Knoten
+2
+n0	2	0
+n1	1	0
+n2	0	0
+
+Fachwerk
+te00	n0	n1	iso0	c0
+te01	n1	n2	iso1	c1
+
+// Querschnittsfläche
+Querschnitt
+c0	0,01
+c1	1
+
+// name, E-modul, Poissonzahl, spezifische Masse
+Material
+iso0	1	0	2
+iso1	1	0	2
+
+Lager
+Lager0	n2	xy
+Lager1	n1	y
+Lager2	n0	y
+
+Eigenlösungen
+2DOFEigen	2
+
+// id, tmax, dt, method, par1, par2
+Zeitintegration
+2DOFAnfang	400	1	1	0,25	0,5
+
+Dämpfung
+0,02
+
+Anfangsbedingungen
+n0	1	0
+n1	0,9	0
+
+end

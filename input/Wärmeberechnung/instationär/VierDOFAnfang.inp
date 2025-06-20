@@ -1,0 +1,37 @@
+ModellName
+4DOF initial, zeitabhängige Randtemperatur
+
+Raumdimension
+2	1
+
+Knoten
+n01	0	0
+n02	1	0
+n03	2	0
+n04	3	0
+
+Material
+c1	1	2
+
+Elemente2D2Knoten
+te00	n01	n02	c1
+te01	n02	n03	c1
+te02	n03	n04	c1
+
+Randbedingungen
+s01	n01	30
+
+Eigenlösungen
+DOFEigen	2
+
+// id, tmax, dt, alfa
+Zeitintegration
+4DOFTimeInitial	50	0,5	0,8
+
+Anfangstemperaturen
+alle	30
+
+Zeitabhängige Randbedingungen
+zR1	n04	linear	0;30	5;10
+
+end

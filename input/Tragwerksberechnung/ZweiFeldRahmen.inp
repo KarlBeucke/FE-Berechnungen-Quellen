@@ -1,0 +1,44 @@
+ModellName
+Zwei Feld Rahmen
+
+Raumdimension
+2	3
+
+Knoten
+1	0	0
+2	0	2
+3	2	2
+4	2	0
+5	3	2
+6	3	0
+
+Biegebalken
+e1	1	2	m0	c0
+e2	2	3	m0	c0
+e3	3	4	m0	c0
+e5	5	6	m0	c0
+
+BiegebalkenGelenk
+e4	3	5	m0	c0	1
+
+Querschnitt
+c0	5e-2	2e-5
+
+Material
+m0	2e8	0
+
+Knotenlast
+nl1	2	100	0	0
+
+Punktlast
+pl1	e2	0	-50	0,5
+
+Linienlast
+Ll1	e2	0	-10	0	-10
+
+Lager
+Lager1	1	xyr
+Lager2	4	xyr
+Lager3	6	xyr
+
+end

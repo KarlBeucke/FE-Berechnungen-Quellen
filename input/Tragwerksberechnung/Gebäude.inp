@@ -1,0 +1,94 @@
+ModellName
+Gebäude
+
+Raumdimension
+2	3
+
+Knoten
+F0	0	0
+F1	6	0
+F2	12	0
+F3	18	0
+F4	24 	0
+G0	0	3,5
+G1	6	3,5
+G2	12	3,5
+G3	18	3,5
+G4	24	3,5
+U10	0	7
+U11	6	7
+U12	18	7
+U13	24	7
+U20	0	10,5
+U21	6	10,5
+U22	18	10,5
+U23	24	10,5
+U30	0	14
+U31	6	14
+U32	18	14
+U33	24	14
+
+Biegebalken
+Col00	F0	G0	m0	c0
+Col01	F1	G1	m0	c0
+Col02	F2	G2	m0	c0
+Col03	F3	G3	m0	c0
+Col04	F4	G4	m0	c0
+Col05	G0	U10	m1	c1
+Col06	G1	U11	m1	c1
+Col07	G3	U12	m1	c1
+Col08	G4	U13	m1	c1
+Col09	U10	U20	m2	c2
+Col10	U11	U21	m2	c2
+Col11	U12	U22	m2	c2
+Col12	U13	U23	m2	c2
+Col13	U20	U30	m2	c2
+Col14	U21	U31	m2	c2
+Col15	U22	U32	m2	c2
+Col16	U23	U33	m2	c2
+Bm00	G0	G1	m3	c3
+Bm01	G1	G2	m3	c3
+Bm02	G2	G3	m3	c3
+Bm03	G3	G4	m3	c3
+Bm04	U10	U11	m4	c4
+Bm05	U12	U13	m4	c4
+Bm06	U20	U21	m4	c4
+Bm07	U22	U23	m4	c4
+Bm08	U30	U31	m4	c4
+Bm09	U32	U33	m4	c4
+Bm10	U31	U32	m4	c5
+
+Querschnitt
+c0	0,18	0,0054
+c1	0,09	0,00068
+c2	0,06	0,00045
+c3	0,15	0,0030
+c4	0,08	0,0011
+c5	0,12	0,0036
+
+//Id	EModul	Poissonzahl	Spezifische Masse
+Material
+m0	2,1e7	0,22	0,175
+m1	2,1e7	0,22	0,175
+m2	2,1e7	0,22	0,175
+m3	2,1e7	0,22	0,175
+m4	2,1e7	0,22	0,175
+m5	2,1e7	0,22	0,175
+
+Lager
+Lager0	F0	xy
+Lager1	F1	xy
+Lager2	F2	xy
+Lager3	F3	xy
+Lager4	F4	xy
+
+Knotenlast
+Knotenlast1	U33	100	0	0
+
+Punktlast
+P1	Bm10	0	-50	0,5
+
+Linienlast
+Linienlast1	Bm10	0	-20	0	-20
+
+end

@@ -1,0 +1,147 @@
+// Schlüsselworte kennzeichnen festgelegte Inhalte,  Tabulatoren trennen separate Eingaben
+
+// nach dem Schlüsselwort "ModellName" wird ein beliebiger Name für die Modelldaten vergeben
+ModellName
+Fachwerkbrücke
+
+// nach dem Schlüsselwort "Raumdimension" wird ein Integer für 2D oder 3D, und ein Integer für die Anzahl der Knotenfreiheitsgrade
+Raumdimension
+2	3
+
+// ************************************ Knoten*****************************
+// nach dem Schlüsselwort "Knoten" kommen beliebig viele Zeilen mit Knotenname und -koordinaten
+// eine Zeile mit einem Integer-Wert ändert die Anzahl der Knotenfreitsgrade für die folgenden Knoten: Knoten 3 mit 2 Freiheitsgraden
+Knoten
+1	0			// Knoten 1 in 1D mit 1 Koordinaten
+1	0	0		// Knoten 1 in 2D mit 2 Koordinaten
+1	0	0	0	// Knoten 1 in 3D mit 3 Koordinaten
+2				// ändere NDOF auf 2 DOF/Knoten
+2	4	5		// Knoten 2 in 2D
+3				// ändere NDOF auf 3 DOF/Knoten
+3	0	5		// Knoten 3 in 2D
+
+// nach dem Schlüsselwort "Knotengruppe" kommt 1 Zeile mit Initial für alle Knoten der Gruppe
+// danach kommen beliebig viele Zeilen mit Knotenkoordinaten gemäß Raumdimension
+// eindeutige Identifikatoren werden generiert mit Initial mit max 100 pro Richtung pro Knoten
+// IDzzyyxx, e.g. ID000000 - ID999999
+Knotengruppe
+k				// Initial für Knotenidentifikatoren der Knotengruppe 
+0	3			// 1. Identifikator generiert "k000000" mit Koordinaten 0;3
+0	2			// 2. Identifikator generiert "k000001" mit Koordinaten 0;2
+
+// nach dem Schlüsselwort "Äquidistantes Knotennetz"
+// kommen beliebig viele Zeilen mit Initial, Koordinate, Abstand, Anzahl je Raumdimension,
+// bzw. 4 Werte für 1D, 7 Werte für 2D und 10 Werte für 3D
+// in jede Richtung x,y,z werden max. 100 (0 - 99) Zähler hochgezählt Initialzzyyxx, z.B. E000000 - E000099
+Äquidistantes Knotennetz
+N	0.	2.	12							// 1D, Start 0., 12 Knoten mit Abstand 2., Id N000000 - N000011
+A	0.	1.	3	1.	1.	3				// 2D, (Start x=0, Abstand 1.)3 Knoten * 3 Knoten(Start y=1., Abstand 1.), Id A000000 - A000202
+Z	0.	1.	3	1.	1.	3	2.	1.	3	// 3D, (Start x=0, Abstand 1.)3 Knoten * 3 Knoten(Start y=1., Abstand 1.) * 3 Nodes(Start z=2., Abstand 1.), Id Z000000 - Z020202
+
+// weiteres Schlüsselwort "Variables Knotennetz"
+// die 1. Zeile beinhaltet die Knotenabstände in alle 3 Richtungen
+// sukzessive zuerst in z- mit x,y=0, dann in z- mit x=0,y=1. Abstand, dann in x=0, y=2. Abstand, usw.
+// so dass kombinatorisch (Anzahl Abstände ^3) Knoten generiert werden (hier 5^3=125)
+// die 2. Zeile beinhaltet einen initialen Identifikator (hier: N) und den Koordinatenursprung des Netzes
+// eindeutige Kontenidentifikatoren werden generiert, indem in jede Richtung 00-99 maximal hochgezählt werden
+Variables Knotennetz
+0.	1.	3.	6.	// Id X000000 - X000303, 4*4 Knoten mit 4 Knotenkoordinaten in x und y
+X	0.	0.		// Initial Identifikator X mit Netzursprung in x=0., y=0.
+
+// ************************************ Elemente *****************************
+//
+// nach dem Schlüsselwort "Fachwerk" kommen beliebig viele Zeilen mit
+// ElementName,  Knotenname1, Knotenname 2, Querschnitt, Material
+Fachwerk
+e00	n0	n1	c1	iso
+
+// nach dem Schlüsselwort "Biegebalken" kommen beliebig viele Zeilen mit
+// ElementName,  Knotenname 1, Knotenname 2, Querschnitt, Material
+Biegebalken
+e1	1	2	c0	EIc
+
+// nach dem Schlüsselwort "BiegebalkenGelenk" kommen beliebig viele Zeilen mit
+// ElementName,  Knotenname 1, Knotenname 2, Querschnitt, Material, Gelenk  am 1. oder 2. Knoten
+BiegebalkenGelenk
+e2	2	3	c0	EIc	2
+e3	3	4	c0	EIc	1
+
+// nach dem Schlüsselwort "Feder" kommen beliebig viele Zeilen mit
+// ElementName,  Knotenname  und Materialnamen
+Feder
+feder	k1	m2
+
+// ************************************ Elementquerschnitt *****************************
+// nach dem Schlüsselwort "Querschnitt" kommen beliebig viele Zeilen mit
+// QuerschnittName, und bis zu 2 Zahlen für Fläche und Trägheitsmoment Ixx
+Querschnitt
+c0	5e-4	2e-8
+
+// ************************************ Material *****************************
+// nach dem Schlüsselwort "Material" kommen beliebig viele Zeilen mit
+// MaterialName, und bis zu 3 Zahlen für E-Modul, Poisson-Zahl und Masse bzw. FederName und 3 Federsteifigkeiten Rx, Ry, Rphi
+Material
+EIc	2e8	0
+m1	2e8
+m2	feder	0	0	100
+
+// ************************************ Lasten *****************************
+// nach dem Schlüsselwort "Knotenlast" kommen beliebig viele Zeilen mit
+// KnotenlastName, Knotenname und 3 Zahlen für Nx, Ny, M
+Knotenlast
+nl1	2	100	0	0
+
+// nach dem Schlüsselwort "Punktlast" kommen beliebig viele Zeilen mit
+// PunktlastName, Knotenname und 3 Zahlen für p1x, p1y, offset
+Punktlast
+pl1	2	0	100	0,5
+
+// nach dem Schlüsselwort "Linienlast" kommen beliebig viele Zeilen mit
+// LinienlastName, Elementname und 4 Zahlen für q1x, q1y, q2x, q2y
+Linienlast
+q	e1	0	-2	0	-2
+
+// ************************************ Festhaltungen *****************************
+// nach dem Schlüsselwort "Lager" kommen beliebig viele Zeilen mit
+// LagerName, Knotenname und Text für x-, y- und rotations-Festhaltung
+Lager
+Lager1	1	xyr
+Lager2	4	x
+
+// ************************************ Eigenlösungen *****************************
+// nach dem Schlüsselwort "Eigenlösungen" kommt eine Zeilen mit
+// EigenlösungName, Anzahl der zu ermittelnden Eigenlösungen
+Eigenlösungen
+2DOFEigen	2
+
+// ************************************ Zeitintegration *****************************
+// nach dem Schlüsselwort "Zeitintegration" kommt eine Zeilen mit
+// ZeitintegrationName, max. Integrationszeit, Zeitintervall, Integrationsmethode, Integrationsparameter1 und 2
+// id, tmax, dt, method, par1, par2
+Zeitintegration
+SechsDOFBodenanregung	125	0,4	1	0,25	0,5
+
+// ******************************* modale Dämpfung *****************************
+// nach dem Schlüsselwort "Dämpfung" kommt eine Zeilen mit modalen Dämpfungsmaßen
+// ein Wert wird interpretiert als einheitliches modales Dämpfungsmaß für alle Eigenzustände
+// ansonsten kann für jeden Eigenzustand ein Wert für die Dämpfungsmaße angegeben werden
+Dämpfung
+0,02
+
+// ******************************* Anfangsbedingungen *****************************
+// nach dem Schlüsselwort "Anfangsbedingungen" folgt eine Zeile mit 3, 5 oder 7 Werten
+// für den Knotennamen und je 2 Werten für Anfangswert und jeweiligen Knotenfreiheitsgrad
+Anfangsbedingungen
+n0	1	0
+n1	0,9	0
+
+// ************************************ Zeitabhängige Knotenlast *****************************
+// nach dem Schlüsselwort "Zeitabhängige Knotenlast" kommt eine Zeilen mit
+// LastName, Indikator für Bodenanregung, Freiheitsgrad
+// eine weitere Zeile mit 1 Wert für Dateinamen, alternativ 3 Werten für Amplitude, Frequenz und Phasenwinkel
+// oder alternativ mit x,y-Wertepaaren für lineare Anregungsintervalle
+Zeitabhängige Knotenlast
+zk0	boden	0
+0;0	0,8;1	1,6;0	3,2;-1	4,8;0	5,6;1	6,4;0
+
+end

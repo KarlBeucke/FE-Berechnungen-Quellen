@@ -1,0 +1,123 @@
+// Schlüsselworte kennzeichnen festgelegte Inhalte,  Tabulatoren trennen separate Eingaben
+
+// "ModellName" folgt ein beliebiger Name für die Modelldaten vergeben
+ModellName
+Fachwerkbrücke
+
+// "Raumdimension" folgt ein 
+// Integer für 2D oder 3D, und ein Integer für die Anzahl der Knotenfreiheitsgrade
+Raumdimension
+2	3
+
+// ************************************ Knoten*****************************
+// "Knoten" folgen beliebig viele Zeilen mit 
+// Knotenname und -koordinaten
+Knoten
+n00	0	0
+
+// weitere Schlüsselwort "Knotengruppe"
+// weiteres Schlüsselwort " Aequidistantes Knotennetz"
+// weiteres Schlüsselwort "Variables Knotennetz"
+
+// ************************************ Elemente *****************************
+// "Elemente2D2Knoten" folgen beliebig viele Zeilen mit
+// ElementName,  Knotenname1, Knotenname2, Material
+Elemente2D2Knoten
+e00	n00	n01	iso
+
+// "Elemente2D3Knoten" folgen beliebig viele Zeilen mit
+// ElementName,  Knotenname1, Knotenname2, Knotenname3, Material
+Elemente2D3Knoten
+e00	n00	n01	n03	iso
+
+// "Elemente2D4Knoten" folgen beliebig viele Zeilen mit
+// ElementName,  Knotenname1, Knotenname2, Knotenname3, Knotenname4, Material
+Elemente2D4Knoten
+e00	n00	n01	n03	n04	iso
+
+// "Elemente3D8Knoten" folgen beliebig viele Zeilen mit
+// ElementName,  Knotenname1, Knotenname2, Knotenname3, Knotenname4, Knotenname5, Knotenname6, Knotenname7, Knotenname8, Material
+Elemente3D8Knoten
+e00	n00	n01	n03	n04n05	n06	n07	n08	iso
+
+// ************************************ Material *****************************
+// "Material" folgen beliebig viele Zeilen mit
+// MaterialName, und bis zu 4 Zahlen für Wärmeleitfähigkeit in 3D und spezifische Wärme*Dichte (rhoC)
+Material
+iso	5	1
+
+// ************************************ Lasten *****************************
+// "KnotenLasten" folgen beliebig viele Zeilen mit
+// KnotenlastName, Knotenname und Wärmelast am Knoten
+KnotenLasten
+kl0	n00	20
+
+// "LinienLasten" folgen beliebig viele Zeilen mit
+// LinienlastName, Knotenname 1, Knotenname 2 und Wärmelast zwischen den Knoten
+LinienLasten
+ll0	n00	n01	10
+
+// "ElementLast3" folgen beliebig viele Zeilen mit
+// ElementlastName, Elementname und Wärmelast an 3 Knoten
+ElementLast3
+el0	e00	10	10	10
+
+// "ElementLast4" folgen beliebig viele Zeilen mit
+// ElementlastName, Elementname und Wärmelast an 4 Knoten
+ElementLast4
+el0	e00	10	10	10	10
+
+// ************************************ Randbedingungen *****************************
+// "Randbedingungen" folgen beliebig viele Zeilen mit
+// RandbedingungenName, Knotenname und Wert für vordefinierte Wärme
+Randbedingungen
+s00	n00	10
+
+// ************************************ Eigenlösungen *****************************
+// "Eigenlösungen"
+// EigenlösungName, Anzahl Eigenzustände
+Eigenlösungen
+Eigen	2
+
+// ************************************ Zeitintegration *****************************
+// "Zeitintegration"
+// ZeitintegrationName, tmax, deltaT, Alfa
+Zeitintegration
+KonstantLinksLinearUnten	30	0,5	0,8
+
+// ************************************ Anfangstemperaturen *****************************
+// "Anfangstemperaturen"
+// "stationäre Lösung" oder Folge von "knotenID inkl. alle" und "Wärmewert"
+Anfangstemperaturen
+stationäre Lösung
+alle	30
+
+// ************************************ Zeitabhängige Randbedingungen *****************************
+// "Zeitabhängige Randbedingungen"
+// RandbedingungName, KnotenName, Wert
+// oder RandbedingungName, KnotenName, datei
+// oder RandbedingungName, KnotenName, linear gefolgt von Zeit;Temperatur-Wertepaaren
+Zeitabhängige Randbedingungen
+rb0	n00	datei
+rb2	n04	linear	0;30	5;10
+
+// ************************************ Zeitabhängige Knotenlast *****************************
+// "Zeitabhängige Knotenlasten"
+// KnotenLastName, KnotenName, wert
+// oder KnotenLastName, KnotenName, datei
+// oder KnotenLastName, KnotenName, linear gefolgt von Wertepaaren für Zeit;Temperatur
+Zeitabhängige Knotenlasten
+zk0	n00	datei
+zk2	n04	linear	0;30	5;10
+
+// ************************************ Zeitabhängige Elementlast *****************************
+// "Zeitabhängige Elementlasten"
+// ElementLastName, ElementName, wert
+// oder ElementLastName, ElementName, datei
+// oder ElementLastName, ElementName, linear gefolgt von Wertepaaren für Zeit;Temperatur
+Zeitabhängige Elementlasten
+ze0	n00	datei
+ze2	n04	linear	0;30	5;10
+
+
+end

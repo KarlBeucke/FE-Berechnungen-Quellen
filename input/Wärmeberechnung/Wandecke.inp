@@ -1,0 +1,76 @@
+ModellName
+Beispiel: Anwendung der FEM fuer ebene, stationaere Waermetransferberechnung
+
+Raumdimension
+2	1 
+
+Knoten
+n01	0,00	0,45
+n02	0,15	0,45
+n03	0,30	0,45
+n04	0,45	0,45
+n05	0,00	0,30
+n06	0,15	0,30
+n07	0,30	0,30
+n08	0,45	0,30
+n09	0,00	0,15
+n10	0,15	0,15
+n11	0,30	0,15
+n12	0,45	0,15
+n13	0,00	0,00
+n14	0,15	0,00
+n15	0,30	0,00
+
+Elemente2D3Knoten
+e01	n01	n05	n06	iso2
+e02	n06	n02	n01	iso2
+e03	n02	n06	n07	iso2
+e04	n07	n03	n02	iso2
+e05	n03	n07	n08	iso2
+e06	n08	n04	n03	iso2
+e07	n05	n09	n10	iso2
+e08	n10	n06	n05	iso2
+e09	n06	n10	n11	iso
+e10	n11	n07	n06	iso
+e11	n07	n11	n12	iso
+e12	n12	n08	n07	iso
+e13	n09	n13	n14	iso2
+e14	n14	n10	n09	iso2
+e15	n10	n14	n15	iso
+e16	n15	n11	n10	iso
+
+Material
+iso	2
+iso2	0,4
+
+ElementLast3
+c01	e01	100	100	100
+c02	e02	100	100	100
+c03	e03	100	100	100
+c04	e04	100	100	100
+c05	e05	100	100	100
+c06	e06	100	100	100
+c07	e07	100	100	100
+c08	e08	100	100	100
+c09	e09	100	100	100
+c10	e10	100	100	100
+c11	e11	100	100	100
+c12	e12	100	100	100
+c13	e13	100	100	100
+c14	e14	100	100	100
+c15	e15	100	100	100
+c16	e16	100	100	100
+
+Randbedingungen
+s01	n01	10
+s02	n02	10
+s03	n03	10
+s04	n04	10
+s05	n05	10
+s06	n09	10
+s07	n13	10
+s08	n11	20
+s09	n12	20
+s10	n15	20
+
+end

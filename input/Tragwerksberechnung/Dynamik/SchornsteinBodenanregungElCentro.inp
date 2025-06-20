@@ -1,0 +1,50 @@
+ModellName
+Schornstein mit 4 Punktmassen
+
+Raumdimension
+2	3
+
+Knoten
+n0	0	0
+n1	0	20
+n2	0	40
+n3	0	60
+n4	0	80
+
+Biegebalken
+e0	n0	n1	iso	c1
+e1	n1	n2	iso	c1
+e2	n2	n3	iso	c1
+e3	n3	n4	iso	c1
+
+//Id	Querschnittsfläche(m^2)	Trägheitsmoment(m^4)
+Querschnitt
+c1	5,0	17,6
+
+//Id	EModul(kN/m^2)	Poissonzahl	 DichteBeton(t/m^3)
+Material
+iso	3e7	0	2,5
+
+Lager
+Lager0	n0	xyr
+Lager1	n1	y
+Lager2	n2	y
+Lager3	n3	y
+Lager4	n4	y
+
+Eigenlösungen
+Eigen	4
+
+// id, tmax, dt, method, par1, par2
+Zeitintegration
+Schornstein	30	0,005	1	0,25	0,5
+
+Dämpfung
+0,02
+
+// Beschleunigungsdaten El Centro BM68elc.acc
+Zeitabhängige Knotenlast
+zkl0	boden	0
+BM68elc.0,005.acc
+
+end

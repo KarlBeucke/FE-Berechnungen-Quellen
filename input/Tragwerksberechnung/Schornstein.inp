@@ -1,0 +1,38 @@
+ModellName
+Schornstein mit 4 Punktmassen
+
+Raumdimension
+2	3
+
+Knoten
+n0	0	0
+n1	0	20
+n2	0	40
+n3	0	60
+n4	0	80
+
+Biegebalken
+e0	n0	n1	iso	c1
+e1	n1	n2	iso	c1
+e2	n2	n3	iso	c1
+e3	n3	n4	iso	c1
+
+
+//Id	Querschnittsflaeche(m^2)	Traegheitsmoment(m^4)
+Querschnitt
+c1	5,0	17,6
+
+//Id	EModul(kN/m^2)	Poissonzahl	 DichteBeton(t/m^3)
+Material
+iso	3e7	0	2,5
+
+Lager
+Support0	n0	xyr
+
+Knotenlast
+P4	n4	 4000	0	0
+P3	n3	 3000	0	0
+P2	n2	 2000	0	0
+P1	n1	 1000	0	0
+
+end

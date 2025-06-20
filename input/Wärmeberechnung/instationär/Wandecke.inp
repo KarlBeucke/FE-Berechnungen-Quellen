@@ -1,0 +1,92 @@
+ModellName
+Wandecke
+
+Raumdimension
+2	1
+
+Knoten
+n00	0	0
+n01	0,5	0
+n02	1	0
+n03	0	0,5
+n04	0,5	0,5
+n05	1	0,5
+n06	0	1
+n07	0,5	1
+n08	1	1
+n09	0	1,5
+n10	0,5	1,5
+n11	1	1,5
+n12	0	2
+n13	0,5	2
+n14	1	2
+n15	1,5	1
+n16	1,5	1,5
+n17	1,5	2
+n18	2	1
+n19	2	1,5
+n20	2	2
+
+Elemente2D3Knoten
+e00	n00	n01	n03	iso
+e01	n01	n04	n03	iso
+e02	n01	n02	n04	iso
+e03	n02	n05	n04	iso
+e04	n03	n04	n06	iso
+e05	n04	n07	n06	iso
+e06	n04	n05	n07	iso
+e07	n05	n08	n07	iso
+e08	n06	n07	n09	iso
+e09	n07	n10	n09	iso
+e10	n07	n08	n10	iso
+e11	n08	n11	n10	iso
+e12	n09	n10	n12	iso
+e13	n10	n13	n12	iso
+e14	n10	n11	n13	iso
+e15	n11	n14	n13	iso
+e16	n08	n15	n11	iso
+e17	n15	n16	n11	iso
+e18	n11	n16	n14	iso
+e19	n16	n17	n14	iso
+e20	n15	n18	n16	iso
+e21	n18	n19	n16	iso
+e22	n16	n19	n17	iso
+e23	n19	n20	n17	iso
+
+Material
+iso	5	2
+
+Randbedingungen
+s00	n02	30
+s01	n05	30
+s02	n08	30
+s03	n15	30
+s04	n18	30
+s05	n00	10
+s06	n03	10
+s07	n06	10
+s08	n09	10
+s09	n12	10
+s10	n13	10
+s11	n14	10
+s12	n17	10
+s13	n20	10
+
+Eigenlösungen
+2DOFEigen	2
+
+// id, tmax, dt, alfa
+Zeitintegration
+KonstantLinksLinearUnten	45	0,1	0,8
+
+Anfangstemperaturen
+stationäre Lösung
+
+Zeitabhängige Randbedingungen
+zR1	n02	linear	0;0	15;20	20;30
+zR2	n05	linear	0;0	15;20	20;30
+zR3	n08	linear	0;0	15;20	20;30
+zR4	n15	linear	0;0	15;20	20;30
+zR5	n18	linear	0;0	15;20	20;30
+
+end
