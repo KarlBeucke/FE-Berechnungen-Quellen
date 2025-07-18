@@ -85,11 +85,11 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
                     _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Knotennetz");
                 }
 
-                for (var k = 0; k < wiederholungenX; k++)
+                for (var k = 0; k < wiederholungenY; k++)
                 {
                     var temp = koordinaten[0];
                     var idY = k.ToString().PadLeft(2, '0');
-                    for (var l = 0; l < wiederholungenY; l++)
+                    for (var l = 0; l < wiederholungenX; l++)
                     {
                         var idX = l.ToString().PadLeft(2, '0');
                         var knotenId = knotenPräfix + idX + idY;
@@ -102,7 +102,6 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
                     koordinaten[1] += abstandY;
                     koordinaten[0] = temp;
                 }
-                //_zähler++;
             }
 
             if (KnotenGrid != null) KnotenGrid.ItemsSource = _knotenListe;

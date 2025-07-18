@@ -4,18 +4,18 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 public class MaterialParser
 {
-    private double eModul;
-    private Material material;
-    private string materialId;
-    private FeModell modell;
-    private string[] substrings;
+    private double _eModul;
+    private Material _material;
+    private string _materialId;
+    private FeModell _modell;
+    private string[] _substrings;
 
     public static double GModul { get; set; }
     public static double Poisson { get; set; }
 
     public void ParseMaterials(string[] lines, FeModell feModell)
     {
-        modell = feModell;
+        _modell = feModell;
         var delimiters = new[] { '\t' };
 
         for (var i = 0; i < lines.Length; i++)
@@ -24,27 +24,31 @@ public class MaterialParser
             FeParser.EingabeGefunden += "\nMaterial";
             do
             {
-                substrings = lines[i + 1].Split(delimiters);
-                materialId = substrings[0];
-                switch (substrings.Length)
+                _substrings = lines[i + 1].Split(delimiters);
+                _materialId = _substrings[0];
+                switch (_substrings.Length)
                 {
+                    case 2:
+                        _eModul = double.Parse(_substrings[1]);
+                        _material = new Material(_eModul);
+                        break;
                     case 3:
-                        eModul = double.Parse(substrings[1]);
-                        Poisson = double.Parse(substrings[2]);
-                        material = new Material(eModul, Poisson);
+                        _eModul = double.Parse(_substrings[1]);
+                        Poisson = double.Parse(_substrings[2]);
+                        _material = new Material(_eModul, Poisson);
                         break;
                     case 4:
-                        eModul = double.Parse(substrings[1]);
-                        Poisson = double.Parse(substrings[2]);
-                        GModul = double.Parse(substrings[3]);
-                        material = new Material(eModul, Poisson, GModul);
+                        _eModul = double.Parse(_substrings[1]);
+                        Poisson = double.Parse(_substrings[2]);
+                        GModul = double.Parse(_substrings[3]);
+                        _material = new Material(_eModul, Poisson, GModul);
                         break;
                     default:
                         throw new ParseAusnahme(i + 1 + ":\nMaterial erfordert 3 oder 4 Eingabeparameter");
                 }
 
-                material.MaterialId = materialId;
-                modell.Material.Add(materialId, material);
+                _material.MaterialId = _materialId;
+                _modell.Material.Add(_materialId, _material);
                 i++;
             } while (lines[i + 1].Length != 0);
 

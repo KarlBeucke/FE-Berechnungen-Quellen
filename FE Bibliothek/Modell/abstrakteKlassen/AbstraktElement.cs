@@ -6,6 +6,7 @@
         public double E { get; set; }
         public double Nue { get; set; }
         public double M { get; set; }
+        public double Dicke { get; set; }
         public double A { get; set; }
         public double I { get; set; }
         public double Kxx { get; set; }

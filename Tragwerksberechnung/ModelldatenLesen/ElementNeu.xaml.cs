@@ -8,7 +8,7 @@ public partial class ElementNeu
 {
     private readonly FeModell _modell;
     private ElementKeys _elementKeys;
-    public MaterialKeys _materialKeys;
+    private MaterialKeys _materialKeys;
     private QuerschnittKeys _querschnittKeys;
     private string _aktuelleId;
 

@@ -4,7 +4,7 @@
     {
         private string _knotenId, _knotenPrefix;
         private string[] _substrings;
-        private readonly char[] _delimiters = { '\t' };
+        private readonly char[] _delimiters = ['\t'];
         private double[] _koords;
         private int _zähler;
         private double _xIntervall, _yIntervall, _zIntervall;
@@ -17,6 +17,8 @@
         public int MaxX { get; set; }
         public int MinY { get; set; }
         public int MaxY { get; set; }
+        public int MinZ { get; set; }
+        public int MaxZ { get; set; }
 
         private int AnzahlKnotenfreiheitsgrade { get; set; }
         public static string EingabeGefunden { get; set; }
@@ -47,16 +49,30 @@
             for (var i = 0; i < zeilen.Length; i++)
             {
                 if (zeilen[i] != "Modellabmessungen") continue;
+
+                MinX = 0; MinY=0; MinZ = 0;
+                MaxX = 0; MaxY = 0; MaxZ = 0;
                 _substrings = zeilen[i + 1].Split(_delimiters);
                 MinX = int.Parse(_substrings[0]);
                 MaxX = int.Parse(_substrings[1]);
-                MinY = int.Parse(_substrings[2]);
-                MaxY = int.Parse(_substrings[3]);
+                if (_substrings.Length > 2)
+                {
+                    MinY = int.Parse(_substrings[2]);
+                    MaxY = int.Parse(_substrings[3]);
+                }
+                if (_substrings.Length > 4)
+                {
+                    MinZ = int.Parse(_substrings[4]);
+                    MaxZ = int.Parse(_substrings[5]);
+                }
+                
                 FeModell.MinX = MinX;
                 FeModell.MaxX = MaxX;
                 FeModell.MinY = MinY;
                 FeModell.MaxY = MaxY;
-                EingabeGefunden += "\nModellabmessungen min x, max x = " + MinX + "," + MaxX + " und min y, max y = " + MinY + "," + MaxY;
+                FeModell.MinZ = MinZ;
+                FeModell.MaxZ = MaxZ;
+                EingabeGefunden += "\nModellabmessungen min x, max x = " + MinX + "," + MaxX + "\n und min y, max y = " + MinY + "," + MaxY + "\n und min z, max z = " + MinZ + "," + MaxZ;
                 break;
             }
         }
@@ -171,7 +187,6 @@
                                     _koords[0] += _xIntervall;
                                 }
 
-                                i++;
                                 break;
                             //Äquidistantes Knotennetz in 2D
                             case 7:
@@ -184,11 +199,11 @@
                                 _yIntervall = double.Parse(_substrings[5]);
                                 _nKnotenY = short.Parse(_substrings[6]);
 
-                                for (var k = 0; k < _nKnotenX; k++)
+                                for (var k = 0; k < _nKnotenY; k++)
                                 {
                                     var temp = _koords[0];
                                     var idY = k.ToString().PadLeft(2, '0');
-                                    for (var l = 0; l < _nKnotenY; l++)
+                                    for (var l = 0; l < _nKnotenX; l++)
                                     {
                                         var idX = l.ToString().PadLeft(2, '0');
                                         _knotenId = _knotenPrefix + idX + idY;
@@ -202,7 +217,7 @@
                                     _koords[1] += _yIntervall;
                                     _koords[0] = temp;
                                 }
-                                i++;
+
                                 break;
                             //Äquidistantes Knotennetz in 3D
                             case 10:
@@ -245,11 +260,12 @@
                                     _koords[2] += _zIntervall;
                                 }
 
-                                i++;
                                 break;
                             default:
                                 throw new ParseAusnahme(i + 3 + ":\nÄquidistantes Knotennetz");
                         }
+
+                        i++;
                     }
                 }
 

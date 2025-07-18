@@ -2,7 +2,6 @@
 
 public class KnotenLast : AbstraktKnotenlast
 {
-    // ... Constructor ........................................................
     public KnotenLast(string knotenId, double[] p)
     {
         KnotenId = knotenId;

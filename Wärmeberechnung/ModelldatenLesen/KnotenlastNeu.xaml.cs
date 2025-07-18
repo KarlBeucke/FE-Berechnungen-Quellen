@@ -108,8 +108,7 @@ public partial class KnotenlastNeu
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
     {
-        if (!_modell.Lasten.ContainsKey(KnotenlastId.Text)) return;
-        _modell.Lasten.Remove(KnotenlastId.Text);
+        if (!_modell.Lasten.Remove(KnotenlastId.Text)) return;
         Close();
         StartFenster.WärmeVisual.Close();
 
@@ -122,7 +121,7 @@ public partial class KnotenlastNeu
     {
         _modell.Knoten.TryGetValue(KnotenId.Text, out var knoten);
         if (knoten == null) { _ = MessageBox.Show("Knoten nicht im Modell gefunden", "neue Knotenlast"); return; }
-        StartFenster.TragwerkVisual.KnotenClick(knoten);
+        StartFenster.WärmeVisual.KnotenClick(knoten);
         Close();
         _modell.Berechnet = false;
     }

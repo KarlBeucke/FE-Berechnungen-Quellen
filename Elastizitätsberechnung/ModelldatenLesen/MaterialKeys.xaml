@@ -1,0 +1,35 @@
+﻿<Window x:Class="FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen.MaterialKeys"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="vorhandene Materialdefinitionen" Height="220" Width="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <ListView Grid.Row="0" Margin="10,10,-40,10" Name="MaterialKey"
+                  d:DataContext="{d:DesignData modell}" MouseDoubleClick="MouseDoubleClickNeuesMaterial" SelectionChanged="SelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding MaterialId}" />
+                    <GridViewColumn Header="E-Modul" Width="80"
+                                    DisplayMemberBinding="{Binding MaterialWerte[0], StringFormat=G3}" />
+                    <GridViewColumn Header="Querdehnung" Width="80"
+                                    DisplayMemberBinding="{Binding MaterialWerte[1], StringFormat=G3}" />
+                    <GridViewColumn Header="Schubmodul G" Width="100"
+                                    DisplayMemberBinding="{Binding MaterialWerte[2], StringFormat=G3}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Height="18" Margin="200,0,20,10" VerticalAlignment="Bottom" 
+                Click="BtnDialogCancel_Click" Grid.Row="1">
+            _schließen
+        </Button>
+    </Grid>
+</Window>

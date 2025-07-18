@@ -6,14 +6,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using ElementNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ElementNeu;
-using KnotenGruppeNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenGruppeNeu;
-using KnotenlastNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenlastNeu;
+using KnotenNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenNeu;
 using KnotenNetzÄquidistant = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenNetzÄquidistant;
 using KnotenNetzVariabel = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenNetzVariabel;
-using KnotenNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenNeu;
-using LinienlastNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.LinienlastNeu;
+using ElementNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ElementNeu;
 using MaterialNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.MaterialNeu;
+using KnotenlastNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.KnotenlastNeu;
+using LinienlastNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.LinienlastNeu;
 using ZeitAnregungVisualisieren = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ZeitAnregungVisualisieren;
 using ZeitintegrationNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ZeitintegrationNeu;
 using ZeitKnotenlastNeu = FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen.ZeitKnotenlastNeu;
@@ -173,28 +172,20 @@ public partial class TragwerkmodellVisualisieren
 
 
     // Modelldefinitionen neu definieren und vorhandene editieren
-    private void OnBtnAbmessungen_Click(object sender, RoutedEventArgs e)
+    private void OnBtnModell_Click(object sender, RoutedEventArgs e)
     {
-        var abmessungenNeu = new AbmessungenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        abmessungenNeu.Show();
+        var modellNeu = new ModellNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        modellNeu.Show();
     }
     // Knoten
     private void MenuBalkenKnotenNeu(object sender, RoutedEventArgs e)
     {
         _knotenNeu = new KnotenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        _modell.Berechnet = false;
     }
-
-    private void MenuBalkenKnotenGruppeNeu(object sender, RoutedEventArgs e)
-    {
-        _ = new KnotenGruppeNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-    }
-
     private void MenuBalkenKnotenNetzÄquidistant(object sender, RoutedEventArgs e)
     {
         _ = new KnotenNetzÄquidistant(_modell) { Topmost = true, Owner = (Window)Parent };
     }
-
     private void MenuBalkenKnotenNetzVariabel(object sender, RoutedEventArgs e)
     {
         _ = new KnotenNetzVariabel(_modell) { Topmost = true, Owner = (Window)Parent };
@@ -321,12 +312,8 @@ public partial class TragwerkmodellVisualisieren
         }
         else
         {
-            foreach (var lasten in Darstellung.LastVektoren.Cast<Shape>())
-            {
-                VisualTragwerkModel.Children.Remove(lasten);
-                foreach (var id in Darstellung.LastIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
-            }
-
+            foreach (var lasten in Darstellung.LastVektoren.Cast<Shape>()) VisualTragwerkModel.Children.Remove(lasten);
+            foreach (var id in Darstellung.LastIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
             _lastenAn = false;
         }
     }
@@ -341,11 +328,8 @@ public partial class TragwerkmodellVisualisieren
         }
         else
         {
-            foreach (var path in Darstellung.LagerDarstellung.Cast<Shape>())
-            {
-                VisualTragwerkModel.Children.Remove(path);
-                foreach (var id in Darstellung.LagerIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
-            }
+            foreach (var lager in Darstellung.LagerDarstellung.Cast<Shape>()) VisualTragwerkModel.Children.Remove(lager);
+            foreach (var id in Darstellung.LagerIDs.Cast<TextBlock>()) VisualTragwerkModel.Children.Remove(id);
             _lagerAn = false;
         }
     }
@@ -458,13 +442,11 @@ public partial class TragwerkmodellVisualisieren
                 if (IsLager)
                 {
                     _ = MessageBox.Show("Elementeingabe ungültig bei Definition eines neuen Lagers", "neue Linienlast");
-                    return;
                 }
                 // bei der Definition einer neuen Knotenlast ist Elementeingabe ungültig
                 else if (IsKnotenlast)
                 {
                     _ = MessageBox.Show("Elementeingabe ungültig bei Definition einer neuen Knotenlast", "neue Linienlast");
-                    return;
                 }
                 else
                 {

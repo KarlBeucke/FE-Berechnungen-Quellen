@@ -1,0 +1,33 @@
+﻿<Window x:Class="FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen.LagerKeys"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="vorhandene Lagerdefinitionen" Height="220" Width="330">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <ListView Margin="10,10,-47,10" Name="LagerKey" 
+                  d:DataContext="{d:DesignData modell}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" Width="60" DisplayMemberBinding="{Binding RandbedingungId}" />
+                    <GridViewColumn Header="Knoten" Width="60" DisplayMemberBinding="{Binding KnotenId}" />
+                    <GridViewColumn Header="xFest" Width="50" DisplayMemberBinding="{Binding Festgehalten[0]}" />
+                    <GridViewColumn Header="yFest" Width="50" DisplayMemberBinding="{Binding Festgehalten[1]}" />
+                    <GridViewColumn Header="rFest" Width="50" DisplayMemberBinding="{Binding Festgehalten[2]}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Height="18" Margin="200,0,-36,10" VerticalAlignment="Bottom" 
+                Click="BtnDialogCancel_Click" Grid.Row="1">
+            _schließen
+        </Button>
+    </Grid>
+</Window>

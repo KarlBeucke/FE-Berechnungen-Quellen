@@ -1,0 +1,65 @@
+﻿<Window x:Class="FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen.MaterialNeu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Material/Querschitt definieren oder editieren" Height="430" Width="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="150" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <Label Name="Header" Grid.Row="0" Grid.ColumnSpan="4" Margin="0,0,-29,1">
+            Material-, Querschnittswerte definieren/editieren
+        </Label>
+
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,11,0,44" Grid.RowSpan="2">Material ID:</Label>
+        <TextBox Name="MaterialId" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Height="32"
+                 Padding="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" 
+                 Width="100" GotFocus="MaterialIdGotFocus" LostFocus="MaterialIdLostFocus"/>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,11,0,10">E Modul</Label>
+        <TextBox Name="EModul" Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Height="30"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="45" />
+
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,46,23,30" Grid.RowSpan="2">3D:</Label>
+        <Label Grid.Row="3" Grid.Column="0" Margin="19,14,4,9">Querdehnung 𝛎</Label>
+        <TextBox Name="Poisson" Grid.Row="4" Grid.Column="1" Margin="5,0,0,0" Height="30"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="45" />
+        <Label Grid.Row="4" Grid.Column="0" Margin="19,11,4,12">Schubmodul G</Label>
+        <TextBox Name="Schub" Grid.Row="3" Grid.Column="1" Margin="5,0,0,0" Height="30"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="45" />
+        <Label Grid.Row="5" Grid.Column="0" Margin="0,9,0,46" Grid.RowSpan="2">Querschnitt ID:</Label>
+        <TextBox Name="QuerschnittId" Grid.Row="5" Grid.Column="1" Margin="5,0,0,0" Height="32"
+                 Padding="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"
+                 Width="100" GotFocus="QuerschnittIdGotFocus" LostFocus="QuerschnittIdLostFocus"/>
+        <Label Grid.Row="5" Grid.Column="0" Margin="0,46,23,30" Grid.RowSpan="2">2D:</Label>
+
+        <Label Grid.Row="6" Grid.Column="0" Margin="22,10,4,13">Dicke t</Label>
+        <TextBox Name="Dicke" Grid.Row="6" Grid.Column="1" Margin="5,0,0,0" Height="30"
+                 VerticalAlignment="Center" HorizontalAlignment="Left" Width="45" />
+
+        <Button Grid.Row="7" Grid.Column="0" Width="50" Height="26" Margin="5,0,0,4.6"
+                Click="BtnLöschen_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            löschen
+        </Button>
+        <Button IsDefault="True" Grid.Row="7" Grid.Column="1" Height="26" Margin="121,19,-6,0"
+                Click="BtnDialogOk_Click" VerticalAlignment="Top">
+            _Ok
+        </Button>
+        <Button Grid.Row="7" Grid.Column="1" Height="26" Margin="30,19,50,0"
+                Click="BtnDialogCancel_Click" VerticalAlignment="Top">
+            _Abbrechen
+        </Button>
+    </Grid>
+</Window>

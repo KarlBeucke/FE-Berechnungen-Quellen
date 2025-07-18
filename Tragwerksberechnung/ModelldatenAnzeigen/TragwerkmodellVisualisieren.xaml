@@ -84,9 +84,9 @@
                         Modelldefinitionen neu definieren und vorhandene editieren
                     </TextBox>
                     <Button Grid.Column="0"   IsDefault="False" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Width="90" Click="OnBtnAbmessungen_Click" Padding="0,-2,0,0" Height="17"
+                            Width="90" Click="OnBtnModell_Click" Padding="0,-2,0,0" Height="17"
                             Margin="0,22,0,0">
-                        Abmessungen
+                        Modell
                     </Button>
                     <Menu Grid.Column="1" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight"
                           Margin="0,22,0,0" Height="16" VerticalAlignment="Top">
@@ -94,10 +94,7 @@
                                   Padding="5,0,0,0" VerticalAlignment="Center">
                             <MenuItem Header="Knoten" HorizontalAlignment="Left" Height="20" Width="250"
                                       Margin="0,0,0,0" Click="MenuBalkenKnotenNeu" />
-                            <MenuItem Header="Knotengruppe" HorizontalAlignment="Left" Height="20" Width="250"
-                                      Margin="0,0,0,0" Click="MenuBalkenKnotenGruppeNeu" />
-                            <MenuItem Header="äquidistantes Knotennetz" HorizontalAlignment="Left" Height="20"
-                                      Width="250"
+                            <MenuItem Header="äquidistantes Knotennetz" HorizontalAlignment="Left" Height="20" Width="250"
                                       Margin="0,0,0,0" Click="MenuBalkenKnotenNetzÄquidistant" />
                             <MenuItem Header="variables Knotennetz" HorizontalAlignment="Left" Height="20" Width="250"
                                       Margin="0,0,0,0" Click="MenuBalkenKnotenNetzVariabel" />
@@ -107,7 +104,7 @@
                           Margin="0,22,0,0" Height="16" VerticalAlignment="Top">
                         <MenuItem Header="Elemente" Height="21" Width="65"
                                   Padding="5,0,0,0" VerticalAlignment="Center">
-                            <MenuItem Header="Element" HorizontalAlignment="Left" Height="20" Width="250"
+                            <MenuItem Header="Stabelemente" HorizontalAlignment="Left" Height="20" Width="250"
                                       Margin="0,0,0,0" Click="MenuBalkenElementNeu" />
                             <MenuItem Header="Querschnitt" HorizontalAlignment="Left" Height="20" Width="250"
                                       Margin="0,0,0,0" Click="MenuQuerschnittNeu" />

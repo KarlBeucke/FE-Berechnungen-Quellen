@@ -2,11 +2,12 @@
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
-public partial class NeuesLager
+public partial class Randbedingung3DNeu
+
 {
     private readonly FeModell _modell;
 
-    public NeuesLager(FeModell modell)
+    public Randbedingung3DNeu(FeModell modell)
     {
         InitializeComponent();
         _modell = modell;
@@ -33,7 +34,7 @@ public partial class NeuesLager
             if (YFest.IsChecked != null && (bool)YFest.IsChecked) conditions += 2;
             if (ZFest.IsChecked != null && (bool)ZFest.IsChecked) conditions += 4;
 
-            var randbedingung = new Lager(knotenId, "0", conditions, prescribed, _modell);
+            var randbedingung = new Lager(knotenId, conditions, prescribed, _modell);
             _modell.Randbedingungen.Add(lagerId, randbedingung);
         }
         else
@@ -80,7 +81,7 @@ public partial class NeuesLager
                                 $"\nfalsche FlächenId = {face.Substring(0, 1)}, muss sein:\n X, Y or Z");
                     }
 
-                    var lager = new Lager(nodeName, face, conditions, prescribed, _modell);
+                    var lager = new Lager(nodeName, conditions, prescribed, _modell);
                     _modell.Randbedingungen.Add(supportName, lager);
                 }
             }

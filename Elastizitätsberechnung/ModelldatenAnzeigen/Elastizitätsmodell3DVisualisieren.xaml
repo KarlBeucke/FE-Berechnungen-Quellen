@@ -7,59 +7,142 @@
         Title="Elastizitätsmodell3DVisualisieren" Height="800" Width="1200"
         Loaded="Window_Loaded"
         KeyDown="Window_KeyDown">
-    <Grid HorizontalAlignment="Left" Margin="0,-1,-3.4,-6.6" Width="1197">
+    <Grid HorizontalAlignment="Left" Margin="0,0,-3,-6" Width="1200">
         <Grid.RowDefinitions>
-            <RowDefinition Height="60" MinHeight="0" />
-            <RowDefinition />
-            <RowDefinition Height="30.4" />
+            <RowDefinition Height="45" />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="33"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="25" />
         </Grid.ColumnDefinitions>
-        <Viewport3D Grid.Row="1" Grid.Column="0" Name="Viewport" Margin="0,0,2,1" />
-        <CheckBox Grid.Column="0" Grid.Row="0" Height="16" HorizontalAlignment="Left" Margin="10,20,0,0"
+
+        <Grid Grid.Column="0" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" 
+              FlowDirection="LeftToRight" Background="LightCoral" Margin="0,2,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="150" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+            </Grid.RowDefinitions>
+            <TextBox Grid.Column="0" Margin="2,1,0,23" Padding="0,-3,0,0" Width="110" 
+                     HorizontalAlignment="Left">
+                Modell berechnen
+            </TextBox>
+            <Button Grid.Column="0" IsDefault="False" HorizontalAlignment="Center" VerticalAlignment="Top"
+                    Width="134" Click="OnBtnBerechnen_Click"
+                    Padding="10,-2,0,0" Height="18"
+                    Margin="0,20,0,0" VerticalContentAlignment="Center">
+                statische Berechnung
+            </Button>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="0" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" 
+              FlowDirection="LeftToRight" Background="GreenYellow" Margin="302,0,0,0" 
+              Width="500">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+            </Grid.RowDefinitions>
+            <TextBox Grid.Column="0" Margin="2,1,-38,23" Padding="0,-3,0,0" Grid.ColumnSpan="4">
+                Modelldefinitionen neu definieren und vorhandene editieren
+            </TextBox>
+        </Grid>
+        <Button Grid.Column="0" Grid.Row="0" IsDefault="False" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Width="90" Padding="0,-1,0,0" Height="16" Margin="310,25,0,0"
+                Click="BtnClickModell">
+            Modell
+        </Button>
+        <Menu Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Width="50" FlowDirection="LeftToRight"
+              Margin="419,25,0,0" Height="16" VerticalAlignment="Top">
+            <MenuItem Header="Knoten" Height="18" Width="59"
+                      Padding="5,0,0,0" VerticalAlignment="Center">
+                <MenuItem Header="Knoten" HorizontalAlignment="Left" Height="20" Width="250"
+                          Margin="0,0,0,0" Click="MenuKnotenNeu" />
+                <MenuItem Header="äquidistantes Knotennetz" HorizontalAlignment="Left" Height="20" Width="250"
+                          Margin="0,0,0,0" Click="MenuKnotenNetzÄquidistant" />
+                <MenuItem Header="variables Knotennetz" HorizontalAlignment="Left" Height="20" Width="250"
+                          Margin="0,0,0,0" Click="MenuKnotenNetzVariabel" />
+            </MenuItem>
+        </Menu>
+        <Menu Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Width="60" FlowDirection="LeftToRight"
+              Margin="480,25,0,4">
+            <MenuItem Header="Elemente" Height="16" Width="60"
+                      Padding="5,0,0,0" VerticalAlignment="Center">
+                <MenuItem Header="Element3D8" HorizontalAlignment="Left" Height="20" Width="250"
+                          Margin="0,0,0,0" Click="MenuElement3D8Neu" />
+                <MenuItem Header="Element3D8Netz" HorizontalAlignment="Left" Height="20" Width="250"
+                          Margin="0,0,0,0" Click="MenuElement3D8Netz" />
+                <Separator />
+                <MenuItem Header="Material" HorizontalAlignment="Left" Height="20" Width="250"
+                          Margin="0,0,0,0" Click="MenuMaterialNeu" />
+            </MenuItem>
+        </Menu>
+        <Menu Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Width="60" FlowDirection="LeftToRight"
+              Margin="0,25,0,0" Height="16" VerticalAlignment="Top">
+            <MenuItem Header="Lasten" Height="16" Width="60"
+                      Padding="10,0,0,0" VerticalAlignment="Center">
+                <MenuItem Header="Knotenlast" HorizontalAlignment="Left" Height="20" Width="250"
+                          Margin="0,0,0,0" Click="MenuKnotenlast3DNeu" />
+            </MenuItem>
+        </Menu>
+        <Button Grid.Row="0" Grid.Column="0" IsDefault="False" HorizontalAlignment="Left"
+                Width="60" Click="OnBtnLagerNeu_Click" Padding="0,-2,0,0"
+                Margin="644,25,0,4">
+            Lager
+        </Button>
+
+        <Viewport3D Grid.Row="0" Grid.Column="0" Name="View3D" Margin="0,45,2,3" Grid.RowSpan="2" />
+
+        <CheckBox Grid.Column="0" Grid.Row="1" Height="16" HorizontalAlignment="Left" Margin="10,5,0,0"
                   VerticalAlignment="Top" Width="150"
-                  Checked="ShowKoordinaten" IsChecked="True" Content="Koordinatensystem" Unchecked="RemoveKoordinaten" />
-        <CheckBox Grid.Column="0" Grid.Row="0" Height="16" HorizontalAlignment="Left" Margin="141,20,0,0"
+                  Checked="ShowKoordinaten" Unchecked="RemoveKoordinaten" IsChecked="True" Content="Koordinatensystem" />
+        <CheckBox Grid.Column="0" Grid.Row="1" Height="16" HorizontalAlignment="Left" Margin="140,5,0,0"
                   VerticalAlignment="Top" Width="150"
                   Checked="ShowOberflächen" Unchecked="RemoveOberflächen" IsChecked="True" Content="Oberflächenmodell" />
-        <CheckBox Grid.Column="0" Grid.Row="0" Height="16" HorizontalAlignment="Left" Margin="270,20,0,0"
+        <CheckBox Grid.Column="0" Grid.Row="1" Height="16" HorizontalAlignment="Left" Margin="270,5,0,0"
                   VerticalAlignment="Top" Width="92"
                   Checked="ShowDrahtmodell" Unchecked="RemoveDrahtmodell" IsChecked="True" Content="Drahtmodell" />
-        <CheckBox Grid.Column="0" Grid.Row="0" Height="16" HorizontalAlignment="Left" Margin="370,30,0,0"
+
+        <CheckBox Grid.Column="0" Grid.Row="1" Height="16" HorizontalAlignment="Left" Margin="370,5,0,0"
                   VerticalAlignment="Top" Width="150"
                   Checked="ShowRandbedingungenFest" Unchecked="RemoveRandbedingungenFest" IsChecked="True"
                   Content="Randbedingungen fest" />
-        <CheckBox Grid.Column="0" Grid.Row="0" Height="16" HorizontalAlignment="Left" Margin="370,11,0,0"
+        <CheckBox Grid.Column="0" Grid.Row="1" Height="16" HorizontalAlignment="Left" Margin="370,25,0,0"
                   VerticalAlignment="Top" Width="188"
                   Checked="ShowRandbedingungenVor" Unchecked="RemoveRandbedingungenVor" IsChecked="True"
                   Content="Randbedingungen vordefiniert" />
-        <CheckBox Grid.Column="0" Grid.Row="0" Height="16" HorizontalAlignment="Left" Margin="600,20,0,0"
-                  VerticalAlignment="Top" Width="188"
+        <CheckBox Grid.Column="0" Grid.Row="1" Height="16" HorizontalAlignment="Left" Margin="600,5,0,0"
+                  VerticalAlignment="Top" Width="100"
                   Checked="ShowKnotenlasten" Unchecked="RemoveKnotenlasten" IsChecked="True" Content="Knotenlasten" />
 
-        <TextBlock Grid.Column="0" Name="Scrollbars" Margin="1020,1,5,27.2" Grid.Row="0"
-                   RenderTransformOrigin="0.5,0.5">
+        <TextBlock Grid.Column="0" Name="Scrollbars" Margin="1018,42,5,666" Grid.Row="0"
+                   RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2">
             <Bold>Scrollbars</Bold>
         </TextBlock>
-        <TextBlock Grid.Column="0" Margin="1020,12,14,0"
-                   Grid.Row="0" Grid.ColumnSpan="2" Height="21" VerticalAlignment="Top">
+        <TextBlock Grid.Column="0" Margin="1022,10,14,0" Grid.ColumnSpan="2" Height="20" VerticalAlignment="Top" Grid.Row="1">
             <Run Text="drehen, kippen" />
         </TextBlock>
-        <TextBlock Grid.Column="0" Margin="1016,31,9,690.6" Grid.Row="0" Grid.RowSpan="2">
+        <TextBlock Grid.Column="0" Margin="1018,28,9,639" Grid.Row="1">
             <Bold>Tastensteuerung</Bold>
         </TextBlock>
-        <TextBlock Grid.Column="0" Margin="1020,46,0,0" Height="26" VerticalAlignment="Top"
-                   Grid.Row="0"
-                   Grid.RowSpan="2">
-            <Run Text="Abstand  PgUp" /><Run Text="/PgDn" />
+        <TextBlock Grid.Column="0" Margin="1022,43,0,0" Height="26" VerticalAlignment="Top"
+                   Grid.Row="1">
+            <Run Text="Abstand PgUp" /><Run Text="/PgDn" />
         </TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="0" Margin="1020,1,0,664"
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="1022,57,0,608"
                    Text="horizontal     li/re" />
-        <TextBlock Grid.Column="0" Margin="1019,18,10,0"
+        <TextBlock Grid.Column="0" Margin="1022,70,10,0"
                    Text="vertikal   hoch/runter" Height="19" VerticalAlignment="Top" Grid.Row="1" />
-        <RichTextBox Grid.Row="1" Grid.Column="0" Margin="1019,47.8,1,0" Height="53"
+        <RichTextBox Grid.Row="1" Grid.Column="0" Margin="1019,92,1,0" Height="53"
                      VerticalAlignment="Top">
             <RichTextBox.Resources>
                 <Style TargetType="{x:Type Paragraph}">

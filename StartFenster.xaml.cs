@@ -1,13 +1,13 @@
 ﻿using FE_Berechnungen.Dateieingabe;
-using FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
-using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
-using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 using FE_Berechnungen.Tragwerksberechnung.Ergebnisse;
 using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
 using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 using FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 using FE_Berechnungen.Wärmeberechnung.Modelldaten;
 using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
+using FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
+using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
+using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
 
 namespace FE_Berechnungen;
 
@@ -21,8 +21,10 @@ public partial class StartFenster
     public static Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren StatikErgebnisse { get; private set; }
     public static WärmemodellVisualisieren WärmeVisual { get; set; }
     public static StationäreErgebnisseVisualisieren StationäreErgebnisse { get; private set; }
-    private static ElastizitätsmodellVisualisieren ElastizitätVisual { get; set; }
-    public static Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren ElastizitätsErgebnisse { get; set; }
+    public static ElastizitätsmodellVisualisieren ElastizitätVisual { get; set; }
+    public static Elastizitätsmodell3DVisualisieren ElastizitätVisual3D { get; set; }
+    private static Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren ElastizitätsErgebnisse { get; set; }
+    private static Elastizitätsberechnung.Ergebnisse.StatikErgebnisse3DVisualisieren ElastizitätsErgebnisse3D { get; set; }
 
     private OpenFileDialog _dateiDialog;
     private string _dateiPfad;
@@ -1274,8 +1276,8 @@ public partial class StartFenster
                 }
             case 3:
                 {
-                    var visual = new Elastizitätsmodell3DVisualisieren(_elastizitätsModell);
-                    visual.Show();
+                    ElastizitätVisual3D = new Elastizitätsmodell3DVisualisieren(_elastizitätsModell);
+                    ElastizitätVisual3D.Show();
                     break;
                 }
         }
@@ -1478,14 +1480,14 @@ public partial class StartFenster
         {
             case 2:
                 {
-                    var tragwerk = new ElastizitätsmodellVisualisieren(_elastizitätsModell);
-                    tragwerk.Show();
+                    ElastizitätVisual = new ElastizitätsmodellVisualisieren(_elastizitätsModell);
+                    ElastizitätVisual.Show();
                     break;
                 }
             case 3:
                 {
-                    var tragwerk = new Elastizitätsmodell3DVisualisieren(_elastizitätsModell);
-                    tragwerk.Show();
+                    ElastizitätVisual3D = new Elastizitätsmodell3DVisualisieren(_elastizitätsModell);
+                    ElastizitätVisual3D.Show();
                     break;
                 }
         }
@@ -1575,14 +1577,14 @@ public partial class StartFenster
         {
             case 2:
                 {
-                    var tragwerk = new Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren(_elastizitätsModell);
-                    tragwerk.Show();
+                    ElastizitätsErgebnisse = new Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren(_elastizitätsModell);
+                    ElastizitätsErgebnisse.Show();
                     break;
                 }
             case 3:
                 {
-                    var tragwerk = new StatikErgebnisse3DVisualisieren(_elastizitätsModell);
-                    tragwerk.Show();
+                    ElastizitätsErgebnisse3D = new StatikErgebnisse3DVisualisieren(_elastizitätsModell);
+                    ElastizitätsErgebnisse3D.Show();
                     break;
                 }
             default:

@@ -73,7 +73,7 @@
                     <DataGridTextColumn Header="Material" Binding="{Binding MaterialId}" />
                     <DataGridTextColumn Header="E-Modul" Binding="{Binding MaterialWerte[0], StringFormat=E2}" />
                     <DataGridTextColumn Header="Poisson" Binding="{Binding MaterialWerte[1]}" />
-                    <DataGridTextColumn Header="Masse" Binding="{Binding MaterialWerte[2]}" />
+                    <DataGridTextColumn Header="G-Modul" Binding="{Binding MaterialWerte[2]}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
@@ -100,7 +100,7 @@
             <DataGrid
                 Name="RandGrid" Margin="5,20,0,5" AlternatingRowBackground="Aqua"
                 AutoGenerateColumns="False" CellEditEnding="Model_Changed"
-                MouseDoubleClick="NeueRandbedingung" UnloadingRow="RandbedingungZeileLoeschen"
+                MouseDoubleClick="NeuesLager" UnloadingRow="RandbedingungZeileLoeschen"
                 SelectionChanged="RandbedingungZeileSelected" d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Lager" Binding="{Binding LagerId}" />

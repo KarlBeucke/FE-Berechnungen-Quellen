@@ -1,0 +1,31 @@
+﻿<Window x:Class="FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen.QuerschnittKeys"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="vorhandene Querschnittdefinitionen" Height="220" Width="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <ListView Width="260" Margin="0,10,0,10" Name="QuerschnittKey" d:DataContext="{d:DesignData modell}" 
+                  HorizontalAlignment="Center" MouseDoubleClick="MouseDoubleClickNeuesMaterial" SelectionChanged="SelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding QuerschnittId}" />
+                    <GridViewColumn Header="Dicke" Width="80"
+                                    DisplayMemberBinding="{Binding QuerschnittsWerte[0], StringFormat=G3}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Height="18" Margin="152,0,8,10" VerticalAlignment="Bottom" 
+                Click="BtnDialogCancel_Click" Grid.Row="1">
+            _schließen
+        </Button>
+    </Grid>
+</Window>

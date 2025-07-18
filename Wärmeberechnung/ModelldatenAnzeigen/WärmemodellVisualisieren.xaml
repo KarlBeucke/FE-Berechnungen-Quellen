@@ -4,31 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Wärmemodell visualisieren" Height="900" Width="1300">
+        Title="Wärmemodell visualisieren" Height="800" Width="1200">
     <ScrollViewer HorizontalScrollBarVisibility="Auto" Margin="0,0,0,0">
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Grid Row="0" Width="1128" Height="40">
+            <Grid Row="0" Width="1196" Height="40">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="160" />
-                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="150" />
                     <ColumnDefinition Width="80" />
-                    <ColumnDefinition Width="80" />
-                    <ColumnDefinition Width="80" />
-                    <ColumnDefinition Width="120" />
-                    <ColumnDefinition Width="90" />
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="120" />
-
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
 
                 <!--Modell berechnen-->
-                <Grid Grid.Column="0" Grid.ColumnSpan="2" Height="40" VerticalAlignment="Center" FlowDirection="LeftToRight"
-                      Background="LightCoral">
+                <Grid Grid.Column="0" Grid.ColumnSpan="2" Height="40" VerticalAlignment="Center" Margin="-3,0,2,0"
+                      FlowDirection="LeftToRight" Background="LightCoral">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="150" />
@@ -41,16 +41,16 @@
                         Modell berechnen
                     </TextBox>
                     <Button Grid.Column="0" IsDefault="False" HorizontalAlignment="Center" VerticalAlignment="Top" Width="134" 
-                            Padding="5,-2,0,0" Height="18" Margin="0,20,0,0" VerticalContentAlignment="Center"
+                            Padding="0,-2,0,0" Height="18" Margin="0,20,0,0" VerticalContentAlignment="Center"
                             Click="OnBtnBerechnen_Click">
                         stationäre Berechnung
                     </Button>
 
                     <Menu Height="15" Grid.Column="1"
-                          VerticalAlignment="Bottom" FlowDirection="LeftToRight" Margin="10,0,0,3"
+                          VerticalAlignment="Top" FlowDirection="LeftToRight" Margin="5,22,8,0"
                           Padding="0,0,0,0">
-                        <MenuItem Header="instationäre Berechnung" Height="22" Width="144" HorizontalAlignment="Center" 
-                                  VerticalAlignment="Center" Padding="5,0,0,0">
+                        <MenuItem Header="instationäre Berechnung" Height="22" Width="130" HorizontalAlignment="Left" 
+                                  VerticalAlignment="Center" Padding="0,0,0,0">
                             <MenuItem Header="Integrationsparameter" HorizontalAlignment="Left" Height="20" Width="250"
                                       Margin="0,0,0,0" Click="MenuIntegrationsParameter" />
                             <MenuItem Header="instationäre Daten anzeigen" HorizontalAlignment="Left" Height="20" Width="250"
@@ -67,38 +67,43 @@
                 </Grid>
 
                 <!--Modelldefinitionen neu definieren und vorhandene editieren-->
-                <Grid Column="2" Grid.ColumnSpan="5" Height="40" Width="450" VerticalAlignment="Center" 
-                      FlowDirection="LeftToRight" Background="GreenYellow" HorizontalAlignment="Center">
+                <Grid Grid.Column="1" Grid.ColumnSpan="6" Height="40" Width="445" VerticalAlignment="Center" 
+                      FlowDirection="LeftToRight" Background="GreenYellow" HorizontalAlignment="Left" Margin="145,0,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="120" />
-                        <ColumnDefinition Width="90" />
+                        <ColumnDefinition Width="70" />
+                        <ColumnDefinition Width="70" />
+                        <ColumnDefinition Width="70" />
+                        <ColumnDefinition Width="70" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="100" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Column="0" Margin="0,1,-11,21" Padding="0,0,0,0" Grid.ColumnSpan="4">
+                    <TextBox Grid.Column="0" Margin="2,1,9,21" Padding="0,0,0,0" Grid.ColumnSpan="5">
                         Modelldefinitionen neu definieren und vorhandene editieren
                     </TextBox>
 
-                    <Menu Grid.Column="0" HorizontalAlignment="Center" Width="60" FlowDirection="LeftToRight" Margin="0,22,0,-2">
+                    <Button Grid.Column="0" IsDefault="False" Height="17" VerticalAlignment="Top" HorizontalAlignment="Center"
+                            Width="66" Click="OnBtnModellNeu_Click" Padding="0,-2,0,0"
+                            Margin="0,22,0,0">
+                        Modell
+                    </Button>
+
+                    <Menu Grid.Column="1" HorizontalAlignment="Center" Width="60" FlowDirection="LeftToRight" Margin="0,22,0,1">
                         <MenuItem Header="Knoten" Height="18" Width="50" Padding="5,0,0,0" VerticalAlignment="Center">
                             <MenuItem Header="Knoten" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
                                       Click="MenuKnotenNeu" />
-                            <MenuItem Header="Knotengruppe" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
-                                      Click="MenuKnotenGruppeNeu" />
                             <MenuItem Header="äquidistantes Knotennetz" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
                                       Click="MenuKnotenNetzÄquidistant" />
                             <MenuItem Header="variables Knotennetz" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
                                       Click="MenuKnotenNetzVariabel" />
                         </MenuItem>
                     </Menu>
-                    <Menu Grid.Column="1" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight" Margin="0,22,0,0" 
-                          Height="19" VerticalAlignment="Top">
-                        <MenuItem Header="Elemente" Height="20" Width="65" Padding="5,0,0,0" VerticalAlignment="Center">
+                    <Menu Grid.Column="2" HorizontalAlignment="Center" Width="70" FlowDirection="LeftToRight" Margin="0,22,0,0" 
+                          Height="17" VerticalAlignment="Top">
+                        <MenuItem Header="Elemente" Height="20" Width="65" Padding="5,0,0,0" VerticalAlignment="Top">
                             <MenuItem Header="Element" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
                                       Click="MenuElementNeu" />
                             <Separator />
@@ -106,7 +111,7 @@
                                       Click="MenuMaterialNeu" />
                         </MenuItem>
                     </Menu>
-                    <Menu Grid.Column="2" HorizontalAlignment="Center" Height="18" VerticalAlignment="Top" Width="60" FlowDirection="LeftToRight" 
+                    <Menu Grid.Column="3" HorizontalAlignment="Center" Height="16" VerticalAlignment="Top" Width="60" FlowDirection="LeftToRight" 
                           Margin="0,23,0,0">
                         <MenuItem Header="Lasten" Height="17" Width="58" Padding="5,0,0,0" VerticalAlignment="Center">
                             <MenuItem Header="Knotenlast" HorizontalAlignment="Left" Height="20" Width="250" Margin="0,0,0,0" 
@@ -118,15 +123,15 @@
                         </MenuItem>
                     </Menu>
 
-                    <Button Grid.Column="3" IsDefault="False" Height="18" VerticalAlignment="Top" HorizontalAlignment="Center"
-                            Width="110" Click="OnBtnRandbedingungNeu_Click" Padding="0,-2,0,0"
-                            Margin="0,22,0,1">
+                    <Button Grid.Column="4" IsDefault="False" Height="17" VerticalAlignment="Top" HorizontalAlignment="Center"
+                            Width="92" Click="OnBtnRandbedingungNeu_Click" Padding="0,-2,0,0"
+                            Margin="0,22,0,0">
                         Randbedingung
                     </Button>
 
-                    <Menu Grid.Column="4" Height="18" VerticalAlignment="Top" FlowDirection="LeftToRight" 
-                          Margin="10,23,5,0">
-                        <MenuItem Header="instationär" Height="17" Width="76" Padding="5,0,0,0" VerticalAlignment="Center">
+                    <Menu Grid.Column="5" Height="17" VerticalAlignment="Top" FlowDirection="LeftToRight" 
+                          Margin="0,22,37,0">
+                        <MenuItem Header="instationär" Height="17" Width="65" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="3,0,0,0">
                             <MenuItem Header="Zeitintegration" HorizontalAlignment="Left" Height="20" Width="250" 
                                       Margin="0,0,0,0" Click="MenuZeitintegrationNeu" />
                             <Separator></Separator>
@@ -147,8 +152,8 @@
                 </Grid>
 
                 <!--Modelldefinitionen darstellen-->
-                <Grid Grid.Column="7" Grid.ColumnSpan="4" Height="40" Width="360" VerticalAlignment="Center" 
-                      FlowDirection="LeftToRight" Background="LightBlue">
+                <Grid Grid.Column="7" Grid.ColumnSpan="5" Height="40" VerticalAlignment="Center" 
+                      FlowDirection="LeftToRight" Background="LightBlue" Margin="0,0,63,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="80" />
@@ -186,9 +191,9 @@
             </Grid>
 
             <Grid Row="1">
-                <Canvas x:Name="VisualWärmeModell"
+                <Canvas x:Name="VisualWärmeModell" Height="740" Width="1200"
                         ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                        MouseLeftButtonDown="OnMouseLeftButtonDown" Margin="0,0,-50,0" Height="800" VerticalAlignment="Top">
+                        MouseLeftButtonDown="OnMouseLeftButtonDown" Margin="1,0,0,0" VerticalAlignment="Center">
                     <Popup x:Name="MyPopup" Placement="MousePoint">
                         <TextBlock x:Name="MyPopupText" Background="LightBlue" Foreground="Blue" Padding="10" />
                     </Popup>

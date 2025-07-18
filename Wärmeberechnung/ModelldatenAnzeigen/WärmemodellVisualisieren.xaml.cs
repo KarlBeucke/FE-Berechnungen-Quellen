@@ -6,17 +6,16 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Element2D3 = FE_Berechnungen.Wärmeberechnung.Modelldaten.Element2D3;
-using ElementKeys = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.ElementKeys;
-using ElementNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.ElementNeu;
-using KnotenGruppeNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenGruppeNeu;
-using KnotenKeys = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenKeys;
-using KnotenlastNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenlastNeu;
+using KnotenNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenNeu;
 using KnotenNetzÄquidistant = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenNetzÄquidistant;
 using KnotenNetzVariabel = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenNetzVariabel;
-using KnotenNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenNeu;
-using LinienlastNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.LinienlastNeu;
+using KnotenKeys = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenKeys;
+using ElementNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.ElementNeu;
+using Element2D3 = FE_Berechnungen.Wärmeberechnung.Modelldaten.Element2D3;
+using ElementKeys = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.ElementKeys;
 using MaterialNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.MaterialNeu;
+using KnotenlastNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.KnotenlastNeu;
+using LinienlastNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.LinienlastNeu;
 using ZeitintegrationNeu = FE_Berechnungen.Wärmeberechnung.ModelldatenLesen.ZeitintegrationNeu;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
@@ -31,7 +30,7 @@ public partial class WärmemodellVisualisieren
     private bool _isDragging;
     private Point _mittelpunkt;
 
-    private readonly FeModell _modell;
+    private readonly FeModell _wärmeModell;
     public readonly Darstellung Darstellung;
     private bool _knotenAn = true, _elementeAn = true, _lastenAn = true, _randbedingungAn = true;
     private KnotenNeu _knotenNeu;
@@ -54,23 +53,23 @@ public partial class WärmemodellVisualisieren
     public KnotenKeys KnotenKeys;
     public ElementKeys ElementKeys;
 
-    public WärmemodellVisualisieren(FeModell feModell)
+    public WärmemodellVisualisieren(FeModell feWärmeModell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
         InitializeComponent();
         VisualWärmeModell.Children.Remove(Pilot);
         Show();
         VisualWärmeModell.Background = Brushes.Transparent;
-        if (feModell == null)
+        if (feWärmeModell == null)
         {
             _ = MessageBox.Show("WärmeModell nicht gefunden", "Wärmeberechnung");
             return;
         }
-        _modell = feModell;
+        _wärmeModell = feWärmeModell;
 
         try
         {
-            Darstellung = new Darstellung(feModell, VisualWärmeModell);
+            Darstellung = new Darstellung(feWärmeModell, VisualWärmeModell);
             Darstellung.AlleElementeZeichnen();
 
             // mit Knoten, Element Ids, Lasten und Randbedingungen
@@ -94,15 +93,15 @@ public partial class WärmemodellVisualisieren
     {
         try
         {
-            if (!_modell.Berechnet)
+            if (!_wärmeModell.Berechnet)
             {
-                var modellBerechnung = new Berechnung(_modell);
+                var modellBerechnung = new Berechnung(_wärmeModell);
                 modellBerechnung.BerechneSystemMatrix();
                 modellBerechnung.BerechneSystemVektor();
                 modellBerechnung.LöseGleichungen();
-                _modell.Berechnet = true;
+                _wärmeModell.Berechnet = true;
             }
-            var stationäreErgebnisse = new StationäreErgebnisseVisualisieren(_modell);
+            var stationäreErgebnisse = new StationäreErgebnisseVisualisieren(_wärmeModell);
             stationäreErgebnisse.Show();
         }
         catch (BerechnungAusnahme e2)
@@ -114,15 +113,15 @@ public partial class WärmemodellVisualisieren
     // instationäre Berechnung
     private void MenuIntegrationsParameter(object sender, RoutedEventArgs e)
     {
-        ZeitintegrationNeu = new ZeitintegrationNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        ZeitintegrationNeu = new ZeitintegrationNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
     }
     private void MenuInstationäreDaten(object sender, RoutedEventArgs e)
     {
-        if (_modell.ZeitintegrationDaten && _modell != null)
+        if (_wärmeModell.ZeitintegrationDaten && _wärmeModell != null)
         {
-            var wärme = new InstationäreDatenAnzeigen(_modell);
+            var wärme = new InstationäreDatenAnzeigen(_wärmeModell);
             wärme.Show();
-            _modell.ZeitintegrationBerechnet = false;
+            _wärmeModell.ZeitintegrationBerechnet = false;
         }
         else
         {
@@ -133,20 +132,20 @@ public partial class WärmemodellVisualisieren
     {
         try
         {
-            if (_modell.ZeitintegrationDaten && _modell != null)
+            if (_wärmeModell.ZeitintegrationDaten && _wärmeModell != null)
             {
                 Berechnung modellBerechnung = null;
-                if (!_modell.Berechnet)
+                if (!_wärmeModell.Berechnet)
                 {
-                    modellBerechnung = new Berechnung(_modell);
+                    modellBerechnung = new Berechnung(_wärmeModell);
                     modellBerechnung.BerechneSystemMatrix();
                     modellBerechnung.BerechneSystemVektor();
                     modellBerechnung.LöseGleichungen();
-                    _modell.Berechnet = true;
+                    _wärmeModell.Berechnet = true;
                 }
 
                 modellBerechnung?.ZeitintegrationErsterOrdnung();
-                _modell.ZeitintegrationBerechnet = true;
+                _wärmeModell.ZeitintegrationBerechnet = true;
                 _ = MessageBox.Show("Zeitintegration erfolgreich durchgeführt", "instationäre Wärmeberechnung");
             }
             else
@@ -155,15 +154,15 @@ public partial class WärmemodellVisualisieren
                 const double tmax = 0;
                 const double dt = 0;
                 const double alfa = 0;
-                if (_modell != null)
+                if (_wärmeModell != null)
                 {
-                    _modell.Zeitintegration = new Zeitintegration(tmax, dt, alfa) { VonStationär = false };
-                    _modell.ZeitintegrationDaten = true;
-                    var wärme = new InstationäreDatenAnzeigen(_modell);
+                    _wärmeModell.Zeitintegration = new Zeitintegration(tmax, dt, alfa) { VonStationär = false };
+                    _wärmeModell.ZeitintegrationDaten = true;
+                    var wärme = new InstationäreDatenAnzeigen(_wärmeModell);
                     wärme.Show();
                 }
 
-                _modell.ZeitintegrationBerechnet = false;
+                _wärmeModell.ZeitintegrationBerechnet = false;
             }
         }
         catch (BerechnungAusnahme e2)
@@ -173,9 +172,9 @@ public partial class WärmemodellVisualisieren
     }
     private void MenuInstationäreModellzuständeVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (_modell.ZeitintegrationBerechnet && _modell != null)
+        if (_wärmeModell.ZeitintegrationBerechnet && _wärmeModell != null)
         {
-            var modellzuständeVisualisieren = new InstationäreModellzuständeVisualisieren(_modell);
+            var modellzuständeVisualisieren = new InstationäreModellzuständeVisualisieren(_wärmeModell);
             modellzuständeVisualisieren.Show();
         }
         else
@@ -185,9 +184,9 @@ public partial class WärmemodellVisualisieren
     }
     private void MenuTemperaturzeitverläufeVisualisieren(object sender, RoutedEventArgs e)
     {
-        if (_modell.ZeitintegrationBerechnet && _modell != null)
+        if (_wärmeModell.ZeitintegrationBerechnet && _wärmeModell != null)
         {
-            var knotenzeitverläufeVisualisieren = new KnotenzeitverläufeVisualisieren(_modell);
+            var knotenzeitverläufeVisualisieren = new KnotenzeitverläufeVisualisieren(_wärmeModell);
             knotenzeitverläufeVisualisieren.Show();
         }
         else
@@ -197,116 +196,140 @@ public partial class WärmemodellVisualisieren
     }
 
     // Modelldefinitionen neu definieren und vorhandene editieren
+    // Modell
+    private void OnBtnModellNeu_Click(object sender, RoutedEventArgs e)
+    {
+        var modellNeu = new ModellNeu(_wärmeModell)
+        {
+            Topmost = true,
+            Owner = (Window)Parent,
+            Name = { Text = _wärmeModell.ModellId },
+            Dimension = { Text = _wärmeModell.Raumdimension.ToString() },
+            Ndof = { Text = _wärmeModell.AnzahlKnotenfreiheitsgrade.ToString() },
+            MinX = { Text = _wärmeModell.MinX.ToString(CultureInfo.CurrentCulture) },
+            MaxX = { Text = _wärmeModell.MaxX.ToString(CultureInfo.CurrentCulture) },
+            MinY = { Text = _wärmeModell.MinY.ToString(CultureInfo.CurrentCulture) },
+            MaxY = { Text = _wärmeModell.MaxY.ToString(CultureInfo.InvariantCulture) }
+        };
+        if (_wärmeModell.Raumdimension == 3)
+        {
+            modellNeu.MinZ.Text = _wärmeModell.MinZ.ToString(CultureInfo.InvariantCulture);
+            modellNeu.MaxZ.Text = _wärmeModell.MaxZ.ToString(CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            modellNeu.MinZ.Text = "";
+            modellNeu.MaxZ.Text = "";
+        }
+        modellNeu.Show();
+    }
+
     // Knoten
     private void MenuKnotenNeu(object sender, RoutedEventArgs e)
     {
-        _knotenNeu = new KnotenNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        KnotenKeys = new KnotenKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        _knotenNeu = new KnotenNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
+        KnotenKeys = new KnotenKeys(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
         KnotenKeys.Show();
-        _modell.Berechnet = false;
-    }
-    private void MenuKnotenGruppeNeu(object sender, RoutedEventArgs e)
-    {
-        _ = new KnotenGruppeNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _wärmeModell.Berechnet = false;
     }
     private void MenuKnotenNetzÄquidistant(object sender, RoutedEventArgs e)
     {
-        _ = new KnotenNetzÄquidistant(_modell) { Topmost = true, Owner = (Window)Parent };
+        _ = new KnotenNetzÄquidistant(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
     }
     private void MenuKnotenNetzVariabel(object sender, RoutedEventArgs e)
     {
-        _ = new KnotenNetzVariabel(_modell) { Topmost = true, Owner = (Window)Parent };
+        _ = new KnotenNetzVariabel(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
     }
 
     // Elemente
     private void MenuElementNeu(object sender, RoutedEventArgs e)
     {
         IsElement = true;
-        _elementNeu = new ElementNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        ElementKeys = new ElementKeys(_modell) { Topmost = true, Owner = (Window)Parent };
+        _elementNeu = new ElementNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
+        ElementKeys = new ElementKeys(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
         ElementKeys.Show();
-        _modell.Berechnet = false;
+        _wärmeModell.Berechnet = false;
     }
     private void MenuMaterialNeu(object sender, RoutedEventArgs e)
     {
-        MaterialNeu = new MaterialNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        _modell.Berechnet = false;
+        MaterialNeu = new MaterialNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
+        _wärmeModell.Berechnet = false;
     }
 
     // Lasten
     private void MenuKnotenlastNeu(object sender, RoutedEventArgs e)
     {
         IsKnotenlast = true;
-        _knotenlastNeu = new KnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _knotenlastNeu = new KnotenlastNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
         _knotenlastNeu.AktuelleId = _knotenlastNeu.KnotenlastId.Text;
-        _modell.Berechnet = false;
+        _wärmeModell.Berechnet = false;
     }
 
     private void MenuLinienlastNeu(object sender, RoutedEventArgs e)
     {
         IsLinienlast = true;
-        _linienlastNeu = new LinienlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _linienlastNeu = new LinienlastNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
         _linienlastNeu.AktuelleId = _linienlastNeu.LinienlastId.Text;
-        _modell.Berechnet = false;
+        _wärmeModell.Berechnet = false;
     }
 
     private void MenuElementlastNeu(object sender, RoutedEventArgs e)
     {
         IsElementlast = true;
-        _elementlastNeu = new ElementlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _elementlastNeu = new ElementlastNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
         _elementlastNeu.AktuelleId = _elementlastNeu.ElementlastId.Text;
-        _modell.Berechnet = false;
+        _wärmeModell.Berechnet = false;
     }
 
     // Randbedingungen
     private void OnBtnRandbedingungNeu_Click(object sender, RoutedEventArgs e)
     {
         IsRandbedingung = true;
-        _randbedingungNeu = new RandbedingungNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _randbedingungNeu = new RandbedingungNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
         _randbedingungNeu.AktuelleId = _randbedingungNeu.RandbedingungId.Text;
-        _modell.Berechnet = false;
+        _wärmeModell.Berechnet = false;
     }
 
     //  instationäre Berechnungen
     private void MenuZeitintegrationNeu(object sender, RoutedEventArgs e)
     {
-        ZeitintegrationNeu = new ZeitintegrationNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        ZeitintegrationNeu = new ZeitintegrationNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
     }
     private void MenuAnfangstemperaturNeu(object sender, RoutedEventArgs e)
     {
         IsAnfangsbedingung = true;
-        _modell.Zeitintegration.VonStationär = false;
-        _zeitKnotenAnfangstemperaturNeu = new ZeitKnotenAnfangstemperaturNeu(_modell) { Topmost = true, Owner = (Window)Parent };
-        _modell.Berechnet = false;
+        _wärmeModell.Zeitintegration.VonStationär = false;
+        _zeitKnotenAnfangstemperaturNeu = new ZeitKnotenAnfangstemperaturNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
+        _wärmeModell.Berechnet = false;
     }
 
     private void MenuZeitRandtemperaturNeu(object sender, RoutedEventArgs e)
     {
         IsZeitRandtemperatur = true;
-        _zeitRandbedingungNeu = new ZeitRandbedingungNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _zeitRandbedingungNeu = new ZeitRandbedingungNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
         _zeitRandbedingungNeu.AktuelleId = _zeitRandbedingungNeu.RandbedingungId.Text;
-        _modell.Berechnet = false;
+        _wärmeModell.Berechnet = false;
     }
 
     private void MenuZeitKnotentemperaturNeu(object sender, RoutedEventArgs e)
     {
         IsZeitKnotentemperatur = true;
-        _zeitKnotentemperaturNeu = new ZeitKnotenlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _zeitKnotentemperaturNeu = new ZeitKnotenlastNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
         _zeitKnotentemperaturNeu.AktuelleId = _zeitKnotentemperaturNeu.LastId.Text;
-        _modell.Berechnet = false;
+        _wärmeModell.Berechnet = false;
     }
 
     private void MenuZeitElementtemperaturNeu(object sender, RoutedEventArgs e)
     {
         IsZeitElementtemperatur = true;
-        _zeitElementtemperaturNeu = new ZeitElementlastNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        _zeitElementtemperaturNeu = new ZeitElementlastNeu(_wärmeModell) { Topmost = true, Owner = (Window)Parent };
         _zeitElementtemperaturNeu.AktuelleId = _zeitElementtemperaturNeu.LastId.Text;
-        _modell.Berechnet = false;
+        _wärmeModell.Berechnet = false;
     }
 
     private void MenuZeitAnregungNeu(object sender, RoutedEventArgs e)
     {
-        _ = new ZeitAnregungVisualisieren(_modell);
+        _ = new ZeitAnregungVisualisieren(_wärmeModell);
     }
 
     // Modelldefinitionen darstellen
@@ -443,14 +466,14 @@ public partial class WärmemodellVisualisieren
         foreach (var item in _hitTextBlock)
         {
             // Textdarstellung ist ein Knoten
-            if (_modell.Knoten.TryGetValue(item.Text, out var knoten))
+            if (_wärmeModell.Knoten.TryGetValue(item.Text, out var knoten))
             {
                 IsKnoten = true;
                 KnotenClick(knoten);
             }
 
             // Textdarstellung ist Element
-            else if (_modell.Elemente.TryGetValue(item.Text, out var element))
+            else if (_wärmeModell.Elemente.TryGetValue(item.Text, out var element))
             {
                 // ElementId angeklickt bei der Definition einer neuen zeitabhängigen Elementlast
                 if (IsZeitElementtemperatur)
@@ -465,9 +488,9 @@ public partial class WärmemodellVisualisieren
             }
 
             // Textdarstellung ist eine Knotenlast
-            else if (_modell.Lasten.TryGetValue(item.Text, out var knotenlast))
+            else if (_wärmeModell.Lasten.TryGetValue(item.Text, out var knotenlast))
             {
-                _knotenlastNeu = new KnotenlastNeu(_modell)
+                _knotenlastNeu = new KnotenlastNeu(_wärmeModell)
                 {
                     Topmost = true,
                     Owner = (Window)Parent,
@@ -478,9 +501,9 @@ public partial class WärmemodellVisualisieren
                 IsKnotenlast = true;
             }
             // Textdarstellung ist eine Linienlast
-            else if (_modell.LinienLasten.TryGetValue(item.Text, out var linienlast))
+            else if (_wärmeModell.LinienLasten.TryGetValue(item.Text, out var linienlast))
             {
-                _linienlastNeu = new LinienlastNeu(_modell)
+                _linienlastNeu = new LinienlastNeu(_wärmeModell)
                 {
                     Topmost = true,
                     Owner = (Window)Parent,
@@ -493,9 +516,9 @@ public partial class WärmemodellVisualisieren
                 IsLinienlast = true;
             }
             // Textdarstellung ist eine Elementlast
-            else if (_modell.ElementLasten.TryGetValue(item.Text, out var elementLast))
+            else if (_wärmeModell.ElementLasten.TryGetValue(item.Text, out var elementLast))
             {
-                _elementlastNeu = new ElementlastNeu(_modell)
+                _elementlastNeu = new ElementlastNeu(_wärmeModell)
                 {
                     Topmost = true,
                     Owner = (Window)Parent,
@@ -527,7 +550,7 @@ public partial class WärmemodellVisualisieren
             }
 
             // Textdarstellung ist zeitabhängige Knotenlast
-            else if (_modell.ZeitabhängigeKnotenLasten.TryGetValue(item.Text, out var zeitKnotenlast))
+            else if (_wärmeModell.ZeitabhängigeKnotenLasten.TryGetValue(item.Text, out var zeitKnotenlast))
             {
                 if (IsZeitKnotentemperatur)
                 {
@@ -561,7 +584,7 @@ public partial class WärmemodellVisualisieren
                             return;
                     }
                 }
-                _zeitKnotentemperaturNeu = new ZeitKnotenlastNeu(_modell)
+                _zeitKnotentemperaturNeu = new ZeitKnotenlastNeu(_wärmeModell)
                 {
                     Topmost = true,
                     Owner = (Window)Parent,
@@ -599,7 +622,7 @@ public partial class WärmemodellVisualisieren
                 IsZeitKnotentemperatur = true;
             }
             // Textdarstellung ist zeitabhängige Elementlast
-            else if (_modell.ZeitabhängigeElementLasten.TryGetValue(item.Uid, out var zeitElementlast))
+            else if (_wärmeModell.ZeitabhängigeElementLasten.TryGetValue(item.Uid, out var zeitElementlast))
             {
                 if (IsZeitElementtemperatur)
                 {
@@ -608,7 +631,7 @@ public partial class WärmemodellVisualisieren
                     _zeitElementtemperaturNeu.P2.Text = zeitElementlast.P[2].ToString("G2");
                     return;
                 }
-                _zeitElementtemperaturNeu = new ZeitElementlastNeu(_modell)
+                _zeitElementtemperaturNeu = new ZeitElementlastNeu(_wärmeModell)
                 {
                     Topmost = true,
                     Owner = (Window)Parent,
@@ -631,9 +654,9 @@ public partial class WärmemodellVisualisieren
             }
 
             // Textdarstellung ist eine Randbedingung
-            else if (_modell.Randbedingungen.TryGetValue(item.Uid, out var randbedingung))
+            else if (_wärmeModell.Randbedingungen.TryGetValue(item.Uid, out var randbedingung))
             {
-                _randbedingungNeu = new RandbedingungNeu(_modell)
+                _randbedingungNeu = new RandbedingungNeu(_wärmeModell)
                 {
                     Topmost = true,
                     Owner = (Window)Parent,
@@ -646,24 +669,24 @@ public partial class WärmemodellVisualisieren
             // Textdarstellung ist eine Anfangstemperatur
             else if (item.Uid == "A")
             {
-                var aktuell = _modell.Zeitintegration.Anfangsbedingungen.FindIndex((a => a.KnotenId == item.Name));
+                var aktuell = _wärmeModell.Zeitintegration.Anfangsbedingungen.FindIndex((a => a.KnotenId == item.Name));
 
                 if (aktuell < 0)
                 {
                     _ = MessageBox.Show("Knoten Id für Anfangstemperatur konnte nicht gefunden werden", "Anfangstemperatur");
                     return;
                 }
-                if (_modell.Zeitintegration == null)
+                if (_wärmeModell.Zeitintegration == null)
                 {
                     _ = MessageBox.Show("Zeitintegration noch nicht definiert", "neue Anfangstemperatur");
                     return;
                 }
 
-                _zeitKnotenAnfangstemperaturNeu = new ZeitKnotenAnfangstemperaturNeu(_modell, aktuell + 1, true) { Topmost = true, Owner = (Window)Parent };
+                _zeitKnotenAnfangstemperaturNeu = new ZeitKnotenAnfangstemperaturNeu(_wärmeModell, aktuell + 1, true) { Topmost = true, Owner = (Window)Parent };
                 IsAnfangsbedingung = true;
             }
             // Textdarstellung ist eine zeitabhängige Randtemperatur
-            else if (_modell.ZeitabhängigeRandbedingung.TryGetValue(item.Text, out var zeitRandtemperatur))
+            else if (_wärmeModell.ZeitabhängigeRandbedingung.TryGetValue(item.Text, out var zeitRandtemperatur))
             {
                 if (IsZeitRandtemperatur)
                 {
@@ -714,13 +737,13 @@ public partial class WärmemodellVisualisieren
                      .Where(item => item.Name != null))
         {
             // Elemente
-            if (_modell.Elemente.TryGetValue(item.Name, out var element))
+            if (_wärmeModell.Elemente.TryGetValue(item.Name, out var element))
                 ElementNeu(element);
 
             // Lasten
-            else if (_modell.Lasten.TryGetValue(item.Name, out var knotenlast))
+            else if (_wärmeModell.Lasten.TryGetValue(item.Name, out var knotenlast))
             {
-                _knotenlastNeu = new KnotenlastNeu(_modell)
+                _knotenlastNeu = new KnotenlastNeu(_wärmeModell)
                 {
                     Topmost = true,
                     Owner = (Window)Parent,
@@ -730,9 +753,9 @@ public partial class WärmemodellVisualisieren
                 };
                 IsKnotenlast = true;
             }
-            else if (_modell.LinienLasten.TryGetValue(item.Name, out var linienlast))
+            else if (_wärmeModell.LinienLasten.TryGetValue(item.Name, out var linienlast))
             {
-                _linienlastNeu = new LinienlastNeu(_modell)
+                _linienlastNeu = new LinienlastNeu(_wärmeModell)
                 {
                     Topmost = true,
                     Owner = (Window)Parent,
@@ -744,9 +767,9 @@ public partial class WärmemodellVisualisieren
                 };
                 IsLinienlast = true;
             }
-            else if (_modell.ElementLasten.TryGetValue(item.Name, out var elementLast))
+            else if (_wärmeModell.ElementLasten.TryGetValue(item.Name, out var elementLast))
             {
-                _elementlastNeu = new ElementlastNeu(_modell)
+                _elementlastNeu = new ElementlastNeu(_wärmeModell)
                 {
                     Topmost = true,
                     Owner = (Window)Parent,
@@ -778,9 +801,9 @@ public partial class WärmemodellVisualisieren
             }
 
             // Lager
-            else if (_modell.Randbedingungen.TryGetValue(item.Name, out var randbedingung))
+            else if (_wärmeModell.Randbedingungen.TryGetValue(item.Name, out var randbedingung))
             {
-                _randbedingungNeu = new RandbedingungNeu(_modell)
+                _randbedingungNeu = new RandbedingungNeu(_wärmeModell)
                 {
                     Topmost = true,
                     Owner = (Window)Parent,
@@ -793,7 +816,7 @@ public partial class WärmemodellVisualisieren
         }
     }
 
-    private void KnotenClick(Knoten knoten)
+    public void KnotenClick(Knoten knoten)
     {
         // Knotentexte angeklickt bei Definition eines neuen Elementes
         if (IsElement)
@@ -904,7 +927,7 @@ public partial class WärmemodellVisualisieren
 
     public void KnotenEdit(Knoten knoten)
     {
-        _knotenNeu = new KnotenNeu(_modell)
+        _knotenNeu = new KnotenNeu(_wärmeModell)
         {
             Topmost = true,
             Owner = (Window)Parent,
@@ -953,7 +976,7 @@ public partial class WärmemodellVisualisieren
         // Elementeigenschaften können editiert werden
         _elementNeu = element switch
         {
-            Element2D2 => new ElementNeu(_modell)
+            Element2D2 => new ElementNeu(_wärmeModell)
             {
                 Topmost = true,
                 Owner = (Window)Parent,
@@ -966,7 +989,7 @@ public partial class WärmemodellVisualisieren
                 Knoten2Id = { Text = element.KnotenIds[1] },
                 MaterialId = { Text = element.ElementMaterialId }
             },
-            Element2D3 => new ElementNeu(_modell)
+            Element2D3 => new ElementNeu(_wärmeModell)
             {
                 Topmost = true,
                 Owner = (Window)Parent,
@@ -980,7 +1003,7 @@ public partial class WärmemodellVisualisieren
                 Knoten3Id = { Text = element.KnotenIds[2] },
                 MaterialId = { Text = element.ElementMaterialId }
             },
-            Element2D4 => new ElementNeu(_modell)
+            Element2D4 => new ElementNeu(_wärmeModell)
             {
                 Topmost = true,
                 Owner = (Window)Parent,
@@ -995,7 +1018,7 @@ public partial class WärmemodellVisualisieren
                 Knoten4Id = { Text = element.KnotenIds[3] },
                 MaterialId = { Text = element.ElementMaterialId }
             },
-            Element3D8 => new ElementNeu(_modell)
+            Element3D8 => new ElementNeu(_wärmeModell)
             {
                 Topmost = true,
                 Owner = (Window)Parent,
@@ -1021,7 +1044,7 @@ public partial class WärmemodellVisualisieren
 
     private void ZeitRandtemperaturNeu(AbstraktZeitabhängigeRandbedingung zeitRandtemperatur)
     {
-        _zeitRandbedingungNeu = new ZeitRandbedingungNeu(_modell)
+        _zeitRandbedingungNeu = new ZeitRandbedingungNeu(_wärmeModell)
         {
             Topmost = true,
             Owner = (Window)Parent,

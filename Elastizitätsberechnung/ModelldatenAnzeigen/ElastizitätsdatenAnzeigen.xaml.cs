@@ -48,7 +48,7 @@ public partial class ElastizitätsdatenAnzeigen
         {
             var nodeId = item.Value.KnotenId;
             var supportName = item.Value.RandbedingungId;
-            string[] vordefiniert = { "frei", "frei", "frei" };
+            string[] vordefiniert = ["frei", "frei", "frei"];
 
             switch (item.Value.Typ)
             {
@@ -253,9 +253,9 @@ public partial class ElastizitätsdatenAnzeigen
     }
 
     // Randbedingungen
-    private void NeueRandbedingung(object sender, MouseButtonEventArgs e)
+    private void NeuesLager(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeuesLager(modell);
+        _ = new LagerNeu(modell);
         modell.Berechnet = false;
         Close();
     }
