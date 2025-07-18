@@ -16,7 +16,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             InitializeComponent();
             _modell = feModell;
             // aktiviere Ereignishandler für Canvas
-            if (_modell.Raumdimension<3)
+            if (_modell.Raumdimension < 3)
                 StartFenster.ElastizitätVisual.VisualElastizitätModel.Background = Brushes.Transparent;
             Show();
 

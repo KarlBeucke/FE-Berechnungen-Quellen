@@ -1,6 +1,6 @@
-﻿using System.Globalization;
-using FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
+﻿using FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
 using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
+using System.Globalization;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -277,7 +277,8 @@ public partial class Elastizitätsmodell3DVisualisieren
     {
         var modellNeu = new ModellNeu(_elastizitätsModell)
         {
-            Topmost = true, Owner = (Window)Parent,
+            Topmost = true,
+            Owner = (Window)Parent,
             Name = { Text = _elastizitätsModell.ModellId },
             Dimension = { Text = _elastizitätsModell.Raumdimension.ToString() },
             Ndof = { Text = _elastizitätsModell.AnzahlKnotenfreiheitsgrade.ToString() },

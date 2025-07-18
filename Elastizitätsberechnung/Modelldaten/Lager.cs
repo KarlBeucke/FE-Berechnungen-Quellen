@@ -54,7 +54,7 @@ public class Lager : AbstraktRandbedingung
 
     }
 
-    private void  SupportTyp(int supportTyp, double[] pre, bool[] fest)
+    private void SupportTyp(int supportTyp, double[] pre, bool[] fest)
     {
         switch (supportTyp)
         {

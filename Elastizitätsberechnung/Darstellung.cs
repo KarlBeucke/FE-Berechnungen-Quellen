@@ -1,10 +1,10 @@
-﻿using System.Windows.Controls;
+﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using static System.Windows.Controls.Canvas;
 using static System.Windows.Media.Brushes;
 using static System.Windows.Media.Color;
-using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 using Lager = FE_Berechnungen.Elastizitätsberechnung.Modelldaten.Lager;
 using LinienLast = FE_Berechnungen.Elastizitätsberechnung.Modelldaten.LinienLast;
 using Path = System.Windows.Shapes.Path;
@@ -84,7 +84,7 @@ public class Darstellung
             _maxX = _modell.MaxX;
             _minX = _modell.MinX;
         }
-        
+
         // vertikales Modell
         var delta = Math.Abs(_maxX - _minX);
         if (delta < 1)

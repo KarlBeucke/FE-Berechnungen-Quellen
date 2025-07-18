@@ -1,6 +1,5 @@
 ﻿using FE_Berechnungen.Elastizitätsberechnung.Ergebnisse;
 using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen;
 using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -118,7 +117,7 @@ public partial class ElastizitätsmodellVisualisieren
         _element2D3Neu = new Element2D3Neu(_modell) { Topmost = true, Owner = (Window)Parent };
         _modell.Berechnet = false;
     }
-    
+
     private void MenuMaterialNeu(object sender, RoutedEventArgs e)
     {
         _materialNeu = new MaterialNeu(_modell) { Topmost = true, Owner = (Window)Parent };
@@ -204,7 +203,7 @@ public partial class ElastizitätsmodellVisualisieren
         }
         else
         {
-            foreach (var fest in _darstellung.LagerDarstellung.Cast<Shape>()) VisualElastizitätModel.Children.Remove(fest); 
+            foreach (var fest in _darstellung.LagerDarstellung.Cast<Shape>()) VisualElastizitätModel.Children.Remove(fest);
             foreach (var id in _darstellung.LagerIDs.Cast<TextBlock>()) VisualElastizitätModel.Children.Remove(id);
             _lagerAn = false;
         }
@@ -313,7 +312,7 @@ public partial class ElastizitätsmodellVisualisieren
                 _knotenlastNeu = new KnotenlastNeu(_modell, knotenlast);
                 IsKnotenlast = true;
             }
-            
+
             // Textdarstellung ist ein Lager
             else if (_modell.Randbedingungen.TryGetValue(item.Text, out var lager))
             {
@@ -342,7 +341,7 @@ public partial class ElastizitätsmodellVisualisieren
             //    //_linienlastNeu = new LinienlastNeu(_modell, linienlast);
             //    //IsLinienlast = true;
             //}
-            
+
             // Lager
             else if (_modell.Randbedingungen.TryGetValue(item.Name, out var lager))
             {
@@ -480,7 +479,7 @@ public partial class ElastizitätsmodellVisualisieren
             _element2D3Neu.QuerschnittId.Text = element.ElementQuerschnittId;
             if (element.Dicke > 0)
                 _element2D3Neu.Dicke.Text = element.A.ToString("E2", CultureInfo.CurrentCulture);
-            
+
             IsElement = false;
             return;
         }

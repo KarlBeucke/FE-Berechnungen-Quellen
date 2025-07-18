@@ -1,6 +1,6 @@
-﻿using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
+﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
 using System.Globalization;
-using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
@@ -124,7 +124,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                     if (Knoten3Id.Text.Length > 0) knotenIds[7] = Knoten8Id.Text;
 
                     if (MaterialId.Text.Length > 0) materialId = MaterialId.Text;
-                    
+
                 }
                 catch (FormatException)
                 {

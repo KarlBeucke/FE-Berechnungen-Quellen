@@ -39,7 +39,7 @@ public class Darstellung3D
     {
         Modell = feModell;
 
-        if (!(Math.Abs(Modell.MaxX - Modell.MinX) < double.Epsilon 
+        if (!(Math.Abs(Modell.MaxX - Modell.MinX) < double.Epsilon
             && Math.Abs(Modell.MaxY - Modell.MinY) < double.Epsilon)) return;
         if (Modell.Knoten.Count <= 0) return;
         var x = new List<double>();
@@ -52,8 +52,8 @@ public class Darstellung3D
             z.Add(item.Value.Koordinaten[1]);
         }
 
-        MinX = x.Min(); _maxX = x.Max(); 
-        _minY = y.Min(); _maxY = y.Max(); 
+        MinX = x.Min(); _maxX = x.Max();
+        _minY = y.Min(); _maxY = y.Max();
         _minZ = z.Min(); _maxZ = z.Max();
         Modell.MinX = MinX; Modell.MaxX = _maxX;
         Modell.MinY = _minY; Modell.MaxY = _maxY;
@@ -239,7 +239,7 @@ public class Darstellung3D
                     ErzeugQuader(mesh, punkte);
 
                     _randbedingungenModell = new GeometryModel3D(mesh, randbedingungenFestMaterial)
-                        { BackMaterial = randbedingungenFestMaterial };
+                    { BackMaterial = randbedingungenFestMaterial };
                     modelGroup.Children.Add(_randbedingungenModell);
 
                     RandbedingungenFest.Add(_randbedingungenModell);
@@ -258,7 +258,7 @@ public class Darstellung3D
                     ErzeugQuader(mesh, punkte);
 
                     _randbedingungenModell = new GeometryModel3D(mesh, randbedingungenFestMaterial)
-                        { BackMaterial = randbedingungenFestMaterial };
+                    { BackMaterial = randbedingungenFestMaterial };
                     modelGroup.Children.Add(_randbedingungenModell);
 
                     RandbedingungenFest.Add(_randbedingungenModell);
@@ -288,7 +288,7 @@ public class Darstellung3D
                     ErzeugQuader(mesh, punkte);
 
                     _randbedingungenBoussinesqModell = new GeometryModel3D(mesh, randbedingungenVorMaterial)
-                        { BackMaterial = randbedingungenVorMaterial };
+                    { BackMaterial = randbedingungenVorMaterial };
                     modelGroup.Children.Add(_randbedingungenBoussinesqModell);
                     RandbedingungenVor.Add(_randbedingungenBoussinesqModell);
                     break;
@@ -306,7 +306,7 @@ public class Darstellung3D
                     ErzeugQuader(mesh, punkte);
 
                     _randbedingungenBoussinesqModell = new GeometryModel3D(mesh, randbedingungenVorMaterial)
-                        { BackMaterial = randbedingungenVorMaterial };
+                    { BackMaterial = randbedingungenVorMaterial };
                     modelGroup.Children.Add(_randbedingungenBoussinesqModell);
                     RandbedingungenVor.Add(_randbedingungenBoussinesqModell);
                     break;
@@ -324,7 +324,7 @@ public class Darstellung3D
                     ErzeugQuader(mesh, punkte);
 
                     _randbedingungenBoussinesqModell = new GeometryModel3D(mesh, randbedingungenVorMaterial)
-                        { BackMaterial = randbedingungenVorMaterial };
+                    { BackMaterial = randbedingungenVorMaterial };
                     modelGroup.Children.Add(_randbedingungenBoussinesqModell);
                     RandbedingungenVor.Add(_randbedingungenBoussinesqModell);
                     break;

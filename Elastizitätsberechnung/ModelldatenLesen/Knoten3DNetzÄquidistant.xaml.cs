@@ -1,6 +1,5 @@
 ﻿using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
 using System.Collections.ObjectModel;
-using System.Globalization;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
@@ -38,7 +37,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             var knotenPräfix = "";
             double abstandX = 0, abstandY = 0, abstandZ = 0;
             int wiederholungenX = 0, wiederholungenY = 0, wiederholungenZ = 0;
-            
+
             if (Präfix.Text.Length > 0) knotenPräfix = Präfix.Text;
             try
             {

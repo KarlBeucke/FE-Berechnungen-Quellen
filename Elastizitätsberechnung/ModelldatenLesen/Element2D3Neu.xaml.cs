@@ -1,6 +1,6 @@
-﻿using System.Globalization;
+﻿using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
+using System.Globalization;
 using Element2D3 = FE_Berechnungen.Elastizitätsberechnung.Modelldaten.Element2D3;
-using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
@@ -78,7 +78,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             if (_materialKeys.Id != null) MaterialId.Text = _materialKeys.Id;
             _materialKeys.Close();
         }
-        
+
         private void QuerschnittIdGotFocus(object sender, RoutedEventArgs e)
         {
             _querschnittKeys = new QuerschnittKeys(_modell) { Topmost = true, Owner = (Window)Parent };
@@ -130,8 +130,8 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             else
             {
                 var knotenIds = new string[3];
-                double eModul=0, poisson=0, dicke=0;
-                string materialId="", querschnittId="";
+                double eModul = 0, poisson = 0, dicke = 0;
+                string materialId = "", querschnittId = "";
                 try
                 {
                     if (Knoten1Id.Text.Length > 0) knotenIds[0] = Knoten1Id.Text;

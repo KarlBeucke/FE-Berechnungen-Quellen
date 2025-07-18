@@ -34,7 +34,7 @@ namespace FE_Berechnungen.input.Wärmeberechnung.instationär.Anregungsdateien.S
 
             _nSteps = (int)(_tmax / _dt);
             _forceFunction = new double[_nSteps + 1][];
-            for (var i = 0; i < _nSteps+1; i++)
+            for (var i = 0; i < _nSteps + 1; i++)
                 _forceFunction[i] = new double[_dimension];
 
             const string forceFile = "DreiDOFSinus.txt";
@@ -51,7 +51,7 @@ namespace FE_Berechnungen.input.Wärmeberechnung.instationär.Anregungsdateien.S
                     {
                         line += "\t" + _forceFunction[k][i];
                     }
-                    _writer.WriteLine(line);	    
+                    _writer.WriteLine(line);
                 }
             }
             finally

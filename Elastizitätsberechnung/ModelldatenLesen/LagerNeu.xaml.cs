@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using System.Windows.Input;
-using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
+using System.Globalization;
+using System.Windows.Input;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
@@ -54,7 +54,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 
                 if (Xfest.IsChecked != null && (bool)Xfest.IsChecked) vorhandenesLager.Festgehalten[0] = true;
                 if (Yfest.IsChecked != null && (bool)Yfest.IsChecked) vorhandenesLager.Festgehalten[1] = true;
-                
+
                 try
                 {
                     if (VorX.Text.Length > 0) vorhandenesLager.Vordefiniert[0] = double.Parse(VorX.Text);
@@ -79,7 +79,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 
                 try
                 {
-                    if (VorX.Text.Length > 0) { vordefiniert[0] = double.Parse(VorX.Text); conditions  = 1; }
+                    if (VorX.Text.Length > 0) { vordefiniert[0] = double.Parse(VorX.Text); conditions = 1; }
                     if (VorY.Text.Length > 0) { vordefiniert[1] = double.Parse(VorY.Text); conditions += 2; }
                 }
                 catch (FormatException)

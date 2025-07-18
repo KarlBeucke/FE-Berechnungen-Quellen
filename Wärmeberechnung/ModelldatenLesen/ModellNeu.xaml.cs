@@ -1,5 +1,4 @@
-﻿using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
-using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
+﻿using FE_Berechnungen.Wärmeberechnung.ModelldatenAnzeigen;
 
 namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 {

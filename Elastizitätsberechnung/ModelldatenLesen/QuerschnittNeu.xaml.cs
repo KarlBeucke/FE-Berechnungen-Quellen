@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
+﻿using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
+using System.Globalization;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
@@ -32,7 +32,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                 try
                 {
                     if (Dicke.Text.Length > 0) vorhandenerQuerschnitt.QuerschnittsWerte[0] = double.Parse(Dicke.Text);
- }
+                }
                 catch (FormatException)
                 {
                     _ = MessageBox.Show("ungültiges  Eingabeformat", "neuer Querschnitt");

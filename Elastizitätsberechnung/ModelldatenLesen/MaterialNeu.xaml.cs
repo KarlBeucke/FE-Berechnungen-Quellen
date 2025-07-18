@@ -1,6 +1,6 @@
-﻿using System.Globalization;
-using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
+﻿using FE_Berechnungen.Elastizitätsberechnung.Modelldaten;
 using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
+using System.Globalization;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
@@ -44,7 +44,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
         {
             var materialId = MaterialId.Text;
-            
+
             // vorhandenes Material
             if (_modell.Material.TryGetValue(materialId, out var vorhandenesMaterial))
             {

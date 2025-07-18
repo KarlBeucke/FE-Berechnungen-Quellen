@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
-using FE_Berechnungen.Tragwerksberechnung.ModelldatenAnzeigen;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 {
@@ -41,7 +40,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                 {
                     x.Add(item.Value.Koordinaten[0]);
                     y.Add(item.Value.Koordinaten[1]);
-                    if(item.Value.Koordinaten.Length == 3) z.Add(item.Value.Koordinaten[2]);
+                    if (item.Value.Koordinaten.Length == 3) z.Add(item.Value.Koordinaten[2]);
                 }
 
                 var xMin = (int)x.Min();
