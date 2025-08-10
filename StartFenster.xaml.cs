@@ -18,12 +18,12 @@ public partial class StartFenster
     private FeModell _elastizitätsModell;
     private Berechnung _modellBerechnung;
     public static TragwerkmodellVisualisieren TragwerkVisual { get; set; }
-    public static Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren StatikErgebnisse { get; private set; }
+    public static ErgebnisseVisualisieren StatikErgebnisse { get; private set; }
     public static WärmemodellVisualisieren WärmeVisual { get; set; }
     public static StationäreErgebnisseVisualisieren StationäreErgebnisse { get; private set; }
     public static ElastizitätsmodellVisualisieren ElastizitätVisual { get; set; }
     public static Elastizitätsmodell3DVisualisieren ElastizitätVisual3D { get; set; }
-    private static Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren ElastizitätsErgebnisse { get; set; }
+    private static StatikErgebnisseVisualisieren ElastizitätsErgebnisse { get; set; }
 
     private OpenFileDialog _dateiDialog;
     private string _dateiPfad;
@@ -1009,7 +1009,7 @@ public partial class StartFenster
                     _tragwerkModell.Berechnet = true;
                 }
 
-                StatikErgebnisse = new Tragwerksberechnung.Ergebnisse.StatikErgebnisseVisualisieren(_tragwerkModell);
+                StatikErgebnisse = new ErgebnisseVisualisieren(_tragwerkModell);
                 StatikErgebnisse.Show();
             }
             else
@@ -1576,7 +1576,7 @@ public partial class StartFenster
         {
             case 2:
                 {
-                    ElastizitätsErgebnisse = new Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren(_elastizitätsModell);
+                    ElastizitätsErgebnisse = new StatikErgebnisseVisualisieren(_elastizitätsModell);
                     ElastizitätsErgebnisse.Show();
                     break;
                 }

@@ -92,7 +92,7 @@ public partial class TragwerkmodellVisualisieren
                     _modell.Berechnet = true;
                 }
 
-                var statikErgebnisse = new StatikErgebnisseVisualisieren(_modell);
+                var statikErgebnisse = new ErgebnisseVisualisieren(_modell);
                 statikErgebnisse.Show();
             }
             else

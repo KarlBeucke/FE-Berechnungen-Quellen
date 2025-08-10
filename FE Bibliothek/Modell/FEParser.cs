@@ -50,7 +50,7 @@
             {
                 if (zeilen[i] != "Modellabmessungen") continue;
 
-                MinX = 0; MinY=0; MinZ = 0;
+                MinX = 0; MinY = 0; MinZ = 0;
                 MaxX = 0; MaxY = 0; MaxZ = 0;
                 _substrings = zeilen[i + 1].Split(_delimiters);
                 MinX = int.Parse(_substrings[0]);
@@ -65,7 +65,7 @@
                     MinZ = int.Parse(_substrings[4]);
                     MaxZ = int.Parse(_substrings[5]);
                 }
-                
+
                 FeModell.MinX = MinX;
                 FeModell.MaxX = MaxX;
                 FeModell.MinY = MinY;

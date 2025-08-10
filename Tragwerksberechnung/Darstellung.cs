@@ -25,7 +25,7 @@ public class Darstellung
     public double MaxY;
     public double PlatzierungV, PlatzierungH;
 
-    public int ÜberhöhungVerformung = 1, ÜberhöhungRotation = 1;
+    public int Überhöhung = 1;
 
     public Darstellung(FeModell feModell, Canvas visual)
     {
@@ -268,13 +268,13 @@ public class Darstellung
                             end = TransformVerformtenKnoten(_knoten, Auflösung, MaxY);
                             var richtung = end - start;
                             richtung.Normalize();
-                            winkel = -element.ElementVerformungen[2] * 180 / Math.PI * ÜberhöhungRotation;
+                            winkel = -element.ElementVerformungen[2] * 180 / Math.PI * Überhöhung;
                             richtung = RotateVectorScreen(richtung, winkel);
                             var control1 = start + richtung * element.BalkenLänge / 4 * Auflösung;
 
                             richtung = start - end;
                             richtung.Normalize();
-                            winkel = -element.ElementVerformungen[5] * 180 / Math.PI * ÜberhöhungRotation;
+                            winkel = -element.ElementVerformungen[5] * 180 / Math.PI * Überhöhung;
                             richtung = RotateVectorScreen(richtung, winkel);
                             var control2 = end + richtung * element.BalkenLänge / 4 * Auflösung;
 
@@ -309,7 +309,7 @@ public class Darstellung
                                     {
                                         var richtung = start - end;
                                         richtung.Normalize();
-                                        winkel = element.ElementVerformungen[4] * 180 / Math.PI * ÜberhöhungRotation;
+                                        winkel = element.ElementVerformungen[4] * 180 / Math.PI * Überhöhung;
                                         richtung = RotateVectorScreen(richtung, winkel);
                                         control = end + richtung * element.BalkenLänge / 4 * Auflösung;
                                         break;
@@ -318,7 +318,7 @@ public class Darstellung
                                     {
                                         var richtung = end - start;
                                         richtung.Normalize();
-                                        winkel = element.ElementVerformungen[2] * 180 / Math.PI * ÜberhöhungRotation;
+                                        winkel = element.ElementVerformungen[2] * 180 / Math.PI * Überhöhung;
                                         richtung = RotateVectorScreen(richtung, winkel);
                                         control = start + richtung * element.BalkenLänge / 4 * Auflösung;
                                         break;
@@ -2371,8 +2371,8 @@ public class Darstellung
     {
         // eingabeEinheit z.B. in m, verformungsEinheit z.B. cm → Überhöhung
         return new Point(
-            (verformt.Koordinaten[0] + verformt.Knotenfreiheitsgrade[0] * ÜberhöhungVerformung) * resolution,
-            (-verformt.Koordinaten[1] - verformt.Knotenfreiheitsgrade[1] * ÜberhöhungVerformung + max) * resolution);
+            (verformt.Koordinaten[0] + verformt.Knotenfreiheitsgrade[0] * Überhöhung) * resolution,
+            (-verformt.Koordinaten[1] - verformt.Knotenfreiheitsgrade[1] * Überhöhung + max) * resolution);
     }
 
     public double[] TransformBildPunkt(Point point)

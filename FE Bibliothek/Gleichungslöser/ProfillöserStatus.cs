@@ -37,7 +37,7 @@
     public class ProfillöserStatus
     {
         private readonly bool[] _status;              // true  : primal vorgegeben
-                                                     // false : dual   vorgegeben
+                                                      // false : dual   vorgegeben
         private readonly int[] _profil;               // Index der 1. spalte != 0
         private readonly double[][] _matrix;          // Systemmatrix A
         private double[] _vector;                     // Systemvektor w

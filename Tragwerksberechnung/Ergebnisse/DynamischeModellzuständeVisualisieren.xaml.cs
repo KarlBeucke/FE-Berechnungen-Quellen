@@ -467,7 +467,7 @@ public partial class DynamischeModellzuständeVisualisieren
 
     private void BtnVerschiebung_Click(object sender, RoutedEventArgs e)
     {
-        _darstellung.ÜberhöhungVerformung = int.Parse(Verschiebung.Text);
+        _darstellung.Überhöhung = int.Parse(Verschiebung.Text);
         foreach (var path in _darstellung.Verformungen.Cast<Shape>()) VisualErgebnisse.Children.Remove(path);
         _verformungenAn = false;
         _darstellung.VerformteGeometrie();
