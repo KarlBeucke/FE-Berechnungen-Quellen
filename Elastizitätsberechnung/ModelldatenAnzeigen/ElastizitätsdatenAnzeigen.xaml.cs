@@ -7,100 +7,99 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenAnzeigen;
 
 public partial class ElastizitätsdatenAnzeigen
 {
-    private readonly FeModell modell;
-    private string removeKey;
+    private readonly FeModell _modell;
+    private string _removeKey;
 
     public ElastizitätsdatenAnzeigen(FeModell modell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
-        this.modell = modell;
+        this._modell = modell;
         InitializeComponent();
     }
 
     private void DatenLoaded(object sender, RoutedEventArgs e)
     {
         // Knoten
-        var knoten = modell.Knoten.Select(item => item.Value).ToList();
+        var knoten = _modell.Knoten.Select(item => item.Value).ToList();
         KnotenGrid.ItemsSource = knoten;
 
         // Elemente
-        var elemente = modell.Elemente.Select(item => item.Value).ToList();
+        var elemente = _modell.Elemente.Select(item => item.Value).ToList();
         ElementGrid.ItemsSource = elemente;
 
         // Material
-        var material = modell.Material.Select(item => item.Value).ToList();
+        var material = _modell.Material.Select(item => item.Value).ToList();
         MaterialGrid.Items.Clear();
         MaterialGrid.ItemsSource = material;
 
         // Querschnitt
-        var querschnitt = modell.Querschnitt.Select(item => item.Value).ToList();
+        var querschnitt = _modell.Querschnitt.Select(item => item.Value).ToList();
         QuerschnittGrid.Items.Clear();
         QuerschnittGrid.ItemsSource = querschnitt;
 
         // Lasten
-        var knotenlast = modell.Lasten.Select(item => item.Value).ToList();
+        var knotenlast = _modell.Lasten.Select(item => item.Value).ToList();
         KnotenlastGrid.Items.Clear();
         KnotenlastGrid.ItemsSource = knotenlast;
 
         // Randbedingungen
         var rand = new Dictionary<string, Lagerbedingung>();
-        foreach (var item in modell.Randbedingungen)
+        foreach (var (supportName, value) in _modell.Randbedingungen)
         {
-            var nodeId = item.Value.KnotenId;
-            var supportName = item.Value.RandbedingungId;
+            var nodeId = value.KnotenId;
             string[] vordefiniert = ["frei", "frei", "frei"];
 
-            switch (item.Value.Typ)
+            switch (value.Typ)
             {
                 case 1:
                     {
-                        if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                        if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
+                        vordefiniert[0] = value.Vordefiniert[0].ToString("F4");
+                        if (_modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
                         break;
                     }
                 case 2:
                     {
-                        if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                        if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
+                        vordefiniert[1] = value.Vordefiniert[1].ToString("F4");
+                        if (_modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
                         break;
                     }
                 case 3:
                     {
-                        if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                        if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                        if (modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
+                        vordefiniert[0] = value.Vordefiniert[0].ToString("F4");
+                        vordefiniert[1] = value.Vordefiniert[1].ToString("F4");
+                        if (_modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
                         break;
                     }
                 case 4:
                     {
-                        if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        vordefiniert[2] = value.Vordefiniert[2].ToString("F4");
                         break;
                     }
                 case 5:
                     {
-                        if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                        if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        vordefiniert[0] = value.Vordefiniert[0].ToString("F4");
+                        vordefiniert[2] = value.Vordefiniert[2].ToString("F4");
                         break;
                     }
                 case 6:
                     {
-                        if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                        if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        vordefiniert[1] = value.Vordefiniert[1].ToString("F4");
+                        vordefiniert[2] = value.Vordefiniert[2].ToString("F4");
                         break;
                     }
                 case 7:
                     {
-                        if (item.Value.Festgehalten[0]) vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                        if (item.Value.Festgehalten[1]) vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                        if (item.Value.Festgehalten[2]) vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        vordefiniert[0] = value.Vordefiniert[0].ToString("F4");
+                        vordefiniert[1] = value.Vordefiniert[1].ToString("F4");
+                        vordefiniert[2] = value.Vordefiniert[2].ToString("F4");
                         break;
                     }
                 default:
                     throw new ModellAusnahme("\nLagerbedingung für Lager " + supportName + " falsch definiert");
             }
 
-            var lager = new Lagerbedingung(item.Key, nodeId, vordefiniert);
-            rand.Add(item.Key, lager);
+            var lager = new Lagerbedingung(supportName, nodeId, vordefiniert);
+            rand.Add(supportName, lager);
         }
 
         var randbedingung = rand.Select(item => item.Value).ToList();
@@ -112,20 +111,20 @@ public partial class ElastizitätsdatenAnzeigen
     private void NeuerKnoten(object sender, MouseButtonEventArgs e)
     {
         const int anzahlKnotenfreiheitsgrade = 3;
-        _ = new NeuerKnoten(modell, anzahlKnotenfreiheitsgrade);
-        modell.Berechnet = false;
+        _ = new NeuerKnoten(_modell, anzahlKnotenfreiheitsgrade);
+        _modell.Berechnet = false;
         Close();
     }
 
     //UnloadingRow
     private void KnotenZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Knoten.Remove(removeKey);
-        modell.Berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Knoten.Remove(_removeKey);
+        _modell.Berechnet = false;
         Close();
 
-        var tragwerk = new ElastizitätsdatenAnzeigen(modell);
+        var tragwerk = new ElastizitätsdatenAnzeigen(_modell);
         tragwerk.Show();
     }
 
@@ -135,26 +134,26 @@ public partial class ElastizitätsdatenAnzeigen
         if (KnotenGrid.SelectedCells.Count <= 0) return;
         var cellInfo = KnotenGrid.SelectedCells[0];
         var knoten = (Knoten)cellInfo.Item;
-        removeKey = knoten.Id;
+        _removeKey = knoten.Id;
     }
 
     // Elemente
     private void NeuesElement(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeuesElement(modell);
-        modell.Berechnet = false;
+        _ = new NeuesElement(_modell);
+        _modell.Berechnet = false;
         Close();
     }
 
     //UnloadingRow
-    private void ElementZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void ElementZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Elemente.Remove(removeKey);
-        modell.Berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Elemente.Remove(_removeKey);
+        _modell.Berechnet = false;
         Close();
 
-        var tragwerk = new ElastizitätsdatenAnzeigen(modell);
+        var tragwerk = new ElastizitätsdatenAnzeigen(_modell);
         tragwerk.Show();
     }
 
@@ -164,25 +163,25 @@ public partial class ElastizitätsdatenAnzeigen
         if (ElementGrid.SelectedCells.Count <= 0) return;
         var cellInfo = ElementGrid.SelectedCells[0];
         var element = (AbstraktElement)cellInfo.Item;
-        removeKey = element.ElementId;
+        _removeKey = element.ElementId;
     }
 
     // Material
     private void NeuesMaterial(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeuesMaterial(modell);
+        _ = new NeuesMaterial(_modell);
         Close();
     }
 
     //UnloadingRow
-    private void MaterialZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void MaterialZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Material.Remove(removeKey);
-        modell.Berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Material.Remove(_removeKey);
+        _modell.Berechnet = false;
         Close();
 
-        var tragwerk = new ElastizitätsdatenAnzeigen(modell);
+        var tragwerk = new ElastizitätsdatenAnzeigen(_modell);
         tragwerk.Show();
     }
 
@@ -192,25 +191,25 @@ public partial class ElastizitätsdatenAnzeigen
         if (MaterialGrid.SelectedCells.Count <= 0) return;
         var cellInfo = MaterialGrid.SelectedCells[0];
         var material = (Material)cellInfo.Item;
-        removeKey = material.MaterialId;
+        _removeKey = material.MaterialId;
     }
 
     // Querschnitt
     private void NeuerQuerschnitt(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeuerQuerschnitt(modell);
+        _ = new NeuerQuerschnitt(_modell);
         Close();
     }
 
     //UnloadingRow
-    private void QuerschnittZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void QuerschnittZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Querschnitt.Remove(removeKey);
-        modell.Berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Querschnitt.Remove(_removeKey);
+        _modell.Berechnet = false;
         Close();
 
-        var tragwerk = new ElastizitätsdatenAnzeigen(modell);
+        var tragwerk = new ElastizitätsdatenAnzeigen(_modell);
         tragwerk.Show();
     }
 
@@ -220,26 +219,26 @@ public partial class ElastizitätsdatenAnzeigen
         if (QuerschnittGrid.SelectedCells.Count <= 0) return;
         var cellInfo = QuerschnittGrid.SelectedCells[0];
         var querschnitt = (Querschnitt)cellInfo.Item;
-        removeKey = querschnitt.QuerschnittId;
+        _removeKey = querschnitt.QuerschnittId;
     }
 
     // Lasten
     private void NeueKnotenlast(object sender, MouseButtonEventArgs e)
     {
-        _ = new NeueKnotenlast(modell, string.Empty, string.Empty, 0, 0, 0);
-        modell.Berechnet = false;
+        _ = new NeueKnotenlast(_modell, string.Empty, string.Empty, 0, 0, 0);
+        _modell.Berechnet = false;
         Close();
     }
 
     //UnloadingRow
-    private void KnotenlastZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void KnotenlastZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Lasten.Remove(removeKey);
-        modell.Berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Lasten.Remove(_removeKey);
+        _modell.Berechnet = false;
         Close();
 
-        var tragwerk = new ElastizitätsdatenAnzeigen(modell);
+        var tragwerk = new ElastizitätsdatenAnzeigen(_modell);
         tragwerk.Show();
     }
 
@@ -249,26 +248,26 @@ public partial class ElastizitätsdatenAnzeigen
         if (KnotenlastGrid.SelectedCells.Count <= 0) return;
         var cellInfo = KnotenlastGrid.SelectedCells[0];
         var knotenlast = (AbstraktLast)cellInfo.Item;
-        removeKey = knotenlast.LastId;
+        _removeKey = knotenlast.LastId;
     }
 
     // Randbedingungen
     private void NeuesLager(object sender, MouseButtonEventArgs e)
     {
-        _ = new LagerNeu(modell);
-        modell.Berechnet = false;
+        _ = new LagerNeu(_modell);
+        _modell.Berechnet = false;
         Close();
     }
 
     //UnloadingRow.
-    private void RandbedingungZeileLoeschen(object sender, DataGridRowEventArgs e)
+    private void RandbedingungZeileLöschen(object sender, DataGridRowEventArgs e)
     {
-        if (removeKey == null) return;
-        modell.Randbedingungen.Remove(removeKey);
-        modell.Berechnet = false;
+        if (_removeKey == null) return;
+        _modell.Randbedingungen.Remove(_removeKey);
+        _modell.Berechnet = false;
         Close();
 
-        var tragwerk = new ElastizitätsdatenAnzeigen(modell);
+        var tragwerk = new ElastizitätsdatenAnzeigen(_modell);
         tragwerk.Show();
     }
 
@@ -277,11 +276,11 @@ public partial class ElastizitätsdatenAnzeigen
     {
         if (RandGrid.SelectedCells.Count <= 0) return;
         var name = (Lagerbedingung)RandGrid.SelectedCells[0].Item;
-        removeKey = name.LagerId;
+        _removeKey = name.LagerId;
     }
 
     private void Model_Changed(object sender, DataGridCellEditEndingEventArgs e)
     {
-        modell.Berechnet = false;
+        _modell.Berechnet = false;
     }
 }

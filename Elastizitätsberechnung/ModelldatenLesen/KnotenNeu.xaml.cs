@@ -18,7 +18,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             // aktiviere Ereignishandler für Canvas
             if (_modell.Raumdimension < 3)
                 StartFenster.ElastizitätVisual.VisualElastizitätModel.Background = Brushes.Transparent;
-            Show();
+            ShowDialog();
 
             var ndof = _modell.AnzahlKnotenfreiheitsgrade;
             AnzahlDof.Text = ndof.ToString("N0", CultureInfo.CurrentCulture);
@@ -50,7 +50,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
         private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
         {
             // entferne Steuerungsknoten und deaktiviere Ereignishandler für Canvas
-            StartFenster.ElastizitätVisual.VisualElastizitätModel.Children.Remove(StartFenster.TragwerkVisual.Pilot);
+            StartFenster.ElastizitätVisual.VisualElastizitätModel.Children.Remove(StartFenster.ElastizitätVisual.Pilot);
             StartFenster.ElastizitätVisual.VisualElastizitätModel.Background = null;
             _knotenKeys?.Close();
             Close();

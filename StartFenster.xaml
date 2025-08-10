@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="FE Berechnungen Stand Juni 2025                                © Prof. Karl Beucke"
+        Title="FE Berechnungen Stand Juli 2025                                © Prof. Karl Beucke"
         Height="300" Width="520">
     <Grid>
         <Grid.ColumnDefinitions>

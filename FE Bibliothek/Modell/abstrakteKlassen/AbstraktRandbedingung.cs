@@ -6,6 +6,7 @@
         public string KnotenId { get; set; }
         public Knoten Knoten { get; set; }
         public int Typ { get; set; }
+        public string Face { get; set; }
         public double[] Vordefiniert { get; set; }
         public bool[] Festgehalten { get; set; }
 

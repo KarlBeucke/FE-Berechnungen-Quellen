@@ -1,5 +1,4 @@
-﻿using FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using System.Windows.Media.Media3D;
 
 namespace FE_Berechnungen.Elastizitätsberechnung;
@@ -39,25 +38,34 @@ public class Darstellung3D
     {
         Modell = feModell;
 
-        if (!(Math.Abs(Modell.MaxX - Modell.MinX) < double.Epsilon
-            && Math.Abs(Modell.MaxY - Modell.MinY) < double.Epsilon)) return;
-        if (Modell.Knoten.Count <= 0) return;
-        var x = new List<double>();
-        var y = new List<double>();
-        var z = new List<double>();
-        foreach (var item in Modell.Knoten)
+        if (   Math.Abs(Modell.MaxX - Modell.MinX) < double.Epsilon
+            && Math.Abs(Modell.MaxY - Modell.MinY) < double.Epsilon
+            && Math.Abs(Modell.MaxZ - Modell.MinZ) < double.Epsilon)
         {
-            x.Add(item.Value.Koordinaten[0]);
-            y.Add(item.Value.Koordinaten[2]);
-            z.Add(item.Value.Koordinaten[1]);
-        }
+            if (Modell.Knoten.Count <= 0) return;
+            var x = new List<double>();
+            var y = new List<double>();
+            var z = new List<double>();
+            foreach (var item in Modell.Knoten)
+            {
+                x.Add(item.Value.Koordinaten[0]);
+                y.Add(item.Value.Koordinaten[2]);
+                z.Add(item.Value.Koordinaten[1]);
+            }
 
-        MinX = x.Min(); _maxX = x.Max();
-        _minY = y.Min(); _maxY = y.Max();
-        _minZ = z.Min(); _maxZ = z.Max();
-        Modell.MinX = MinX; Modell.MaxX = _maxX;
-        Modell.MinY = _minY; Modell.MaxY = _maxY;
-        Modell.MinZ = _minZ; Modell.MaxZ = _maxZ;
+            MinX = x.Min(); _maxX = x.Max();
+            _minY = y.Min(); _maxY = y.Max();
+            _minZ = z.Min(); _maxZ = z.Max();
+            Modell.MinX = MinX; Modell.MaxX = _maxX;
+            Modell.MinY = _minY; Modell.MaxY = _maxY;
+            Modell.MinZ = _minZ; Modell.MaxZ = _maxZ;
+        }
+        else
+        {
+            MinX = Modell.MinX; _maxX = Modell.MaxX;
+            _minY = Modell.MinY; _maxY = Modell.MaxY;
+            _minZ = Modell.MinZ; _maxZ = Modell.MaxZ;
+        }
     }
 
     public void Koordinatensystem(Model3DGroup modelGroup)
@@ -84,9 +92,9 @@ public class Darstellung3D
 
     private GeometryModel3D XAchse(MeshGeometry3D mesh)
     {
-        const double wichte = 0.1;
+        const double wichte = 0.05;
         const double vektorLänge = 1.0;
-        const double achsüberstand = 0.8;
+        const double achsüberstand = 0.2;
         // x-Achse
         var start = new Point3D(-achsüberstand, 0, 0);
         var end = new Point3D(vektorLänge, 0, 0);
@@ -94,7 +102,7 @@ public class Darstellung3D
         ErzeugQuader(mesh, punkte);
 
         const double pfeillänge = 0.4;
-        const double breite = 2 * wichte;
+        const double breite = 1 * wichte;
         var pfeile = PfeilPunkteX(end, pfeillänge, breite);
         ErzeugPfeilspitze(mesh, pfeile);
 
@@ -105,9 +113,9 @@ public class Darstellung3D
 
     private GeometryModel3D YAchse(MeshGeometry3D mesh)
     {
-        const double wichte = 0.1;
+        const double wichte = 0.05;
         const double vektorLänge = 1.0;
-        const double achsüberstand = 0.8;
+        const double achsüberstand = 0.2;
         // y-Achse
         var start = new Point3D(0, -achsüberstand, 0);
         var end = new Point3D(0, vektorLänge, 0);
@@ -115,7 +123,7 @@ public class Darstellung3D
         ErzeugQuader(mesh, punkte);
 
         const double pfeillänge = 0.4;
-        const double breite = 2 * wichte;
+        const double breite = 1 * wichte;
         var pfeile = PfeilPunkteY(end, pfeillänge, breite);
         ErzeugPfeilspitze(mesh, pfeile);
 
@@ -126,9 +134,9 @@ public class Darstellung3D
 
     private GeometryModel3D ZAchse(MeshGeometry3D mesh)
     {
-        const double wichte = 0.1;
+        const double wichte = 0.05;
         const double vektorLänge = 1.0;
-        const double achsüberstand = 0.8;
+        const double achsüberstand = 0.2;
         // z-Achse
         var start = new Point3D(0, 0, -achsüberstand);
         var end = new Point3D(0, 0, vektorLänge);
@@ -136,7 +144,7 @@ public class Darstellung3D
         ErzeugQuader(mesh, punkte);
 
         const double pfeillänge = 0.4;
-        const double breite = 2 * wichte;
+        const double breite = 1 * wichte;
         var pfeile = PfeilPunkteZ(end, pfeillänge, breite);
         ErzeugPfeilspitze(mesh, pfeile);
 
@@ -216,8 +224,14 @@ public class Darstellung3D
         const double d = 0.1;
         var randbedingungenFestMaterial = new DiffuseMaterial(Brushes.Red);
         var randbedingungenVorMaterial = new DiffuseMaterial(Brushes.LightPink);
+        HashSet<string> faces = [];
+        
+        foreach (var item in Modell.Randbedingungen)
+        {
+            faces.Add(item.Value.Face);
+        }
 
-        foreach (var item in ElastizitätsParser.ParseElastizitätsRandbedingungen.Faces)
+        foreach (var item in faces)
         {
             var punkte = new Point3DCollection();
             _punktDictionary.Clear();
@@ -266,14 +280,14 @@ public class Darstellung3D
             }
         }
 
-        foreach (var item2 in ElastizitätsParser.ParseElastizitätsRandbedingungen.Faces)
+        foreach (var item in faces)
         {
             var punkte = new Point3DCollection();
             _punktDictionary.Clear();
             punkte.Clear();
             var mesh = new MeshGeometry3D();
 
-            switch (item2)
+            switch (item)
             {
                 case "XMax": // rechts
                     punkte.Add(new Point3D(_maxX, -_minY, _minZ)); //0
@@ -346,7 +360,7 @@ public class Darstellung3D
             if (Modell.Knoten.TryGetValue(knotenId, out var knoten))
             {
                 lastAngriff.X = knoten.Koordinaten[0];
-                lastAngriff.Y = -knoten.Koordinaten[2];
+                lastAngriff.Y = knoten.Koordinaten[2];
                 lastAngriff.Z = knoten.Koordinaten[1];
             }
 
@@ -357,7 +371,7 @@ public class Darstellung3D
             }
             else if (Math.Abs(last.Value.Lastwerte[2]) > 0)
             {
-                lastRichtung.Y = -1;
+                lastRichtung.Y = 1;
                 lastWert = lastSkalierung * last.Value.Lastwerte[2];
             }
             else if (Math.Abs(last.Value.Lastwerte[1]) > 0)
@@ -418,7 +432,7 @@ public class Darstellung3D
 
             const double gross = 2 * wichte;
             // Pfeilspitze
-            var weiter = (Vector3D)lastAngriff - lastRichtung * pfeilLänge;
+            var weiter = (Vector3D)lastAngriff + lastRichtung * pfeilLänge;
             var cross = Vector3D.CrossProduct(new Vector3D(0, 0, 1), weiter);
             cross.Normalize();
 

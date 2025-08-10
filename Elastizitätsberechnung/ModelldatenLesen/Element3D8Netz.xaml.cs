@@ -35,7 +35,6 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             }
             //_modell.Elemente.Clear();
 
-            var elementDictionary = new Dictionary<string, AbstraktElement>();
             for (var n = 0; n < anzahl; n++)
             {
                 var idX = n.ToString().PadLeft(2, '0');
@@ -50,6 +49,8 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                         var idZp = (k + 1).ToString().PadLeft(2, '0');
                         var eNode = new string[NodesPerElement];
                         var elementName = elementPre + idX + idY + idZ;
+                        //
+                        //
                         if (_modell.Elemente.TryGetValue(elementName, out var element))
                             throw new ParseAusnahme($"\nElement \"{elementName}\" bereits vorhanden.");
                         eNode[0] = elementKnoten + idX + idY + idZ;
@@ -76,7 +77,6 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 
         private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
         {
-            StartFenster.ElastizitätVisual3D.IsElement = false;
             Close();
         }
     }

@@ -16,7 +16,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             InitializeComponent();
             _modell = modell;
             AktuelleId = "";
-            Show();
+            ShowDialog();
         }
 
         public KnotenlastNeu(FeModell modell, AbstraktLast knotenlast)
@@ -28,8 +28,8 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             KnotenId.Text = knotenlast.KnotenId;
             Px.Text = knotenlast.Lastwerte[0].ToString("0.00");
             Py.Text = knotenlast.Lastwerte[1].ToString("0.00");
-            if (knotenlast.Lastwerte.Length > 2) M.Text = knotenlast.Lastwerte[2].ToString("0.00");
-            Show();
+            if (knotenlast.Lastwerte.Length > 2) Pz.Text = knotenlast.Lastwerte[2].ToString("0.00");
+            ShowDialog();
         }
 
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
@@ -50,7 +50,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                 {
                     if (Px.Text.Length > 0) vorhandeneKnotenlast.Lastwerte[0] = double.Parse(Px.Text);
                     if (Py.Text.Length > 0) vorhandeneKnotenlast.Lastwerte[1] = double.Parse(Py.Text);
-                    if (M.Text.Length > 0) vorhandeneKnotenlast.Lastwerte[2] = double.Parse(M.Text);
+                    if (Pz.Text.Length > 0) vorhandeneKnotenlast.Lastwerte[2] = double.Parse(Pz.Text);
                 }
                 catch (FormatException)
                 {
@@ -72,7 +72,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                 {
                     if (Px.Text.Length > 0) px = double.Parse(Px.Text);
                     if (Py.Text.Length > 0) py = double.Parse(Py.Text);
-                    if (M.Text.Length > 0) m = double.Parse(M.Text);
+                    if (Pz.Text.Length > 0) m = double.Parse(Pz.Text);
                 }
                 catch (FormatException)
                 {
@@ -94,9 +94,19 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             if (AktuelleId != LastId.Text) _modell.Lasten.Remove(AktuelleId);
 
             Close();
-            StartFenster.ElastizitätVisual.Close();
-            StartFenster.ElastizitätVisual = new ElastizitätsmodellVisualisieren(_modell);
-            StartFenster.ElastizitätVisual.Show();
+            switch (_modell.Raumdimension)
+            {
+                case 2:
+                    StartFenster.ElastizitätVisual.Close();
+                    StartFenster.ElastizitätVisual = new ElastizitätsmodellVisualisieren(_modell);
+                    StartFenster.ElastizitätVisual.Show();
+                    break;
+                case 3:
+                    StartFenster.ElastizitätVisual3D.Close();
+                    StartFenster.ElastizitätVisual3D = new Elastizitätsmodell3DVisualisieren(_modell);
+                    StartFenster.ElastizitätVisual3D.Show();
+                    break;
+            }
             _modell.Berechnet = false;
         }
 
@@ -116,6 +126,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
         private void LastIdLostFocus(object sender, RoutedEventArgs e)
         {
             _lastenKeys?.Close();
+            if (_lastenKeys is { Id: not null }) LastId.Text = _lastenKeys.Id;
             if (!_modell.Lasten.TryGetValue(LastId.Text, out var vorhandeneKnotenlast)) return;
 
             // vorhandene Knotenlastdefinition
@@ -124,7 +135,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             Px.Text = vorhandeneKnotenlast.Lastwerte[0].ToString("G3", CultureInfo.CurrentCulture);
             Py.Text = vorhandeneKnotenlast.Lastwerte[1].ToString("G3", CultureInfo.CurrentCulture);
             if (vorhandeneKnotenlast.Lastwerte.Length > 2)
-                M.Text = vorhandeneKnotenlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
+                Pz.Text = vorhandeneKnotenlast.Lastwerte[2].ToString("G3", CultureInfo.CurrentCulture);
         }
 
         private void KnotenIdLostFocus(object sender, RoutedEventArgs e)
@@ -148,10 +159,10 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
         {
             if (!_modell.Lasten.Remove(LastId.Text, out _)) return;
             Close();
-            StartFenster.ElastizitätVisual.Close();
+            StartFenster.ElastizitätVisual3D.Close();
 
-            StartFenster.ElastizitätVisual = new ElastizitätsmodellVisualisieren(_modell);
-            StartFenster.ElastizitätVisual.Show();
+            StartFenster.ElastizitätVisual3D = new Elastizitätsmodell3DVisualisieren(_modell);
+            StartFenster.ElastizitätVisual3D.Show();
             _modell.Berechnet = false;
         }
 

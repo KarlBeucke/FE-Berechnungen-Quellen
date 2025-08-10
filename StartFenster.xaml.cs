@@ -24,7 +24,6 @@ public partial class StartFenster
     public static ElastizitätsmodellVisualisieren ElastizitätVisual { get; set; }
     public static Elastizitätsmodell3DVisualisieren ElastizitätVisual3D { get; set; }
     private static Elastizitätsberechnung.Ergebnisse.StatikErgebnisseVisualisieren ElastizitätsErgebnisse { get; set; }
-    private static Elastizitätsberechnung.Ergebnisse.StatikErgebnisse3DVisualisieren ElastizitätsErgebnisse3D { get; set; }
 
     private OpenFileDialog _dateiDialog;
     private string _dateiPfad;
@@ -1583,8 +1582,8 @@ public partial class StartFenster
                 }
             case 3:
                 {
-                    ElastizitätsErgebnisse3D = new StatikErgebnisse3DVisualisieren(_elastizitätsModell);
-                    ElastizitätsErgebnisse3D.Show();
+                    var elastizitätsErgebnisse3D = new StatikErgebnisse3DVisualisieren(_elastizitätsModell);
+                    elastizitätsErgebnisse3D.Show();
                     break;
                 }
             default:

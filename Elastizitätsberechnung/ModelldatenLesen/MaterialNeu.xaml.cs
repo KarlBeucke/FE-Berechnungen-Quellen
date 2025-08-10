@@ -123,9 +123,20 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             if (AktuelleQuerschnittId != QuerschnittId.Text) _modell.Querschnitt.Remove(AktuelleQuerschnittId);
 
             Close();
-            StartFenster.ElastizitätVisual.Close();
-            StartFenster.ElastizitätVisual = new ElastizitätsmodellVisualisieren(_modell);
-            StartFenster.ElastizitätVisual.Show();
+            switch (_modell.Raumdimension)
+            {
+                case 2:
+                    StartFenster.ElastizitätVisual.Close();
+                    StartFenster.ElastizitätVisual = new ElastizitätsmodellVisualisieren(_modell);
+                    StartFenster.ElastizitätVisual.Show();
+                    break;
+                case 3:
+                    StartFenster.ElastizitätVisual3D.Close();
+                    StartFenster.ElastizitätVisual3D = new Elastizitätsmodell3DVisualisieren(_modell);
+                    StartFenster.ElastizitätVisual3D.Show();
+                    break;
+            }
+
             _modell.Berechnet = false;
         }
 

@@ -24,7 +24,6 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             _knotenKeys.Show();
 
             Präfix.Focus();
-            //_zähler = 0;
             var ndof = _modell.AnzahlKnotenfreiheitsgrade;
             AnzahlDof.Text = ndof.ToString("N0", CultureInfo.CurrentCulture);
             _knotenListe = [];
@@ -39,7 +38,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             var anzahlKnotenDof = 3;
             double abstandX = 0, abstandY = 0;
             int wiederholungenX = 0, wiederholungenY = 0;
-            if (StartY.Text.Length == 0)
+            if (AnzahlY.Text.Length == 0)
             {
                 try
                 {
@@ -47,6 +46,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                     if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
 
                     if (StartX.Text.Length > 0) koordinaten[0] = double.Parse(StartX.Text);
+                    if (StartY.Text.Length > 0) koordinaten[1] = double.Parse(StartY.Text);
                     if (InkrementX.Text.Length > 0) abstandX = double.Parse(InkrementX.Text);
                     if (AnzahlX.Text.Length > 0) wiederholungenX = int.Parse(AnzahlX.Text);
                 }
@@ -58,7 +58,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                 for (var k = 0; k < wiederholungenX; k++)
                 {
                     var knotenId = knotenPräfix + k.ToString().PadLeft(2, '0');
-                    var knotenKoords = new[] { koordinaten[0], 0 };
+                    var knotenKoords = new[] { koordinaten[0], koordinaten[1] };
                     var neuerKnoten = new Knoten(knotenId, knotenKoords, anzahlKnotenDof, dimension);
                     _knotenListe.Add(neuerKnoten);
                     koordinaten[0] += abstandX;
@@ -114,19 +114,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                 // neuer Knoten
                 if (_modell.Knoten.TryAdd(knoten.Id, knoten)) continue;
                 // vorhandener Knoten
-                _modell.Knoten.TryGetValue(knoten.Id, out var vorhandenerKnoten);
-                if (vorhandenerKnoten == null) continue;
-                try
-                {
-                    if (AnzahlDof.Text.Length > 0)
-                        vorhandenerKnoten.AnzahlKnotenfreiheitsgrade = int.Parse(AnzahlDof.Text);
-                    if (StartX.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(StartX.Text);
-                    if (StartY.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(StartY.Text);
-                }
-                catch (FormatException)
-                {
-                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Knotennetz");
-                }
+                _ = MessageBox.Show("Knoten " + knoten.Id + " nicht hinzugefügt, da schon vorhanden", "neues Knotennetz");
             }
 
             StartFenster.ElastizitätVisual.Close();

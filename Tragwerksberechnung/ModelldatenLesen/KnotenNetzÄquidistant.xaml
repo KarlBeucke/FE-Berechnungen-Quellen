@@ -4,8 +4,94 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="äquidistantes Knotennetz definieren oder editieren" Height="460" Width="440">
-    <Grid Height="444" VerticalAlignment="Center">
+        Title="äquidistantes Knotennetz definieren oder editieren" Height="482" Width="440">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="460*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="143*" />
+            <RowDefinition Height="262*" />
+            <RowDefinition Height="61.042" />
+        </Grid.RowDefinitions>
+        <Label Name="Header" Grid.Row="0" Grid.RowSpan="3">
+            Präfix für alle KnotenIds eingeben, Knoten Ids werden generiert
+        </Label>
+
+        <Grid Grid.Row="0" Margin="0,0,0,3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120*" />
+                <ColumnDefinition Width="40*" />
+                <ColumnDefinition Width="80*" />
+                <ColumnDefinition Width="40*" />
+                <ColumnDefinition Width="100*" />
+                <ColumnDefinition Width="40*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40*" />
+                <RowDefinition Height="40*" />
+                <RowDefinition Height="40" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Margin="0,25,42,43" Grid.ColumnSpan="2" Grid.RowSpan="2">Knoten Präfix</Label>
+            <TextBox Name="Präfix" Grid.Row="0" Grid.Column="1" Height="25" Margin="0,28,0,0"
+                VerticalAlignment="Top" HorizontalAlignment="Center" Width="32" Grid.RowSpan="2" />
+            <Label Grid.Row="0" Grid.Column="2" Margin="0,25,2,39" Grid.ColumnSpan="2" Grid.RowSpan="2">Anzahl Freiheitsgrade</Label>
+            <TextBox Name="AnzahlDof" Grid.Row="0" Grid.Column="4" Margin="5,28,0,0" Height="24"
+                VerticalAlignment="Top" HorizontalAlignment="Left" Width="33" Grid.RowSpan="2" />
+
+            <Label Grid.Row="1" Grid.Column="0" Margin="0,6,0,4" HorizontalAlignment="Left" Width="32">1D:</Label>
+            <Label Grid.Row="1" Grid.Column="0" Margin="0,5,38,10" HorizontalAlignment="Right" Width="104" Grid.ColumnSpan="2">
+                Startkoordinate x
+            </Label>
+            <TextBox Name="StartX" Grid.Row="1" Grid.Column="1" Height="20"
+                VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
+            <Label Grid.Row="1" Grid.Column="2" Margin="4,5,0,10">x Inkrement</Label>
+            <TextBox Name="InkrementX" Grid.Row="1" Grid.Column="3" Height="20"
+                VerticalAlignment="Center" HorizontalAlignment="Center" Width="34" />
+            <Label Grid.Row="1" Grid.Column="4" Margin="0,5,0,5">Wiederholungen</Label>
+            <TextBox Name="AnzahlX" Grid.Row="1" Grid.Column="5" Height="20"
+                VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
+
+            <Label Grid.Row="2" Grid.Column="0" Margin="0,6,0,4" HorizontalAlignment="Left" Width="32">2D:</Label>
+            <Label Grid.Row="2" Grid.Column="0" Margin="0,5,41,10" HorizontalAlignment="Right" Width="100"
+                Grid.ColumnSpan="2">
+                Startkoordinate y
+            </Label>
+            <TextBox Name="StartY" Grid.Row="2" Grid.Column="1" Height="20"
+                VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
+            <Label Grid.Row="2" Grid.Column="2" Margin="4,5,0,10">y Inkrement</Label>
+            <TextBox Name="InkrementY" Grid.Row="2" Grid.Column="3" Height="20"
+                VerticalAlignment="Center" HorizontalAlignment="Center" Width="34" />
+            <Label Grid.Row="2" Grid.Column="4" Margin="0,5,0,5">Wiederholungen</Label>
+            <TextBox Name="AnzahlY" Grid.Row="2" Grid.Column="5" Height="20"
+                VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
+        </Grid>
+        <DataGrid Name="KnotenGrid" Grid.Column="0" Grid.Row="1" Margin="0,0,0,1"
+                  AlternatingRowBackground="Aqua" AutoGenerateColumns="False" d:DataContext="{d:DesignData modell}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header=" Knoten Id" Binding="{Binding Id}" />
+                <DataGridTextColumn Header=" Anzahl DoF" Binding="{Binding AnzahlKnotenfreiheitsgrade}" />
+                <DataGridTextColumn Header=" x-Koordinate" Binding="{Binding Koordinaten[0]}" />
+                <DataGridTextColumn Header=" y-Koordinate" Binding="{Binding Koordinaten[1]}" />
+                <DataGridTextColumn Header=" z-Koordinate" Binding="{Binding Koordinaten[2]}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Width="130" Margin="25,10,0,30"
+                Click="BtnTabelleneintrag">
+            _Knotennetz generieren
+        </Button>
+        <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Width="30" Margin="0,10,20,30"
+                Click="BtnDialogOk_Click">
+            _Ok
+        </Button>
+        <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Width="80" Margin="0,10,60,30"
+                Click="BtnDialogCancel_Click">
+            _Abbrechen
+        </Button>
+    </Grid>
+
+    <!--<Grid VerticalAlignment="Stretch" Height="460" HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120" />
             <ColumnDefinition Width="40" />
@@ -61,8 +147,9 @@
         <TextBox Name="AnzahlY" Grid.Row="3" Grid.Column="5" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Center" Width="32" />
 
-        <DataGrid Name="KnotenGrid" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" Margin="0,0,-39,0"
-                  AlternatingRowBackground="Aqua" AutoGenerateColumns="False" d:DataContext="{d:DesignData modell}">
+        <DataGrid Name="KnotenGrid" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" Margin="5,0,0,5"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  AlternatingRowBackground="Aqua" AutoGenerateColumns="False" d:DataContext="{d:DesignData modell}" Height="213">
             <DataGrid.Columns>
                 <DataGridTextColumn Header=" Knoten Id" Binding="{Binding Id}" />
                 <DataGridTextColumn Header=" Anzahl DoF" Binding="{Binding AnzahlKnotenfreiheitsgrade}" />
@@ -84,5 +171,5 @@
                 Click="BtnDialogCancel_Click">
             _Abbrechen
         </Button>
-    </Grid>
+    </Grid>-->
 </Window>

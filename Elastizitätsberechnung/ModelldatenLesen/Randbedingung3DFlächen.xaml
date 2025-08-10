@@ -1,0 +1,77 @@
+﻿<Window x:Class="FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen.Randbedingung3DFlächen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Randbedingung 3D" Height="510" Width="450">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="280" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="260*" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <Label Name="Header" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,37.4" Grid.RowSpan="2">
+            Randbedingung 3D Flächen neu definieren oder vorhandene editieren
+        </Label>
+
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,5,6,0">Lager ID Initial:</Label>
+        <TextBox Name="LagerId" Grid.Row="1" Grid.Column="0" Margin="0,9.8,9.8,7.4" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" />
+
+
+
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,5,4,7">Flächen ID:</Label>
+        <TextBox Name="FlächenId" Grid.Row="2" Grid.Column="0" Margin="0,9.8,9.8,0" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" />
+        <Label Grid.Row="2" Grid.Column="1" Margin="4,5,139,7">Knoten ID Initial:</Label>
+        <TextBox Name="InitialKnotenId" Grid.Row="2" Grid.Column="1" Margin="0,9.8,147.8,9" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" />
+        <Label Grid.Row="2" Grid.Column="1" Margin="138.2,0,51.8,7" Height="29" VerticalAlignment="Bottom">Anzahl Knoten:</Label>
+        <TextBox Name="AnzahlKnoten" Grid.Row="2" Grid.Column="1" Margin="0,9.8,22.8,0" Height="20"
+                 VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" />
+
+        <Label Grid.Row="3" Grid.Column="0"
+               VerticalAlignment="Top" HorizontalAlignment="Left" Height="26" Width="85" Margin="0,3,0,0">
+            Festhaltungen
+        </Label>
+        <Label Grid.Column="0" Grid.Row="3" Margin="0,20,0,0"
+               VerticalAlignment="Top" HorizontalAlignment="Center" Height="26" Width="168">
+            "x" und/oder "y" und/oder "z"
+        </Label>
+        <CheckBox Name="XFest" Grid.Row="3" Grid.Column="1" Margin="10.2,3,15.8,1.8">Festhaltung X</CheckBox>
+        <CheckBox Name="YFest" Grid.Row="3" Grid.Column="1" Margin="10.2,21,14.8,18.8">Festhaltung Y</CheckBox>
+        <CheckBox Name="ZFest" Grid.Row="3" Grid.Column="1" Margin="10.2,42,15.8,2.8">Festhaltung Z</CheckBox>
+
+        <DataGrid Grid.Row="4" Name="RandbedingungenGrid" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,0"
+                  AlternatingRowBackground="Aqua" AutoGenerateColumns="False" d:DataContext="{d:DesignData modell}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header=" Lager Id" Binding="{Binding LagerId}" />
+                <DataGridTextColumn Header=" Knoten Id" Binding="{Binding NodeId}" />
+                <DataGridTextColumn Header=" Fläche" Binding="{Binding Face}" />
+                <DataGridTextColumn Header=" u-x" Binding="{Binding Vordefiniert[0]}" />
+                <DataGridTextColumn Header=" u-y" Binding="{Binding Vordefiniert[1]}" />
+                <DataGridTextColumn Header=" u-z" Binding="{Binding Vordefiniert[2]}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Grid.Row="5" Grid.Column="0" Width="164" Margin="5,5,0,22"
+                Click="BtnTabelleneintrag" VerticalAlignment="Top" HorizontalAlignment="Left">
+            _Randbedingungen generieren
+        </Button>
+        <Button IsDefault="True" Grid.Row="5" Grid.Column="1" Width="35" Height="26" Margin="220,5,0,0"
+                Click="BtnDialogOk_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+            _Ok
+        </Button>
+        <Button Grid.Row="5" Grid.Column="1" Width="71" Height="26" Margin="140,5,0,0"
+                Click="BtnDialogCancel_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+            _Abbrechen
+        </Button>
+    </Grid>
+</Window>

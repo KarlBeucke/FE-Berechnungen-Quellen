@@ -328,7 +328,10 @@ public partial class ElastizitätsmodellVisualisieren
         {
             // Elemente
             if (_modell.Elemente.TryGetValue(item.Name, out var element))
+            {
                 ElementNeu(element);
+                //IsElement = true;
+            }
 
             // Lasten
             else if (_modell.Lasten.TryGetValue(item.Name, out var knotenlast))
@@ -474,11 +477,11 @@ public partial class ElastizitätsmodellVisualisieren
             if (element.E > 0)
                 _element2D3Neu.EModul.Text = element.E.ToString("E2", CultureInfo.CurrentCulture);
             if (element.Nue > 0)
-                _element2D3Neu.Poisson.Text = element.M.ToString("E2", CultureInfo.CurrentCulture);
+                _element2D3Neu.Poisson.Text = element.Nue.ToString("E2", CultureInfo.CurrentCulture);
 
             _element2D3Neu.QuerschnittId.Text = element.ElementQuerschnittId;
             if (element.Dicke > 0)
-                _element2D3Neu.Dicke.Text = element.A.ToString("E2", CultureInfo.CurrentCulture);
+                _element2D3Neu.Dicke.Text = element.Dicke.ToString("E2", CultureInfo.CurrentCulture);
 
             IsElement = false;
             return;
@@ -503,6 +506,6 @@ public partial class ElastizitätsmodellVisualisieren
             QuerschnittId = { Text = element.ElementQuerschnittId },
             Dicke = { Text = dicke },
         };
-        IsElement = true;
+        //IsElement = true;
     }
 }

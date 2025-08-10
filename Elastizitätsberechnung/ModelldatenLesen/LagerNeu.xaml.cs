@@ -9,12 +9,14 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
     {
         private readonly FeModell _modell;
         private LagerKeys _lagerKeys;
+        private readonly int _anzahlFreiheitsgrade;
         public string AktuelleId;
 
         public LagerNeu(FeModell modell)
         {
             InitializeComponent();
             _modell = modell;
+            _anzahlFreiheitsgrade = modell.AnzahlKnotenfreiheitsgrade;
             Show();
             AktuelleId = LagerId.Text;
         }
@@ -50,7 +52,6 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                     vorhandenesLager.KnotenId = KnotenId.Text.ToString(CultureInfo.CurrentCulture);
                 vorhandenesLager.Festgehalten[0] = false;
                 vorhandenesLager.Festgehalten[1] = false;
-                vorhandenesLager.Festgehalten[2] = false;
 
                 if (Xfest.IsChecked != null && (bool)Xfest.IsChecked) vorhandenesLager.Festgehalten[0] = true;
                 if (Yfest.IsChecked != null && (bool)Yfest.IsChecked) vorhandenesLager.Festgehalten[1] = true;
@@ -88,7 +89,8 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                     return;
                 }
 
-                var lager = new Lager(KnotenId.Text, conditions, vordefiniert, _modell) { RandbedingungId = lagerId };
+                var lager = new Lager(KnotenId.Text, conditions, vordefiniert, _anzahlFreiheitsgrade) 
+                    { RandbedingungId = lagerId };
 
                 lager.RandbedingungId = lagerId;
                 _modell.Randbedingungen.Add(lagerId, lager);

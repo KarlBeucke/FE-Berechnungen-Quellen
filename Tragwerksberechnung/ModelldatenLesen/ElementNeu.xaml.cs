@@ -270,7 +270,7 @@ public partial class ElementNeu
     {
         if (_materialKeys.Id != null) MaterialId.Text = _materialKeys.Id;
         _materialKeys.Close();
-        //Show();
+        Show();
     }
 
     private void QuerschnittIdGotFocus(object sender, RoutedEventArgs e)

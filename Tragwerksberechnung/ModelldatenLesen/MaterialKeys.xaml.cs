@@ -26,6 +26,7 @@ public partial class MaterialKeys
         if (MaterialKey.SelectedItems.Count <= 0) { return; }
         var material = (Material)MaterialKey.SelectedItem;
         if (material == null) return;
+
         Id = material.MaterialId;
         _modell.Berechnet = false;
     }

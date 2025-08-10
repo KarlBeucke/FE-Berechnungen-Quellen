@@ -13,7 +13,8 @@
             <RowDefinition Height="150" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" Margin="0,3,-56,29" Name="TragwerklastenKeys" d:DataContext="{d:DesignData modell}" Grid.RowSpan="2">
+        <ListView Grid.Row="0" Margin="0,3,-56,29" Name="LastenKey" d:DataContext="{d:DesignData modell}" Grid.RowSpan="2"
+                  MouseDoubleClick="MouseDoubleClickNeueKnotenlast" SelectionChanged="SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding LastId}" />

@@ -7,51 +7,24 @@ public class Lager : AbstraktRandbedingung
 
     protected double[] Deflection;
 
-    private string _face;
-
-    public Lager(string knotenId, int supportTyp, double[] pre, FeModell modell)
+    public Lager(string knotenId, int supportTyp, double[] pre, int ndof)
     {
-        int ndof;
         Vordefiniert = pre;
-
-        if (modell.Knoten.TryGetValue(knotenId, out var node))
-            ndof = node.AnzahlKnotenfreiheitsgrade;
-        else
-            throw new ModellAusnahme("\nLagerknoten nicht definiert");
         Typ = supportTyp;
         Festgehalten = new bool[ndof];
         for (var i = 0; i < ndof; i++) Festgehalten[i] = false;
         KnotenId = knotenId;
         SupportTyp(Typ, Vordefiniert, Festgehalten);
     }
-    public Lager(string knotenId, string face, int supportTyp, double[] pre, FeModell modell)
+    public Lager(string knotenId, string face, int supportTyp, double[] pre, int ndof)
     {
-        _face = face;
-        int ndof;
-
-        //switch (supportType)
-        //{
-        //    case 1:
-        //        nodeId = "N00" + nodeId.Substring(3, 4);
-        //        break;
-        //    case 2:
-        //        nodeId = nodeId.Substring(0, 3) + "00" + nodeId.Substring(5,2);
-        //        break;
-        //    case 3:
-        //        nodeId = nodeId.Substring(0, 3) + nodeId.Substring(5, 2) + "00";
-        //        break;
-        //}
-        if (modell.Knoten.TryGetValue(knotenId, out var node))
-            ndof = node.AnzahlKnotenfreiheitsgrade;
-        else
-            throw new ModellAusnahme("\nLagerknoten nicht definiert");
+        Vordefiniert = pre;
         Typ = supportTyp;
-        Vordefiniert = new double[ndof];
-        var fest = new bool[ndof];
-        for (var i = 0; i < ndof; i++) fest[i] = false;
+        Festgehalten = new bool[ndof];
+        for (var i = 0; i < ndof; i++) Festgehalten[i] = false;
         KnotenId = knotenId;
-        SupportTyp(Typ, pre, fest);
-
+        Face = face;
+        SupportTyp(Typ, Vordefiniert, Festgehalten);
     }
 
     private void SupportTyp(int supportTyp, double[] pre, bool[] fest)

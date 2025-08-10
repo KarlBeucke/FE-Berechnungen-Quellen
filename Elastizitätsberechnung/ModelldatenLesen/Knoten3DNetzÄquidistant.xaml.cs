@@ -86,22 +86,12 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
         {
-            // vorhandener Knoten
             foreach (var knoten in _knotenListe)
             {
+                // neuer Knoten
                 if (_modell.Knoten.TryAdd(knoten.Id, knoten)) continue;
-                _modell.Knoten.TryGetValue(knoten.Id, out var vorhandenerKnoten);
-                if (vorhandenerKnoten == null) continue;
-                try
-                {
-                    if (StartX.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(StartX.Text);
-                    if (StartY.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(StartY.Text);
-                    if (StartZ.Text.Length > 0) vorhandenerKnoten.Koordinaten[2] = double.Parse(StartZ.Text);
-                }
-                catch (FormatException)
-                {
-                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Knotennetz");
-                }
+                // vorhandener Knoten
+                _ = MessageBox.Show("Knoten " + knoten.Id + " nicht hinzugefügt, da schon vorhanden", "neues Knotennetz");
             }
 
             StartFenster.ElastizitätVisual3D.Close();

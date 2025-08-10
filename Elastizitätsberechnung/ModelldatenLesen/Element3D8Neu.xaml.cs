@@ -161,7 +161,6 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
         private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
         {
             _elementKeys?.Close();
-            StartFenster.ElastizitätVisual3D.IsElement = false;
             Close();
         }
     }

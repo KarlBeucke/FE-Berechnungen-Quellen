@@ -39,9 +39,7 @@ public partial class Elastizitätsmodell3DVisualisieren
     private readonly FeModell _elastizitätsModell;
     private MaterialNeu _materialNeu;
     private KnotenlastNeu _knotenlastNeu;
-    private LagerNeu _lagerNeu;
-    private bool _lastenAn = true, _lagerAn = true, _knotenTexteAn = true, _elementTexteAn = true;
-    public bool IsKnoten, IsElement, IsKnotenlast, IsLinienlast, IsLager;
+    //private LagerNeu _lagerNeu;
     private Berechnung _modellBerechnung;
 
     public Elastizitätsmodell3DVisualisieren(FeModell feModell)
@@ -49,14 +47,21 @@ public partial class Elastizitätsmodell3DVisualisieren
         _elastizitätsModell = feModell;
         _darstellung3D = new Darstellung3D(feModell);
         InitializeComponent();
+        Koordinaten.IsChecked = true;
+        Oberflächen.IsChecked = true;
+        Drahtmodell.IsChecked = true;
+        RandbedingungenFest.IsChecked = true;
+        RandbedingungenVor.IsChecked = true;
+        Knotenlasten.IsChecked = true;
+        ErstellSzene();
     }
 
     // Erstellung einer 3D-Szene
     // Viewport ist definiert als Viewport3D im XAML-Code, der alles darstellt 
-    private void Window_Loaded(object sender, RoutedEventArgs e)
+    private void ErstellSzene()
     {
         // Festlegung der Anfangsposition der Kamera
-        _theCamera = new PerspectiveCamera { FieldOfView = 60 };
+        _theCamera = new PerspectiveCamera { FieldOfView = 100 };
         View3D.Camera = _theCamera;
         PositionierKamera();
 
@@ -64,7 +69,7 @@ public partial class Elastizitätsmodell3DVisualisieren
         FestlegungBeleuchtung();
 
         // Koordinatensystem
-        //_darstellung3D.Koordinatensystem(_model3DGroup);
+        _darstellung3D.Koordinatensystem(_model3DGroup);
 
         // Erzeugung des Modells
         _darstellung3D.UnverformteGeometrie(_model3DGroup, true);
@@ -155,8 +160,6 @@ public partial class Elastizitätsmodell3DVisualisieren
 
             case Key.Subtract: //  - Ziffernblock
             case Key.OemMinus: //  - alphanumerisch
-                _cameraR += CameraDr;
-                break;
             case Key.PageDown:
                 _cameraR += CameraDr;
                 if (_cameraR < CameraDr) _cameraR = CameraDr;
@@ -173,7 +176,7 @@ public partial class Elastizitätsmodell3DVisualisieren
         _cameraTheta = ScrTheta.Value;
         PositionierKamera();
     }
-
+    
     private void ScrPhiScroll(object sender, ScrollEventArgs e)
     {
         _cameraPhi = ScrPhi.Value;
@@ -279,7 +282,7 @@ public partial class Elastizitätsmodell3DVisualisieren
         {
             Topmost = true,
             Owner = (Window)Parent,
-            Name = { Text = _elastizitätsModell.ModellId },
+            Id = { Text = _elastizitätsModell.ModellId },
             Dimension = { Text = _elastizitätsModell.Raumdimension.ToString() },
             Ndof = { Text = _elastizitätsModell.AnzahlKnotenfreiheitsgrade.ToString() },
             MinX = { Text = _elastizitätsModell.MinX.ToString(CultureInfo.CurrentCulture) },
@@ -318,15 +321,13 @@ public partial class Elastizitätsmodell3DVisualisieren
     }
 
     // Elemente
-    private void MenuElement3D8Neu(object sender, RoutedEventArgs e)
+   private void MenuElement3D8Neu(object sender, RoutedEventArgs e)
     {
-        IsElement = true;
         _ = new Element3D8Neu(_elastizitätsModell) { Topmost = true, Owner = (Window)Parent };
         _elastizitätsModell.Berechnet = false;
     }
     private void MenuElement3D8Netz(object sender, RoutedEventArgs e)
     {
-        IsElement = true;
         _ = new Element3D8Netz(_elastizitätsModell) { Topmost = true, Owner = (Window)Parent };
         _elastizitätsModell.Berechnet = false;
     }
@@ -339,20 +340,29 @@ public partial class Elastizitätsmodell3DVisualisieren
     }
 
     // Lasten
-    private void MenuKnotenlast3DNeu(object sender, RoutedEventArgs e)
+    private void MenuKnotenlastNeu(object sender, RoutedEventArgs e)
     {
-        IsKnotenlast = true;
-        _knotenlastNeu = new KnotenlastNeu(_elastizitätsModell) { Topmost = true, Owner = (Window)Parent };
+        _knotenlastNeu = new KnotenlastNeu(_elastizitätsModell);
         _knotenlastNeu.AktuelleId = _knotenlastNeu.LastId.Text;
         _elastizitätsModell.Berechnet = false;
     }
 
     // Randbedingungen
-    private void OnBtnLagerNeu_Click(object sender, RoutedEventArgs e)
+    private void MenuKnotenRandbedingungNeu(object sender, RoutedEventArgs e)
     {
-        IsLager = true;
-        _lagerNeu = new LagerNeu(_elastizitätsModell) { Topmost = true, Owner = (Window)Parent };
-        _lagerNeu.AktuelleId = _lagerNeu.LagerId.Text;
+        _ = new Randbedingung3DKnoten(_elastizitätsModell) { Topmost = true, Owner = (Window)Parent };
+        _elastizitätsModell.Berechnet = false;
+    }
+
+    private void MenuFlächenRandbedingungNeu(object sender, RoutedEventArgs e)
+    {
+        _ = new Randbedingung3DFlächen(_elastizitätsModell) { Topmost = true, Owner = (Window)Parent };
+        _elastizitätsModell.Berechnet = false;
+    }
+
+    private void MenuBoussinesqRandbedingungNeu(object sender, RoutedEventArgs e)
+    {
+        _ = new Randbedingung3DBoussinesq(_elastizitätsModell) { Topmost = true, Owner = (Window)Parent };
         _elastizitätsModell.Berechnet = false;
     }
 }

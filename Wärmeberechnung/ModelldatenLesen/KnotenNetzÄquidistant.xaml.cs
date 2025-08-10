@@ -24,7 +24,6 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             _knotenKeys.Show();
 
             Präfix.Focus();
-            //_zähler = 0;
             var ndof = _modell.AnzahlKnotenfreiheitsgrade;
             AnzahlDof.Text = ndof.ToString("N0", CultureInfo.CurrentCulture);
             _knotenListe = [];
@@ -39,16 +38,17 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             var anzahlKnotenDof = 3;
             double abstandX = 0, abstandY = 0;
             int wiederholungenX = 0, wiederholungenY = 0;
-            if (startY.Text.Length == 0)
+            if (AnzahlY.Text.Length == 0)
             {
                 try
                 {
                     if (Präfix.Text.Length > 0) knotenPräfix = Präfix.Text;
                     if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
 
-                    if (startX.Text.Length > 0) koordinaten[0] = double.Parse(startX.Text);
-                    if (inkrementX.Text.Length > 0) abstandX = double.Parse(inkrementX.Text);
-                    if (anzahlX.Text.Length > 0) wiederholungenX = int.Parse(anzahlX.Text);
+                    if (StartX.Text.Length > 0) koordinaten[0] = double.Parse(StartX.Text);
+                    if (StartY.Text.Length > 0) koordinaten[1] = double.Parse(StartY.Text);
+                    if (InkrementX.Text.Length > 0) abstandX = double.Parse(InkrementX.Text);
+                    if (AnzahlX.Text.Length > 0) wiederholungenX = int.Parse(AnzahlX.Text);
                 }
                 catch (FormatException)
                 {
@@ -58,7 +58,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
                 for (var k = 0; k < wiederholungenX; k++)
                 {
                     var knotenId = knotenPräfix + k.ToString().PadLeft(2, '0');
-                    var knotenKoords = new[] { koordinaten[0] };
+                    var knotenKoords = new[] { koordinaten[0], koordinaten[1] };
                     var neuerKnoten = new Knoten(knotenId, knotenKoords, anzahlKnotenDof, dimension);
                     _knotenListe.Add(neuerKnoten);
                     koordinaten[0] += abstandX;
@@ -72,13 +72,13 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
                 {
                     if (AnzahlDof.Text.Length > 0) anzahlKnotenDof = int.Parse(AnzahlDof.Text);
 
-                    if (startX.Text.Length > 0) koordinaten[0] = double.Parse(startX.Text);
-                    if (inkrementX.Text.Length > 0) abstandX = double.Parse(inkrementX.Text);
-                    if (anzahlX.Text.Length > 0) wiederholungenX = int.Parse(anzahlX.Text);
+                    if (StartX.Text.Length > 0) koordinaten[0] = double.Parse(StartX.Text);
+                    if (InkrementX.Text.Length > 0) abstandX = double.Parse(InkrementX.Text);
+                    if (AnzahlX.Text.Length > 0) wiederholungenX = int.Parse(AnzahlX.Text);
 
-                    if (startY.Text.Length > 0) koordinaten[1] = double.Parse(startY.Text);
-                    if (inkrementY.Text.Length > 0) abstandY = double.Parse(inkrementY.Text);
-                    if (anzahlY.Text.Length > 0) wiederholungenY = int.Parse(anzahlY.Text);
+                    if (StartY.Text.Length > 0) koordinaten[1] = double.Parse(StartY.Text);
+                    if (InkrementY.Text.Length > 0) abstandY = double.Parse(InkrementY.Text);
+                    if (AnzahlY.Text.Length > 0) wiederholungenY = int.Parse(AnzahlY.Text);
                 }
                 catch (FormatException)
                 {
@@ -109,23 +109,13 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
 
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
         {
-            // vorhandener Knoten
+            // nur neue Knoten zufügen
             foreach (var knoten in _knotenListe)
             {
+                // neuer Knoten
                 if (_modell.Knoten.TryAdd(knoten.Id, knoten)) continue;
-                _modell.Knoten.TryGetValue(knoten.Id, out var vorhandenerKnoten);
-                if (vorhandenerKnoten == null) continue;
-                try
-                {
-                    if (AnzahlDof.Text.Length > 0)
-                        vorhandenerKnoten.AnzahlKnotenfreiheitsgrade = int.Parse(AnzahlDof.Text);
-                    if (startX.Text.Length > 0) vorhandenerKnoten.Koordinaten[0] = double.Parse(startX.Text);
-                    if (startY.Text.Length > 0) vorhandenerKnoten.Koordinaten[1] = double.Parse(startY.Text);
-                }
-                catch (FormatException)
-                {
-                    _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Knotennetz");
-                }
+                // vorhandener Knoten
+                _ = MessageBox.Show("Knoten " + knoten.Id + " nicht hinzugefügt, da schon vorhanden", "neues Knotennetz");
             }
 
             StartFenster.WärmeVisual.Close();

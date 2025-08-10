@@ -39,8 +39,8 @@
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5.4,0,0">Lastwert in y-Richtung:</Label>
         <TextBox Name="Py" Grid.Row="4" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" />
-        <Label Grid.Row="5" Grid.Column="0" Margin="0,5.4,0,0">Knotenmoment:</Label>
-        <TextBox Name="M" Grid.Row="5" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
+        <Label Grid.Row="5" Grid.Column="0" Margin="0,5.4,0,0">Lastwert in z-Richtung:</Label>
+        <TextBox Name="Pz" Grid.Row="5" Grid.Column="1" Margin="10,10,10,4.8" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" />
 
         <Button Grid.Row="6" Grid.Column="0" Width="50" Height="26" Margin="5,0,0,4.6"
