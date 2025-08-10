@@ -33,7 +33,7 @@ public class RandbedingungenParser : FeParser
             {
                 _substrings = lines[i + 1].Split(delimiters);
                 if (_substrings.Length is 5 or 6)
-					
+
                 {
                     _supportId = _substrings[0];
                     _nodeId = _substrings[1];

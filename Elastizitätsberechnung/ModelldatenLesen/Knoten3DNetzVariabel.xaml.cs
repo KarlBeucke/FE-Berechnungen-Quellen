@@ -34,7 +34,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             var ndof = _modell.AnzahlKnotenfreiheitsgrade;
             double startx = 0, starty = 0, startz = 0;
             var knotenPräfix = "";
-            var inkrements ="";
+            var inkrements = "";
             char[] delimiters = [';'];
 
             if (Präfix.Text.Length > 0) knotenPräfix = Präfix.Text;
@@ -43,10 +43,10 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             if (StartY.Text.Length > 0) starty = double.Parse(StartY.Text);
             if (StartZ.Text.Length > 0) startz = double.Parse(StartZ.Text);
             if (Inkrements.Text.Length > 0) inkrements = Inkrements.Text;
-            
+
             var abständeText = inkrements.Split(delimiters);
             var abstände = new double[abständeText.Length];
-            for (var i=0;i<abständeText.Length;i++)
+            for (var i = 0; i < abständeText.Length; i++)
                 abstände[i] = double.Parse(abständeText[i]);
 
             for (var n = 0; n < abstände.Length; n++)

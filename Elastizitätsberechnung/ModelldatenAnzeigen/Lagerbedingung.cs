@@ -5,7 +5,7 @@ internal class Lagerbedingung(string lagerId, string nodeId, string[] vordefinie
     public string LagerId { get; } = lagerId;
     public string NodeId { get; } = nodeId;
     public string[] Vordefiniert { get; } = vordefiniert;
-    
+
 }
 internal class LagerbedingungFläche(string lagerId, string nodeId, string face, string[] vordefiniert)
 {

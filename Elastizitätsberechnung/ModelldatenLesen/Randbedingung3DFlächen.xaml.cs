@@ -30,7 +30,7 @@ public partial class Randbedingung3DFlächen
         var prescribed = new double[3];
         var supportInitial = "";
         var face = "";
-        var knotenInitial="";
+        var knotenInitial = "";
         var nKnoten = 0;
 
         try
@@ -73,7 +73,7 @@ public partial class Randbedingung3DFlächen
                         $"\nfalsche FlächenId = {face[..1]}, muss sein:\n X, Y or Z")
                 };
 
-                var neuesLager = new Lager(nodeName,face, conditions, prescribed, 3)
+                var neuesLager = new Lager(nodeName, face, conditions, prescribed, 3)
                 {
                     RandbedingungId = supportName
                 };
@@ -97,52 +97,52 @@ public partial class Randbedingung3DFlächen
             switch (item.Value.Typ)
             {
                 case 1:
-                {
-                    vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                    break;
-                }
+                    {
+                        vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
+                        break;
+                    }
                 case 2:
-                {
-                    vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                    if (_modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
-                    break;
-                }
+                    {
+                        vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
+                        if (_modell.Raumdimension == 2) vordefiniert[2] = string.Empty;
+                        break;
+                    }
                 case 3:
-                {
-                    vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                    vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                    break;
-                }
+                    {
+                        vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
+                        vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
+                        break;
+                    }
                 case 4:
-                {
-                    vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
-                    break;
-                }
+                    {
+                        vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        break;
+                    }
                 case 5:
-                {
-                    vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                    vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
-                    break;
-                }
+                    {
+                        vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
+                        vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        break;
+                    }
                 case 6:
-                {
-                    vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                    vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
-                    break;
-                }
+                    {
+                        vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
+                        vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        break;
+                    }
                 case 7:
-                {
-                    vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
-                    vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
-                    vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
-                    break;
-                }
+                    {
+                        vordefiniert[0] = item.Value.Vordefiniert[0].ToString("F4");
+                        vordefiniert[1] = item.Value.Vordefiniert[1].ToString("F4");
+                        vordefiniert[2] = item.Value.Vordefiniert[2].ToString("F4");
+                        break;
+                    }
                 default:
                     throw new ModellAusnahme("\nLagerbedingung für Lager " + supportName + " falscher Typ");
             }
             var lagerBedingung = new LagerbedingungFläche(item.Key, nodeId, face, vordefiniert);
             _randbedingungenListe.Add(lagerBedingung);
-            
+
         }
         return _randbedingungenListe;
     }
@@ -150,7 +150,7 @@ public partial class Randbedingung3DFlächen
     private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
     {
         foreach (var item in _lagerDictionary.Where(item
-                     => !_modell.Randbedingungen.TryAdd(item.Key,item.Value )))
+                     => !_modell.Randbedingungen.TryAdd(item.Key, item.Value)))
         {
             _ = MessageBox.Show("Randbedingung " + item.Key + " nicht hinzugefügt, da schon vorhanden" +
                                 "\nVorgang abgebrochen", "neues Knotennetz");

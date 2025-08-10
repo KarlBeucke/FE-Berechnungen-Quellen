@@ -45,7 +45,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             var face = "";
             var inkremente = "";
             var type = "xyz";
-            double gModulus=0, poisson=0, p=0;
+            double gModulus = 0, poisson = 0, p = 0;
             try
             {
                 if (RandbedingungInitialId.Text.Length > 0) supportInitial = RandbedingungInitialId.Text;
@@ -60,7 +60,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             try
             {
                 if (Material.Text.Length > 0) _material = Material.Text;
-                
+
                 if (_modell.Material.TryGetValue(_material, out var vorhandenesMaterial))
                 {
                     poisson = vorhandenesMaterial.MaterialWerte[0];
@@ -107,14 +107,14 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                     for (var k = 0; k < nKnoten; k++)
                     {
                         var id2 = k.ToString().PadLeft(2, '0');
-                        var supportName=supportInitial + face + id1 + id2;
+                        var supportName = supportInitial + face + id1 + id2;
                         if (_modell.Randbedingungen.TryGetValue(supportName, out _))
                         {
                             _ = MessageBox.Show($"\nRandbedingung Boussinesq \"{supportName}\" bereits vorhanden.", "neue Randbedingung3DFlächen");
                             return;
                         }
                         var faceNode = $"0{abstände.Length - 1}";
-                        var knotenName=face[..1] switch
+                        var knotenName = face[..1] switch
                         {
                             "X" => knotenInitial + faceNode + id1 + id2,
                             "Y" => knotenInitial + id1 + faceNode + id2,
@@ -194,7 +194,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             {
                 _ = MessageBox.Show("ungültiges Format: Inkremente", "Randbedingung3DBoussinesq");
             }
-            
+
             _randbedingungenListe = Lagerbedingungen(_lagerDictionary);
             RandbedingungenGrid.Items.Clear();
             RandbedingungenGrid.ItemsSource = _randbedingungenListe;
@@ -265,7 +265,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
 
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in _lagerDictionary.Where(item 
+            foreach (var item in _lagerDictionary.Where(item
                          => !_modell.Randbedingungen.TryAdd(item.Key, item.Value)))
             {
                 // vorhandene Randbedingung

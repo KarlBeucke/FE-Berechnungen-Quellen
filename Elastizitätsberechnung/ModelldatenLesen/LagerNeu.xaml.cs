@@ -89,8 +89,8 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
                     return;
                 }
 
-                var lager = new Lager(KnotenId.Text, conditions, vordefiniert, _anzahlFreiheitsgrade) 
-                    { RandbedingungId = lagerId };
+                var lager = new Lager(KnotenId.Text, conditions, vordefiniert, _anzahlFreiheitsgrade)
+                { RandbedingungId = lagerId };
 
                 lager.RandbedingungId = lagerId;
                 _modell.Randbedingungen.Add(lagerId, lager);

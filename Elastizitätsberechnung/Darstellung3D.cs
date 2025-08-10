@@ -38,7 +38,7 @@ public class Darstellung3D
     {
         Modell = feModell;
 
-        if (   Math.Abs(Modell.MaxX - Modell.MinX) < double.Epsilon
+        if (Math.Abs(Modell.MaxX - Modell.MinX) < double.Epsilon
             && Math.Abs(Modell.MaxY - Modell.MinY) < double.Epsilon
             && Math.Abs(Modell.MaxZ - Modell.MinZ) < double.Epsilon)
         {
@@ -225,7 +225,7 @@ public class Darstellung3D
         var randbedingungenFestMaterial = new DiffuseMaterial(Brushes.Red);
         var randbedingungenVorMaterial = new DiffuseMaterial(Brushes.LightPink);
         HashSet<string> faces = [];
-        
+
         foreach (var item in Modell.Randbedingungen)
         {
             faces.Add(item.Value.Face);

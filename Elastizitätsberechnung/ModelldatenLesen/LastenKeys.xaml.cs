@@ -1,5 +1,4 @@
 ﻿using FE_Berechnungen.Tragwerksberechnung.Modelldaten;
-using FEBibliothek.Modell;
 using System.Windows.Input;
 
 namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
@@ -21,7 +20,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             var linienlasten = modell.ElementLasten.Where(item => item.Value is LinienLast)
                 .Select(AbstraktLast (item) => item.Value).ToList();
             lasten.AddRange(linienlasten);
-            
+
             var punktlasten = modell.PunktLasten.Where(item => item.Value is PunktLast)
                 .Select(AbstraktLast (item) => item.Value).ToList();
             lasten.AddRange(punktlasten);

@@ -176,7 +176,7 @@ public partial class Elastizitätsmodell3DVisualisieren
         _cameraTheta = ScrTheta.Value;
         PositionierKamera();
     }
-    
+
     private void ScrPhiScroll(object sender, ScrollEventArgs e)
     {
         _cameraPhi = ScrPhi.Value;
@@ -321,7 +321,7 @@ public partial class Elastizitätsmodell3DVisualisieren
     }
 
     // Elemente
-   private void MenuElement3D8Neu(object sender, RoutedEventArgs e)
+    private void MenuElement3D8Neu(object sender, RoutedEventArgs e)
     {
         _ = new Element3D8Neu(_elastizitätsModell) { Topmost = true, Owner = (Window)Parent };
         _elastizitätsModell.Berechnet = false;

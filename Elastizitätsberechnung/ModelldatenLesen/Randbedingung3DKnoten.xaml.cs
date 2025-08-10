@@ -40,7 +40,7 @@ namespace FE_Berechnungen.Elastizitätsberechnung.ModelldatenLesen
             if (VorX.Text.Length != 0) prescribed[0] = double.Parse(VorX.Text);
             if (VorY.Text.Length != 0) prescribed[1] = double.Parse(VorZ.Text);
             if (VorZ.Text.Length != 0) prescribed[2] = double.Parse(VorX.Text);
-            
+
             var randbedingung = new Lager(knotenId, conditions, prescribed, AnzahlKnotenfreiheitsgrade)
             {
                 RandbedingungId = randbedingungId
