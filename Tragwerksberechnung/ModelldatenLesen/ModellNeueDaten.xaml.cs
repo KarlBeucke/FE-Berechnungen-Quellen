@@ -2,11 +2,11 @@
 
 namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
-    public partial class ModellNeu
+    public partial class ModellNeueDaten
     {
         private readonly FeModell _modell;
 
-        public ModellNeu(FeModell modell)
+        public ModellNeueDaten(FeModell modell)
         {
             InitializeComponent();
             _modell = modell;

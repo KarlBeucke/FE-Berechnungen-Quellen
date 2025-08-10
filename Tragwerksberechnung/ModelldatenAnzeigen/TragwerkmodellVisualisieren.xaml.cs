@@ -174,7 +174,7 @@ public partial class TragwerkmodellVisualisieren
     // Modelldefinitionen neu definieren und vorhandene editieren
     private void OnBtnModell_Click(object sender, RoutedEventArgs e)
     {
-        var modellNeu = new ModellNeu(_modell) { Topmost = true, Owner = (Window)Parent };
+        var modellNeu = new ModellNeueDaten(_modell) { Topmost = true, Owner = (Window)Parent };
         modellNeu.Show();
     }
     // Knoten
