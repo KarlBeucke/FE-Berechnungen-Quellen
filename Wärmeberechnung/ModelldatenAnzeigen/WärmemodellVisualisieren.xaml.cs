@@ -203,7 +203,7 @@ public partial class WärmemodellVisualisieren
         {
             Topmost = true,
             Owner = (Window)Parent,
-            Name = { Text = _wärmeModell.ModellId },
+            ModellName = { Text = _wärmeModell.ModellId },
             Dimension = { Text = _wärmeModell.Raumdimension.ToString() },
             Ndof = { Text = _wärmeModell.AnzahlKnotenfreiheitsgrade.ToString() },
             MinX = { Text = _wärmeModell.MinX.ToString(CultureInfo.CurrentCulture) },

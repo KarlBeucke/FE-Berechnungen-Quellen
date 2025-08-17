@@ -10,7 +10,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
         {
             InitializeComponent();
             _modell = modell;
-            Name.Text = _modell.ModellId;
+            ModellName.Text = _modell.ModellId;
             Dimension.Text = _modell.Raumdimension.ToString("D");
             Ndof.Text = _modell.AnzahlKnotenfreiheitsgrade.ToString("D");
             MinX.Text = modell.MinX.ToString("G");
@@ -58,7 +58,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
                 return;
             }
 
-            _modell.ModellId = Name.Text;
+            _modell.ModellId = ModellName.Text;
             _modell.Raumdimension = int.Parse(Dimension.Text);
             _modell.AnzahlKnotenfreiheitsgrade = int.Parse(Ndof.Text);
 
