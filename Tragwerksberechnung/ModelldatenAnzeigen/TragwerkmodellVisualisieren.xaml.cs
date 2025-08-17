@@ -576,7 +576,7 @@ public partial class TragwerkmodellVisualisieren
         }
     }
 
-    public void KnotenClick(Knoten knoten)
+    private void KnotenClick(Knoten knoten)
     {
         // Knotentexte angeklickt bei Definition eines neuen Elementes
         if (IsElement)

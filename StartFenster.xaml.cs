@@ -54,7 +54,7 @@ public partial class StartFenster
         }
         else
         {
-            _ = MessageBox.Show("Directory für FE Berechnungen " + initial + " nicht gefunden," +
+            _ = MessageBox.Show("Directory für FE Berechnungen \"" + initial + "\" nicht gefunden," +
                                 " Eingabedatei am Speicherort von \\FE Berechnungen\\input\\Wärmeberechnung",
                          "Wärmeberechnung");
             _dateiDialog.ShowDialog();
@@ -684,7 +684,7 @@ public partial class StartFenster
         }
         else
         {
-            _ = MessageBox.Show("Directory für FE Berechnungen " + initial + " nicht gefunden," +
+            _ = MessageBox.Show("Directory für FE Berechnungen \"" + initial + "\" nicht gefunden," +
                                 " Eingabedatei am Speicherort von \\FE Berechnungen\\input\\Tragwerksberechnung",
                          "Tragwerksberechnung");
             _dateiDialog.ShowDialog();
@@ -1233,7 +1233,7 @@ public partial class StartFenster
         }
         else
         {
-            _ = MessageBox.Show("Directory für FE Berechnungen " + initial + " nicht gefunden," +
+            _ = MessageBox.Show("Directory für FE Berechnungen \"" + initial + "\" nicht gefunden," +
                                 " Eingabedatei am Speicherort von \\FE Berechnungen\\input\\Elastizitätsberechnung",
                          "Elastizitätsberechnung");
             _dateiDialog.ShowDialog();

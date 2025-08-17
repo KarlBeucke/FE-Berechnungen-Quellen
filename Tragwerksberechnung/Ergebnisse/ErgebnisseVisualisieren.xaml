@@ -64,8 +64,8 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
                     MouseLeftButtonDown="OnMouseLeftButtonDown"
                     MouseRightButtonDown="OnMouseRightButtonDown">
-                <Popup x:Name="MyPopup" Placement="MousePoint">
-                    <TextBlock x:Name="MyPopupText" Background="LightBlue" Foreground="Blue" Padding="10" />
+                <Popup x:Name="ErgebnisPopup" Placement="MousePoint">
+                    <TextBlock x:Name="ErgebnisPopupText" Background="LightBlue" Foreground="Blue" Padding="10" />
                 </Popup>
             </Canvas>
         </StackPanel>

@@ -15,11 +15,12 @@ public class Darstellung
 {
     private const int RandOben = 60, RandLinks = 60;
     public double PlatzierungV, PlatzierungH;
-    private const double MaxScreenLength = 40;
+    private const double MaxScreenLength = 80;
     private readonly FeModell _modell;
     private readonly Canvas _visualErgebnisse;
     private double _lastAuflösung;
-    public double _auflösungH, Auflösung;
+    private double _auflösungH;
+    public double Auflösung;
     public double MaxY;
     private Knoten _knoten;
     private double _screenH, _screenV, _minX, _maxX, _minY;
@@ -540,9 +541,8 @@ public class Darstellung
 
     public void FesthaltungenZeichnen()
     {
-        foreach (var item in _modell.Randbedingungen)
+        foreach (var (key, lager) in _modell.Randbedingungen)
         {
-            var lager = item.Value;
             var pathGeometry = new PathGeometry();
 
             if (!_modell.Knoten.TryGetValue(lager.KnotenId, out var lagerKnoten))
@@ -575,7 +575,7 @@ public class Darstellung
 
             Shape path = new Path
             {
-                Name = item.Key,
+                Name = key,
                 Stroke = Green,
                 StrokeThickness = 2,
                 Data = pathGeometry

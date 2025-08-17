@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="WärmedatenAnzeigen" Height="588" Width="814">
+        Title="Wärmedaten anzeigen" Height="588" Width="814">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150*" />

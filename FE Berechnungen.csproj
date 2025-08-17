@@ -61,7 +61,9 @@
     <ProjectReference Include="FE Bibliothek\FEBibliothek.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Ressourcen\Halbraum.jpg" />
+    <Resource Include="Ressourcen\Halbraum.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Ressourcen\Durchlaufträger.jpg" />

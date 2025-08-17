@@ -6,7 +6,7 @@ using System.Windows.Shapes;
 
 namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
 {
-    public partial class ErgebnisseVisualisieren : Window
+    public partial class ErgebnisseVisualisieren
     {
         private readonly List<Shape> _hitList = [];
         private readonly List<TextBlock> _hitTextBlock = [];
@@ -321,14 +321,12 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
             VisualTreeHelper.HitTest(VisualTragwerkErgebnisse, null, HitTestCallBack,
                 new GeometryHitTestParameters(_hitArea));
 
-            MyPopup.IsOpen = false;
-
             var sb = new StringBuilder();
 
             foreach (var item in _hitTextBlock.Where(item => item != null).Where(item => item.Text != string.Empty))
             {
                 sb.Clear();
-                MyPopup.IsOpen = true;
+                ErgebnisPopup.IsOpen = false;
 
                 if (_modell.Knoten.TryGetValue(item.Text, out var knoten))
                 {
@@ -340,7 +338,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
                     if (knoten.Reaktionen != null)
                         for (var i = 0; i < knoten.Reaktionen.Length; i++)
                             sb.Append("\nLagerreaktion " + i + "\t=" + knoten.Reaktionen[i].ToString("F2"));
-                    MyPopupText.Text = sb.ToString();
+                    ErgebnisPopup.IsOpen = true;
+                    ErgebnisPopupText.Text = sb.ToString();
                     return;
                 }
 
@@ -353,7 +352,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
                     sb.Append("\nFx\t= " + linienElement.ElementZustand[0].ToString("F2"));
                     sb.Append("\nFy\t= " + linienElement.ElementZustand[1].ToString("F2"));
                     sb.Append("\nM\t= " + linienElement.ElementZustand[2].ToString("F2"));
-                    MyPopupText.Text = sb.ToString();
+                    ErgebnisPopupText.Text = sb.ToString();
                 }
 
                 var balken = (AbstraktBalken)linienElement;
@@ -376,14 +375,14 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
                         sb.Append("\nMb\t= " + balkenEndKräfte[5].ToString("F2"));
                         break;
                 }
-
-                MyPopupText.Text = sb.ToString();
+                ErgebnisPopup.IsOpen = true;
+                ErgebnisPopupText.Text = sb.ToString();
                 return;
             }
 
             foreach (var unused in _hitList.Where(item => item is { Name: "Biegemomente" }))
             {
-                MyPopup.IsOpen = false;
+                ErgebnisPopup.IsOpen = false;
                 if (_momentenMaxTexte)
                 {
                     foreach (var momentenMaxText in Darstellung.MomentenMaxTexte.Cast<TextBlock>())
@@ -439,7 +438,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.Ergebnisse
 
         private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MyPopup.IsOpen = false;
+            ErgebnisPopup.IsOpen = false;
         }
     }
 }
