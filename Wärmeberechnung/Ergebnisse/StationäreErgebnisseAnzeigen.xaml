@@ -21,7 +21,7 @@
                       d:DataContext="{d:DesignData modell}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Knoten" Binding="{Binding Path=Key}" />
-                    <DataGridTextColumn Header="Temperature"
+                    <DataGridTextColumn Header="Temperatur"
                                         Binding="{Binding Path=Value.Knotenfreiheitsgrade[0], StringFormat=N2}" />
                 </DataGrid.Columns>
             </DataGrid>

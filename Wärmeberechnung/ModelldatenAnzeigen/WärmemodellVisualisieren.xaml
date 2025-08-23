@@ -51,8 +51,6 @@
                           Padding="0,0,0,0">
                         <MenuItem Header="instationäre Berechnung" Height="22" Width="130" HorizontalAlignment="Left" 
                                   VerticalAlignment="Center" Padding="0,0,0,0">
-                            <MenuItem Header="Integrationsparameter" HorizontalAlignment="Left" Height="20" Width="250"
-                                      Margin="0,0,0,0" Click="MenuIntegrationsParameter" />
                             <MenuItem Header="instationäre Daten anzeigen" HorizontalAlignment="Left" Height="20" Width="250"
                                       Margin="0,0,0,0" Click="MenuInstationäreDaten" />
                             <MenuItem Header="instationäre Berechnung" HorizontalAlignment="Left" Height="20" Width="250"
