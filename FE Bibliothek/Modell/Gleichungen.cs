@@ -87,10 +87,10 @@
             }
         }
         // addier DiagonalSubmatrix()
-        public void AddDiagonalMatrix(int[] index, double[] elementMatrix)
+        public void AddDiagonalMatrix(int[] index, double[] diagonalMatrix)
         {
             for (var k = 0; k < index.Length; k++)
-                DiagonalMatrix[index[k]] += elementMatrix[k];
+                DiagonalMatrix[index[k]] += diagonalMatrix[k];
         }
         // addVector()
         public void AddVektor(int[] index, double[] subvektor)

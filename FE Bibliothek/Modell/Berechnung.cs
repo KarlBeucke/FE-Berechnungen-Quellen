@@ -354,8 +354,8 @@ namespace FEBibliothek.Modell
             {
                 var abstraktesElement = item.Value;
                 var index = abstraktesElement.SystemIndizesElement;
-                var elementMatrix = abstraktesElement.BerechneDiagonalMatrix();
-                _systemGleichungen.AddDiagonalMatrix(index, elementMatrix);
+                var diagonalMatrix = abstraktesElement.BerechneDiagonalMatrix();
+                _systemGleichungen.AddDiagonalMatrix(index, diagonalMatrix);
             }
 
             // festgehaltene Freiheitsgrade liefern keine Beiträge zu Massenkräften

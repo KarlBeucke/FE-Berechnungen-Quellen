@@ -30,10 +30,10 @@ public class Element2D3 : AbstraktLinear2D3
         KnotenIds = eKnotens;
         Knoten = new Knoten[KnotenProElement];
         ElementMaterialId = eMaterialId;
-        SpezifischeWärmeMatrix = new double[3];
+        SpezifischeWärmeMatrix = new double[3]; // 3 Knoten
     }
 
-    // Compute element Matrix
+    // berechne Elementmatrix
     public override double[,] BerechneElementMatrix()
     {
         BerechneGeometrie();
@@ -43,7 +43,7 @@ public class Element2D3 : AbstraktLinear2D3
         ElementMaterial = _material;
         if (_material == null) return _elementMatrix;
 
-        // Ke = area*Sx*c*SxT
+        // Ke = area*Sx*c*SxT (isotropes Material)
         var c = new[,] { { _material.MaterialWerte[0], 0 }, { 0, _material.MaterialWerte[1] } };
         var temp = MatrizenAlgebra.Mult(Sx, c);
         _elementMatrix = MatrizenAlgebra.RectMultMatrixTransposed(0.5 * Determinant, temp, Sx);
@@ -51,14 +51,14 @@ public class Element2D3 : AbstraktLinear2D3
         return _elementMatrix;
     }
 
-    // berechne diagonale spezifische Wärme Matrix
+    // berechne diagonale spezifische Wärmematrix
     public override double[] BerechneDiagonalMatrix()
     {
         BerechneGeometrie();
-        // Me = dichte * leitfähigkeit * 0.5*determinante/3 (area/3)
-        SpezifischeWärmeMatrix[0] = _material.MaterialWerte[3] * Determinant / 6;
+        // Ce = dichte * leitfähigkeit * 0.5*determinante/3 (Fläche/3 Knoten), isotropes Material
+        SpezifischeWärmeMatrix[0] = _material.MaterialWerte[3] * _material.MaterialWerte[0] * Determinant / 6;
         SpezifischeWärmeMatrix[1] = SpezifischeWärmeMatrix[0];
-        if (SpezifischeWärmeMatrix.Length > 2) SpezifischeWärmeMatrix[2] = SpezifischeWärmeMatrix[0];
+        SpezifischeWärmeMatrix[2] = SpezifischeWärmeMatrix[0];
         return SpezifischeWärmeMatrix;
     }
 

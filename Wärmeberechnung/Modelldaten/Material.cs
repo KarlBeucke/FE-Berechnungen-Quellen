@@ -9,11 +9,11 @@ public class Material : AbstraktMaterial
         for (var i = 0; i < conduct.Count; i++) MaterialWerte[i] = conduct[i];
     }
 
-    public Material(string id, IReadOnlyList<double> conduct, double rhoC)
+    public Material(string id, IReadOnlyList<double> conduct, double rho)
     {
         MaterialId = id;
         MaterialWerte = new double[4];
         for (var i = 0; i < conduct.Count; i++) MaterialWerte[i] = conduct[i];
-        MaterialWerte[3] = rhoC;
+        MaterialWerte[3] = rho;
     }
 }

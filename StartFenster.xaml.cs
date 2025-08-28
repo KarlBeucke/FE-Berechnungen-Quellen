@@ -629,9 +629,10 @@ public partial class StartFenster
 
     private void InstationäreErgebnisseAnzeigen(object sender, RoutedEventArgs e)
     {
+        //WärmeVisual?.Close();
         if (_wärmeModell.ZeitintegrationBerechnet && _wärmeModell != null)
         {
-            var ergebnisse = new InstationäreErgebnisseAnzeigen(_wärmeModell);
+            var ergebnisse = new InstationäreErgebnisseAnzeigen(_wärmeModell, WärmeVisual);
             ergebnisse.Show();
         }
         else
@@ -1591,4 +1592,5 @@ public partial class StartFenster
                 break;
         }
     }
+
 }

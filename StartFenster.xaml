@@ -123,7 +123,7 @@
                 <MenuItem Header="stationäre Berechnung" HorizontalAlignment="Left" Height="20" Width="250"
                           Margin="0,0,0,0" Click="WärmedatenBerechnen" />
                 <Separator HorizontalAlignment="Left" Height="4" Width="250" Margin="0,0,-0.2,0" />
-                <MenuItem Header="stationäre Ergebnisse anzeigen" HorizontalAlignment="Left" Height="20" Width="300"
+                <MenuItem Header="stationäre Ergebnisse anzeigen" HorizontalAlignment="Left" Height="20" Width="320"
                           Margin="0,0,0,0" Click="WärmeberechnungErgebnisseAnzeigen" />
                 <MenuItem Header="stationäre Ergebnisse visualisieren" HorizontalAlignment="Left" Height="20"
                           Width="300" Margin="0,0,0,0" Click="WärmeberechnungErgebnisseVisualisieren" />
@@ -143,7 +143,7 @@
                 <MenuItem Header="instationäre Berechnung" HorizontalAlignment="Left" Height="20" Width="250"
                           Margin="0,0,0,0" Click="InstationäreBerechnung" />
                 <Separator HorizontalAlignment="Left" Height="4" Width="250" Margin="0,0,-0.2,0" />
-                <MenuItem Header="instationäre Ergebnisse anzeigen" HorizontalAlignment="Left" Height="20" Width="262"
+                <MenuItem Header="instationäre Ergebnisse anzeigen" HorizontalAlignment="Left" Height="20" Width="300"
                           Margin="0,0,0,0" Click="InstationäreErgebnisseAnzeigen" />
                 <MenuItem Header="zeitabhängige Modellzustände visualisieren" HorizontalAlignment="Left" Height="20"
                           Width="350" Margin="0,0,0,0" Click="InstationäreModellzuständeVisualisieren" />

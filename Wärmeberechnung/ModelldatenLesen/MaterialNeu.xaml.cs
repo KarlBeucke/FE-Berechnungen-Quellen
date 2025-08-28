@@ -26,7 +26,7 @@ public partial class MaterialNeu
         }
 
         var leitfähigkeit = new double[3];
-        double dichteLeitfähigkeit = 0;
+        double dichte = 0;
         // vorhandenes Material
         if (_modell.Material.TryGetValue(materialId, out _vorhandenesMaterial))
         {
@@ -38,8 +38,8 @@ public partial class MaterialNeu
                     _vorhandenesMaterial.MaterialWerte[1] = double.Parse(LeitfähigkeitY.Text);
                 if (LeitfähigkeitZ.Text.Length > 0)
                     _vorhandenesMaterial.MaterialWerte[2] = double.Parse(LeitfähigkeitZ.Text);
-                if (DichteLeitfähigkeit.Text.Length > 0)
-                    _vorhandenesMaterial.MaterialWerte[3] = double.Parse(DichteLeitfähigkeit.Text);
+                if (Dichte.Text.Length > 0)
+                    _vorhandenesMaterial.MaterialWerte[3] = double.Parse(Dichte.Text);
             }
             catch (FormatException)
             {
@@ -58,14 +58,14 @@ public partial class MaterialNeu
                     leitfähigkeit[1] = double.Parse(LeitfähigkeitY.Text);
                 if (LeitfähigkeitZ.Text.Length > 0)
                     leitfähigkeit[2] = double.Parse(LeitfähigkeitZ.Text);
-                if (DichteLeitfähigkeit.Text.Length > 0)
-                    dichteLeitfähigkeit = double.Parse(DichteLeitfähigkeit.Text);
+                if (Dichte.Text.Length > 0)
+                    dichte = double.Parse(Dichte.Text);
             }
             catch (FormatException)
             {
                 _ = MessageBox.Show("ungültiges  Eingabeformat", "neues Material");
             }
-            _material = new Material(materialId, leitfähigkeit, dichteLeitfähigkeit);
+            _material = new Material(materialId, leitfähigkeit, dichte);
             _modell.Material.Add(materialId, _material);
         }
         Close();
@@ -96,7 +96,7 @@ public partial class MaterialNeu
         LeitfähigkeitX.Text = _vorhandenesMaterial.MaterialWerte[0].ToString("G3", CultureInfo.CurrentCulture);
         LeitfähigkeitY.Text = _vorhandenesMaterial.MaterialWerte[1].ToString("G3", CultureInfo.CurrentCulture);
         LeitfähigkeitZ.Text = _vorhandenesMaterial.MaterialWerte[2].ToString("G3", CultureInfo.CurrentCulture);
-        DichteLeitfähigkeit.Text = _vorhandenesMaterial.MaterialWerte[3].ToString("G3", CultureInfo.CurrentCulture);
+        Dichte.Text = _vorhandenesMaterial.MaterialWerte[3].ToString("G3", CultureInfo.CurrentCulture);
     }
 
     private void BtnLöschen_Click(object sender, RoutedEventArgs e)
@@ -106,6 +106,13 @@ public partial class MaterialNeu
         _modell.Material.Remove(_vorhandenesMaterial.MaterialId);
         Close();
     }
+
+    private void LeitfähigkeitXLostFocus(object sender, RoutedEventArgs e)
+    {
+        LeitfähigkeitY.Text = LeitfähigkeitX.Text;
+        LeitfähigkeitZ.Text = LeitfähigkeitX.Text;
+    }
+
     private bool MaterialReferenziert()
     {
         var id = MaterialId.Text;

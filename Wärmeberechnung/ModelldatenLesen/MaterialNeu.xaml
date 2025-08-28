@@ -28,15 +28,16 @@
                  VerticalAlignment="Top" HorizontalAlignment="Left" Width="32" LostFocus="MaterialIdLostFocus" />
         <Label Grid.Row="2" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">Leitfähigkeit x</Label>
         <TextBox Name="LeitfähigkeitX" Grid.Row="2" Grid.Column="1" Margin="10,5.4,0,0"
-                 HorizontalAlignment="Left" Width="45" Height="20" />
+                 HorizontalAlignment="Left" Width="45" Height="20" LostFocus ="LeitfähigkeitXLostFocus"/>
         <Label Grid.Row="3" Grid.Column="0" Margin="0,5.4,0,0">Leitfähigkeit y</Label>
         <TextBox Name="LeitfähigkeitY" Grid.Row="3" Grid.Column="1" Margin="10,5.4,0,0"
                  HorizontalAlignment="Left" Width="45" Height="20" />
         <Label Grid.Row="4" Grid.Column="0" Margin="0,5.4,0,0.6">Leitfähigkeit z</Label>
         <TextBox Name="LeitfähigkeitZ" Grid.Row="4" Grid.Column="1" Margin="10,5.4,0,0" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="45" />
-        <Label Grid.Row="5" Grid.Column="0" Margin="0,5,0,35" Grid.RowSpan="2">Dichte*Leitfähigkeit</Label>
-        <TextBox Name="DichteLeitfähigkeit" Grid.Row="5" Grid.Column="1" Margin="10,5.4,0,0" Height="20"
+        <Label Grid.Row="5" Grid.Column="0" Margin="0,6,0,3">spezifische Dichte</Label>
+        <Label Grid.Row="5" Grid.Column="0" Margin="0,2,0,21" Padding="0,0,0,0" FontSize="8">(instationäre Berechnungen)</Label>
+        <TextBox Name="Dichte" Grid.Row="5" Grid.Column="1" Margin="10,5.4,0,0" Height="20"
                  VerticalAlignment="Center" HorizontalAlignment="Left" Width="45" />
 
         <Button Grid.Row="6" Grid.Column="0" Width="50" Height="26" Margin="5,0,0,4.6"

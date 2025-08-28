@@ -9,25 +9,27 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 public partial class InstationäreErgebnisseAnzeigen
 {
     private readonly FeModell _modell;
-    private readonly WärmemodellVisualisieren _wärmeModell;
+    private readonly WärmemodellVisualisieren _wärmeModell; 
+    private readonly WärmemodellVisualisieren _wärmeVisual;
     private readonly double[] _zeit;
     private Knoten _knoten;
     private Shape _letzterKnoten;
     private Shape _letztesElement;
 
-    public InstationäreErgebnisseAnzeigen(FeModell modell)
+    public InstationäreErgebnisseAnzeigen(FeModell modell, WärmemodellVisualisieren wärmeVisual)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
         _modell = modell;
         DataContext = this;
-        _wärmeModell = new WärmemodellVisualisieren(modell);
-        _wärmeModell.Show();
+        _wärmeVisual = wärmeVisual;
+        //_wärmeModell = new WärmemodellVisualisieren(modell);
+        //_wärmeModell.Show();
         InitializeComponent();
         Show();
 
-        Knotenauswahl.ItemsSource = this._modell.Knoten.Keys;
+        Knotenauswahl.ItemsSource = _modell?.Knoten.Keys;
 
-        Dt = this._modell.Zeitintegration.Dt;
+        Dt = _modell.Zeitintegration.Dt;
         var tmax = this._modell.Zeitintegration.Tmax;
         NSteps = (int)(tmax / Dt) + 1;
         _zeit = new double[NSteps];
@@ -49,9 +51,7 @@ public partial class InstationäreErgebnisseAnzeigen
         }
 
         var knotenId = (string)Knotenauswahl.SelectedItem;
-        if (_modell.Knoten.TryGetValue(knotenId, out _knoten))
-        {
-        }
+        if (_modell.Knoten.TryGetValue(knotenId, out _knoten)) { }
 
         if (_knoten != null)
         {

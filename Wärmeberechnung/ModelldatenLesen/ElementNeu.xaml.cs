@@ -249,7 +249,7 @@ public partial class ElementNeu
             LeitfähigkeitX = { Text = material.MaterialWerte[0].ToString("g3") },
             LeitfähigkeitY = { Text = material.MaterialWerte[1].ToString("g3") },
             LeitfähigkeitZ = { Text = material.MaterialWerte[2].ToString("g3") },
-            DichteLeitfähigkeit = { Text = material.MaterialWerte[3].ToString("g3") }
+            Dichte = { Text = material.MaterialWerte[3].ToString("g3") }
         };
         //MaterialId.Text = materialNeu.MaterialId.Text;
     }

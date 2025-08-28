@@ -38,7 +38,7 @@
                 <DataGridTextColumn Header="Schritt" Binding="{Binding Path=Key}" />
                 <DataGridTextColumn Header="Zeit" Binding="{Binding Path=Value[0], StringFormat=N2}" />
                 <DataGridTextColumn Header="Temperatur" Binding="{Binding Path=Value[1], StringFormat=N4}" />
-                <DataGridTextColumn Header="Gradient" Binding="{Binding Path=Value[2], StringFormat=N4}" />
+                <DataGridTextColumn Header="Wärmefluss" Binding="{Binding Path=Value[2], StringFormat=N4}" />
             </DataGrid.Columns>
         </DataGrid>
 
