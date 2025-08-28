@@ -9,28 +9,45 @@ namespace FE_Berechnungen.Wärmeberechnung.Ergebnisse;
 public partial class InstationäreErgebnisseAnzeigen
 {
     private readonly FeModell _modell;
-    private readonly WärmemodellVisualisieren _wärmeModell; 
     private readonly WärmemodellVisualisieren _wärmeVisual;
     private readonly double[] _zeit;
     private Knoten _knoten;
     private Shape _letzterKnoten;
     private Shape _letztesElement;
 
-    public InstationäreErgebnisseAnzeigen(FeModell modell, WärmemodellVisualisieren wärmeVisual)
+    public InstationäreErgebnisseAnzeigen(FeModell modell)
     {
         Language = XmlLanguage.GetLanguage("de-DE");
         _modell = modell;
         DataContext = this;
-        _wärmeVisual = wärmeVisual;
-        //_wärmeModell = new WärmemodellVisualisieren(modell);
-        //_wärmeModell.Show();
+        _wärmeVisual = new WärmemodellVisualisieren(modell);
+        _wärmeVisual.Show();
         InitializeComponent();
         Show();
 
-        Knotenauswahl.ItemsSource = _modell?.Knoten.Keys;
+        Knotenauswahl.ItemsSource = this._modell.Knoten.Keys;
 
         Dt = _modell.Zeitintegration.Dt;
         var tmax = this._modell.Zeitintegration.Tmax;
+        NSteps = (int)(tmax / Dt) + 1;
+        _zeit = new double[NSteps];
+        for (var i = 0; i < NSteps; i++) _zeit[i] = i * Dt;
+        Zeitschrittauswahl.ItemsSource = _zeit;
+    }
+    public InstationäreErgebnisseAnzeigen(FeModell modell, WärmemodellVisualisieren visual)
+    {
+        Language = XmlLanguage.GetLanguage("de-DE");
+        _modell = modell;
+        DataContext = this;
+        _wärmeVisual = visual;
+        _wärmeVisual.Show();
+        InitializeComponent();
+        Show();
+
+        Knotenauswahl.ItemsSource = _modell.Knoten.Keys;
+
+        Dt = _modell.Zeitintegration.Dt;
+        var tmax = _modell.Zeitintegration.Tmax;
         NSteps = (int)(tmax / Dt) + 1;
         _zeit = new double[NSteps];
         for (var i = 0; i < NSteps; i++) _zeit[i] = i * Dt;
@@ -51,7 +68,9 @@ public partial class InstationäreErgebnisseAnzeigen
         }
 
         var knotenId = (string)Knotenauswahl.SelectedItem;
-        if (_modell.Knoten.TryGetValue(knotenId, out _knoten)) { }
+        if (_modell.Knoten.TryGetValue(knotenId, out _knoten))
+        {
+        }
 
         if (_knoten != null)
         {
@@ -83,8 +102,8 @@ public partial class InstationäreErgebnisseAnzeigen
 
         KnotentemperaturGrid.ItemsSource = knotentemperaturen;
 
-        if (_letzterKnoten != null) _wärmeModell.VisualWärmeModell.Children.Remove(_letzterKnoten);
-        _letzterKnoten = _wärmeModell.Darstellung.KnotenZeigen(_knoten, Brushes.Green, 1);
+        if (_letzterKnoten != null) _wärmeVisual.VisualWärmeModell.Children.Remove(_letzterKnoten);
+        _letzterKnoten = _wärmeVisual.Darstellung.KnotenZeigen(_knoten, Brushes.Green, 1);
     }
 
     //KontenwerteGrid
@@ -130,14 +149,14 @@ public partial class InstationäreErgebnisseAnzeigen
         {
         }
 
-        if (_letzterKnoten != null) _wärmeModell.VisualWärmeModell.Children.Remove(_letzterKnoten);
-        _letzterKnoten = _wärmeModell.Darstellung.KnotenZeigen(_knoten, Brushes.Green, 1);
+        if (_letzterKnoten != null) _wärmeVisual.VisualWärmeModell.Children.Remove(_letzterKnoten);
+        _letzterKnoten = _wärmeVisual.Darstellung.KnotenZeigen(_knoten, Brushes.Green, 1);
     }
 
     //LostFocus
     private void KeineKnotenwerteZeileSelected(object sender, RoutedEventArgs e)
     {
-        _wärmeModell.VisualWärmeModell.Children.Remove(_letzterKnoten);
+        _wärmeVisual.VisualWärmeModell.Children.Remove(_letzterKnoten);
     }
 
     //WärmeflussvektorenGrid
@@ -169,21 +188,21 @@ public partial class InstationäreErgebnisseAnzeigen
         var cellInfo = WärmeflussVektorGrid.SelectedCells[0];
         var cell = (KeyValuePair<string, AbstraktElement>)cellInfo.Item;
         var element = cell.Value;
-        if (_letztesElement != null) _wärmeModell.VisualWärmeModell.Children.Remove(_letztesElement);
-        _letztesElement = _wärmeModell.Darstellung.ElementFillZeichnen((Abstrakt2D)element,
+        if (_letztesElement != null) _wärmeVisual.VisualWärmeModell.Children.Remove(_letztesElement);
+        _letztesElement = _wärmeVisual.Darstellung.ElementFillZeichnen((Abstrakt2D)element,
             Brushes.Black, Colors.Green, .2, 2);
     }
 
     //LostFocus
     private void KeinElementSelected(object sender, RoutedEventArgs e)
     {
-        _wärmeModell.VisualWärmeModell.Children.Remove(_letztesElement);
+        _wärmeVisual.VisualWärmeModell.Children.Remove(_letztesElement);
         _letzterKnoten = null;
     }
 
     //Unloaded
     private void ModellSchliessen(object sender, RoutedEventArgs e)
     {
-        _wärmeModell.Close();
+        _wärmeVisual.Close();
     }
 }

@@ -24,11 +24,11 @@
 
         private double[,] BerechneSx()
         {
-            Sx[0, 0] = Xzu[1, 1] / Determinant; 
+            Sx[0, 0] = Xzu[1, 1] / Determinant;
             Sx[0, 1] = -Xzu[0, 1] / Determinant;
-            Sx[1, 0] = -Xzu[1, 0] / Determinant; 
+            Sx[1, 0] = -Xzu[1, 0] / Determinant;
             Sx[1, 1] = Xzu[0, 0] / Determinant;
-            Sx[2, 0] = (Xzu[1, 0] - Xzu[1, 1]) / Determinant; 
+            Sx[2, 0] = (Xzu[1, 0] - Xzu[1, 1]) / Determinant;
             Sx[2, 1] = (Xzu[0, 1] - Xzu[0, 0]) / Determinant;
             return Sx;
         }
