@@ -6,7 +6,7 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
     public partial class ZeitAnregungVisualisieren
     {
         private static string _typ = string.Empty;
-        public ZeitAnregungVisualisieren(FeModell feModell)
+        public ZeitAnregungVisualisieren(FeModell feModell, string initialDirectory)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             InitializeComponent();
@@ -28,8 +28,8 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
                 switch (item.Value.VariationsTyp)
                 {
                     case 0:
-                        const string inputDirectory =
-                            "\\FE-Berechnungen\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                        var inputDirectory = initialDirectory +
+                                             "\\Beispiele\\Wärmeberechnung\\instationär\\Anregungsdateien";
                         // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
                         // nur 1. Spalte lesen
                         Berechnung.AusDatei(inputDirectory, 0, funktion, feModell);
@@ -69,8 +69,8 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
             foreach (var item in feModell.ZeitabhängigeElementLasten)
             {
                 _typ = "zeitabhängige Elementlast ";
-                const string inputDirectory =
-                    "\\FE-Berechnungen\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                var inputDirectory = initialDirectory +
+                                     "\\Beispiele\\Wärmeberechnung\\instationär\\Anregungsdateien";
                 // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
                 // nur 1. Spalte lesen
                 Berechnung.AusDatei(inputDirectory, 0, funktion, feModell);
@@ -99,8 +99,8 @@ namespace FE_Berechnungen.Wärmeberechnung.ModelldatenLesen
                 switch (item.Value.VariationsTyp)
                 {
                     case 0:
-                        const string inputDirectory =
-                            "\\FE-Berechnungen\\input\\Wärmeberechnung\\instationär\\Anregungsdateien";
+                        var inputDirectory = initialDirectory +
+                                             "\\Beispiele\\Wärmeberechnung\\instationär\\Anregungsdateien";
                         // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
                         // nur 1. Spalte lesen
                         Berechnung.AusDatei(inputDirectory, 0, funktion, feModell);

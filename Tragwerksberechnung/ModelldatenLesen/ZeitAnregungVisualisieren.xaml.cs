@@ -5,7 +5,7 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
 {
     public partial class ZeitAnregungVisualisieren
     {
-        public ZeitAnregungVisualisieren(FeModell feModell)
+        public ZeitAnregungVisualisieren(FeModell feModell, string initialDirectory)
         {
             Language = XmlLanguage.GetLanguage("de-DE");
             InitializeComponent();
@@ -25,8 +25,8 @@ namespace FE_Berechnungen.Tragwerksberechnung.ModelldatenLesen
                 switch (item.Value.VariationsTyp)
                 {
                     case 0:
-                        const string inputDirectory =
-                            "\\FE-Berechnungen\\input\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
+                        var inputDirectory = initialDirectory +
+                                                    "\\Beispiele\\Tragwerksberechnung\\Dynamik\\Anregungsdateien";
                         // Ordinatenwerte im Zeitintervall dt aus Datei lesen: Schritte = (int)(Tmax/dt)+1
                         Berechnung.AusDatei(inputDirectory, -1, funktion, feModell);
                         break;

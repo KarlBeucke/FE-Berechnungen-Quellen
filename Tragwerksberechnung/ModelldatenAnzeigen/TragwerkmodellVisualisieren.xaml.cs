@@ -269,7 +269,8 @@ public partial class TragwerkmodellVisualisieren
 
     private void MenuZeitAnregungNeu(object sender, RoutedEventArgs e)
     {
-        _ = new ZeitAnregungVisualisieren(_modell);
+        var initialDirectory = StartFenster.InitialDirectory;
+        _ = new ZeitAnregungVisualisieren(_modell, initialDirectory);
         //anregung.Show();
     }
 

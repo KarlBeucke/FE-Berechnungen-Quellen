@@ -26,6 +26,7 @@ public partial class StartFenster
     private static StatikErgebnisseVisualisieren ElastizitätsErgebnisse { get; set; }
 
     private OpenFileDialog _dateiDialog;
+    public static string InitialDirectory;
     private string _dateiPfad;
     private string[] _dateiZeilen;
     private FeParser _parse;
@@ -33,40 +34,25 @@ public partial class StartFenster
     public StartFenster()
     {
         InitializeComponent();
+        Language = XmlLanguage.GetLanguage("de-DE");
+        InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\FE Berechnungen";
+
+        if (Directory.Exists(InitialDirectory)) return;
+
+        _ = MessageBox.Show("'FE Berechnungen' im Dokumentenordner nicht vorhanden." +
+                            "\nNavigier zum Speicherort der Anwendung." +
+                            "\nClick beliebige Datei im Ordner der Anwendung.");
+        _dateiDialog = new OpenFileDialog { InitialDirectory = "C:" };
+        _dateiDialog.ShowDialog();
+        InitialDirectory = Path.GetDirectoryName(_dateiDialog.FileName);
     }
 
     // Wärmeberechnung
     private void WärmedatenEinlesen(object sender, RoutedEventArgs e)
     {
-        Language = XmlLanguage.GetLanguage("de-DE");
-
-        var initial = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\FE Berechnungen";
-        _dateiDialog = new OpenFileDialog
-        {
-            Filter = "inp files (*.inp)|*.inp|All files (*.*)|*.*",
-            InitialDirectory = initial
-        };
-
-        if (Directory.Exists(_dateiDialog.InitialDirectory))
-        {
-            _dateiDialog.InitialDirectory += "\\input\\Wärmeberechnung";
-            _dateiDialog.ShowDialog();
-        }
-        else
-        {
-            _ = MessageBox.Show("Directory für FE Berechnungen \"" + initial + "\" nicht gefunden," +
-                                " Eingabedatei am Speicherort von \\FE Berechnungen\\input\\Wärmeberechnung",
-                         "Wärmeberechnung");
-            _dateiDialog.ShowDialog();
-        }
-
+        _dateiDialog = new OpenFileDialog { InitialDirectory = InitialDirectory + "\\Beispiele\\Wärmeberechnung" };
+        _dateiDialog.ShowDialog();
         _dateiPfad = _dateiDialog.FileName;
-
-        if (_dateiPfad.Length == 0)
-        {
-            _ = MessageBox.Show("Eingabedatei ist leer", "Wärmeberechnung");
-            return;
-        }
 
         _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
 
@@ -512,7 +498,7 @@ public partial class StartFenster
         if (_wärmeModell != null)
         {
             //_modellBerechnung ??= new Berechnung(_wärmeModell);
-            var anregung = new Wärmeberechnung.ModelldatenLesen.ZeitAnregungVisualisieren(_wärmeModell);
+            var anregung = new Wärmeberechnung.ModelldatenLesen.ZeitAnregungVisualisieren(_wärmeModell, InitialDirectory);
             anregung.Show();
         }
         else
@@ -598,7 +584,7 @@ public partial class StartFenster
         {
             if (!_wärmeModell.Berechnet)
             {
-                _modellBerechnung = new Berechnung(_wärmeModell);
+                _modellBerechnung = new Berechnung(_wärmeModell, InitialDirectory);
                 _modellBerechnung.BerechneSystemMatrix();
                 _modellBerechnung.BerechneSystemVektor();
                 _modellBerechnung.LöseGleichungen();
@@ -671,33 +657,9 @@ public partial class StartFenster
     // Tragwerksberechnung
     private void TragwerksdatenEinlesen(object sender, RoutedEventArgs e)
     {
-        var initial = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\FE Berechnungen";
-        _dateiDialog = new OpenFileDialog
-        {
-            Filter = "inp files (*.inp)|*.inp|All files (*.*)|*.*",
-            InitialDirectory = initial
-        };
-
-        if (Directory.Exists(_dateiDialog.InitialDirectory))
-        {
-            _dateiDialog.InitialDirectory += "\\input\\Tragwerksberechnung";
-            _dateiDialog.ShowDialog();
-        }
-        else
-        {
-            _ = MessageBox.Show("Directory für FE Berechnungen \"" + initial + "\" nicht gefunden," +
-                                " Eingabedatei am Speicherort von \\FE Berechnungen\\input\\Tragwerksberechnung",
-                         "Tragwerksberechnung");
-            _dateiDialog.ShowDialog();
-        }
-
+        _dateiDialog = new OpenFileDialog { InitialDirectory = InitialDirectory + "\\Beispiele\\Tragwerksberechnung" };
+        _dateiDialog.ShowDialog();
         _dateiPfad = _dateiDialog.FileName;
-
-        if (_dateiPfad.Length == 0)
-        {
-            _ = MessageBox.Show("Eingabedatei ist leer", "Tragwerksberechnung");
-            return;
-        }
 
         _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
 
@@ -1147,7 +1109,8 @@ public partial class StartFenster
         if (_tragwerkModell != null)
         {
             //_modellBerechnung ??= new Berechnung(_tragwerkModell);
-            var anregung = new Tragwerksberechnung.ModelldatenLesen.ZeitAnregungVisualisieren(_tragwerkModell);
+            var initialDirectory = StartFenster.InitialDirectory;
+            var anregung = new Tragwerksberechnung.ModelldatenLesen.ZeitAnregungVisualisieren(_tragwerkModell, initialDirectory);
             anregung.Show();
         }
         else
@@ -1162,7 +1125,7 @@ public partial class StartFenster
         {
             if (_tragwerkModell.ZeitintegrationDaten && _tragwerkModell != null)
             {
-                _modellBerechnung = new Berechnung(_tragwerkModell);
+                _modellBerechnung = new Berechnung(_tragwerkModell, InitialDirectory);
                 _modellBerechnung.BerechneSystemMatrix();
                 _modellBerechnung.BerechneSystemVektor();
                 _modellBerechnung.LöseGleichungen();
@@ -1220,33 +1183,9 @@ public partial class StartFenster
     // Elastizitätsberechnung
     private void ElastizitätsdatenEinlesen(object sender, RoutedEventArgs e)
     {
-        var initial = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\FE Berechnungen";
-        _dateiDialog = new OpenFileDialog
-        {
-            Filter = "inp files (*.inp)|*.inp|All files (*.*)|*.*",
-            InitialDirectory = initial
-        };
-
-        if (Directory.Exists(_dateiDialog.InitialDirectory))
-        {
-            _dateiDialog.InitialDirectory += "\\input\\Elastizitätsberechnung";
-            _dateiDialog.ShowDialog();
-        }
-        else
-        {
-            _ = MessageBox.Show("Directory für FE Berechnungen \"" + initial + "\" nicht gefunden," +
-                                " Eingabedatei am Speicherort von \\FE Berechnungen\\input\\Elastizitätsberechnung",
-                         "Elastizitätsberechnung");
-            _dateiDialog.ShowDialog();
-        }
-
+        _dateiDialog = new OpenFileDialog { InitialDirectory = InitialDirectory + "\\Beispiele\\Elastizitätsberechnung" };
+        _dateiDialog.ShowDialog();
         _dateiPfad = _dateiDialog.FileName;
-
-        if (_dateiPfad.Length == 0)
-        {
-            _ = MessageBox.Show("Eingabedatei ist leer", "Elastizitätsberechnung");
-            return;
-        }
 
         _dateiZeilen = File.ReadAllLines(_dateiPfad, Encoding.UTF8);
 

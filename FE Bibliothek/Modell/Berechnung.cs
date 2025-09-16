@@ -15,6 +15,7 @@ namespace FEBibliothek.Modell
         private ProfillöserStatus _profilLöser;
         private int _dimension;
         private bool _zerlegt, _setzDimension, _profil, _diagonalMatrix;
+        private readonly string _initialDirectory;
 
         public Berechnung(FeModell m)
         {
@@ -23,15 +24,32 @@ namespace FEBibliothek.Modell
             {
                 throw new BerechnungAusnahme("\nModelleingabedaten noch nicht eingelesen");
             }
-            // setz Systemindizes
+
+            SetzSystemindizes();
+            SetzReferenzen(m);
+            FreieKnoten();
+        }
+        public Berechnung(FeModell m, string initialDirectory)
+        {
+            _modell = m;
+            if (_modell == null)
+            {
+                throw new BerechnungAusnahme("\nModelleingabedaten noch nicht eingelesen");
+            }
+            _initialDirectory = initialDirectory;
+
+            SetzSystemindizes();
+            SetzReferenzen(m);
+            FreieKnoten();
+        }
+        private void SetzSystemindizes()
+        {
             var k = 0;
             foreach (var item in _modell.Knoten)
             {
                 _knoten = item.Value;
                 k = _knoten.SetzSystemIndizes(k);
             }
-            SetzReferenzen(m);
-            FreieKnoten();
         }
         // Objekt Referenzen werden erst auf Basis der eindeutigen Identifikatoren ermittelt, d.h. unmittelbar vor Objekt Instantiierung
         // wenn, eine Berechnung gestartet wird, müssen folglich ALLE Objektreferenzen auf Basis der eindeutigen Identifikatoren ermittelt werden
@@ -430,9 +448,8 @@ namespace FEBibliothek.Modell
             // setz stationäre Lösung als Anfangsbedingungen
             if (_modell.Zeitintegration.VonStationär) { temperatur[0] = _systemGleichungen.Primal; }
 
-            for (var k = 0; k < _modell.Zeitintegration.Anfangsbedingungen.Count; k++)
+            foreach (var anf in _modell.Zeitintegration.Anfangsbedingungen)
             {
-                var anf = _modell.Zeitintegration.Anfangsbedingungen[k];
                 if (anf.KnotenId == "alle")
                 {
                     for (var i = 0; i < _dimension; i++) temperatur[0][i] = anf.Werte[0];
@@ -477,7 +494,7 @@ namespace FEBibliothek.Modell
                         case 0:
                             {
                                 // Datei einlesen
-                                const string inputDirectory = @"\FE Berechnungen\input\Wärmeberechnung\instationär\Anregungsdateien";
+                                var inputDirectory = _initialDirectory + @"\Beispiele\Wärmeberechnung\instationär\Anregungsdateien";
                                 const int spalte = 0;
                                 AusDatei(inputDirectory, spalte, last, _modell);
                                 break;
@@ -533,7 +550,7 @@ namespace FEBibliothek.Modell
                                 // Datei einlesen
                                 _ = MessageBox.Show("Randbedingung " + item.Key + " Daten aus Datei", "Heat Transfer Analysis");
 
-                                const string inputDirectory = @"\FE Berechnungen\input\Wärmeberechnung\instationär\Anregungsdateien";
+                                var inputDirectory = _initialDirectory + @"\Beispiele\Wärmeberechnung\instationär\Anregungsdateien";
                                 const int spalte = 0;
                                 AusDatei(inputDirectory, spalte, vordefinierteTemperatur, _modell);
                                 break;
@@ -728,7 +745,7 @@ namespace FEBibliothek.Modell
                 {
                     case 0:
                         {
-                            const string inputDirectory = @"\FE Berechnungen\input\Tragwerksberechnung\Dynamik\Anregungsdateien";
+                            var inputDirectory = _initialDirectory + @"\Beispiele\Tragwerksberechnung\Dynamik\Anregungsdateien";
                             const int col = -1; // ALLE Values in Datei
                                                 // Ordinatenwerte im Zeitintervall dt aus Datei lesen
                             AusDatei(inputDirectory, col, last, _modell);
@@ -793,11 +810,8 @@ namespace FEBibliothek.Modell
         {
             var datei = new OpenFileDialog
             {
-                Filter = "All files (*.*)|*.*",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments),
+                InitialDirectory = inputDirectory
             };
-
-            datei.InitialDirectory += inputDirectory;
             if (datei.ShowDialog() != true) return;
 
             var pfad = datei.FileName;
@@ -869,10 +883,8 @@ namespace FEBibliothek.Modell
 
             var datei = new OpenFileDialog
             {
-                Filter = "All files (*.*)|*.*",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments)
+                InitialDirectory = inputDirectory
             };
-            datei.InitialDirectory += inputDirectory;
 
             if (datei.ShowDialog() != true) return null;
             var pfad = datei.FileName;

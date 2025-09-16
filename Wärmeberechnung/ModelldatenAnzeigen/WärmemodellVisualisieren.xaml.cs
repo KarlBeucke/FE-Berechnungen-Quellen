@@ -329,7 +329,8 @@ public partial class WärmemodellVisualisieren
 
     private void MenuZeitAnregungNeu(object sender, RoutedEventArgs e)
     {
-        _ = new ZeitAnregungVisualisieren(_wärmeModell);
+        var initialDirectory = StartFenster.InitialDirectory;
+        _ = new ZeitAnregungVisualisieren(_wärmeModell, initialDirectory);
     }
 
     // Modelldefinitionen darstellen
