@@ -39,9 +39,8 @@ public partial class StartFenster
 
         if (Directory.Exists(InitialDirectory)) return;
 
-        _ = MessageBox.Show("'FE Berechnungen' im Dokumentenordner nicht vorhanden." +
-                            "\nNavigier zum Speicherort der Anwendung." +
-                            "\nClick beliebige Datei im Ordner der Anwendung.");
+        _ = MessageBox.Show("Anwendungsordner 'FE Berechnungen' nicht gefunden in \n" + InitialDirectory +
+                            "\nNavigier zum Speicherort der Anwendung." + "\nClick beliebige Datei im Ordner der Anwendung.");
         _dateiDialog = new OpenFileDialog { InitialDirectory = "C:" };
         _dateiDialog.ShowDialog();
         InitialDirectory = Path.GetDirectoryName(_dateiDialog.FileName);
